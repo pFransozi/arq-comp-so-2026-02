@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Percurso da disciplina de Arquitetura de Computadores e Sistemas Operacionais</title>
+<desc id="desc">Seis etapas ligadas a um projeto central de processamento concorrente.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#eef7fa"/>
+    <stop offset="1" stop-color="#fbf5ef"/>
+  </linearGradient>
+  <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="#176b87"/>
+    <stop offset="1" stop-color="#8a5a35"/>
+  </linearGradient>
+  <filter id="shadow">
+    <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#142534" flood-opacity=".16"/>
+  </filter>
+</defs>
+
+<rect width="1600" height="900" rx="42" fill="url(#bg)"/>
+<text x="800" y="82" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="800" fill="#142534">Percurso da disciplina</text>
+<text x="800" y="126" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="22" fill="#5d6b78">Do percurso de uma instrução à defesa de uma aplicação concorrente</text>
+
+<path d="M345 280 C520 205 610 230 705 345" fill="none" stroke="#7fa9b8" stroke-width="5" stroke-dasharray="10 12"/>
+<path d="M1255 280 C1080 205 990 230 895 345" fill="none" stroke="#b99a80" stroke-width="5" stroke-dasharray="10 12"/>
+<path d="M300 600 C500 690 620 650 710 555" fill="none" stroke="#7fa9b8" stroke-width="5" stroke-dasharray="10 12"/>
+<path d="M1300 600 C1100 690 980 650 890 555" fill="none" stroke="#b99a80" stroke-width="5" stroke-dasharray="10 12"/>
+
+<g filter="url(#shadow)">
+  <rect x="570" y="305" width="460" height="285" rx="40" fill="url(#core)"/>
+  <text x="800" y="390" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="26" font-weight="700" fill="#d9f2f8">Projeto PBL</text>
+  <text x="800" y="445" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="850" fill="white">Processamento</text>
+  <text x="800" y="495" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="42" font-weight="850" fill="white">Concorrente</text>
+  <text x="800" y="545" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="20" fill="#edf7fa">baseline · threads · processos · métricas · defesa</text>
+</g>
+
+<g font-family="Inter,Arial,sans-serif">
+  <g transform="translate(95 190)">
+    <rect width="390" height="170" rx="26" fill="white" stroke="#c8dce4" stroke-width="3"/>
+    <text x="34" y="46" font-size="19" font-weight="800" fill="#176b87">01 · CAMADAS E EXECUÇÃO</text>
+    <text x="34" y="82" font-size="23" font-weight="750" fill="#142534">
+      <tspan x="34" dy="0">Código → runtime → SO</tspan>
+      <tspan x="34" dy="28">→ hardware</tspan>
+    </text>
+    <text x="34" y="146" font-size="18" fill="#667581">Organização, instruções e evidências.</text>
+  </g>
+
+  <g transform="translate(1115 190)">
+    <rect width="390" height="170" rx="26" fill="white" stroke="#dfcdbd" stroke-width="3"/>
+    <text x="34" y="46" font-size="19" font-weight="800" fill="#8a5a35">02 · RECURSOS</text>
+    <text x="34" y="82" font-size="22" font-weight="750" fill="#142534">
+      <tspan x="34" dy="0">CPU · memória ·</tspan>
+      <tspan x="34" dy="28">armazenamento</tspan>
+    </text>
+    <text x="34" y="146" font-size="18" fill="#667581">Gargalos, localidade, latência e vazão.</text>
+  </g>
+
+  <g transform="translate(55 560)">
+    <rect width="430" height="170" rx="26" fill="white" stroke="#c8dce4" stroke-width="3"/>
+    <text x="34" y="46" font-size="19" font-weight="800" fill="#176b87">03 · SISTEMA OPERACIONAL</text>
+    <text x="34" y="86" font-size="24" font-weight="750" fill="#142534">
+      <tspan x="34" dy="0">Kernel · processos ·</tspan>
+      <tspan x="34" dy="28">chamadas</tspan>
+    </text>
+    <text x="34" y="146" font-size="18" fill="#667581">Abstração, proteção e ambientes de execução.</text>
+  </g>
+
+  <g transform="translate(1115 560)">
+    <rect width="430" height="170" rx="26" fill="white" stroke="#dfcdbd" stroke-width="3"/>
+    <text x="34" y="46" font-size="19" font-weight="800" fill="#8a5a35">04 · CONCORRÊNCIA</text>
+    <text x="34" y="86" font-size="22" font-weight="750" fill="#142534">
+      <tspan x="34" dy="0">Threads · processos ·</tspan>
+      <tspan x="34" dy="28">sincronização</tspan>
+    </text>
+    <text x="34" y="146" font-size="18" fill="#667581">Corridas, filas, escalonamento e contenção.</text>
+  </g>
+
+  <g transform="translate(320 755)">
+    <rect width="450" height="105" rx="24" fill="#e6f5f1" stroke="#8ccab8" stroke-width="3"/>
+    <text x="30" y="42" font-size="18" font-weight="800" fill="#21735f">05 · PERSISTÊNCIA E INICIALIZAÇÃO</text>
+    <text x="30" y="76" font-size="21" font-weight="700" fill="#142534">Arquivos · segurança · drivers · boot</text>
+  </g>
+
+  <g transform="translate(830 755)">
+    <rect width="450" height="105" rx="24" fill="#f7eee7" stroke="#d9bca6" stroke-width="3"/>
+    <text x="30" y="42" font-size="18" font-weight="800" fill="#8a5a35">06 · VALIDAÇÃO E DEFESA</text>
+    <text x="30" y="76" font-size="21" font-weight="700" fill="#142534">Testes · métricas · ADRs · banca</text>
+  </g>
+</g>
+</svg>
