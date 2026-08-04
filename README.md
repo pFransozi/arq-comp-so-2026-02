@@ -1,0 +1,1 @@
+# arquitetura_computador_so_2026-02
