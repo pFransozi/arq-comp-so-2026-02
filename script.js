@@ -43,6 +43,64 @@ decisionSection?.remove();
 const finalIndividualRecord = document.querySelector('#fechamento .exit-card');
 finalIndividualRecord?.remove();
 
+const isAula03 = document.querySelector('#organizacao') && document.querySelector('#arquiteturas') && document.querySelector('#ciclo');
+if (isAula03) {
+  const paletteStyle = document.createElement('style');
+  paletteStyle.textContent = `
+    :root {
+      --blue: #3157d5;
+      --blue-soft: #edf2ff;
+      --violet: #7357d8;
+      --violet-soft: #f2efff;
+      --teal: #17857b;
+      --teal-soft: #eaf8f6;
+      --navy: #0f172a;
+      --amber: #b66a07;
+      --amber-soft: #fff7e8;
+    }
+
+    .hero {
+      background:
+        radial-gradient(circle at 87% 20%, rgba(115,87,216,.14), transparent 27%),
+        radial-gradient(circle at 75% 75%, rgba(23,133,123,.12), transparent 22%),
+        linear-gradient(180deg, #fbfcff 0%, #fff 100%);
+    }
+
+    .hero::after {
+      border-color: rgba(49,87,213,.13);
+      box-shadow: 0 0 0 70px rgba(49,87,213,.025), 0 0 0 140px rgba(115,87,216,.018);
+    }
+
+    .section-dark .eyebrow,
+    .stored-callout strong {
+      color: #92a9ff;
+    }
+
+    .warmup {
+      background: linear-gradient(135deg, var(--navy), #172554);
+    }
+
+    .system-box.center {
+      border-color: #b9c7ff;
+    }
+
+    .cpu-shell {
+      border-color: #b9c7ff;
+    }
+
+    .inquiry {
+      border-color: #cbd6ff;
+      background: linear-gradient(135deg, #f5f7ff, #fff);
+      box-shadow: 0 15px 36px rgba(49,87,213,.07);
+    }
+
+    .inquiry-head {
+      border-bottom-color: #dce4ff;
+    }
+  `;
+  document.head.appendChild(paletteStyle);
+}
+
 const missionSection = document.querySelector('#missao');
 if (missionSection) {
   const intro = missionSection.querySelector('.section-heading > p:last-child');
