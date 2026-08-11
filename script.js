@@ -27,6 +27,9 @@ if (baselineCallout) {
   if (downloadButton) downloadButton.textContent = 'Baixar código';
 }
 
+const projectBoundary = document.querySelector('.project-boundary');
+projectBoundary?.remove();
+
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
 if (executionChain) {
   const figure = document.createElement('figure');
