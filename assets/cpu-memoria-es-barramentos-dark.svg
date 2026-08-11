@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">CPU, memória e entrada/saída: como o computador se organiza</title>
+  <desc id="desc">Versão escura do infográfico didático mostrando memória principal, CPU, entrada e saída e os barramentos de endereços, dados e controle.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="10" stdDeviation="16" flood-color="#000" flood-opacity="0.34"/></filter>
+    <style>
+      .title{font:800 48px Inter,Segoe UI,Arial,sans-serif;fill:#eef4ff}.subtitle{font:400 22px Inter,Segoe UI,Arial,sans-serif;fill:#aab7cc}
+      .kicker{font:800 18px Inter,Segoe UI,Arial,sans-serif;letter-spacing:1px}.h2{font:800 31px Inter,Segoe UI,Arial,sans-serif}.body{font:400 20px Inter,Segoe UI,Arial,sans-serif;fill:#d7e1f0}.small{font:400 17px Inter,Segoe UI,Arial,sans-serif;fill:#b8c5d8}.mini{font:700 18px Inter,Segoe UI,Arial,sans-serif}.tiny{font:400 15px Inter,Segoe UI,Arial,sans-serif;fill:#b8c5d8}.busTitle{font:800 16px Inter,Segoe UI,Arial,sans-serif;fill:#07101f}.note{font:400 18px Inter,Segoe UI,Arial,sans-serif;fill:#d7e1f0}.noteStrong{font:800 18px Inter,Segoe UI,Arial,sans-serif;fill:#84a2ff}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="#101725"/>
+  <text x="800" y="64" text-anchor="middle" class="title">CPU, memória e entrada/saída: como o computador se organiza</text>
+  <line x1="250" y1="105" x2="360" y2="105" stroke="#43d0c8" stroke-width="3"/><circle cx="250" cy="105" r="5" fill="#43d0c8"/>
+  <line x1="1240" y1="105" x2="1350" y2="105" stroke="#43d0c8" stroke-width="3"/><circle cx="1350" cy="105" r="5" fill="#43d0c8"/>
+  <text x="800" y="113" text-anchor="middle" class="subtitle">Modelo didático para entender armazenamento, processamento e movimentação de dados</text>
+
+  <g filter="url(#shadow)"><rect x="35" y="155" width="330" height="590" rx="24" fill="#172033" stroke="#43d0c8" stroke-width="2"/></g>
+  <rect x="58" y="178" width="46" height="46" rx="12" fill="#43d0c8"/><text x="81" y="211" text-anchor="middle" font-family="Inter,Arial" font-size="28" font-weight="800" fill="#07101f">1</text>
+  <text x="122" y="210" class="kicker" fill="#43d0c8">MEMÓRIA PRINCIPAL</text>
+  <rect x="82" y="272" width="236" height="96" rx="11" fill="#3a8e67" stroke="#43d0c8" stroke-width="3"/>
+  <rect x="100" y="292" width="42" height="48" rx="5" fill="#0d1422"/><rect x="154" y="292" width="42" height="48" rx="5" fill="#0d1422"/><rect x="208" y="292" width="42" height="48" rx="5" fill="#0d1422"/><rect x="262" y="292" width="38" height="48" rx="5" fill="#0d1422"/>
+  <g fill="#f0c85a"><rect x="105" y="360" width="10" height="8"/><rect x="122" y="360" width="10" height="8"/><rect x="139" y="360" width="10" height="8"/><rect x="156" y="360" width="10" height="8"/><rect x="173" y="360" width="10" height="8"/><rect x="190" y="360" width="10" height="8"/><rect x="207" y="360" width="10" height="8"/><rect x="224" y="360" width="10" height="8"/><rect x="241" y="360" width="10" height="8"/><rect x="258" y="360" width="10" height="8"/><rect x="275" y="360" width="10" height="8"/></g>
+  <text x="70" y="427" class="body"><tspan x="70" dy="0" font-weight="700" fill="#80e5df">Armazena temporariamente</tspan><tspan x="70" dy="31" font-weight="700" fill="#80e5df">instruções e dados usados</tspan><tspan x="70" dy="31" font-weight="700" fill="#80e5df">durante a execução.</tspan></text>
+  <line x1="68" y1="535" x2="332" y2="535" stroke="#43d0c8" stroke-width="2"/>
+  <circle cx="72" cy="575" r="5" fill="#43d0c8"/><text x="88" y="582" class="small">guarda o programa em execução</text>
+  <circle cx="72" cy="620" r="5" fill="#43d0c8"/><text x="88" y="627" class="small">mantém variáveis e dados</text>
+  <circle cx="72" cy="665" r="5" fill="#43d0c8"/><text x="88" y="672" class="small"><tspan x="88" dy="0">é acessada constantemente</tspan><tspan x="88" dy="24">pela CPU</tspan></text>
+
+  <g filter="url(#shadow)"><rect x="610" y="140" width="430" height="620" rx="26" fill="#172033" stroke="#a994ff" stroke-width="2"/></g>
+  <rect x="736" y="164" width="48" height="48" rx="12" fill="#a994ff"/><text x="760" y="198" text-anchor="middle" font-family="Inter,Arial" font-size="28" font-weight="800" fill="#07101f">2</text>
+  <text x="805" y="198" class="h2" fill="#c4b7ff">CPU</text>
+  <rect x="662" y="248" width="120" height="120" rx="18" fill="#506987" stroke="#84a2ff" stroke-width="3"/><rect x="690" y="276" width="64" height="64" rx="8" fill="#b9c8dc"/>
+  <g stroke="#6f88a8" stroke-width="8" stroke-linecap="round"><line x1="676" y1="238" x2="676" y2="225"/><line x1="699" y1="238" x2="699" y2="225"/><line x1="722" y1="238" x2="722" y2="225"/><line x1="745" y1="238" x2="745" y2="225"/><line x1="768" y1="238" x2="768" y2="225"/><line x1="676" y1="378" x2="676" y2="391"/><line x1="699" y1="378" x2="699" y2="391"/><line x1="722" y1="378" x2="722" y2="391"/><line x1="745" y1="378" x2="745" y2="391"/><line x1="768" y1="378" x2="768" y2="391"/></g>
+  <text x="830" y="270" class="body"><tspan x="830" dy="0">Busca instruções na memória,</tspan><tspan x="830" dy="29">executa operações e</tspan><tspan x="830" dy="29">coordena o funcionamento</tspan><tspan x="830" dy="29">do sistema.</tspan></text>
+  <g><rect x="630" y="430" width="186" height="135" rx="16" fill="#111a2b" stroke="#4b416e"/><circle cx="670" cy="475" r="23" fill="#a994ff"/><circle cx="670" cy="475" r="9" fill="#111a2b"/><text x="706" y="468" class="mini" fill="#c4b7ff">UC</text><text x="706" y="490" class="tiny">unidade de controle</text><text x="649" y="535" class="tiny">coordena a execução</text></g>
+  <g><rect x="828" y="430" width="190" height="135" rx="16" fill="#111a2b" stroke="#4b416e"/><rect x="846" y="451" width="48" height="48" rx="8" fill="#a994ff"/><text x="870" y="483" text-anchor="middle" font-family="Arial" font-size="24" font-weight="800" fill="#07101f">±×</text><text x="910" y="468" class="mini" fill="#c4b7ff">ULA</text><text x="910" y="494" class="tiny">operações lógicas</text><text x="910" y="517" class="tiny">e aritméticas</text></g>
+  <g><rect x="630" y="580" width="186" height="135" rx="16" fill="#111a2b" stroke="#4b416e"/><rect x="650" y="602" width="42" height="50" rx="6" fill="none" stroke="#a994ff" stroke-width="4"/><line x1="660" y1="615" x2="682" y2="615" stroke="#a994ff" stroke-width="3"/><line x1="660" y1="627" x2="682" y2="627" stroke="#a994ff" stroke-width="3"/><line x1="660" y1="639" x2="682" y2="639" stroke="#a994ff" stroke-width="3"/><text x="706" y="620" class="mini" fill="#c4b7ff">Registradores</text><text x="706" y="645" class="tiny">valores imediatos</text><text x="650" y="684" class="tiny">armazenamento interno rápido</text></g>
+  <g><rect x="828" y="580" width="190" height="135" rx="16" fill="#111a2b" stroke="#4b416e"/><circle cx="870" cy="625" r="26" fill="none" stroke="#a994ff" stroke-width="5"/><line x1="870" y1="625" x2="870" y2="607" stroke="#a994ff" stroke-width="4"/><line x1="870" y1="625" x2="883" y2="633" stroke="#a994ff" stroke-width="4"/><text x="910" y="620" class="mini" fill="#c4b7ff">Clock</text><text x="910" y="645" class="tiny">marca o ritmo</text><text x="910" y="668" class="tiny">das operações</text></g>
+
+  <g filter="url(#shadow)"><rect x="1235" y="155" width="330" height="590" rx="24" fill="#172033" stroke="#84a2ff" stroke-width="2"/></g>
+  <rect x="1258" y="178" width="46" height="46" rx="12" fill="#84a2ff"/><text x="1281" y="211" text-anchor="middle" font-family="Inter,Arial" font-size="28" font-weight="800" fill="#07101f">3</text>
+  <text x="1322" y="210" class="kicker" fill="#84a2ff">ENTRADA / SAÍDA</text>
+  <rect x="1305" y="268" width="190" height="128" rx="12" fill="#334b68"/><rect x="1322" y="285" width="156" height="88" rx="7" fill="#0d1422"/><rect x="1378" y="396" width="44" height="14" rx="4" fill="#506987"/><rect x="1353" y="408" width="94" height="10" rx="4" fill="#506987"/>
+  <rect x="1333" y="307" width="42" height="24" rx="4" fill="#aab7cc"/><circle cx="1400" cy="319" r="12" fill="#aab7cc"/><circle cx="1450" cy="319" r="16" fill="none" stroke="#aab7cc" stroke-width="3"/><rect x="1340" y="342" width="28" height="28" rx="5" fill="#aab7cc"/><rect x="1434" y="343" width="35" height="25" rx="4" fill="#aab7cc"/>
+  <text x="1274" y="463" class="body"><tspan x="1274" dy="0" font-weight="700" fill="#a9bbff">Conecta o computador a</tspan><tspan x="1274" dy="31" font-weight="700" fill="#a9bbff">periféricos e a outras formas</tspan><tspan x="1274" dy="31" font-weight="700" fill="#a9bbff">de armazenamento.</tspan></text>
+  <line x1="1270" y1="565" x2="1532" y2="565" stroke="#84a2ff" stroke-width="2"/>
+  <circle cx="1275" cy="605" r="5" fill="#84a2ff"/><text x="1291" y="612" class="small">teclado, mouse e rede</text>
+  <circle cx="1275" cy="650" r="5" fill="#84a2ff"/><text x="1291" y="657" class="small">disco e SSD</text>
+  <circle cx="1275" cy="695" r="5" fill="#84a2ff"/><text x="1291" y="702" class="small">terminal, vídeo e impressora</text>
+
+  <g stroke-width="6" fill="none">
+    <path d="M365 300 H425 M555 300 H610 M1040 300 H1235" stroke="#43d0c8"/>
+    <path d="M365 455 H425 M555 455 H610 M1040 455 H1235" stroke="#84a2ff"/>
+    <path d="M365 610 H425 M555 610 H610 M1040 610 H1235" stroke="#f0b35f"/>
+  </g>
+  <g fill="none" stroke-width="5">
+    <path d="M365 300l12-9m-12 9l12 9M425 300l-12-9m12 9l-12 9M555 300l12-9m-12 9l12 9M610 300l-12-9m12 9l-12 9M1040 300l12-9m-12 9l12 9M1235 300l-12-9m12 9l-12 9" stroke="#43d0c8"/>
+    <path d="M365 455l12-9m-12 9l12 9M425 455l-12-9m12 9l-12 9M555 455l12-9m-12 9l12 9M610 455l-12-9m12 9l-12 9M1040 455l12-9m-12 9l12 9M1235 455l-12-9m12 9l-12 9" stroke="#84a2ff"/>
+    <path d="M365 610l12-9m-12 9l12 9M425 610l-12-9m12 9l-12 9M555 610l12-9m-12 9l12 9M610 610l-12-9m12 9l-12 9M1040 610l12-9m-12 9l12 9M1235 610l-12-9m12 9l-12 9" stroke="#f0b35f"/>
+  </g>
+
+  <rect x="430" y="260" width="120" height="50" rx="10" fill="#43d0c8"/><text x="490" y="281" text-anchor="middle" class="busTitle"><tspan x="490" dy="0">BARRAMENTO</tspan><tspan x="490" dy="18">DE ENDEREÇOS</tspan></text><text x="490" y="335" text-anchor="middle" class="tiny"><tspan x="490" dy="0">indica posição de</tspan><tspan x="490" dy="20">memória ou destino</tspan></text>
+  <rect x="430" y="415" width="120" height="50" rx="10" fill="#84a2ff"/><text x="490" y="436" text-anchor="middle" class="busTitle"><tspan x="490" dy="0">BARRAMENTO</tspan><tspan x="490" dy="18">DE DADOS</tspan></text><text x="490" y="490" text-anchor="middle" class="tiny"><tspan x="490" dy="0">transporta valores,</tspan><tspan x="490" dy="20">instruções e resultados</tspan></text>
+  <rect x="430" y="570" width="120" height="50" rx="10" fill="#f0b35f"/><text x="490" y="591" text-anchor="middle" class="busTitle"><tspan x="490" dy="0">BARRAMENTO</tspan><tspan x="490" dy="18">DE CONTROLE</tspan></text><text x="490" y="645" text-anchor="middle" class="tiny"><tspan x="490" dy="0">leitura, escrita,</tspan><tspan x="490" dy="20">interrupção e sincronização</tspan></text>
+
+  <rect x="230" y="795" width="1140" height="78" rx="20" fill="#111a2b" stroke="#2a3750" stroke-width="2"/>
+  <circle cx="278" cy="834" r="28" fill="#84a2ff"/><path d="M270 832c0-9 6-15 14-15s14 6 14 15c0 6-4 10-8 13v6h-12v-6c-5-3-8-7-8-13z" fill="none" stroke="#07101f" stroke-width="3"/><line x1="278" y1="856" x2="290" y2="856" stroke="#07101f" stroke-width="3"/>
+  <text x="325" y="828" class="noteStrong">Importante:</text><text x="430" y="828" class="note">este é um modelo simplificado. Computadores atuais usam controladores e interconexões mais complexos,</text><text x="325" y="854" class="note">mas os barramentos ajudam a visualizar a comunicação básica entre CPU, memória e entrada/saída.</text>
+</svg>
