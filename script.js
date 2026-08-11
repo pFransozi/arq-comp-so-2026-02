@@ -30,6 +30,9 @@ if (baselineCallout) {
 const projectBoundary = document.querySelector('.project-boundary');
 projectBoundary?.remove();
 
+const methodReminder = document.querySelector('#missao .method-reminder');
+methodReminder?.remove();
+
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
 if (executionChain) {
   const figure = document.createElement('figure');
