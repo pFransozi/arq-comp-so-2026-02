@@ -544,3 +544,79 @@ if (cycleInquiry) {
   if (tag) tag.textContent = 'Previsão → explicação';
   if (textarea) textarea.placeholder = 'Nossa explicação...\nComo PC, IR e ACC mudam...\nO que corrigimos...';
 }
+
+const cycleSection = document.querySelector('#ciclo');
+if (cycleSection) {
+  const cycleTitle = cycleSection.querySelector('.section-heading h2');
+  const cycleIntro = cycleSection.querySelector('.section-heading > p:last-child');
+  if (cycleTitle) cycleTitle.textContent = 'Buscar, decodificar e executar';
+  if (cycleIntro) cycleIntro.textContent = 'Neste modelo didático, cada instrução passa por três momentos: busca, decodificação e execução. A máquina abaixo avança uma instrução completa por vez; cada avanço resume essas etapas e não representa um único pulso de clock.';
+
+  const phases = cycleSection.querySelectorAll('.cycle-phase');
+  if (phases[0]) phases[0].querySelector('p').textContent = 'O PC indica o endereço da próxima instrução. A CPU a busca na memória, coloca-a no IR e atualiza o PC.';
+  if (phases[1]) {
+    phases[1].querySelector('h3').textContent = 'Decodificação';
+    phases[1].querySelector('p').textContent = 'A unidade de controle interpreta a instrução armazenada no IR e identifica a operação e os operandos envolvidos.';
+  }
+  if (phases[2]) phases[2].querySelector('p').textContent = 'A CPU realiza a operação, que pode envolver ULA, registradores, memória ou E/S.';
+
+  const simTitle = cycleSection.querySelector('.sim-head h3');
+  if (simTitle) simTitle.textContent = 'Avance uma instrução por vez';
+
+  const simCode = cycleSection.querySelector('.sim-head p');
+  if (simCode && !cycleSection.querySelector('.cycle-clarification')) {
+    const clarification = document.createElement('p');
+    clarification.className = 'cycle-clarification';
+    clarification.innerHTML = '<strong>Leitura do simulador:</strong> os valores exibidos mostram o estado <em>após</em> cada instrução. O PC, portanto, já aponta para a próxima instrução.';
+    simCode.insertAdjacentElement('afterend', clarification);
+  }
+
+  const accLabel = cycleSection.querySelector('#state-acc')?.previousElementSibling;
+  if (accLabel) accLabel.textContent = 'ACC · registrador';
+
+  const nextButton = cycleSection.querySelector('#next-cycle');
+  if (nextButton) nextButton.textContent = 'Próxima instrução';
+
+  const tableHeaders = cycleSection.querySelectorAll('.trace-table thead th');
+  if (tableHeaders[0]) tableHeaders[0].textContent = 'Passo';
+  if (tableHeaders[1]) tableHeaders[1].textContent = 'PC antes';
+
+  const inquiryQuestions = cycleSection.querySelectorAll('.inquiry .prompt-list li');
+  if (inquiryQuestions[0]) inquiryQuestions[0].textContent = 'Onde a CPU encontra a instrução ADD 21 e em qual registrador ela fica após a busca?';
+  if (inquiryQuestions[1]) inquiryQuestions[1].textContent = 'De onde vem o valor 5 usado como operando?';
+  if (inquiryQuestions[2]) inquiryQuestions[2].textContent = 'Qual componente realiza a soma 7 + 5?';
+  if (inquiryQuestions[3]) inquiryQuestions[3].textContent = 'Em qual registrador fica o resultado 12 antes de STORE 22?';
+
+  const updateDidacticMessage = () => {
+    const irValue = cycleSection.querySelector('#state-ir')?.textContent.trim();
+    const message = cycleSection.querySelector('#sim-message');
+    if (!message) return;
+    const messages = {
+      '—': '<strong>Estado inicial.</strong> O PC aponta para a instrução 00. Nenhuma instrução foi executada ainda.',
+      'LOAD 20': '<strong>Passo 1 · LOAD 20 concluída.</strong> A instrução foi buscada e decodificada; na execução, o valor 7 de Mem[20] foi carregado no ACC. O PC já aponta para 01.',
+      'ADD 21': '<strong>Passo 2 · ADD 21 concluída.</strong> A instrução foi buscada e decodificada; na execução, a ULA somou o valor 5 de Mem[21] ao 7 que estava no ACC. O ACC agora guarda 12 e o PC aponta para 02.',
+      'STORE 22': '<strong>Passo 3 · STORE 22 concluída.</strong> A instrução foi buscada e decodificada; na execução, o valor 12 do ACC foi gravado em Mem[22]. O PC aponta para 03.',
+      'HALT': '<strong>Passo 4 · HALT concluída.</strong> A instrução foi buscada e decodificada e a sequência didática foi encerrada.'
+    };
+    if (messages[irValue]) message.innerHTML = messages[irValue];
+  };
+
+  nextButton?.addEventListener('click', updateDidacticMessage);
+  cycleSection.querySelector('#reset-cycle')?.addEventListener('click', updateDidacticMessage);
+  updateDidacticMessage();
+
+  const cycleStyle = document.createElement('style');
+  cycleStyle.textContent = `
+    #ciclo .cycle-clarification {
+      margin: .75rem 0 0;
+      padding: .75rem .9rem;
+      border-radius: 12px;
+      background: var(--blue-soft);
+      color: var(--muted);
+      font-size: .88rem;
+    }
+    #ciclo .cycle-clarification strong { color: var(--blue); }
+    body.theme-dark #ciclo .cycle-clarification { background: #111a2b; color: var(--muted); }
+  `;
+  document.head.appendChild(cycleStyle);
+}
