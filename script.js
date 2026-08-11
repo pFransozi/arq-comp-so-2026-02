@@ -40,6 +40,9 @@ document.querySelector('.main-nav a[href="#evidencias"]')?.remove();
 const decisionSection = document.querySelector('#decisao');
 decisionSection?.remove();
 
+const finalIndividualRecord = document.querySelector('#fechamento .exit-card');
+finalIndividualRecord?.remove();
+
 const missionSection = document.querySelector('#missao');
 if (missionSection) {
   const intro = missionSection.querySelector('.section-heading > p:last-child');
