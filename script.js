@@ -33,6 +33,54 @@ projectBoundary?.remove();
 const methodReminder = document.querySelector('#missao .method-reminder');
 methodReminder?.remove();
 
+const missionSection = document.querySelector('#missao');
+if (missionSection) {
+  const intro = missionSection.querySelector('.section-heading > p:last-child');
+  if (intro) {
+    intro.innerHTML = 'Em equipe, valide o baseline e execute a mesma entrada pequena <strong>três vezes</strong>. Após cada execução, copie as métricas para uma linha da tabela abaixo. O objetivo é observar o ponto de partida e perceber que as medições podem variar mesmo sem mudar o código ou a entrada. No Windows, os comandos abaixo usam <code>py</code>; se o seu ambiente usar <code>python</code>, substitua o comando.';
+  }
+
+  const missionGrid = missionSection.querySelector('.mission-grid');
+  if (missionGrid) {
+    missionGrid.innerHTML = `
+      <article><span>1</span><h3>Conheça o pacote</h3><p>Leia o README e localize <code>main.py</code>, <code>entradas/</code>, <code>tests/</code>, <code>outputs/</code> e <code>logs/</code>.</p></article>
+      <article><span>2</span><h3>Valide o ponto de partida</h3><p>Execute <code>py -m unittest discover -s tests -v</code> e confirme que os testes passam antes das medições.</p></article>
+      <article><span>3</span><h3>Faça a execução 1</h3><p>Execute <code>py main.py --entrada entradas/pequena.json</code>. Ao terminar, abra <code>outputs/metricas_pequena.json</code> e preencha a linha 1 da tabela.</p></article>
+      <article><span>4</span><h3>Repita mais duas vezes</h3><p>Execute o mesmo comando novamente para as execuções 2 e 3. Após cada execução, copie as métricas para a linha correspondente antes de rodar novamente.</p></article>
+      <article><span>5</span><h3>Compare as medições</h3><p>Compare tempo total, tempo de CPU, pico de memória, vazão e correção. Observe quais valores permaneceram iguais e quais variaram.</p></article>
+      <article><span>6</span><h3>Explique o que observou</h3><p>Relacione entrada, processamento, resultados, métricas e logs. Registre uma hipótese inicial sobre qual recurso pode se tornar limitante quando a carga aumentar.</p></article>
+    `;
+  }
+}
+
+const measurementCard = document.querySelector('#registro .measurement-card');
+if (measurementCard) {
+  const title = measurementCard.querySelector('.measurement-head h3');
+  const description = measurementCard.querySelector('.measurement-head > p');
+  const rowHeaders = measurementCard.querySelectorAll('tbody th');
+  const note = measurementCard.querySelector('.table-note');
+
+  if (title) title.textContent = 'Registre três execuções do mesmo baseline';
+  if (description) {
+    description.innerHTML = 'Use <code>entradas/pequena.json</code> nas três execuções e preencha uma linha após cada rodada. Assim, a tabela registra três medições comparáveis do mesmo ponto de partida.';
+  }
+
+  ['1', '2', '3'].forEach((label, index) => {
+    if (rowHeaders[index]) rowHeaders[index].textContent = label;
+  });
+
+  [2, 3].forEach((run) => {
+    const input = measurementCard.querySelector(`[data-save="medicao-${run}-entrada"]`);
+    const tasks = measurementCard.querySelector(`[data-save="medicao-${run}-tarefas"]`);
+    if (input) input.placeholder = 'pequena';
+    if (tasks) tasks.placeholder = '6';
+  });
+
+  if (note) {
+    note.innerHTML = 'Após cada execução, copie os valores de <code>outputs/metricas_pequena.json</code> para a linha correspondente. Esse arquivo é reescrito quando o programa roda novamente, por isso registre a medição antes da próxima execução. O pico de memória é medido de forma dependente do sistema operacional; em comparações futuras, registre também o ambiente.';
+  }
+}
+
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
 if (executionChain) {
   const figure = document.createElement('figure');
