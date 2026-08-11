@@ -18,9 +18,9 @@ if (executionChain) {
   figure.className = 'execution-flow-figure';
   figure.innerHTML = `
     <img
-      src="./assets/fluxo-execucao-alto-nivel-light.webp"
-      data-light-src="./assets/fluxo-execucao-alto-nivel-light.webp"
-      data-dark-src="./assets/fluxo-execucao-alto-nivel-dark.webp"
+      src="./assets/fluxo-execucao-alto-nivel-light.svg"
+      data-light-src="./assets/fluxo-execucao-alto-nivel-light.svg"
+      data-dark-src="./assets/fluxo-execucao-alto-nivel-dark.svg"
       alt="Fluxo da execução: o código-fonte passa pelo interpretador Python, sistema operacional e processo em execução; o processo utiliza CPU, memória e entrada/saída, e o fluxo retorna até o resultado observável."
       loading="lazy"
     >
