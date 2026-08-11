@@ -105,6 +105,24 @@ if (isAula03) {
       height: auto;
     }
 
+    /* Contraste explícito para o fluxo de programa armazenado. */
+    .stored-node {
+      background: #ffffff;
+      border-color: #dfe5ef;
+      color: #172033;
+    }
+    .stored-node.memory {
+      background: #f5f8ff;
+      border-color: #cbd6ff;
+    }
+    .stored-node.cpu {
+      background: #faf7ff;
+      border-color: #d9d0ff;
+    }
+    .stored-node small { color: #3157d5; }
+    .stored-node strong { color: #172033; }
+    .stored-node span { color: #647087; }
+
     body.theme-dark {
       --ink: #eef4ff;
       --muted: #aab7cc;
@@ -155,10 +173,25 @@ if (isAula03) {
     body.theme-dark .memory-table,
     body.theme-dark .record-table input,
     body.theme-dark .record-table select,
-    body.theme-dark .worksheet textarea {
+    body.theme-dark .worksheet textarea,
+    body.theme-dark .stored-node,
+    body.theme-dark .stored-node.memory,
+    body.theme-dark .stored-node.cpu,
+    body.theme-dark .execution-step,
+    body.theme-dark .stored-type {
       background: #172033;
       border-color: var(--line);
       color: var(--ink);
+    }
+    body.theme-dark .stored-node small { color: #92a9ff; }
+    body.theme-dark .stored-node strong { color: var(--ink); }
+    body.theme-dark .stored-node span,
+    body.theme-dark .execution-step p,
+    body.theme-dark .stored-type p { color: var(--muted); }
+    body.theme-dark .stored-definition { background: #070b14; }
+    body.theme-dark .example-goal {
+      background: var(--teal-soft);
+      color: var(--teal);
     }
     body.theme-dark .topic-list div,
     body.theme-dark .cpu-part,
