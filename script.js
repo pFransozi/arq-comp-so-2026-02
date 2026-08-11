@@ -37,6 +37,9 @@ const evidenceSection = document.querySelector('#evidencias');
 evidenceSection?.remove();
 document.querySelector('.main-nav a[href="#evidencias"]')?.remove();
 
+const decisionSection = document.querySelector('#decisao');
+decisionSection?.remove();
+
 const missionSection = document.querySelector('#missao');
 if (missionSection) {
   const intro = missionSection.querySelector('.section-heading > p:last-child');
