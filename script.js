@@ -2,6 +2,11 @@ const navToggle = document.querySelector('.nav-toggle');
 const mainNav = document.querySelector('.main-nav');
 const themeToggle = document.querySelector('.theme-toggle');
 
+const percursoEyebrow = document.querySelector('#percurso .eyebrow');
+if (percursoEyebrow?.textContent.trim() === 'Percurso de 4 horas') {
+  percursoEyebrow.remove();
+}
+
 const applyTheme = (theme) => {
   const isDark = theme === 'dark';
   document.body.classList.toggle('theme-dark', isDark);
