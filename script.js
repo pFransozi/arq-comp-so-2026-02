@@ -45,18 +45,24 @@ finalIndividualRecord?.remove();
 
 const isAula03 = document.querySelector('#organizacao') && document.querySelector('#arquiteturas') && document.querySelector('#ciclo');
 if (isAula03) {
-  const paletteStyle = document.createElement('style');
-  paletteStyle.textContent = `
+  const aula03Style = document.createElement('style');
+  aula03Style.textContent = `
     :root {
+      --ink: #172033;
+      --muted: #647087;
+      --line: #dfe5ef;
+      --soft: #f4f7fb;
+      --paper: #ffffff;
+      --navy: #0f172a;
       --blue: #3157d5;
       --blue-soft: #edf2ff;
       --violet: #7357d8;
       --violet-soft: #f2efff;
       --teal: #17857b;
       --teal-soft: #eaf8f6;
-      --navy: #0f172a;
       --amber: #b66a07;
       --amber-soft: #fff7e8;
+      --shadow: 0 18px 48px rgba(35, 50, 78, .09);
     }
 
     .hero {
@@ -65,55 +71,153 @@ if (isAula03) {
         radial-gradient(circle at 75% 75%, rgba(23,133,123,.12), transparent 22%),
         linear-gradient(180deg, #fbfcff 0%, #fff 100%);
     }
-
     .hero::after {
       border-color: rgba(49,87,213,.13);
       box-shadow: 0 0 0 70px rgba(49,87,213,.025), 0 0 0 140px rgba(115,87,216,.018);
     }
-
     .section-dark .eyebrow,
-    .stored-callout strong {
-      color: #92a9ff;
+    .stored-callout strong { color: #92a9ff; }
+    .warmup { background: linear-gradient(135deg, var(--navy), #172554); }
+    .bridge-question {
+      background: var(--teal-soft);
+      border-color: rgba(23,133,123,.22);
     }
-
-    .warmup {
-      background: linear-gradient(135deg, var(--navy), #172554);
-    }
-
-    .system-box.center {
-      border-color: #b9c7ff;
-    }
-
-    .cpu-shell {
-      border-color: #b9c7ff;
-    }
-
+    .system-box.center,
+    .cpu-shell { border-color: #b9c7ff; }
     .inquiry {
       border-color: #cbd6ff;
       background: linear-gradient(135deg, #f5f7ff, #fff);
       box-shadow: 0 15px 36px rgba(49,87,213,.07);
     }
-
-    .inquiry-head {
-      border-bottom-color: #dce4ff;
-    }
+    .inquiry-head { border-bottom-color: #dce4ff; }
 
     .organization-infographic {
       margin: 1.6rem 0 0;
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: #fff;
+      background: var(--paper);
       box-shadow: var(--shadow);
     }
-
     .organization-infographic img {
       display: block;
       width: 100%;
       height: auto;
     }
+
+    body.theme-dark {
+      --ink: #eef4ff;
+      --muted: #aab7cc;
+      --line: #2a3750;
+      --soft: #0d1422;
+      --paper: #101725;
+      --navy: #070b14;
+      --blue: #84a2ff;
+      --blue-soft: #162443;
+      --violet: #a994ff;
+      --violet-soft: #231d3e;
+      --teal: #43d0c8;
+      --teal-soft: #102d2c;
+      --amber: #f0b35f;
+      --amber-soft: #2b2113;
+      --shadow: 0 18px 48px rgba(0,0,0,.32);
+      background: var(--paper);
+      color: var(--ink);
+    }
+    body.theme-dark .site-header {
+      background: rgba(16,23,37,.92);
+      border-bottom-color: rgba(42,55,80,.9);
+    }
+    body.theme-dark .main-nav a { color: var(--muted); }
+    body.theme-dark .main-nav a:hover,
+    body.theme-dark .main-nav a.active,
+    body.theme-dark .nav-highlight { color: var(--blue) !important; }
+    body.theme-dark .hero {
+      background:
+        radial-gradient(circle at 87% 20%, rgba(169,148,255,.16), transparent 27%),
+        radial-gradient(circle at 75% 75%, rgba(67,208,200,.10), transparent 22%),
+        var(--paper);
+    }
+    body.theme-dark .guiding-card,
+    body.theme-dark .card,
+    body.theme-dark .lesson-path a,
+    body.theme-dark .function-card,
+    body.theme-dark .system-box,
+    body.theme-dark .cpu-diagram,
+    body.theme-dark .arch-card,
+    body.theme-dark .cycle-phase,
+    body.theme-dark .simulator,
+    body.theme-dark .trace-table-wrap,
+    body.theme-dark .record-table-wrap,
+    body.theme-dark .project-step,
+    body.theme-dark .check-item,
+    body.theme-dark .inquiry,
+    body.theme-dark .memory-table,
+    body.theme-dark .record-table input,
+    body.theme-dark .record-table select,
+    body.theme-dark .worksheet textarea {
+      background: #172033;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    body.theme-dark .topic-list div,
+    body.theme-dark .cpu-part,
+    body.theme-dark .state-box,
+    body.theme-dark .arch-memory div,
+    body.theme-dark .bus-line,
+    body.theme-dark .sim-message,
+    body.theme-dark .inquiry-tag,
+    body.theme-dark .memory-row strong {
+      background: #111a2b;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    body.theme-dark .button-secondary,
+    body.theme-dark .sim-controls button:not(.primary) {
+      background: #172033;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+    body.theme-dark .button-primary,
+    body.theme-dark .sim-controls .primary {
+      background: var(--blue);
+      border-color: var(--blue);
+      color: #07101f;
+    }
+    body.theme-dark .skill strong,
+    body.theme-dark .c6 .skill strong {
+      background: #111a2b;
+      color: var(--blue);
+    }
+    body.theme-dark .c6 .skill strong,
+    body.theme-dark .reg { color: var(--violet); }
+    body.theme-dark .reg { background: var(--violet-soft); }
+    body.theme-dark .bridge-question {
+      background: var(--teal-soft);
+      border-color: rgba(67,208,200,.20);
+      color: var(--ink);
+    }
+    body.theme-dark .precision-note {
+      background: var(--amber-soft);
+      border-left-color: var(--amber);
+      color: var(--ink);
+    }
+    body.theme-dark .stored-callout,
+    body.theme-dark .warmup { background: #070b14; }
+    body.theme-dark .stored-callout strong,
+    body.theme-dark .section-dark .eyebrow { color: #92a9ff; }
+    body.theme-dark .trace-table thead th,
+    body.theme-dark .record-table thead th { background: #111a2b; color: var(--ink); }
+    body.theme-dark .trace-table td,
+    body.theme-dark .trace-table th,
+    body.theme-dark .record-table td,
+    body.theme-dark .record-table th { border-color: var(--line); }
+    body.theme-dark .organization-infographic {
+      background: #101725;
+      border-color: var(--line);
+    }
   `;
-  document.head.appendChild(paletteStyle);
+  document.head.appendChild(aula03Style);
 
   const organizationModel = document.querySelector('#organizacao .system-model');
   if (organizationModel) {
@@ -122,8 +226,10 @@ if (isAula03) {
     figure.innerHTML = `
       <img
         src="./assets/cpu-memoria-es-barramentos.svg"
+        data-light-src="./assets/cpu-memoria-es-barramentos.svg"
+        data-dark-src="./assets/cpu-memoria-es-barramentos-dark.svg"
         alt="Infográfico didático que mostra memória principal, CPU e entrada/saída conectadas pelos barramentos de endereços, dados e controle. A CPU é detalhada em unidade de controle, ULA, registradores e clock."
-        loading="lazy"
+        loading="eager"
       >
     `;
     organizationModel.replaceWith(figure);
@@ -277,12 +383,9 @@ const applyTheme = (theme) => {
   const isDark = theme === 'dark';
   document.body.classList.toggle('theme-dark', isDark);
 
-  const executionFlowImage = document.querySelector('.execution-flow-figure img');
-  if (executionFlowImage) {
-    executionFlowImage.src = isDark
-      ? executionFlowImage.dataset.darkSrc
-      : executionFlowImage.dataset.lightSrc;
-  }
+  document.querySelectorAll('img[data-light-src][data-dark-src]').forEach((image) => {
+    image.src = isDark ? image.dataset.darkSrc : image.dataset.lightSrc;
+  });
 
   if (themeToggle) {
     themeToggle.setAttribute('aria-pressed', String(isDark));
