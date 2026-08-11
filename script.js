@@ -7,6 +7,49 @@ if (percursoEyebrow?.textContent.trim() === 'Percurso de 4 horas') {
   percursoEyebrow.remove();
 }
 
+const executionChain = document.querySelector('.execution-synthesis .execution-chain');
+if (executionChain) {
+  const figure = document.createElement('figure');
+  figure.className = 'execution-flow-figure';
+  figure.innerHTML = `
+    <img
+      src="./assets/fluxo-execucao-alto-nivel.svg"
+      alt="Fluxo esperado em alto nível: código-fonte, interpretador Python, processo, memória, CPU, serviços do sistema operacional e saída ou resultado observável."
+      loading="lazy"
+    >
+    <figcaption>Do código-fonte ao resultado observável: uma visão integrada das responsabilidades envolvidas durante a execução.</figcaption>
+  `;
+  executionChain.replaceWith(figure);
+
+  const flowFigureStyle = document.createElement('style');
+  flowFigureStyle.textContent = `
+    .execution-flow-figure {
+      margin: 1.6rem 0 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #071426;
+      box-shadow: var(--shadow);
+    }
+    .execution-flow-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #071426;
+    }
+    .execution-flow-figure figcaption {
+      margin: 0;
+      padding: .9rem 1.1rem 1rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: #071426;
+      color: #aebbd0;
+      text-align: center;
+      font-size: .88rem;
+    }
+  `;
+  document.head.appendChild(flowFigureStyle);
+}
+
 const applyTheme = (theme) => {
   const isDark = theme === 'dark';
   document.body.classList.toggle('theme-dark', isDark);
