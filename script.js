@@ -489,3 +489,42 @@ document.querySelectorAll('.image-dialog').forEach((dialog) => {
     if (event.target === dialog) dialog.close();
   });
 });
+
+const architectureGrid = document.querySelector('#arquiteturas .architecture-grid');
+if (architectureGrid) {
+  const architectureFigure = document.createElement('figure');
+  architectureFigure.className = 'architecture-infographic';
+  const architectureIsDark = document.body.classList.contains('theme-dark');
+  architectureFigure.innerHTML = `
+    <img
+      src="${architectureIsDark ? './assets/von-neumann-harvard-dark.svg' : './assets/von-neumann-harvard-light.svg'}"
+      data-light-src="./assets/von-neumann-harvard-light.svg"
+      data-dark-src="./assets/von-neumann-harvard-dark.svg"
+      alt="Comparação didática entre von Neumann, com memória e barramento compartilhados para instruções e dados, e Harvard, com memórias e caminhos de acesso separados."
+      loading="eager"
+    >
+  `;
+  architectureGrid.replaceWith(architectureFigure);
+
+  const architectureStyle = document.createElement('style');
+  architectureStyle.textContent = `
+    .architecture-infographic {
+      margin: 1.6rem 0 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .architecture-infographic img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    body.theme-dark .architecture-infographic {
+      background: #07101f;
+      border-color: var(--line);
+    }
+  `;
+  document.head.appendChild(architectureStyle);
+}
