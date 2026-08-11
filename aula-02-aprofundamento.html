@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Material de aprofundamento teórico da Aula 02 de Arquitetura de Computadores e Sistemas Operacionais: execução de programas, camadas, processos, sistema operacional, CPU, memória e entrada/saída.">
+  <meta name="theme-color" content="#111b32">
+  <title>Aula 02 — Aprofundamento teórico | Arquitetura de Computadores e Sistemas Operacionais</title>
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="script.js"></script>
+  <style>
+    .study-page { background: var(--bg); color: var(--text); }
+    .study-page .site-header { background: color-mix(in srgb, var(--bg) 92%, transparent); }
+    .study-hero {
+      padding: 6rem 0 5rem;
+      background:
+        radial-gradient(circle at 88% 18%, rgba(124,103,232,.15), transparent 27rem),
+        radial-gradient(circle at 8% 78%, rgba(49,94,251,.11), transparent 24rem),
+        var(--bg);
+    }
+    .study-hero-grid { display: grid; grid-template-columns: minmax(0,1.3fr) minmax(280px,.7fr); gap: 3.5rem; align-items: end; }
+    .study-hero h1 { margin: 0; max-width: 920px; font-size: clamp(3rem, 6.3vw, 5.9rem); line-height: .96; letter-spacing: -.055em; }
+    .study-lead { max-width: 780px; margin: 1.5rem 0 0; color: var(--muted); font-size: clamp(1.15rem, 2vw, 1.42rem); }
+    .study-card { padding: 1.5rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
+    .study-card strong { display: block; margin-bottom: .55rem; color: var(--primary); }
+    .study-card p:last-child { margin-bottom: 0; }
+    .study-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1.7rem; }
+    .study-meta { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1.3rem; }
+    .study-meta span { padding: .35rem .7rem; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: var(--surface); font-size: .84rem; }
+
+    .study-toc-shell { position: sticky; top: 76px; z-index: 60; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 94%, transparent); backdrop-filter: blur(14px); }
+    .study-toc { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: .5rem; padding: .85rem 0; }
+    .study-toc a { padding: .72rem .7rem; border: 1px solid var(--line); border-radius: 12px; text-decoration: none; text-align: center; color: var(--muted); background: var(--surface); font-size: .78rem; font-weight: 800; line-height: 1.2; }
+    .study-toc a:hover { color: var(--primary); border-color: var(--primary); }
+
+    .study-section { padding: 5.5rem 0; scroll-margin-top: 155px; }
+    .study-section.alt { background: var(--surface-soft); }
+    .study-heading { max-width: 880px; margin-bottom: 2.2rem; }
+    .study-heading h2 { margin: 0; font-size: clamp(2.15rem,4vw,3.6rem); line-height: 1.04; letter-spacing: -.045em; }
+    .study-heading > p:last-child { margin: 1rem 0 0; color: var(--muted); font-size: 1.05rem; }
+    .study-kicker { margin: 0 0 .65rem; color: var(--primary); font-size: .76rem; font-weight: 850; letter-spacing: .11em; text-transform: uppercase; }
+    .study-grid { display: grid; grid-template-columns: minmax(0,1.2fr) minmax(280px,.8fr); gap: 2rem; align-items: start; }
+    .study-prose { min-width: 0; }
+    .study-prose h3 { margin: 2.3rem 0 .8rem; font-size: 1.55rem; }
+    .study-prose h3:first-child { margin-top: 0; }
+    .study-prose h4 { margin: 1.65rem 0 .55rem; font-size: 1.08rem; }
+    .study-prose p, .study-prose li { color: var(--muted); }
+    .study-prose p { margin: 0 0 1.05rem; }
+    .study-prose ul, .study-prose ol { padding-left: 1.3rem; }
+    .study-prose li + li { margin-top: .42rem; }
+    .study-stack { display: grid; gap: 1rem; }
+
+    .study-callout { padding: 1.15rem 1.25rem; border-left: 4px solid var(--primary); border-radius: 0 16px 16px 0; background: color-mix(in srgb, var(--primary) 9%, var(--surface)); }
+    .study-callout strong { display: block; margin-bottom: .35rem; color: var(--primary); }
+    .study-callout p { margin: 0; color: var(--muted); }
+    .study-callout.violet { border-left-color: var(--secondary); background: color-mix(in srgb, var(--secondary) 10%, var(--surface)); }
+    .study-callout.violet strong { color: var(--secondary); }
+    .study-callout.teal { border-left-color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+    .study-callout.teal strong { color: var(--accent); }
+
+    .mini-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .mini-grid.four { grid-template-columns: repeat(4,minmax(0,1fr)); }
+    .mini-card { padding: 1.2rem; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .mini-card h4 { margin: 0 0 .45rem; }
+    .mini-card p { margin: 0; color: var(--muted); }
+    .mini-card .tag { display: inline-block; margin-bottom: .75rem; padding: .26rem .55rem; border-radius: 999px; background: color-mix(in srgb, var(--primary) 10%, var(--surface)); color: var(--primary); font-size: .72rem; font-weight: 850; text-transform: uppercase; letter-spacing: .06em; }
+
+    .flow { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: .55rem; margin: 1.5rem 0; align-items: stretch; }
+    .flow span { position: relative; display: grid; place-items: center; min-height: 82px; padding: .8rem .65rem; border: 1px solid var(--line); border-radius: 13px; background: var(--surface); text-align: center; color: var(--text); font-size: .8rem; font-weight: 800; }
+    .flow span:not(:last-child)::after { content: "→"; position: absolute; right: -.5rem; top: 50%; transform: translate(50%,-50%); z-index: 2; color: var(--primary); font-size: 1.05rem; }
+
+    .layer-stack { display: grid; gap: .65rem; margin: 1.5rem 0; }
+    .layer { display: grid; grid-template-columns: 150px 1fr; gap: 1rem; align-items: center; padding: 1rem 1.15rem; border: 1px solid var(--line); border-radius: 15px; background: var(--surface); }
+    .layer strong { color: var(--text); }
+    .layer p { margin: 0; color: var(--muted); }
+    .layer:nth-child(1) { border-left: 5px solid var(--secondary); }
+    .layer:nth-child(2) { border-left: 5px solid var(--primary); }
+    .layer:nth-child(3) { border-left: 5px solid var(--accent); }
+    .layer:nth-child(4) { border-left: 5px solid #d18a22; }
+
+    .study-table-wrap { margin: 1.5rem 0; overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .study-table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    .study-table th, .study-table td { padding: .85rem .9rem; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
+    .study-table th { background: color-mix(in srgb, var(--primary) 10%, var(--surface)); color: var(--text); font-size: .82rem; }
+    .study-table td { color: var(--muted); font-size: .9rem; }
+    .study-table tr:last-child td { border-bottom: 0; }
+
+    .boundary { margin: 1.8rem 0; padding: 1.4rem; border: 1px dashed color-mix(in srgb, var(--secondary) 55%, var(--line)); border-radius: 18px; background: color-mix(in srgb, var(--secondary) 6%, var(--surface)); }
+    .boundary strong { color: var(--secondary); }
+    .boundary p:last-child { margin-bottom: 0; }
+
+    .check-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1rem; margin-top: 1.5rem; }
+    .check-card { padding: 1.2rem; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+    .check-card span { display: inline-grid; place-items: center; width: 34px; height: 34px; margin-bottom: .8rem; border-radius: 10px; color: #fff; background: var(--primary); font-size: .78rem; font-weight: 900; }
+    .check-card strong { display: block; margin-bottom: .35rem; }
+    .check-card p { margin: 0; color: var(--muted); font-size: .9rem; }
+
+    .references { padding-left: 1.2rem; }
+    .references li + li { margin-top: .7rem; }
+    .references li { color: var(--muted); }
+    .study-page .site-footer { border-top: 1px solid var(--line); }
+
+    @media (max-width: 1050px) {
+      .mini-grid.four { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .flow { grid-template-columns: repeat(4,minmax(0,1fr)); }
+      .flow span::after { display: none; }
+    }
+    @media (max-width: 980px) {
+      .study-hero-grid, .study-grid { grid-template-columns: 1fr; }
+      .study-toc { grid-template-columns: repeat(3,minmax(0,1fr)); }
+      .check-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+    }
+    @media (max-width: 680px) {
+      .study-hero { padding: 4.2rem 0 3.5rem; }
+      .study-toc-shell { position: static; }
+      .study-toc { grid-template-columns: repeat(2,minmax(0,1fr)); }
+      .study-section { padding: 4rem 0; scroll-margin-top: 90px; }
+      .mini-grid, .mini-grid.four, .check-grid, .flow { grid-template-columns: 1fr; }
+      .layer { grid-template-columns: 1fr; gap: .35rem; }
+      .study-nav .nav-label { display: none; }
+    }
+  </style>
+</head>
+<body class="study-page">
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="site-header" id="inicio">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal">
+        <span class="brand-mark" aria-hidden="true">AC</span>
+        <span><strong>Arquitetura & SO</strong><small>Engenharia de Software</small></span>
+      </a>
+      <nav class="main-nav study-nav" aria-label="Navegação principal">
+        <a href="aula-02.html">Aula 02</a>
+        <a class="nav-highlight" href="aula-02-aprofundamento.html">Aprofundamento</a>
+        <a href="index.html">Portal</a>
+        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false">
+          <span class="theme-icon" aria-hidden="true">☾</span>
+          <span class="theme-text nav-label">Modo noturno</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="study-hero">
+      <div class="container study-hero-grid">
+        <div>
+          <p class="eyebrow">Aula 02 · material de aprofundamento</p>
+          <h1>Da aplicação ao hardware</h1>
+          <p class="study-lead">Uma leitura teórica ampliada sobre o que significa executar um programa e como aplicação, runtime, sistema operacional, processador, memória e entrada/saída cooperam para produzir um resultado.</p>
+          <div class="study-meta">
+            <span>Arquitetura de Computadores e SO</span>
+            <span>Engenharia de Software</span>
+            <span>2026/2</span>
+            <span>Leitura teórica</span>
+          </div>
+          <div class="study-actions">
+            <a class="button button-primary" href="#execucao">Começar a leitura</a>
+            <a class="button button-secondary" href="aula-02.html">Voltar à aula principal</a>
+          </div>
+        </div>
+        <aside class="study-card">
+          <strong>Qual é o papel deste material?</strong>
+          <p>A Aula 02 foi organizada para conversa, investigação e construção de hipóteses em sala. Aqui o mesmo percurso é retomado com mais tempo para desenvolver os conceitos e as relações entre as camadas do sistema computacional.</p>
+          <p>O foco é teórico: não há roteiro de laboratório, configuração de ferramentas ou procedimentos de medição.</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="study-toc-shell" aria-label="Sumário do aprofundamento">
+      <div class="container study-toc">
+        <a href="#execucao">Executar um programa</a>
+        <a href="#camadas">Camadas do sistema</a>
+        <a href="#processo">Programa e processo</a>
+        <a href="#so">Sistema operacional</a>
+        <a href="#hardware">CPU, memória e E/S</a>
+        <a href="#servicos">Serviços e chamadas</a>
+        <a href="#integracao">Visão integrada</a>
+        <a href="#observabilidade">Observabilidade</a>
+        <a href="#limites">Limites do modelo</a>
+        <a href="#sintese">Síntese</a>
+      </div>
+    </div>
+
+    <section class="study-section" id="execucao">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte I · Da descrição à atividade</p>
+          <h2>O que significa executar um programa?</h2>
+          <p>Escrever um programa e executar um programa são situações diferentes. A primeira produz uma descrição; a segunda coloca essa descrição em relação com recursos reais do sistema computacional.</p>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Código não é execução</h3>
+            <p>Um arquivo de código-fonte contém uma representação de operações que desejamos realizar. Enquanto está armazenado, ele é uma estrutura de informação: possui bytes, organização sintática e significado para ferramentas e programadores, mas não está, por si só, consumindo tempo de processador para realizar o trabalho descrito.</p>
+            <p>A execução começa quando o sistema cria as condições para que aquelas operações sejam efetivamente realizadas. Isso exige carregar código e dados, estabelecer um contexto de execução, reservar ou disponibilizar memória, obter tempo de processador e, quando necessário, solicitar serviços relacionados a arquivos, terminal, rede ou outros dispositivos.</p>
+
+            <h3>Uma ação aparentemente simples mobiliza várias camadas</h3>
+            <p>Quando uma pessoa solicita a execução de um programa, costuma enxergar uma relação direta entre <em>comando</em> e <em>resultado</em>. Do ponto de vista do sistema, há muito mais acontecendo. O programa pode depender de um interpretador ou runtime, o sistema operacional precisa organizar recursos e o hardware precisa realizar operações físicas sobre instruções e dados.</p>
+            <p>É por isso que a pergunta “quem executa o programa?” não possui uma boa resposta se escolhermos apenas uma camada. A CPU executa instruções de máquina; o sistema operacional controla e oferece recursos; o runtime transforma e coordena operações próprias da linguagem; e a aplicação expressa a lógica que queremos realizar. A execução observada resulta da cooperação entre esses níveis.</p>
+
+            <div class="boundary">
+              <p><strong>Distinção central:</strong> o programa descreve trabalho; a execução é o trabalho acontecendo dentro de um sistema que fornece processador, memória e mecanismos de entrada/saída.</p>
+            </div>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout">
+              <strong>Pergunta da aula</strong>
+              <p>O que acontece entre executar um programa e produzir um resultado?</p>
+            </div>
+            <div class="study-callout violet">
+              <strong>Uma primeira resposta</strong>
+              <p>O código precisa ser colocado em um contexto no qual instruções possam ser executadas, dados possam ser mantidos e recursos externos possam ser acessados de forma controlada.</p>
+            </div>
+            <div class="study-callout teal">
+              <strong>Por que isso importa para Engenharia de Software?</strong>
+              <p>Requisitos como desempenho, compatibilidade, uso de memória, persistência e interação com dispositivos dependem de camadas que ficam abaixo da lógica da aplicação.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section alt" id="camadas">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte II · Um modelo para raciocinar</p>
+          <h2>Aplicação, runtime, sistema operacional e hardware</h2>
+          <p>O modelo em camadas usado na Aula 02 separa responsabilidades para tornar a execução compreensível. Ele não afirma que cada camada funciona isoladamente.</p>
+        </div>
+
+        <div class="layer-stack" aria-label="Camadas conceituais do sistema computacional">
+          <div class="layer">
+            <strong>Aplicação</strong>
+            <p>Expressa a lógica do problema e utiliza as abstrações fornecidas pelas camadas inferiores.</p>
+          </div>
+          <div class="layer">
+            <strong>Runtime</strong>
+            <p>Oferece mecanismos próprios do ambiente de execução da linguagem, como representação de objetos, execução de operações, bibliotecas e integração com serviços do sistema.</p>
+          </div>
+          <div class="layer">
+            <strong>Sistema operacional</strong>
+            <p>Organiza o uso dos recursos físicos, fornece abstrações e estabelece mecanismos de proteção e compartilhamento.</p>
+          </div>
+          <div class="layer">
+            <strong>Hardware</strong>
+            <p>Realiza operações físicas sobre instruções e dados por meio de processador, memória, controladores e dispositivos de entrada/saída.</p>
+          </div>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Por que dividir em camadas?</h3>
+            <p>Sem abstrações, cada aplicação teria de conhecer detalhes específicos de processadores, dispositivos de armazenamento, controladores de vídeo, teclados, redes e muitos outros componentes. A divisão em níveis reduz essa complexidade ao estabelecer interfaces e responsabilidades.</p>
+            <p>A aplicação pode pedir para abrir um arquivo sem conhecer o protocolo elétrico do dispositivo de armazenamento. Um runtime pode criar uma estrutura de dados sem exigir que o programador manipule diretamente cada endereço físico de memória. O sistema operacional pode fornecer a ideia de “processo” ou “arquivo” como abstrações mais estáveis do que os detalhes do hardware.</p>
+
+            <h3>Abstrair não significa esconder tudo</h3>
+            <p>As camadas reduzem detalhes, mas não eliminam consequências. Uma aplicação continua sendo afetada pela quantidade de memória disponível, pela velocidade do processador, pela latência de entrada/saída e pelas decisões do sistema operacional. O engenheiro de software não precisa controlar diretamente todos esses mecanismos, mas precisa compreender que eles condicionam o comportamento do software.</p>
+
+            <h3>O runtime não é uma camada universal</h3>
+            <p>O termo <em>runtime</em> é particularmente útil em ambientes como Python, Java, .NET e JavaScript, nos quais existe uma infraestrutura de execução relevante entre o código escrito pelo programador e os serviços do sistema operacional. Em outros cenários, como programas nativos compilados, essa fronteira pode parecer menos evidente. O modelo continua útil, mas as divisões concretas variam conforme linguagem, compilador, bibliotecas e plataforma.</p>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-card">
+              <strong>O modelo é uma simplificação</strong>
+              <p>Setas como “Aplicação → Runtime → SO → Hardware” ajudam a pensar em dependências, mas a execução real envolve retornos, interrupções, buffers, caches, bibliotecas, controladores e múltiplas interações em ambas as direções.</p>
+            </div>
+            <div class="study-card">
+              <strong>Interface</strong>
+              <p>Uma camada pode usar serviços de outra sem conhecer toda a sua implementação interna. Essa separação é um dos princípios que tornam sistemas complexos administráveis.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section" id="processo">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte III · Programa em execução</p>
+          <h2>Programa e processo não são a mesma coisa</h2>
+          <p>A distinção entre uma descrição armazenada e uma atividade em andamento é fundamental para compreender o papel do sistema operacional.</p>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-card">
+            <span class="tag">Programa</span>
+            <h4>Uma descrição armazenada</h4>
+            <p>Código e dados organizados de modo que possam ser carregados ou interpretados para realizar uma tarefa.</p>
+          </div>
+          <div class="mini-card">
+            <span class="tag">Processo</span>
+            <h4>Uma execução em andamento</h4>
+            <p>Uma instância ativa que possui contexto, memória associada, estado de execução e relação com recursos administrados pelo sistema operacional.</p>
+          </div>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Do arquivo para uma entidade gerenciada</h3>
+            <p>Um mesmo programa pode ser executado mais de uma vez. Cada execução precisa ser distinguida das outras porque pode estar em um ponto diferente do código, manipular dados diferentes e possuir recursos diferentes. O conceito de processo permite ao sistema operacional representar e administrar essas execuções separadamente.</p>
+            <p>O processo não é apenas o conteúdo do programa copiado para a memória. Ele inclui também informações necessárias para continuar a execução: onde ela está, quais recursos estão associados, qual memória pertence àquela execução e outros elementos de contexto.</p>
+
+            <h3>Processos tornam o compartilhamento controlável</h3>
+            <p>Em um computador comum, muitas execuções coexistem. Navegador, editor, terminal, serviços do sistema e aplicações diversas disputam processador, memória e entrada/saída. O sistema operacional precisa manter separação suficiente para que uma execução não trate os recursos de outra como se fossem seus.</p>
+            <p>Essa ideia prepara os temas de gerenciamento de processos que serão aprofundados mais adiante. Aqui basta compreender que <strong>processo é a abstração usada para tratar uma execução como uma entidade administrável</strong>.</p>
+
+            <div class="boundary">
+              <p><strong>Neste ponto da disciplina:</strong> não é necessário detalhar estados de processo, estruturas internas do kernel ou algoritmos de escalonamento. O objetivo é apenas entender por que “programa” e “programa em execução” são conceitos distintos.</p>
+            </div>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout">
+              <strong>Uma consequência importante</strong>
+              <p>Fechar um processo não apaga necessariamente o programa que o originou. O programa continua armazenado e pode iniciar uma nova execução.</p>
+            </div>
+            <div class="study-callout violet">
+              <strong>Outra consequência</strong>
+              <p>Duas execuções do mesmo programa podem ter estados diferentes porque cada processo representa uma atividade independente.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section alt" id="so">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte IV · A camada intermediária</p>
+          <h2>O sistema operacional como abstração e gerenciador de recursos</h2>
+          <p>O sistema operacional permite que programas utilizem o computador sem assumir diretamente toda a complexidade e todo o risco do acesso ao hardware.</p>
+        </div>
+
+        <div class="mini-grid">
+          <div class="mini-card">
+            <span class="tag">Abstração</span>
+            <h4>Uma máquina mais conveniente</h4>
+            <p>Processos, arquivos, diretórios e outros conceitos oferecem interfaces mais regulares do que a manipulação direta de cada mecanismo físico.</p>
+          </div>
+          <div class="mini-card">
+            <span class="tag">Gerência</span>
+            <h4>Recursos precisam ser coordenados</h4>
+            <p>Processador, memória e dispositivos são finitos e compartilhados. O sistema operacional organiza seu uso e estabelece regras de proteção.</p>
+          </div>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Dois papéis que se complementam</h3>
+            <p>Uma forma clássica de compreender sistemas operacionais combina dois pontos de vista. No primeiro, o SO oferece uma interface mais simples e abstrata sobre a máquina física. No segundo, administra recursos para que diferentes programas possam utilizá-los com segurança e eficiência.</p>
+            <p>Esses papéis aparecem juntos na execução de tarefas comuns. Ao criar um arquivo, por exemplo, a aplicação trabalha com uma abstração de alto nível. Internamente, o sistema operacional precisa verificar permissões, administrar estruturas do sistema de arquivos, coordenar buffers e interagir com mecanismos de entrada/saída.</p>
+
+            <h3>Proteção é parte da arquitetura de execução</h3>
+            <p>Se qualquer programa pudesse alterar livremente qualquer região de memória ou controlar diretamente qualquer dispositivo, uma falha local poderia comprometer todo o sistema. Por isso, processadores modernos e sistemas operacionais trabalham com mecanismos que distinguem operações permitidas a aplicações comuns de operações reservadas ao núcleo do sistema.</p>
+            <p>A separação entre <strong>espaço de usuário</strong> e <strong>espaço do núcleo</strong> pode ser entendida, neste momento, como uma fronteira de privilégio: aplicações executam com acesso limitado e solicitam ao sistema operacional operações que exigem autoridade maior sobre recursos compartilhados.</p>
+
+            <h3>O SO não executa toda instrução da aplicação</h3>
+            <p>É importante evitar outro extremo. O sistema operacional não fica interpretando, uma a uma, todas as instruções normais do programa. A maior parte da execução de código de usuário acontece diretamente no processador com os privilégios apropriados. O SO intervém quando precisa fornecer serviços, lidar com eventos, organizar recursos ou retomar o controle da máquina.</p>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-card">
+              <strong>Processador</strong>
+              <p>O SO decide e coordena o uso do tempo de CPU entre atividades concorrentes, embora a execução física das instruções ocorra no processador.</p>
+            </div>
+            <div class="study-card">
+              <strong>Memória</strong>
+              <p>O SO acompanha e protege o uso da memória por diferentes processos, oferecendo a cada execução uma visão organizada de seu espaço de endereçamento.</p>
+            </div>
+            <div class="study-card">
+              <strong>Entrada/saída</strong>
+              <p>O SO oferece interfaces comuns para dispositivos distintos e utiliza drivers e controladores para realizar operações concretas.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section" id="hardware">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte V · A base física da execução</p>
+          <h2>Processador, memória e entrada/saída têm papéis diferentes</h2>
+          <p>O hardware não é um bloco único. A execução depende da cooperação entre componentes especializados em processar, manter informação temporariamente e comunicar-se com o ambiente externo.</p>
+        </div>
+
+        <div class="mini-grid four">
+          <div class="mini-card">
+            <span class="tag">CPU</span>
+            <h4>Executar instruções</h4>
+            <p>Busca, interpreta e realiza operações definidas pela arquitetura do conjunto de instruções.</p>
+          </div>
+          <div class="mini-card">
+            <span class="tag">Memória</span>
+            <h4>Manter o trabalho ativo</h4>
+            <p>Disponibiliza instruções e dados que precisam ser acessados durante a execução.</p>
+          </div>
+          <div class="mini-card">
+            <span class="tag">Armazenamento</span>
+            <h4>Persistir informação</h4>
+            <p>Mantém programas e dados mesmo quando a execução termina ou a energia é desligada.</p>
+          </div>
+          <div class="mini-card">
+            <span class="tag">E/S</span>
+            <h4>Interagir com o exterior</h4>
+            <p>Conecta o sistema a dispositivos, redes, terminais, sensores e outras fontes ou destinos de informação.</p>
+          </div>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>A CPU executa instruções de máquina</h3>
+            <p>Programadores normalmente trabalham com linguagens de nível mais alto do que a linguagem diretamente compreendida pelo processador. Entre o código-fonte e a CPU existem processos de tradução, interpretação, compilação, bibliotecas e runtimes, dependendo da tecnologia utilizada.</p>
+            <p>No nível do processador, a execução ocorre por meio de instruções definidas pela arquitetura da máquina. Em uma visão introdutória, podemos imaginar um ciclo contínuo no qual uma instrução é obtida, decodificada e executada, alterando registradores, dados ou o fluxo de execução.</p>
+
+            <h3>Memória não é sinônimo de armazenamento</h3>
+            <p>A memória principal funciona como espaço de trabalho para a execução. Instruções e dados precisam estar disponíveis com baixa latência para que o processador possa utilizá-los. Já o armazenamento persistente prioriza a conservação de informação ao longo do tempo.</p>
+            <p>Essa diferença ajuda a responder uma pergunta frequente: um programa pode existir no armazenamento sem estar em execução; quando executado, partes relevantes de seu código e de seus dados passam a participar de uma estrutura de memória ativa associada ao processo.</p>
+
+            <h3>Entrada e saída conectam a execução ao mundo</h3>
+            <p>Uma operação de entrada/saída ocorre quando o sistema precisa trocar informação com algo além do processamento interno imediato da CPU. Ler um arquivo, escrever no terminal, receber dados de rede ou acessar um dispositivo são exemplos de E/S.</p>
+            <p>Essas operações têm características diferentes das operações puramente computacionais. Dispositivos possuem velocidades, protocolos e formas de controle próprias. Por isso, controladores, drivers e o sistema operacional formam uma cadeia que separa a aplicação dos detalhes físicos de cada periférico.</p>
+
+            <div class="boundary">
+              <p><strong>Limite deliberado:</strong> a Aula 03 abrirá a camada de hardware e estudará com mais detalhe CPU, memória, interconexões, programa armazenado, arquiteturas von Neumann e Harvard e ciclo de instrução. Aqui esses conceitos aparecem somente no nível necessário para compreender a execução de ponta a ponta.</p>
+            </div>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout">
+              <strong>Quem faz a conta?</strong>
+              <p>No fim da cadeia, operações aritméticas e lógicas são realizadas por circuitos do processador; o código de alto nível especifica o que desejamos fazer, mas não é executado literalmente como texto.</p>
+            </div>
+            <div class="study-callout violet">
+              <strong>Onde ficam os dados?</strong>
+              <p>Durante a execução, dados são mantidos em diferentes níveis da hierarquia de memória. A visão simplificada desta aula destaca a memória principal; caches e detalhes internos serão aprofundados depois.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section alt" id="servicos">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte VI · Atravessando a fronteira</p>
+          <h2>Serviços do sistema operacional e chamadas de sistema</h2>
+          <p>Aplicações precisam de um mecanismo controlado para solicitar operações que envolvem recursos protegidos ou compartilhados.</p>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Solicitar é diferente de controlar diretamente</h3>
+            <p>Quando uma aplicação deseja criar um arquivo, enviar dados pela rede ou obter alguma informação do sistema, ela normalmente não recebe permissão para manipular livremente o hardware correspondente. Em vez disso, utiliza interfaces que conduzem a uma solicitação ao sistema operacional.</p>
+            <p>A <strong>chamada de sistema</strong> é o mecanismo conceitual que permite essa transição controlada entre código de usuário e serviços oferecidos pelo núcleo. A forma concreta como uma linguagem chega até essa interface pode envolver bibliotecas, runtimes e APIs, mas a ideia fundamental permanece: certas operações precisam ser mediadas pelo sistema operacional.</p>
+
+            <h3>Uma chamada de sistema muda o contexto da execução</h3>
+            <p>Durante código comum de usuário, o processador executa com privilégios limitados. Ao solicitar um serviço do núcleo, ocorre uma transição controlada para código privilegiado do sistema operacional. Depois que o serviço é tratado — imediatamente ou após alguma espera — a execução pode retornar ao código da aplicação.</p>
+            <p>Essa transição ajuda a explicar por que a execução não é uma seta simples da aplicação para o hardware. O controle pode alternar entre aplicação, bibliotecas, runtime e núcleo muitas vezes ao longo de uma única tarefa.</p>
+
+            <h3>APIs e chamadas de sistema não são sinônimos</h3>
+            <p>Uma API é uma interface de programação apresentada ao desenvolvedor. Ela pode ser implementada inteiramente em uma biblioteca, pode chamar outras bibliotecas ou pode, em algum ponto, solicitar serviços do sistema operacional. Uma chamada de sistema é uma interface específica com o núcleo. Separar esses conceitos evita assumir que toda função de biblioteca atravessa necessariamente a fronteira do kernel.</p>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-card">
+              <strong>Exemplo conceitual: arquivo</strong>
+              <p>A aplicação expressa a intenção de abrir ou gravar; bibliotecas e runtime organizam a chamada; o SO valida e gerencia o recurso; drivers e hardware realizam as operações necessárias no dispositivo.</p>
+            </div>
+            <div class="study-card">
+              <strong>Exemplo conceitual: terminal</strong>
+              <p>“Imprimir” texto não significa desenhar diretamente pixels na tela. A saída percorre abstrações e componentes até chegar ao destino visível.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section" id="integracao">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte VII · Reconstruindo o percurso</p>
+          <h2>Uma visão integrada da execução</h2>
+          <p>Podemos agora reconstruir o percurso apresentado em sala sem confundir descrição, execução, abstração e mecanismo físico.</p>
+        </div>
+
+        <div class="flow" aria-label="Fluxo conceitual da execução">
+          <span>Código-fonte</span>
+          <span>Programa</span>
+          <span>Runtime / bibliotecas</span>
+          <span>Processo</span>
+          <span>Serviços do SO</span>
+          <span>CPU · memória · E/S</span>
+          <span>Resultado</span>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>O fluxo é conceitual, não cronológico</h3>
+            <p>O diagrama acima organiza responsabilidades, mas não deve ser interpretado como sete etapas que acontecem uma única vez. Depois que um processo existe, a execução pode alternar repetidamente entre código da aplicação, runtime, bibliotecas e serviços do sistema operacional. A CPU continua executando instruções enquanto a memória fornece dados e a entrada/saída introduz eventos e esperas.</p>
+
+            <h3>O resultado pode depender de recursos diferentes</h3>
+            <p>Uma tarefa essencialmente aritmética pode depender principalmente de CPU e memória. Uma tarefa que lê muitos arquivos pode passar grande parte do tempo aguardando entrada/saída. Uma aplicação interativa pode alternar pequenos períodos de processamento com longas esperas por eventos externos. Em todos os casos, a lógica do software é a mesma dimensão do problema, mas o comportamento da execução depende também da plataforma.</p>
+
+            <h3>Da abstração ao requisito de software</h3>
+            <p>Essa visão é importante porque requisitos não funcionais frequentemente atravessam camadas. “Responder rapidamente”, “usar pouca memória”, “funcionar em determinada arquitetura” ou “persistir dados com segurança” não são propriedades explicadas apenas pelo algoritmo da aplicação. Elas dependem das interações entre software e sistema computacional.</p>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout teal">
+              <strong>Uma boa pergunta de engenharia</strong>
+              <p>Qual camada possui a responsabilidade principal pelo comportamento que estou observando — e quais outras camadas podem condicioná-lo?</p>
+            </div>
+            <div class="study-callout">
+              <strong>Evite explicações monocausais</strong>
+              <p>“É a CPU”, “é o Python” ou “é o sistema operacional” costumam ser respostas incompletas quando a pergunta é sobre o percurso inteiro de uma aplicação.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section alt" id="observabilidade">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte VIII · O que conseguimos observar</p>
+          <h2>Execução e evidência não são a mesma coisa</h2>
+          <p>A execução possui muitos eventos internos; logs, métricas, testes e rastros são maneiras diferentes de produzir sinais sobre o que aconteceu.</p>
+        </div>
+
+        <div class="study-table-wrap">
+          <table class="study-table">
+            <thead>
+              <tr>
+                <th>Conceito</th>
+                <th>Pergunta principal</th>
+                <th>O que representa</th>
+                <th>Limite</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Teste</strong></td>
+                <td>O comportamento atende ao que era esperado?</td>
+                <td>Uma verificação de propriedade, resultado ou condição.</td>
+                <td>Um teste aprovado não descreve todo o caminho percorrido internamente.</td>
+              </tr>
+              <tr>
+                <td><strong>Log</strong></td>
+                <td>O que a aplicação ou componente decidiu registrar?</td>
+                <td>Eventos selecionados pelo próprio software.</td>
+                <td>Ausência de registro não significa ausência do evento.</td>
+              </tr>
+              <tr>
+                <td><strong>Métrica</strong></td>
+                <td>Qual grandeza foi medida?</td>
+                <td>Uma representação quantitativa de tempo, uso, volume ou outra propriedade.</td>
+                <td>Precisa de contexto e condições de coleta para ser interpretada.</td>
+              </tr>
+              <tr>
+                <td><strong>Rastro / trace</strong></td>
+                <td>Que sequência de interações foi observada?</td>
+                <td>Eventos associados ao percurso de execução em determinado nível.</td>
+                <td>Todo rastro é parcial: ele enxerga a camada e os eventos que o mecanismo de observação consegue capturar.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>Observar exige escolher um nível</h3>
+            <p>Uma aplicação pode registrar que iniciou uma tarefa, enquanto o sistema operacional observa abertura de arquivos e o hardware realiza inúmeras instruções que não aparecem em nenhum desses registros. Cada evidência corresponde a um ponto de observação diferente.</p>
+            <p>Isso significa que não devemos confundir “o que conseguimos medir” com “tudo o que aconteceu”. Uma explicação técnica forte relaciona a evidência ao modelo do sistema e reconhece o nível no qual ela foi produzida.</p>
+
+            <h3>O modelo orienta a interpretação</h3>
+            <p>Se sabemos que abrir um arquivo depende de serviços do sistema operacional, um rastro de chamadas ao SO pode ser relevante para aquela pergunta. Se queremos comparar o custo computacional de uma rotina, métricas de tempo e uso de CPU podem ser mais adequadas. A escolha da evidência nasce da pergunta sobre a execução, não apenas da disponibilidade de uma ferramenta.</p>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout violet">
+              <strong>Princípio de leitura</strong>
+              <p>Uma evidência é sempre uma representação parcial do sistema. Antes de concluir, pergunte: de qual camada este sinal vem?</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section" id="limites">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte IX · O que foi simplificado</p>
+          <h2>O modelo da Aula 02 é útil porque deixa detalhes para depois</h2>
+          <p>Compreender um sistema complexo exige escolher um nível de abstração. Alguns mecanismos foram propositalmente apenas mencionados nesta etapa.</p>
+        </div>
+
+        <div class="check-grid">
+          <div class="check-card">
+            <span>01</span>
+            <strong>Detalhes internos da CPU</strong>
+            <p>Registradores específicos, unidade de controle, ALU, barramentos internos e execução detalhada serão tratados ao abrir a camada de hardware.</p>
+          </div>
+          <div class="check-card">
+            <span>02</span>
+            <strong>Arquiteturas de memória</strong>
+            <p>Cache, hierarquia, endereçamento e memória virtual exigem modelos próprios e aparecerão em momentos posteriores.</p>
+          </div>
+          <div class="check-card">
+            <span>03</span>
+            <strong>Escalonamento</strong>
+            <p>A ideia de que processos compartilham CPU é suficiente agora; políticas e algoritmos de escalonamento serão aprofundados depois.</p>
+          </div>
+          <div class="check-card">
+            <span>04</span>
+            <strong>Threads e concorrência</strong>
+            <p>Uma execução pode conter múltiplos fluxos, mas isso não é necessário para compreender o modelo básico de processo usado nesta leitura.</p>
+          </div>
+          <div class="check-card">
+            <span>05</span>
+            <strong>Drivers e controladores</strong>
+            <p>Foram apresentados como ponte com dispositivos; protocolos, interrupções e detalhes de E/S ficam para o aprofundamento específico.</p>
+          </div>
+          <div class="check-card">
+            <span>06</span>
+            <strong>Compilação e interpretação</strong>
+            <p>O caminho entre código de alto nível e instruções de máquina varia entre linguagens e plataformas e merece uma discussão própria.</p>
+          </div>
+        </div>
+
+        <div class="boundary">
+          <p><strong>Por que não explicar tudo agora?</strong> Porque um modelo é útil quando destaca relações relevantes para uma pergunta. Na Aula 02, a pergunta é como software, sistema operacional e hardware participam da execução. A próxima aula muda a escala e pergunta como a camada de hardware está organizada internamente para realizar essa execução.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="study-section alt" id="sintese">
+      <div class="container">
+        <div class="study-heading">
+          <p class="study-kicker">Parte X · Síntese</p>
+          <h2>Da aplicação ao hardware: o que precisa ficar</h2>
+          <p>Ao terminar esta leitura, a ideia central não é decorar nomes de camadas, mas compreender responsabilidades e relações.</p>
+        </div>
+
+        <div class="check-grid">
+          <div class="check-card">
+            <span>A</span>
+            <strong>Programa ≠ processo</strong>
+            <p>Programa é uma descrição armazenada; processo representa uma execução ativa e gerenciada.</p>
+          </div>
+          <div class="check-card">
+            <span>B</span>
+            <strong>Camadas reduzem complexidade</strong>
+            <p>Aplicação, runtime, SO e hardware possuem responsabilidades diferentes e se comunicam por interfaces.</p>
+          </div>
+          <div class="check-card">
+            <span>C</span>
+            <strong>SO abstrai e gerencia</strong>
+            <p>O sistema operacional oferece uma máquina mais conveniente ao mesmo tempo em que coordena recursos compartilhados.</p>
+          </div>
+          <div class="check-card">
+            <span>D</span>
+            <strong>CPU executa instruções</strong>
+            <p>O processador realiza instruções de máquina; código de alto nível chega até esse nível por tradução e infraestrutura de execução.</p>
+          </div>
+          <div class="check-card">
+            <span>E</span>
+            <strong>Memória sustenta a execução</strong>
+            <p>Instruções e dados ativos precisam estar acessíveis durante a execução, enquanto armazenamento preserva informação de forma persistente.</p>
+          </div>
+          <div class="check-card">
+            <span>F</span>
+            <strong>E/S atravessa fronteiras</strong>
+            <p>Arquivos, terminal, rede e dispositivos exigem cooperação entre aplicação, SO, drivers, controladores e hardware.</p>
+          </div>
+        </div>
+
+        <div class="study-grid" style="margin-top:2rem">
+          <div class="study-prose">
+            <h3>A ponte para a Aula 03</h3>
+            <p>Agora temos uma visão macroscópica do percurso: sabemos que uma aplicação se torna uma execução, que o sistema operacional organiza recursos e que o hardware realiza as operações físicas.</p>
+            <p>A próxima pergunta é mais específica: <strong>o que existe dentro da camada de hardware e como CPU, memória e entrada/saída cooperam para executar uma tarefa?</strong> Essa mudança de escala conduz ao estudo da organização do computador, do programa armazenado e do ciclo de instrução.</p>
+
+            <h3>Referências de base</h3>
+            <p>Este aprofundamento acompanha o percurso conceitual da Aula 02 e utiliza como sustentação as duas referências principais adotadas para estes tópicos na disciplina.</p>
+            <ol class="references">
+              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. Edição disponibilizada como referência da disciplina.</li>
+              <li><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas Operacionais Modernos</em>. Edição disponibilizada como referência da disciplina.</li>
+            </ol>
+          </div>
+
+          <aside class="study-stack">
+            <div class="study-callout">
+              <strong>Stallings como apoio</strong>
+              <p>Organização do computador, relação entre processador, memória e entrada/saída e visão de execução em nível de máquina.</p>
+            </div>
+            <div class="study-callout teal">
+              <strong>Tanenbaum & Bos como apoio</strong>
+              <p>Sistema operacional como abstração e gerenciador de recursos, processos, serviços do sistema, arquivos e entrada/saída.</p>
+            </div>
+            <a class="button button-primary" href="aula-03.html">Seguir para a Aula 03</a>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container" style="padding:2rem 0; display:flex; flex-wrap:wrap; gap:1rem; justify-content:space-between; color:var(--muted); font-size:.9rem">
+      <span>Arquitetura de Computadores e Sistemas Operacionais · 2026/2</span>
+      <span>Material de aprofundamento da Aula 02</span>
+    </div>
+  </footer>
+</body>
+</html>
