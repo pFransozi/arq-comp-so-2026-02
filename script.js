@@ -528,3 +528,19 @@ if (architectureGrid) {
   `;
   document.head.appendChild(architectureStyle);
 }
+
+const logisimSection = document.querySelector('#logisim');
+if (logisimSection) {
+  logisimSection.remove();
+  document.querySelectorAll('a[href="#logisim"]').forEach((link) => link.remove());
+}
+
+const cycleInquiry = document.querySelector('#ciclo .inquiry');
+if (cycleInquiry) {
+  const kicker = cycleInquiry.querySelector('.inquiry-kicker');
+  const tag = cycleInquiry.querySelector('.inquiry-tag');
+  const textarea = cycleInquiry.querySelector('textarea');
+  if (kicker?.textContent.trim() === 'Antes do Logisim') kicker.textContent = 'Aplicação do modelo';
+  if (tag) tag.textContent = 'Previsão → explicação';
+  if (textarea) textarea.placeholder = 'Nossa explicação...\nComo PC, IR e ACC mudam...\nO que corrigimos...';
+}
