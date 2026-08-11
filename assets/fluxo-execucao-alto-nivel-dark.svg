@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-labelledby="title desc">
+<title id="title">Fluxo de execução do código-fonte ao resultado observável</title>
+<desc id="desc">O código-fonte passa pelo interpretador Python, pelo sistema operacional e pelo processo em execução. O processo utiliza CPU, memória e entrada e saída. O fluxo retorna ao resultado observável.</desc>
+<defs>
+  <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#061426"/><stop offset="1" stop-color="#07101f"/></linearGradient>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7ee8ff"/></marker>
+  <style>
+    .card{fill:#071a2f;stroke:#23c6ff;stroke-width:2}
+    .n{fill:#13a9ec}.nt{fill:white;font:700 20px system-ui,-apple-system,'Segoe UI',sans-serif;text-anchor:middle;dominant-baseline:middle}
+    .h{fill:#f4f7fb;font:700 25px system-ui,-apple-system,'Segoe UI',sans-serif}
+    .s{fill:#bdc9da;font:400 17px system-ui,-apple-system,'Segoe UI',sans-serif}
+    .line{fill:none;stroke:#7ee8ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#arrow)}
+    .wire{fill:none;stroke:#7ee8ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .icon{fill:none;stroke:#21c6ff;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+    .tech{fill:none;stroke:#1a6fa7;stroke-width:1.5;opacity:.32}
+  </style>
+</defs>
+<rect width="1600" height="700" fill="url(#bg)"/>
+<path class="tech" d="M0 110H120l34-34h82M0 145h86l26-26h110M0 520h120l38 38h90M1600 105h-130l-34 34h-82M1600 150h-90l-28 28h-94M1600 520h-128l-34 38h-86"/>
+<g class="tech"><circle cx="120" cy="110" r="4"/><circle cx="154" cy="76" r="4"/><circle cx="1436" cy="139" r="4"/><circle cx="1470" cy="105" r="4"/><circle cx="120" cy="520" r="4"/><circle cx="1472" cy="520" r="4"/></g>
+<rect class="card" x="230" y="24" rx="18" width="520" height="102"/>
+<rect class="n" x="250" y="43" rx="9" width="42" height="42"/><text class="nt" x="271" y="64">1</text>
+<g class="icon" transform="translate(318 43)"><path d="M8 0h38l16 16v54H8z"/><path d="M46 0v17h16"/><path d="M27 30l-10 10 10 10M42 30l10 10-10 10"/></g>
+<text class="h" x="405" y="64">Código-fonte</text><text class="s" x="405" y="94">Arquivo com instruções e dados.</text>
+<rect class="card" x="980" y="24" rx="18" width="390" height="102"/>
+<rect class="n" x="1000" y="43" rx="9" width="42" height="42"/><text class="nt" x="1021" y="64">8</text>
+<g class="icon" transform="translate(1065 43)"><rect x="0" y="0" width="64" height="48" rx="5"/><path d="M12 34l13-13 10 9 17-18M23 58h18M32 48v10"/></g>
+<text class="h" x="1150" y="61">Resultado observável</text><text class="s" x="1150" y="88">Mensagem exibida, arquivo gerado</text><text class="s" x="1150" y="109">e outros rastros.</text>
+<rect class="card" x="420" y="160" rx="16" width="540" height="82"/>
+<rect class="n" x="440" y="180" rx="8" width="38" height="38"/><text class="nt" x="459" y="199">2</text>
+<rect x="510" y="176" width="58" height="48" rx="14" fill="#102c43" stroke="#ffd34d" stroke-width="2"/><text x="539" y="207" fill="#ffd34d" font="700 24px system-ui" text-anchor="middle">Py</text>
+<text class="h" x="600" y="196">Interpretador Python</text><text class="s" x="600" y="222">Lê o script e inicia a execução.</text>
+<rect class="card" x="420" y="260" rx="16" width="540" height="82"/>
+<rect class="n" x="440" y="280" rx="8" width="38" height="38"/><text class="nt" x="459" y="299">3</text>
+<g class="icon" transform="translate(510 276)"><circle cx="28" cy="25" r="20"/><circle cx="28" cy="25" r="8"/><path d="M28 0v6M28 44v6M3 25h6M47 25h6M10 7l5 5M41 38l5 5M46 7l-5 5M15 38l-5 5"/></g>
+<text class="h" x="600" y="296">Sistema Operacional</text><text class="s" x="600" y="322">Cria e gerencia processo, memória, CPU e E/S.</text>
+<rect class="card" x="420" y="360" rx="16" width="540" height="82"/>
+<rect class="n" x="440" y="380" rx="8" width="38" height="38"/><text class="nt" x="459" y="399">4</text>
+<g class="icon" transform="translate(510 377)"><rect x="0" y="0" width="62" height="48" rx="5"/><path d="M0 12h62M14 24l9 7-9 7M31 38h14"/><circle cx="9" cy="6" r="1.5" fill="#21c6ff" stroke="none"/><circle cx="15" cy="6" r="1.5" fill="#21c6ff" stroke="none"/></g>
+<text class="h" x="600" y="396">Processo em execução</text><text class="s" x="600" y="422">Instância do programa em funcionamento.</text>
+<path class="line" d="M490 126V154"/><path class="line" d="M690 242V254"/><path class="line" d="M690 342V354"/>
+<path class="wire" d="M690 442V470H365V490M690 470V490M690 470H1095V490"/>
+<path class="line" d="M365 470V490"/><path class="line" d="M690 470V490"/><path class="line" d="M1095 470V490"/>
+<rect class="card" x="170" y="495" rx="16" width="390" height="105"/>
+<rect class="n" x="190" y="515" rx="8" width="38" height="38"/><text class="nt" x="209" y="534">5</text>
+<g class="icon" transform="translate(260 515)"><rect x="10" y="8" width="44" height="44" rx="5"/><rect x="21" y="19" width="22" height="22" rx="3"/><path d="M18 0v8M30 0v8M42 0v8M18 52v8M30 52v8M42 52v8M2 16h8M2 28h8M2 40h8M54 16h8M54 28h8M54 40h8"/></g>
+<text class="h" x="345" y="538">CPU</text><text class="s" x="345" y="568">Executa as instruções.</text>
+<rect class="card" x="600" y="495" rx="16" width="340" height="105"/>
+<rect class="n" x="620" y="515" rx="8" width="38" height="38"/><text class="nt" x="639" y="534">6</text>
+<g class="icon" transform="translate(690 518)"><rect x="0" y="0" width="74" height="42" rx="6"/><rect x="10" y="10" width="12" height="20" rx="2"/><rect x="29" y="10" width="12" height="20" rx="2"/><rect x="48" y="10" width="12" height="20" rx="2"/><path d="M12 42v8M25 42v8M38 42v8M51 42v8M64 42v8"/></g>
+<text class="h" x="790" y="535">Memória</text><text class="s" x="790" y="562">Mantém código, objetos</text><text class="s" x="790" y="584">e variáveis.</text>
+<rect class="card" x="980" y="495" rx="16" width="430" height="105"/>
+<rect class="n" x="1000" y="515" rx="8" width="38" height="38"/><text class="nt" x="1019" y="534">7</text>
+<g class="icon" transform="translate(1060 517)"><rect x="0" y="0" width="52" height="38" rx="5"/><path d="M10 14l8 6-8 6M24 29h12"/><path d="M38 23h31v27H38zM46 23v-7h13l6 7"/></g>
+<text class="h" x="1150" y="535">E/S / arquivos / terminal</text><text class="s" x="1150" y="562">Interação com arquivos,</text><text class="s" x="1150" y="584">saída e dispositivos.</text>
+<path class="wire" d="M365 600V620H1095V600M690 600V620"/>
+<path class="wire" d="M1095 620H1175V145"/>
+<path class="line" d="M1175 145V132"/>
+<rect x="70" y="646" width="1460" height="38" rx="14" fill="#071426" stroke="#1f5270"/>
+<circle cx="105" cy="665" r="12" fill="none" stroke="#7ee8ff" stroke-width="2"/><text x="105" y="671" fill="#7ee8ff" font="700 18px system-ui" text-anchor="middle">i</text>
+<text x="135" y="671" fill="#bdc9da" font="400 16px system-ui,-apple-system,'Segoe UI',sans-serif">Do código-fonte ao resultado observável: a execução desce pelas camadas do sistema e retorna como resultado por meio de CPU, memória e E/S.</text>
+</svg>
