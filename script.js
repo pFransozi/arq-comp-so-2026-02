@@ -91,7 +91,8 @@ if (isAula03) {
     }
     .inquiry-head { border-bottom-color: #dce4ff; }
 
-    .organization-infographic {
+    .organization-infographic,
+    .cpu-infographic {
       margin: 1.6rem 0 0;
       overflow: hidden;
       border: 1px solid var(--line);
@@ -99,13 +100,13 @@ if (isAula03) {
       background: var(--paper);
       box-shadow: var(--shadow);
     }
-    .organization-infographic img {
+    .organization-infographic img,
+    .cpu-infographic img {
       display: block;
       width: 100%;
       height: auto;
     }
 
-    /* Contraste explícito para o fluxo de programa armazenado. */
     .stored-node {
       background: #ffffff;
       border-color: #dfe5ef;
@@ -245,7 +246,8 @@ if (isAula03) {
     body.theme-dark .trace-table th,
     body.theme-dark .record-table td,
     body.theme-dark .record-table th { border-color: var(--line); }
-    body.theme-dark .organization-infographic {
+    body.theme-dark .organization-infographic,
+    body.theme-dark .cpu-infographic {
       background: #101725;
       border-color: var(--line);
     }
@@ -267,6 +269,22 @@ if (isAula03) {
     `;
     organizationModel.replaceWith(figure);
     document.querySelector('#organizacao .precision-note')?.remove();
+  }
+
+  const cpuZoom = document.querySelector('#cpu .cpu-zoom');
+  if (cpuZoom) {
+    const figure = document.createElement('figure');
+    figure.className = 'cpu-infographic';
+    figure.innerHTML = `
+      <img
+        src="./assets/cpu-internos-light.svg"
+        data-light-src="./assets/cpu-internos-light.svg"
+        data-dark-src="./assets/cpu-internos-dark.svg"
+        alt="Infográfico didático sobre unidade de controle, ULA e registradores, mostrando o fluxo de informação dentro da CPU e exemplos de registradores PC, IR e ACC."
+        loading="eager"
+      >
+    `;
+    cpuZoom.replaceWith(figure);
   }
 }
 
