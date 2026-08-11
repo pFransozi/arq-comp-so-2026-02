@@ -97,8 +97,38 @@ if (isAula03) {
     .inquiry-head {
       border-bottom-color: #dce4ff;
     }
+
+    .organization-infographic {
+      margin: 1.6rem 0 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .organization-infographic img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
   `;
   document.head.appendChild(paletteStyle);
+
+  const organizationModel = document.querySelector('#organizacao .system-model');
+  if (organizationModel) {
+    const figure = document.createElement('figure');
+    figure.className = 'organization-infographic';
+    figure.innerHTML = `
+      <img
+        src="./assets/cpu-memoria-es-barramentos.svg"
+        alt="Infográfico didático que mostra memória principal, CPU e entrada/saída conectadas pelos barramentos de endereços, dados e controle. A CPU é detalhada em unidade de controle, ULA, registradores e clock."
+        loading="lazy"
+      >
+    `;
+    organizationModel.replaceWith(figure);
+    document.querySelector('#organizacao .precision-note')?.remove();
+  }
 }
 
 const missionSection = document.querySelector('#missao');
