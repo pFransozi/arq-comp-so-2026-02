@@ -7,6 +7,11 @@ if (percursoEyebrow?.textContent.trim() === 'Percurso de 4 horas') {
   percursoEyebrow.remove();
 }
 
+const registroEyebrow = document.querySelector('#registro .eyebrow');
+if (registroEyebrow?.textContent.trim() === 'Entrega formativa') {
+  registroEyebrow.textContent = 'Entrega';
+}
+
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
 if (executionChain) {
   const figure = document.createElement('figure');
