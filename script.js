@@ -12,6 +12,21 @@ if (registroEyebrow?.textContent.trim() === 'Entrega formativa') {
   registroEyebrow.textContent = 'Entrega';
 }
 
+const baselineCallout = document.querySelector('.baseline-callout');
+if (baselineCallout) {
+  const label = baselineCallout.querySelector('.callout-label');
+  const title = baselineCallout.querySelector('h3');
+  const description = baselineCallout.querySelector('p');
+  const downloadButton = baselineCallout.querySelector('.button');
+
+  if (label) label.textContent = 'Código inicial do projeto';
+  if (title) title.textContent = 'Versão sequencial para os primeiros experimentos';
+  if (description) {
+    description.textContent = 'O programa lê tarefas em arquivos JSON, processa uma por vez, grava resultados e logs e gera métricas básicas. Também inclui testes e entradas com diferentes tamanhos.';
+  }
+  if (downloadButton) downloadButton.textContent = 'Baixar código';
+}
+
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
 if (executionChain) {
   const figure = document.createElement('figure');
