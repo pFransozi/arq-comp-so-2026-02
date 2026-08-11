@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+<title id="title">Comparação entre as arquiteturas von Neumann e Harvard</title>
+<desc id="desc">Von Neumann compartilha memória e barramento entre instruções e dados. Harvard separa memória e caminhos de acesso.</desc>
+<defs>
+  <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="12" stdDeviation="18" flood-color="#000000" flood-opacity=".35"/></filter>
+  <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#3157d5"/></marker>
+  <marker id="arrowViolet" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#7357d8"/></marker>
+  <marker id="arrowTeal" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 L10 5 L0 10z" fill="#17857b"/></marker>
+  <style>
+    text{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#eef4ff}.title{font-size:58px;font-weight:800}.subtitle{font-size:24px;fill:#aab7cc}.card-title{font-size:34px;font-weight:800}.body{font-size:21px;fill:#c4cee0}.label{font-size:21px;font-weight:800}.small{font-size:17px;fill:#aab7cc}.note{font-size:17px}.summary{font-size:20px}.blue{fill:#84a2ff}.violet{fill:#a994ff}.teal{fill:#43d0c8}
+  </style>
+</defs>
+<rect width="1600" height="900" fill="#07101f"/>
+<text x="800" y="72" text-anchor="middle" class="title">von Neumann e Harvard</text>
+<text x="800" y="116" text-anchor="middle" class="subtitle">A pergunta central é: instruções e dados compartilham ou não a mesma memória e o mesmo caminho de acesso?</text>
+<g filter="url(#shadow)"><rect x="45" y="150" width="735" height="650" rx="28" fill="#111a2b" stroke="#3157d5" stroke-width="2"/></g>
+<rect x="45" y="150" width="735" height="74" rx="28" fill="#0d1730"/>
+<circle cx="98" cy="187" r="24" fill="#3157d5"/><rect x="87" y="176" width="22" height="22" rx="4" fill="none" stroke="#fff" stroke-width="3"/><path d="M83 181h4m-4 8h4m22-8h4m-4 8h4M92 172v4m8-4v4m-8 22v4m8-4v4" stroke="#fff" stroke-width="2.5"/>
+<text x="140" y="199" class="card-title blue">von Neumann</text>
+<text x="95" y="267" class="body">Instruções e dados compartilham a memória principal</text><text x="95" y="298" class="body">e o mesmo barramento de acesso.</text>
+<rect x="250" y="335" width="325" height="84" rx="18" fill="#172443" stroke="#3157d5" stroke-width="2"/><text x="412" y="387" text-anchor="middle" class="label">CPU</text>
+<line x1="412" y1="420" x2="412" y2="472" stroke="#3157d5" stroke-width="5" marker-end="url(#arrowBlue)"/><line x1="412" y1="475" x2="412" y2="423" stroke="#3157d5" stroke-width="5" marker-end="url(#arrowBlue)"/>
+<rect x="170" y="477" width="485" height="58" rx="16" fill="#231d3e" stroke="#7357d8" stroke-width="2"/><text x="412" y="513" text-anchor="middle" class="label violet">barramento compartilhado</text>
+<line x1="412" y1="536" x2="412" y2="591" stroke="#3157d5" stroke-width="5" marker-end="url(#arrowBlue)"/><line x1="412" y1="594" x2="412" y2="539" stroke="#3157d5" stroke-width="5" marker-end="url(#arrowBlue)"/>
+<rect x="125" y="398" width="150" height="54" rx="15" fill="#231d3e" stroke="#7357d8"/><text x="200" y="431" text-anchor="middle" class="label violet">instruções</text><path d="M200 453 V467 H300 V477" fill="none" stroke="#7357d8" stroke-width="3" marker-end="url(#arrowViolet)"/>
+<rect x="550" y="398" width="125" height="54" rx="15" fill="#102d2c" stroke="#17857b"/><text x="612" y="431" text-anchor="middle" class="label teal">dados</text><path d="M612 453 V467 H525 V477" fill="none" stroke="#17857b" stroke-width="3" marker-end="url(#arrowTeal)"/>
+<rect x="145" y="605" width="535" height="96" rx="20" fill="#211b38" stroke="#7357d8" stroke-width="2"/><text x="412" y="646" text-anchor="middle" class="label violet">Memória única</text><text x="412" y="678" text-anchor="middle" class="body">instruções + dados</text>
+<rect x="80" y="725" width="665" height="48" rx="14" fill="#111a2b" stroke="#d6def5"/><text x="105" y="756" class="note"><tspan class="blue" font-weight="800">Vantagem:</tspan><tspan> simplicidade.  </tspan><tspan class="blue" font-weight="800">Limite:</tspan><tspan> disputa pelo mesmo caminho.</tspan></text>
+<g filter="url(#shadow)"><rect x="820" y="150" width="735" height="650" rx="28" fill="#111a2b" stroke="#17857b" stroke-width="2"/></g>
+<rect x="820" y="150" width="735" height="74" rx="28" fill="#0c2225"/>
+<circle cx="873" cy="187" r="24" fill="#17857b"/><rect x="862" y="176" width="22" height="22" rx="4" fill="none" stroke="#fff" stroke-width="3"/><path d="M858 181h4m-4 8h4m22-8h4m-4 8h4M867 172v4m8-4v4m-8 22v4m8-4v4" stroke="#fff" stroke-width="2.5"/>
+<text x="915" y="199" class="card-title teal">Harvard</text><text x="870" y="267" class="body">Instruções e dados usam memórias e caminhos</text><text x="870" y="298" class="body">de acesso separados.</text>
+<rect x="1020" y="335" width="335" height="84" rx="18" fill="#123032" stroke="#17857b" stroke-width="2"/><text x="1187" y="387" text-anchor="middle" class="label">CPU</text>
+<rect x="880" y="460" width="230" height="58" rx="16" fill="#231d3e" stroke="#7357d8" stroke-width="2"/><text x="995" y="496" text-anchor="middle" class="label violet">barramento de instruções</text>
+<rect x="1260" y="460" width="230" height="58" rx="16" fill="#102d2c" stroke="#17857b" stroke-width="2"/><text x="1375" y="496" text-anchor="middle" class="label teal">barramento de dados</text>
+<path d="M1110 419 V443 H995 V460" fill="none" stroke="#7357d8" stroke-width="4" marker-end="url(#arrowViolet)"/><path d="M1265 419 V443 H1375 V460" fill="none" stroke="#17857b" stroke-width="4" marker-end="url(#arrowTeal)"/>
+<rect x="880" y="560" width="230" height="112" rx="20" fill="#211b38" stroke="#7357d8" stroke-width="2"/><text x="995" y="608" text-anchor="middle" class="label violet">Memória de</text><text x="995" y="639" text-anchor="middle" class="label violet">instruções</text>
+<rect x="1260" y="560" width="230" height="112" rx="20" fill="#123032" stroke="#17857b" stroke-width="2"/><text x="1375" y="608" text-anchor="middle" class="label teal">Memória de</text><text x="1375" y="639" text-anchor="middle" class="label teal">dados</text>
+<line x1="995" y1="519" x2="995" y2="558" stroke="#7357d8" stroke-width="4" marker-end="url(#arrowViolet)"/><line x1="1375" y1="519" x2="1375" y2="558" stroke="#17857b" stroke-width="4" marker-end="url(#arrowTeal)"/>
+<text x="890" y="448" class="small violet">instruções</text><text x="1418" y="448" class="small teal">dados</text>
+<rect x="855" y="725" width="665" height="48" rx="14" fill="#102d2c" stroke="#ccebe7"/><text x="880" y="756" class="note"><tspan class="teal" font-weight="800">Vantagem:</tspan><tspan> acessos independentes.  </tspan><tspan class="teal" font-weight="800">Limite:</tspan><tspan> maior complexidade.</tspan></text>
+<rect x="120" y="825" width="1360" height="50" rx="16" fill="#111a2b" stroke="#cbd6ff"/><text x="800" y="857" text-anchor="middle" class="summary"><tspan class="blue" font-weight="800">Resumo:</tspan><tspan> von Neumann compartilha memória e barramento; Harvard separa memória e acesso para instruções e dados.</tspan></text>
+</svg>
