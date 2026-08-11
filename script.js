@@ -37,18 +37,18 @@ const missionSection = document.querySelector('#missao');
 if (missionSection) {
   const intro = missionSection.querySelector('.section-heading > p:last-child');
   if (intro) {
-    intro.innerHTML = 'Em equipe, valide o baseline e execute a mesma entrada pequena <strong>três vezes</strong>. Após cada execução, copie as métricas para uma linha da tabela abaixo. O objetivo é observar o ponto de partida e perceber que as medições podem variar mesmo sem mudar o código ou a entrada. No Windows, os comandos abaixo usam <code>py</code>; se o seu ambiente usar <code>python</code>, substitua o comando.';
+    intro.innerHTML = 'Em equipe, valide o baseline e faça <strong>uma execução</strong> com <code>entradas/pequena.json</code>. O objetivo é compreender o ponto de partida, observar os artefatos gerados e registrar a primeira referência. No Windows, os comandos abaixo usam <code>py</code>; se o seu ambiente usar <code>python</code>, substitua o comando.';
   }
 
   const missionGrid = missionSection.querySelector('.mission-grid');
   if (missionGrid) {
     missionGrid.innerHTML = `
       <article><span>1</span><h3>Conheça o pacote</h3><p>Leia o README e localize <code>main.py</code>, <code>entradas/</code>, <code>tests/</code>, <code>outputs/</code> e <code>logs/</code>.</p></article>
-      <article><span>2</span><h3>Valide o ponto de partida</h3><p>Execute <code>py -m unittest discover -s tests -v</code> e confirme que os testes passam antes das medições.</p></article>
-      <article><span>3</span><h3>Faça a execução 1</h3><p>Execute <code>py main.py --entrada entradas/pequena.json</code>. Ao terminar, abra <code>outputs/metricas_pequena.json</code> e preencha a linha 1 da tabela.</p></article>
-      <article><span>4</span><h3>Repita mais duas vezes</h3><p>Execute o mesmo comando novamente para as execuções 2 e 3. Após cada execução, copie as métricas para a linha correspondente antes de rodar novamente.</p></article>
-      <article><span>5</span><h3>Compare as medições</h3><p>Compare tempo total, tempo de CPU, pico de memória, vazão e correção. Observe quais valores permaneceram iguais e quais variaram.</p></article>
-      <article><span>6</span><h3>Explique o que observou</h3><p>Relacione entrada, processamento, resultados, métricas e logs. Registre uma hipótese inicial sobre qual recurso pode se tornar limitante quando a carga aumentar.</p></article>
+      <article><span>2</span><h3>Valide o ponto de partida</h3><p>Execute <code>py -m unittest discover -s tests -v</code> e confirme que os testes passam antes da primeira medição.</p></article>
+      <article><span>3</span><h3>Execute a entrada pequena</h3><p>Use <code>py main.py --entrada entradas/pequena.json</code>. Esta é a execução que será registrada na primeira linha da tabela.</p></article>
+      <article><span>4</span><h3>Observe os artefatos</h3><p>Abra <code>outputs/resultados_pequena.json</code>, <code>outputs/metricas_pequena.json</code> e <code>logs/execucao_pequena.log</code>.</p></article>
+      <article><span>5</span><h3>Preencha a primeira referência</h3><p>Use <code>metricas_pequena.json</code> para registrar entrada, tarefas, tempos, memória, vazão e correção na primeira linha da tabela.</p></article>
+      <article><span>6</span><h3>Explique o que aconteceu</h3><p>Relacione a entrada JSON, o processamento sequencial e os resultados, métricas e logs produzidos pelo programa.</p></article>
     `;
   }
 }
@@ -60,25 +60,53 @@ if (measurementCard) {
   const rowHeaders = measurementCard.querySelectorAll('tbody th');
   const note = measurementCard.querySelector('.table-note');
 
-  if (title) title.textContent = 'Registre três execuções do mesmo baseline';
+  if (title) title.textContent = 'Registre o primeiro resultado observado';
   if (description) {
-    description.innerHTML = 'Use <code>entradas/pequena.json</code> nas três execuções e preencha uma linha após cada rodada. Assim, a tabela registra três medições comparáveis do mesmo ponto de partida.';
+    description.innerHTML = 'Preencha apenas a primeira linha com a execução de <code>entradas/pequena.json</code>. As linhas seguintes ficam reservadas para medições futuras, quando começarmos a comparar o comportamento do programa.';
   }
 
-  ['1', '2', '3'].forEach((label, index) => {
-    if (rowHeaders[index]) rowHeaders[index].textContent = label;
-  });
-
-  [2, 3].forEach((run) => {
-    const input = measurementCard.querySelector(`[data-save="medicao-${run}-entrada"]`);
-    const tasks = measurementCard.querySelector(`[data-save="medicao-${run}-tarefas"]`);
-    if (input) input.placeholder = 'pequena';
-    if (tasks) tasks.placeholder = '6';
-  });
+  if (rowHeaders[0]) rowHeaders[0].textContent = '1 — hoje';
+  if (rowHeaders[1]) rowHeaders[1].textContent = '2 — futura';
+  if (rowHeaders[2]) rowHeaders[2].textContent = '3 — futura';
 
   if (note) {
-    note.innerHTML = 'Após cada execução, copie os valores de <code>outputs/metricas_pequena.json</code> para a linha correspondente. Esse arquivo é reescrito quando o programa roda novamente, por isso registre a medição antes da próxima execução. O pico de memória é medido de forma dependente do sistema operacional; em comparações futuras, registre também o ambiente.';
+    note.innerHTML = 'Os valores da primeira linha podem ser copiados de <code>outputs/metricas_pequena.json</code>. O pico de memória é medido de forma dependente do sistema operacional; por isso, o ambiente deverá ser registrado quando iniciarmos comparações futuras.';
   }
+}
+
+const registerZero = document.querySelector('#registro .register-zero');
+if (registerZero) {
+  registerZero.innerHTML = `
+    <div class="inquiry-head">
+      <div>
+        <span class="inquiry-kicker">Uma resposta por equipe</span>
+        <h3>Registro da primeira execução do baseline</h3>
+      </div>
+      <span class="inquiry-tag">Entrada pequena · primeira referência</span>
+    </div>
+    <div class="inquiry-body">
+      <div>
+        <ol class="prompt-list">
+          <li><strong>Validação:</strong> os testes passaram? Registre o resultado.</li>
+          <li><strong>Execução:</strong> qual comando foi utilizado para executar o baseline?</li>
+          <li><strong>Entrada:</strong> quantas tarefas havia em <code>entradas/pequena.json</code>?</li>
+          <li><strong>Medição:</strong> qual foi o tempo total e o resultado foi considerado correto?</li>
+          <li><strong>Artefatos:</strong> quais arquivos foram gerados em <code>outputs/</code> e <code>logs/</code>?</li>
+          <li><strong>Fluxo:</strong> descreva o caminho <code>entrada JSON → processamento sequencial → resultados/métricas/log</code>.</li>
+          <li><strong>Limite da observação:</strong> o que ainda não podemos concluir sobre o desempenho a partir de uma única execução com entrada pequena?</li>
+        </ol>
+        <div class="completion-criterion">
+          <strong>Critério de conclusão</strong>
+          <p>“Com a entrada pequena, o baseline recebeu ______ tarefas, processou-as de forma ______, levou ______ s, produziu ______ e deixou como evidências ______.”</p>
+        </div>
+      </div>
+      <div class="worksheet">
+        <label for="baseline">Registro 0 da equipe</label>
+        <textarea id="baseline" data-save="baseline" placeholder="Testes:\nComando:\nNúmero de tarefas:\nTempo total:\nResultado correto:\nArquivos gerados:\nFluxo observado:\nO que ainda não podemos concluir:"></textarea>
+        <span class="save-note">O texto e a tabela ficam salvos somente neste navegador.</span>
+      </div>
+    </div>
+  `;
 }
 
 const executionChain = document.querySelector('.execution-synthesis .execution-chain');
