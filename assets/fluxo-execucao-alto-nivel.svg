@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1916" height="821" viewBox="0 0 1916 821" role="img" aria-labelledby="title desc">
+  <title id="title">Fluxo esperado em alto nível</title>
+  <desc id="desc">Fluxo da execução: código-fonte, interpretador Python, processo, memória, CPU, serviços do sistema operacional e resultado observável.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#071426"/>
+      <stop offset="1" stop-color="#03101f"/>
+    </linearGradient>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0b1d36"/>
+      <stop offset="1" stop-color="#07172c"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="7" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .card{fill:url(#card);stroke:#19c9ff;stroke-width:2}
+      .badge{fill:#19c9ff}
+      .n{font:700 28px Inter,Arial,sans-serif;fill:#fff;text-anchor:middle}
+      .h{font:700 28px Inter,Arial,sans-serif;fill:#fff;text-anchor:middle}
+      .s{font:400 20px Inter,Arial,sans-serif;fill:#aebbd0;text-anchor:middle}
+      .icon{fill:none;stroke:#29cfff;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+      .icon2{fill:none;stroke:#71e2b4;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+      .arrow{font:700 44px Inter,Arial,sans-serif;fill:#ff9d3f;text-anchor:middle;filter:url(#glow)}
+    </style>
+  </defs>
+
+  <rect width="1916" height="821" fill="url(#bg)"/>
+  <g opacity=".18" stroke="#1d6f9a" fill="none">
+    <path d="M0 86H250l16 16h340l14-14h340l14 17h330l16 18h280l18 18h300"/>
+    <path d="M90 692h260l16 18h390l16 16h340l16-15h370l16-18h320"/>
+  </g>
+
+  <!-- 1 Código-fonte -->
+  <g transform="translate(28 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">1</text>
+    <g class="icon" transform="translate(65 80)">
+      <path d="M20 0h62l28 28v86H20z"/>
+      <path d="M82 0v28h28"/>
+      <path d="M46 58l-16 16 16 16M78 58l16 16-16 16M64 50l-10 48"/>
+    </g>
+    <text class="h" x="110" y="270">Código-fonte</text>
+    <text class="s" x="110" y="320"><tspan x="110">Arquivo com</tspan><tspan x="110" dy="30">instruções e</tspan><tspan x="110" dy="30">dados.</tspan></text>
+  </g>
+  <text class="arrow" x="269" y="391">→</text>
+
+  <!-- 2 Interpretador -->
+  <g transform="translate(298 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">2</text>
+    <g transform="translate(72 80)">
+      <rect x="0" y="0" width="76" height="76" rx="22" fill="#123f73" stroke="#29cfff" stroke-width="3"/>
+      <text x="38" y="49" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="34" font-weight="800" fill="#ffd15c">Py</text>
+    </g>
+    <text class="h" x="110" y="258"><tspan x="110">Interpretador</tspan><tspan x="110" dy="34">Python</tspan></text>
+    <text class="s" x="110" y="350"><tspan x="110">Lê e prepara a</tspan><tspan x="110" dy="30">execução.</tspan></text>
+  </g>
+  <text class="arrow" x="539" y="391">→</text>
+
+  <!-- 3 Processo -->
+  <g transform="translate(568 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">3</text>
+    <g class="icon" transform="translate(63 85)">
+      <rect x="28" y="0" width="50" height="28" rx="5"/>
+      <path d="M53 28v28M53 56l-18 18 18 18 18-18zM35 74H0v32M71 74h35v32"/>
+      <rect x="-10" y="106" width="36" height="24" rx="5" stroke="#71e2b4"/>
+      <rect x="80" y="106" width="36" height="24" rx="5" stroke="#a27cff"/>
+    </g>
+    <text class="h" x="110" y="270">Processo</text>
+    <text class="s" x="110" y="320"><tspan x="110">É criado pelo</tspan><tspan x="110" dy="30">sistema</tspan><tspan x="110" dy="30">operacional.</tspan></text>
+  </g>
+  <text class="arrow" x="809" y="391">→</text>
+
+  <!-- 4 Memória -->
+  <g transform="translate(838 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">4</text>
+    <g class="icon2" transform="translate(48 93)">
+      <rect x="0" y="0" width="124" height="56" rx="8"/>
+      <rect x="14" y="12" width="21" height="26" rx="2"/>
+      <rect x="43" y="12" width="21" height="26" rx="2"/>
+      <rect x="72" y="12" width="21" height="26" rx="2"/>
+      <rect x="101" y="12" width="10" height="26" rx="2"/>
+      <path d="M12 56v12M28 56v12M44 56v12M60 56v12M76 56v12M92 56v12M108 56v12" stroke="#ffd15c"/>
+    </g>
+    <text class="h" x="110" y="270">Memória</text>
+    <text class="s" x="110" y="320"><tspan x="110">Recebe</tspan><tspan x="110" dy="30">instruções,</tspan><tspan x="110" dy="30">objetos e</tspan><tspan x="110" dy="30">variáveis.</tspan></text>
+  </g>
+  <text class="arrow" x="1079" y="391">→</text>
+
+  <!-- 5 CPU -->
+  <g transform="translate(1108 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">5</text>
+    <g class="icon" transform="translate(68 86)">
+      <rect x="10" y="10" width="84" height="84" rx="12"/>
+      <rect x="30" y="30" width="44" height="44" rx="5"/>
+      <path d="M0 26h10M0 44h10M0 62h10M0 80h10M94 26h10M94 44h10M94 62h10M94 80h10M26 0v10M44 0v10M62 0v10M80 0v10M26 94v10M44 94v10M62 94v10M80 94v10"/>
+    </g>
+    <text class="h" x="110" y="270">CPU</text>
+    <text class="s" x="110" y="320"><tspan x="110">Executa as</tspan><tspan x="110" dy="30">operações do</tspan><tspan x="110" dy="30">programa.</tspan></text>
+  </g>
+  <text class="arrow" x="1349" y="391">→</text>
+
+  <!-- 6 Serviços do SO -->
+  <g transform="translate(1378 132)">
+    <rect class="card" width="220" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">6</text>
+    <g class="icon" transform="translate(48 86)">
+      <rect x="0" y="0" width="124" height="90" rx="10" stroke="#a27cff"/>
+      <path d="M0 22h124M14 11h1M29 11h1M44 11h1" stroke="#a27cff"/>
+      <path d="M17 43h35v28H17zM25 50l8 7-8 7M72 45h34v26H72zM80 45v-7h17v7"/>
+    </g>
+    <text class="h" x="110" y="270">Serviços do SO</text>
+    <text class="s" x="110" y="314"><tspan x="110">Intermediam</tspan><tspan x="110" dy="27">acesso ao</tspan><tspan x="110" dy="27">terminal, sistema</tspan><tspan x="110" dy="27">de arquivos e</tspan><tspan x="110" dy="27">outros recursos.</tspan></text>
+  </g>
+  <text class="arrow" x="1619" y="391">→</text>
+
+  <!-- 7 Saída -->
+  <g transform="translate(1648 132)">
+    <rect class="card" width="240" height="500" rx="24"/>
+    <rect class="badge" x="18" y="18" width="48" height="48" rx="14"/>
+    <text class="n" x="42" y="51">7</text>
+    <g class="icon" transform="translate(66 86)">
+      <rect x="0" y="0" width="108" height="78" rx="8"/>
+      <path d="M24 24h60v36H24zM42 78v16M24 94h60"/>
+      <path d="M37 50l10-10 10 10 20-22" stroke="#71e2b4"/>
+    </g>
+    <text class="h" x="120" y="258"><tspan x="120">Saída /</tspan><tspan x="120" dy="34">resultado</tspan></text>
+    <text class="s" x="120" y="342"><tspan x="120">Exibe o resultado</tspan><tspan x="120" dy="27">e gera evidências</tspan><tspan x="120" dy="27">observáveis.</tspan></text>
+  </g>
+
+  <g opacity=".55" stroke="#19c9ff" fill="none">
+    <path d="M140 662v24h267v-20M407 686h266v-20M673 686h264v-20M937 686h263v-20M1200 686h272v-20M1472 686h264v-20"/>
+    <circle cx="140" cy="662" r="4" fill="#19c9ff"/><circle cx="407" cy="666" r="4" fill="#19c9ff"/><circle cx="673" cy="666" r="4" fill="#19c9ff"/><circle cx="937" cy="666" r="4" fill="#19c9ff"/><circle cx="1200" cy="666" r="4" fill="#19c9ff"/><circle cx="1472" cy="666" r="4" fill="#19c9ff"/><circle cx="1736" cy="666" r="4" fill="#19c9ff"/>
+  </g>
+</svg>
