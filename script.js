@@ -18,11 +18,12 @@ if (executionChain) {
   figure.className = 'execution-flow-figure';
   figure.innerHTML = `
     <img
-      src="./assets/fluxo-execucao-alto-nivel.svg"
-      alt="Fluxo esperado em alto nível: código-fonte, interpretador Python, processo, memória, CPU, serviços do sistema operacional e saída ou resultado observável."
+      src="./assets/fluxo-execucao-alto-nivel-light.webp"
+      data-light-src="./assets/fluxo-execucao-alto-nivel-light.webp"
+      data-dark-src="./assets/fluxo-execucao-alto-nivel-dark.webp"
+      alt="Fluxo da execução: o código-fonte passa pelo interpretador Python, sistema operacional e processo em execução; o processo utiliza CPU, memória e entrada/saída, e o fluxo retorna até o resultado observável."
       loading="lazy"
     >
-    <figcaption>Do código-fonte ao resultado observável: uma visão integrada das responsabilidades envolvidas durante a execução.</figcaption>
   `;
   executionChain.replaceWith(figure);
 
@@ -33,23 +34,16 @@ if (executionChain) {
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: #071426;
+      background: var(--paper);
       box-shadow: var(--shadow);
     }
     .execution-flow-figure img {
       display: block;
       width: 100%;
       height: auto;
-      background: #071426;
     }
-    .execution-flow-figure figcaption {
-      margin: 0;
-      padding: .9rem 1.1rem 1rem;
-      border-top: 1px solid rgba(255,255,255,.08);
+    body.theme-dark .execution-flow-figure {
       background: #071426;
-      color: #aebbd0;
-      text-align: center;
-      font-size: .88rem;
     }
   `;
   document.head.appendChild(flowFigureStyle);
@@ -87,6 +81,13 @@ py exemplo_fluxo.py
 const applyTheme = (theme) => {
   const isDark = theme === 'dark';
   document.body.classList.toggle('theme-dark', isDark);
+
+  const executionFlowImage = document.querySelector('.execution-flow-figure img');
+  if (executionFlowImage) {
+    executionFlowImage.src = isDark
+      ? executionFlowImage.dataset.darkSrc
+      : executionFlowImage.dataset.lightSrc;
+  }
 
   if (themeToggle) {
     themeToggle.setAttribute('aria-pressed', String(isDark));
