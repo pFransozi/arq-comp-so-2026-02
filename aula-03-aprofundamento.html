@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Material de aprofundamento teórico da Aula 03 de Arquitetura de Computadores e Sistemas Operacionais: organização e arquitetura, programa armazenado, CPU, memória, E/S, barramentos, von Neumann, Harvard e ciclo de instrução.">
+  <meta name="description" content="Material de aprofundamento teórico da Aula 03 de Arquitetura de Computadores e Sistemas Operacionais: estrutura e função, arquitetura e organização, programa armazenado, CPU, memória, E/S, interconexão, von Neumann, Harvard e ciclo de instrução.">
   <meta name="theme-color" content="#111b32">
   <title>Aula 03 — Aprofundamento teórico | Arquitetura de Computadores e Sistemas Operacionais</title>
   <link rel="stylesheet" href="styles.css">
@@ -14,7 +14,7 @@
     .study-hero{padding:6rem 0 5rem;background:radial-gradient(circle at 88% 18%,rgba(124,103,232,.15),transparent 27rem),radial-gradient(circle at 8% 78%,rgba(49,94,251,.11),transparent 24rem),var(--bg)}
     .study-hero-grid{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(280px,.7fr);gap:3.5rem;align-items:end}
     .study-hero h1{margin:0;max-width:930px;font-size:clamp(3rem,6.3vw,5.9rem);line-height:.96;letter-spacing:-.055em}
-    .study-lead{max-width:790px;margin:1.5rem 0 0;color:var(--muted);font-size:clamp(1.15rem,2vw,1.42rem)}
+    .study-lead{max-width:800px;margin:1.5rem 0 0;color:var(--muted);font-size:clamp(1.15rem,2vw,1.42rem)}
     .study-card{padding:1.5rem;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);box-shadow:var(--shadow)}
     .study-card strong{display:block;margin-bottom:.55rem;color:var(--primary)}
     .study-card p:last-child{margin-bottom:0}
@@ -27,7 +27,7 @@
     .study-toc a:hover{color:var(--primary);border-color:var(--primary)}
     .study-section{padding:5.5rem 0;scroll-margin-top:155px}
     .study-section.alt{background:var(--surface-soft)}
-    .study-heading{max-width:900px;margin-bottom:2.2rem}
+    .study-heading{max-width:930px;margin-bottom:2.2rem}
     .study-heading h2{margin:0;font-size:clamp(2.15rem,4vw,3.6rem);line-height:1.04;letter-spacing:-.045em}
     .study-heading>p:last-child{margin:1rem 0 0;color:var(--muted);font-size:1.05rem}
     .study-kicker{margin:0 0 .65rem;color:var(--primary);font-size:.76rem;font-weight:850;letter-spacing:.11em;text-transform:uppercase}
@@ -53,22 +53,26 @@
     .mini-card{padding:1.2rem;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
     .mini-card h4{margin:0 0 .45rem}.mini-card p{margin:0;color:var(--muted)}
     .mini-card .tag{display:inline-block;margin-bottom:.75rem;padding:.26rem .55rem;border-radius:999px;background:color-mix(in srgb,var(--primary) 10%,var(--surface));color:var(--primary);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
-    .flow{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:.55rem;margin:1.5rem 0;align-items:stretch}
-    .flow span{position:relative;display:grid;place-items:center;min-height:82px;padding:.8rem .65rem;border:1px solid var(--line);border-radius:13px;background:var(--surface);text-align:center;color:var(--text);font-size:.8rem;font-weight:800}
-    .flow span:not(:last-child)::after{content:"→";position:absolute;right:-.5rem;top:50%;transform:translate(50%,-50%);z-index:2;color:var(--primary);font-size:1.05rem}
-    .machine{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:1rem;margin:1.5rem 0}
-    .machine-block{min-height:150px;padding:1.2rem;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
-    .machine-block h4{margin:0 0 .5rem}.machine-block p{margin:0;color:var(--muted)}
-    .cpu-core{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem;margin-top:.9rem}
-    .cpu-core span{padding:.8rem .55rem;border-radius:12px;background:var(--surface-soft);text-align:center;font-size:.78rem;font-weight:800}
+    .concept-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+    .concept-card{padding:1.35rem;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+    .concept-card h3{margin:.2rem 0 1rem}.concept-pair{display:grid;gap:.8rem}.concept-item{padding:1rem;border-radius:13px;background:var(--surface-soft)}
+    .concept-item strong{display:block;margin-bottom:.3rem}.concept-item p{margin:0;color:var(--muted)}
+    .system-four{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0}
+    .system-block{padding:1.3rem;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
+    .system-block h3{margin:.15rem 0 .45rem}.system-block p{margin:0;color:var(--muted)}
+    .system-block.interconnect{grid-column:1/-1;border-color:color-mix(in srgb,var(--primary) 40%,var(--line));background:color-mix(in srgb,var(--primary) 5%,var(--surface))}
     .bus-stack{display:grid;gap:.55rem;margin:1.2rem 0}
     .bus{display:grid;grid-template-columns:120px 1fr;gap:.8rem;padding:.85rem 1rem;border:1px solid var(--line);border-radius:13px;background:var(--surface)}
     .bus strong{color:var(--text)}.bus span{color:var(--muted)}
+    .io-chain{margin-top:1rem;padding:.8rem 1rem;border:1px dashed var(--line);border-radius:12px;text-align:center;color:var(--muted);font-family:"SFMono-Regular",Consolas,monospace;font-weight:800}
     .study-table-wrap{margin:1.5rem 0;overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:var(--surface)}
     .study-table{width:100%;border-collapse:collapse;min-width:760px}
     .study-table th,.study-table td{padding:.85rem .9rem;border-bottom:1px solid var(--line);vertical-align:top;text-align:left}
     .study-table th{background:color-mix(in srgb,var(--primary) 10%,var(--surface));color:var(--text);font-size:.82rem}
     .study-table td{color:var(--muted);font-size:.9rem}.study-table tr:last-child td{border-bottom:0}
+    .ias-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.75rem;margin:1.5rem 0}
+    .ias-card{padding:1.05rem;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
+    .ias-card strong{display:block;margin-bottom:.35rem}.ias-card p{margin:0;color:var(--muted);font-size:.9rem}
     .arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1.5rem 0}
     .arch-card{padding:1.3rem;border:1px solid var(--line);border-radius:18px;background:var(--surface)}
     .arch-card h3{margin-top:0}.arch-diagram{display:grid;gap:.55rem;margin:1rem 0}
@@ -76,12 +80,17 @@
     .arch-path{padding:.55rem;border:1px dashed var(--line);border-radius:10px;text-align:center;color:var(--muted);font-size:.82rem}
     .arch-memory{display:grid;grid-template-columns:1fr 1fr;gap:.55rem}.arch-memory.one{grid-template-columns:1fr}
     .arch-memory span{padding:.8rem;border-radius:11px;background:var(--surface-soft);text-align:center;font-weight:800;font-size:.83rem}
-    .cycle{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1.5rem 0}
+    .bottleneck{margin:2rem 0 0;padding:1.35rem;border:1px solid color-mix(in srgb,var(--secondary) 36%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--secondary) 6%,var(--surface))}
+    .bottleneck h3{margin:.15rem 0 .55rem}.bottleneck p:last-child{margin-bottom:0;color:var(--muted)}
+    .cycle{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
     .cycle-step{padding:1.1rem;border:1px solid var(--line);border-radius:15px;background:var(--surface)}
     .cycle-step b{display:inline-grid;place-items:center;width:32px;height:32px;margin-bottom:.7rem;border-radius:9px;background:color-mix(in srgb,var(--primary) 12%,var(--surface));color:var(--primary)}
     .cycle-step strong{display:block;margin-bottom:.35rem}.cycle-step p{margin:0;color:var(--muted);font-size:.9rem}
     .microflow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:.65rem;margin:1.5rem 0}
     .microflow span{padding:.9rem .7rem;border:1px solid var(--line);border-radius:12px;background:var(--surface);text-align:center;font-family:"SFMono-Regular",Consolas,monospace;font-size:.82rem;font-weight:800}
+    .flow{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.55rem;margin:1.5rem 0;align-items:stretch}
+    .flow span{position:relative;display:grid;place-items:center;min-height:82px;padding:.8rem .65rem;border:1px solid var(--line);border-radius:13px;background:var(--surface);text-align:center;color:var(--text);font-size:.8rem;font-weight:800}
+    .flow span:not(:last-child)::after{content:"→";position:absolute;right:-.5rem;top:50%;transform:translate(50%,-50%);z-index:2;color:var(--primary);font-size:1.05rem}
     .boundary{margin:1.8rem 0;padding:1.4rem;border:1px dashed color-mix(in srgb,var(--secondary) 55%,var(--line));border-radius:18px;background:color-mix(in srgb,var(--secondary) 6%,var(--surface))}
     .boundary strong{color:var(--secondary)}.boundary p:last-child{margin-bottom:0}
     .check-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1rem;margin-top:1.5rem}
@@ -90,9 +99,9 @@
     .check-card strong{display:block;margin-bottom:.35rem}.check-card p{margin:0;color:var(--muted);font-size:.9rem}
     .references{padding-left:1.2rem}.references li+li{margin-top:.7rem}.references li{color:var(--muted)}
     .study-page .site-footer{border-top:1px solid var(--line)}
-    @media(max-width:1050px){.mini-grid.four{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:repeat(4,minmax(0,1fr))}.flow span::after{display:none}.cycle{grid-template-columns:repeat(2,1fr)}.microflow{grid-template-columns:repeat(3,1fr)}}
-    @media(max-width:980px){.study-hero-grid,.study-grid{grid-template-columns:1fr}.study-toc{grid-template-columns:repeat(3,minmax(0,1fr))}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.machine{grid-template-columns:1fr}.arch-grid{grid-template-columns:1fr}}
-    @media(max-width:680px){.study-hero{padding:4.2rem 0 3.5rem}.study-toc-shell{position:static}.study-toc{grid-template-columns:repeat(2,minmax(0,1fr))}.study-section{padding:4rem 0;scroll-margin-top:90px}.mini-grid,.mini-grid.four,.check-grid,.flow,.cycle,.microflow{grid-template-columns:1fr}.bus{grid-template-columns:1fr;gap:.2rem}.study-nav .nav-label{display:none}}
+    @media(max-width:1050px){.mini-grid.four,.ias-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.flow{grid-template-columns:repeat(3,minmax(0,1fr))}.flow span::after{display:none}.microflow{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:980px){.study-hero-grid,.study-grid{grid-template-columns:1fr}.study-toc{grid-template-columns:repeat(3,minmax(0,1fr))}.check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.arch-grid,.concept-grid{grid-template-columns:1fr}}
+    @media(max-width:680px){.study-hero{padding:4.2rem 0 3.5rem}.study-toc-shell{position:static}.study-toc{grid-template-columns:repeat(2,minmax(0,1fr))}.study-section{padding:4rem 0;scroll-margin-top:90px}.mini-grid,.mini-grid.four,.check-grid,.flow,.cycle,.microflow,.ias-grid,.system-four{grid-template-columns:1fr}.system-block.interconnect{grid-column:auto}.bus{grid-template-columns:1fr;gap:.2rem}.study-nav .nav-label{display:none}}
   </style>
 </head>
 <body class="study-page">
@@ -118,22 +127,22 @@
         <div>
           <p class="eyebrow">Aula 03 · material de aprofundamento</p>
           <h1>Dentro do computador</h1>
-          <p class="study-lead">Da ideia de programa armazenado ao ciclo de instrução: uma leitura ampliada sobre como processador, memória e entrada/saída formam um sistema e cooperam para transformar instruções em efeitos observáveis.</p>
+          <p class="study-lead">Uma leitura teórica ampliada sobre como descrever um computador, como programa, processador, memória, entrada/saída e interconexões cooperam e como o modelo de programa armazenado conduz ao ciclo de busca, decodificação e execução.</p>
           <div class="study-meta"><span>Arquitetura de Computadores e SO</span><span>Engenharia de Software</span><span>2026/2</span><span>Leitura teórica</span></div>
           <div class="study-actions"><a class="button button-primary" href="#modelo">Começar a leitura</a><a class="button button-secondary" href="aula-03.html">Voltar à aula principal</a></div>
         </div>
         <aside class="study-card">
           <strong>Qual é o papel deste material?</strong>
-          <p>A aula principal usa modelos simples, investigação e rastreamento. Aqui esses mesmos modelos são desenvolvidos com mais precisão, incluindo distinções que ajudam a evitar simplificações enganosas.</p>
-          <p>O foco continua conceitual. Pipeline, caches em detalhe, x86/ARM, memória virtual e concorrência serão aprofundados em momentos próprios da disciplina.</p>
+          <p>A aula principal trabalha com modelos simples e rastreamento. Aqui os mesmos conceitos são desenvolvidos com mais precisão a partir da bibliografia da disciplina.</p>
+          <p>O aprofundamento não pretende substituir as aulas seguintes: microarquitetura detalhada, x86/ARM, caches, memória virtual, drivers e concorrência aparecem apenas quando ajudam a delimitar o modelo atual.</p>
         </aside>
       </div>
     </section>
 
     <div class="study-toc-shell" aria-label="Sumário do aprofundamento">
       <div class="container study-toc">
-        <a href="#modelo">Arquitetura e organização</a>
-        <a href="#funcoes">Estrutura e funções</a>
+        <a href="#modelo">Como descrever o computador</a>
+        <a href="#sistema">Sistema de alto nível</a>
         <a href="#programa">Programa armazenado</a>
         <a href="#interconexao">Interconexão</a>
         <a href="#arquiteturas">von Neumann × Harvard</a>
@@ -147,216 +156,221 @@
 
     <section class="study-section" id="modelo">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">1 · Um vocabulário para não misturar níveis</p><h2>Arquitetura e organização não são a mesma coisa</h2><p>Antes de olhar para CPU, memória ou barramentos, vale separar duas perguntas diferentes: o que a máquina apresenta ao software e como o hardware realiza esse comportamento.</p></div>
+        <div class="study-heading"><p class="study-kicker">1 · Quatro perguntas diferentes</p><h2>Função, estrutura, arquitetura e organização</h2><p>Boa parte da confusão em arquitetura de computadores nasce quando usamos palavras diferentes como se respondessem à mesma pergunta. Stallings organiza o estudo separando níveis de descrição.</p></div>
+        <div class="concept-grid">
+          <article class="concept-card"><p class="study-kicker">Sistema</p><h3>Função × estrutura</h3><div class="concept-pair"><div class="concept-item"><strong>Função</strong><p>Descreve a operação desempenhada por um componente como parte do sistema: processar, armazenar, movimentar ou controlar.</p></div><div class="concept-item"><strong>Estrutura</strong><p>Descreve como componentes e subsistemas estão relacionados e interligados.</p></div></div></article>
+          <article class="concept-card"><p class="study-kicker">Máquina</p><h3>Arquitetura × organização</h3><div class="concept-pair"><div class="concept-item"><strong>Arquitetura</strong><p>Reúne atributos visíveis ao programador de máquina e que afetam a execução lógica, como conjunto de instruções, registradores, formatos de dados e formas de endereçamento.</p></div><div class="concept-item"><strong>Organização</strong><p>Reúne unidades operacionais e interconexões que realizam aquela arquitetura.</p></div></div></article>
+        </div>
         <div class="study-grid">
           <div class="study-prose">
-            <h3>Arquitetura: o contrato visível</h3>
-            <p>Na formulação de Stallings, <strong>arquitetura de computador</strong> reúne atributos que afetam diretamente a execução lógica de programas. O conjunto de instruções, os registradores disponíveis, os formatos de dados, os mecanismos de entrada/saída e as formas de endereçamento pertencem a esse nível.</p>
-            <p>Uma maneira útil de pensar nisso é como um contrato: o software de baixo nível precisa saber quais operações existem e quais efeitos elas produzem, mas não precisa conhecer cada detalhe elétrico ou físico usado para implementá-las.</p>
-            <h3>Organização: como o contrato é realizado</h3>
-            <p><strong>Organização</strong> diz respeito às unidades operacionais e às interligações que concretizam a arquitetura. Duas máquinas podem oferecer a mesma instrução de multiplicação e, ainda assim, implementá-la com caminhos internos, latências, unidades funcionais e políticas diferentes.</p>
-            <p>Essa distinção será importante mais adiante no curso: compatibilidade de software depende fortemente da arquitetura, enquanto desempenho, consumo e custo podem mudar muito por decisões de organização.</p>
-            <div class="study-callout"><strong>Uma frase para guardar</strong><p>Arquitetura descreve o comportamento que precisa ser preservado; organização descreve como o hardware torna esse comportamento possível.</p></div>
+            <h3>Por que arquitetura e organização podem mudar em ritmos diferentes?</h3>
+            <p>Uma família de processadores pode preservar a arquitetura para manter compatibilidade de software e, ao mesmo tempo, modificar profundamente a organização interna. Isso permite que novas gerações executem os mesmos programas de máquina com diferenças importantes de desempenho, energia, cache, unidades funcionais e interconexão.</p>
+            <p>O exemplo clássico de Stallings é simples: decidir <em>se existe</em> uma instrução de multiplicação pertence à arquitetura; decidir <em>como ela será implementada</em> pertence à organização.</p>
           </div>
           <div class="study-stack">
-            <article class="study-card"><strong>Exemplo arquitetural</strong><p>Existe uma instrução para somar dois valores? Quais registradores ela usa? Como um endereço é expresso? Essas decisões são visíveis ao programador de máquina.</p></article>
-            <article class="study-card"><strong>Exemplo organizacional</strong><p>A soma usa uma única ULA compartilhada ou várias unidades? A cache está dividida? Quantos caminhos internos existem? Esses detalhes realizam a arquitetura.</p></article>
-            <article class="study-card"><strong>Por que isso importa em Engenharia de Software?</strong><p>Porque o mesmo software pode continuar compatível em gerações diferentes enquanto a microarquitetura muda significativamente por baixo.</p></article>
+            <article class="study-card"><strong>Arquitetura pergunta</strong><p>Que operações a máquina oferece? Quais estados e formatos o software pode observar?</p></article>
+            <article class="study-card"><strong>Organização pergunta</strong><p>Que unidades, caminhos e tecnologias internas realizam essas operações?</p></article>
+            <div class="study-callout"><strong>Uma frase para guardar</strong><p>Estrutura e função descrevem o sistema; arquitetura e organização ajudam a separar o comportamento visível da forma como ele é implementado.</p></div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="study-section alt" id="funcoes">
+    <section class="study-section alt" id="sistema">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">2 · O computador como sistema</p><h2>Quatro funções, poucos componentes e muitas interações</h2><p>Um computador moderno é complexo, mas seu comportamento de alto nível pode ser organizado em poucas funções fundamentais.</p></div>
+        <div class="study-heading"><p class="study-kicker">2 · Visão de alto nível</p><h2>O computador como conjunto de componentes inter-relacionados</h2><p>No tratamento de Stallings, um computador tradicional pode ser compreendido por quatro grandes componentes estruturais: processador, memória principal, entrada/saída e sistema de interconexão.</p></div>
         <div class="mini-grid four">
-          <article class="mini-card"><span class="tag">Função 1</span><h4>Processamento</h4><p>Transformar dados por operações aritméticas, lógicas, comparações, deslocamentos e outras operações definidas pela arquitetura.</p></article>
-          <article class="mini-card"><span class="tag">Função 2</span><h4>Armazenamento</h4><p>Manter instruções, operandos, resultados intermediários e informações persistentes em diferentes níveis da hierarquia de memória.</p></article>
-          <article class="mini-card"><span class="tag">Função 3</span><h4>Movimentação</h4><p>Transferir dados entre processador, memória, periféricos e, quando necessário, sistemas externos.</p></article>
-          <article class="mini-card"><span class="tag">Função 4</span><h4>Controle</h4><p>Coordenar a sequência de ações, selecionar operações e emitir sinais para que os demais componentes façam o que a instrução exige.</p></article>
+          <article class="mini-card"><span class="tag">Função</span><h4>Processar dados</h4><p>Executar operações sobre valores conforme as instruções da máquina.</p></article>
+          <article class="mini-card"><span class="tag">Função</span><h4>Armazenar dados</h4><p>Manter instruções, operandos e resultados temporários ou persistentes.</p></article>
+          <article class="mini-card"><span class="tag">Função</span><h4>Movimentar dados</h4><p>Transferir informação entre o sistema e seu ambiente externo.</p></article>
+          <article class="mini-card"><span class="tag">Função</span><h4>Controlar</h4><p>Coordenar a sequência de operações e o uso dos componentes.</p></article>
         </div>
-        <div class="machine">
-          <article class="machine-block"><h4>Memória principal</h4><p>Fornece um espaço endereçável para instruções e dados ativos. É maior e mais lenta que registradores e caches.</p></article>
-          <article class="machine-block"><h4>Processador</h4><p>Busca e executa instruções. No modelo clássico, destacamos unidade de controle, unidade lógica e aritmética e registradores.</p><div class="cpu-core"><span>Controle</span><span>ULA</span><span>Registradores</span></div></article>
-          <article class="machine-block"><h4>Entrada/saída</h4><p>Conecta o computador ao ambiente: armazenamento, rede, teclado, tela, sensores e outros dispositivos aparecem por módulos e controladores.</p></article>
+        <div class="system-four">
+          <article class="system-block"><p class="study-kicker">Processamento</p><h3>CPU</h3><p>Busca e executa instruções. Em um modelo inicial, reconhecemos unidade de controle, ULA e registradores.</p></article>
+          <article class="system-block"><p class="study-kicker">Armazenamento</p><h3>Memória principal</h3><p>Mantém instruções e dados que precisam estar disponíveis durante a execução.</p></article>
+          <article class="system-block"><p class="study-kicker">Comunicação externa</p><h3>Entrada / saída</h3><p>Permite que o computador receba dados e produza resultados por meio de módulos, controladores e dispositivos.</p></article>
+          <article class="system-block"><p class="study-kicker">Ambiente</p><h3>Dispositivos externos</h3><p>Armazenamento, rede, teclado, tela, sensores e outros periféricos se conectam ao sistema por interfaces de E/S.</p></article>
+          <article class="system-block interconnect"><p class="study-kicker">Comunicação interna</p><h3>Sistema de interconexão</h3><p>É o mecanismo que permite a comunicação entre CPU, memória principal e E/S. O barramento compartilhado é um exemplo clássico, mas não é a única forma de interconexão.</p></article>
         </div>
-        <div class="study-callout teal"><strong>O quarto componente é a interconexão</strong><p>CPU, memória e E/S não funcionam como ilhas. O sistema precisa de caminhos para transportar dados, endereços e sinais de controle entre eles.</p></div>
+        <div class="study-callout teal"><strong>Por que a interconexão merece aparecer como componente próprio?</strong><p>Sem um mecanismo de comunicação, CPU, memória e E/S seriam blocos isolados. A execução depende tanto das unidades que processam e armazenam quanto dos caminhos que transportam informação entre elas.</p></div>
       </div>
     </section>
 
     <section class="study-section" id="programa">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">3 · A ideia que torna a máquina geral</p><h2>Programa armazenado: instruções também são informação</h2><p>O salto conceitual da máquina de programa armazenado é permitir que a sequência de operações seja representada em memória, em vez de ficar rigidamente definida pela fiação da máquina.</p></div>
+        <div class="study-heading"><p class="study-kicker">3 · A ideia de programa armazenado</p><h2>Instruções também podem ser mantidas na memória</h2><p>O conceito de programa armazenado tornou possível tratar a sequência de operações como informação que pode ser carregada, armazenada e buscada pelo próprio computador.</p></div>
         <div class="study-grid">
           <div class="study-prose">
             <h3>O princípio central</h3>
-            <p>No modelo clássico associado às máquinas de von Neumann, a memória mantém tanto <strong>instruções</strong> quanto <strong>dados</strong>. A unidade de controle busca uma instrução, interpreta seu código de operação e coordena as transferências e operações necessárias.</p>
-            <p>Isso não significa que instrução e dado sejam “a mesma coisa” semanticamente. Ambos podem ser representados como padrões de bits na memória, mas o significado depende do contexto em que esses bits são lidos e interpretados.</p>
-            <div class="mini-grid">
-              <article class="mini-card"><span class="tag">Instrução</span><h4>O que fazer</h4><p>Inclui um código de operação e, dependendo da arquitetura, referências a operandos, registradores, valores imediatos ou endereços.</p></article>
-              <article class="mini-card"><span class="tag">Dado</span><h4>Sobre o que operar</h4><p>Pode representar inteiros, caracteres, endereços, estruturas, partes de imagens ou qualquer outro valor definido pelo software.</p></article>
-            </div>
-            <h3>O IAS como modelo didático</h3>
-            <p>Stallings usa a máquina IAS para mostrar de forma concreta o programa armazenado. Ela possui memória principal, ULA, unidade de controle e E/S. Registradores como PC, IR, MAR e MBR tornam explícito o percurso entre “onde está a próxima instrução”, “qual instrução está sendo executada” e “qual posição de memória está sendo acessada”.</p>
-            <p>O valor desse exemplo é conceitual. Processadores atuais são muito mais complexos, mas a ideia de buscar instruções, manter estado interno e coordenar memória e E/S continua fundamental.</p>
+            <p>Na máquina IAS apresentada por Stallings, a memória principal mantém <strong>dados e instruções</strong>. A unidade de controle busca uma instrução, identifica a operação que ela representa e coordena as transferências necessárias para executá-la.</p>
+            <p>Isso não torna instrução e dado semanticamente idênticos. Ambos são codificados como bits; o papel de cada conteúdo depende do contexto em que o processador o utiliza.</p>
+            <h3>Por que a IAS é útil mesmo sendo histórica?</h3>
+            <p>Porque ela deixa visíveis relações que continuam importantes em máquinas modernas: uma instrução precisa ser localizada, trazida ao processador, decodificada e executada; operandos precisam ser obtidos; resultados precisam ser mantidos ou escritos em algum lugar.</p>
+            <p>Stallings observa ainda que o conceito de programa armazenado é geralmente associado a John von Neumann, embora ideias semelhantes tenham sido desenvolvidas no mesmo período por outros pesquisadores, incluindo Alan Turing.</p>
           </div>
           <div class="study-stack">
-            <article class="study-card"><strong>PC — Program Counter</strong><p>Mantém uma referência para a próxima instrução a ser buscada no modelo sequencial clássico.</p></article>
-            <article class="study-card"><strong>IR — Instruction Register</strong><p>Mantém a instrução corrente enquanto a unidade de controle determina a ação necessária.</p></article>
-            <article class="study-card"><strong>MAR e MBR</strong><p>No modelo didático, separam “qual endereço de memória acessar” e “qual conteúdo está sendo transferido para ou da memória”.</p></article>
-            <div class="study-callout violet"><strong>Cuidado com o modelo</strong><p>Esses nomes ajudam a raciocinar sobre transferências internas. Microarquiteturas atuais podem organizar o mesmo trabalho com estruturas internas muito mais numerosas e sofisticadas.</p></div>
+            <article class="study-card"><strong>Programa</strong><p>Sequência codificada de instruções que define operações e fluxo de execução.</p></article>
+            <article class="study-card"><strong>Memória</strong><p>Espaço endereçável no qual instruções e dados podem permanecer disponíveis.</p></article>
+            <article class="study-card"><strong>CPU</strong><p>Busca instruções, mantém estado interno, executa operações e coordena transferências.</p></article>
           </div>
         </div>
+        <div class="ias-grid">
+          <article class="ias-card"><strong>PC</strong><p>Aponta para a próxima instrução a ser buscada no modelo sequencial.</p></article>
+          <article class="ias-card"><strong>IR</strong><p>Mantém a instrução corrente ou, no modelo IAS, seu código de operação em execução.</p></article>
+          <article class="ias-card"><strong>MAR</strong><p>Identifica o endereço da posição de memória que será lida ou escrita.</p></article>
+          <article class="ias-card"><strong>MBR</strong><p>Mantém temporariamente a palavra transferida entre memória e processador/E/S.</p></article>
+        </div>
+        <div class="boundary"><strong>Esses registradores são um modelo didático, não uma lista universal.</strong><p>Microarquiteturas atuais realizam o mesmo tipo de trabalho com estruturas internas muito mais numerosas. O valor pedagógico de PC, IR, MAR e MBR é tornar explícitas as responsabilidades de localização, instrução corrente, endereço e conteúdo transferido.</p></div>
       </div>
     </section>
 
     <section class="study-section alt" id="interconexao">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">4 · Nada acontece sem comunicação</p><h2>Interconexão: dados, endereços e controle precisam circular</h2><p>O barramento é um modelo clássico para explicar comunicação entre os grandes blocos do computador. Ele ajuda a separar três tipos de informação que viajam pelo sistema.</p></div>
+        <div class="study-heading"><p class="study-kicker">4 · Comunicação interna</p><h2>Barramentos ajudam a enxergar o que precisa circular</h2><p>O barramento é uma representação clássica de interconexão. Ele permite separar três categorias de sinais que participam das transferências entre CPU, memória e E/S.</p></div>
         <div class="bus-stack">
-          <div class="bus"><strong>Dados</strong><span>Transportam instruções, operandos e resultados. A largura do caminho influencia quanto pode ser transferido em uma operação.</span></div>
-          <div class="bus"><strong>Endereços</strong><span>Indicam qual posição de memória ou qual recurso está sendo referenciado. A capacidade de endereçamento depende do modelo arquitetural.</span></div>
-          <div class="bus"><strong>Controle</strong><span>Indicam operações e condições: leitura, escrita, interrupção, sincronização e outros sinais necessários para coordenar os componentes.</span></div>
+          <div class="bus"><strong>Dados</strong><span>Transportam instruções, operandos e resultados entre componentes.</span></div>
+          <div class="bus"><strong>Endereços</strong><span>Identificam a posição de memória ou o destino associado a uma transferência.</span></div>
+          <div class="bus"><strong>Controle</strong><span>Coordenam ações como leitura, escrita e outras condições necessárias à transferência.</span></div>
         </div>
         <div class="study-grid">
           <div class="study-prose">
-            <h3>Por que o barramento compartilhado é um modelo útil</h3>
-            <p>Em uma representação simples, CPU, memória e E/S compartilham um meio de comunicação. Isso deixa evidente que os componentes precisam disputar ou coordenar o uso do caminho e que a comunicação tem custo.</p>
-            <h3>Por que máquinas atuais não são apenas “um barramento”</h3>
-            <p>À medida que desempenho e número de dispositivos aumentam, uma única interconexão compartilhada se torna limitante. Sistemas atuais usam interconexões dedicadas e ponto a ponto, controladores integrados e padrões como PCI Express. Portanto, “barramento do sistema” deve ser entendido como um modelo inicial, não como fotografia literal de todo computador moderno.</p>
-            <div class="study-callout"><strong>Consequência para desempenho</strong><p>Não basta perguntar “quão rápida é a CPU?”. Se o processador passa tempo aguardando dados, a capacidade das interconexões e da hierarquia de memória passa a limitar o ritmo efetivo do sistema.</p></div>
+            <h3>O barramento compartilhado é um modelo, não uma fotografia</h3>
+            <p>Um barramento compartilhado é excelente para introduzir o problema: vários componentes precisam comunicar-se e a infraestrutura de comunicação possui capacidade finita. Porém, máquinas contemporâneas frequentemente usam ligações ponto a ponto, controladores integrados e interconexões especializadas.</p>
+            <h3>Estrutura e desempenho se encontram aqui</h3>
+            <p>Uma CPU pode ter grande capacidade de processamento e ainda assim ficar limitada se dados e instruções não chegam no ritmo necessário. Por isso, Stallings enfatiza que projetar um sistema equilibrado exige considerar processador, memória e interconexões em conjunto.</p>
           </div>
-          <aside class="study-card"><strong>Uma visão de sistema equilibrado</strong><p>Processador, memória e interconexões evoluem em ritmos diferentes. O desempenho observado emerge da cooperação — e das incompatibilidades — entre esses componentes.</p><p>Essa ideia prepara as aulas sobre cache, memória, armazenamento e, mais tarde, paralelismo.</p></aside>
+          <div class="study-stack">
+            <article class="study-card"><strong>Dados</strong><p>Respondem à pergunta: qual conteúdo está sendo transferido?</p></article>
+            <article class="study-card"><strong>Endereço</strong><p>Responde à pergunta: de onde ou para onde a transferência se refere?</p></article>
+            <article class="study-card"><strong>Controle</strong><p>Responde à pergunta: que operação de comunicação deve ocorrer?</p></article>
+          </div>
         </div>
       </div>
     </section>
 
     <section class="study-section" id="arquiteturas">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">5 · Dois modelos de caminhos para instruções e dados</p><h2>von Neumann e Harvard são modelos de organização</h2><p>A comparação é útil porque destaca uma pergunta estrutural: instruções e dados compartilham memória e caminhos de acesso ou possuem caminhos separados?</p></div>
+        <div class="study-heading"><p class="study-kicker">5 · Dois modelos clássicos</p><h2>von Neumann e Harvard: como instruções e dados são organizados e acessados?</h2><p>A comparação é mais precisa quando tratamos von Neumann e Harvard como modelos de organização dos espaços e caminhos usados por instruções e dados.</p></div>
         <div class="arch-grid">
-          <article class="arch-card">
-            <h3>von Neumann</h3>
-            <div class="arch-diagram"><div class="arch-cpu">CPU</div><div class="arch-path">caminho compartilhado para instruções e dados</div><div class="arch-memory one"><span>Memória única: instruções + dados</span></div></div>
-            <p>O modelo destaca a simplicidade de um espaço compartilhado. Instruções e dados competem pelo acesso ao mesmo sistema de memória e interconexão em uma representação clássica.</p>
-          </article>
-          <article class="arch-card">
-            <h3>Harvard</h3>
-            <div class="arch-diagram"><div class="arch-cpu">CPU</div><div class="arch-path">caminhos separados</div><div class="arch-memory"><span>Memória de instruções</span><span>Memória de dados</span></div></div>
-            <p>O modelo separa armazenamento e caminhos para instruções e dados, permitindo acessos independentes e simplificando alguns tipos de paralelismo de acesso.</p>
-          </article>
+          <article class="arch-card"><h3>von Neumann clássico</h3><div class="arch-diagram"><div class="arch-cpu">CPU</div><div class="arch-path">caminho compartilhado</div><div class="arch-memory one"><span>Memória: instruções + dados</span></div></div><p>Instruções e dados compartilham o espaço de memória e, na representação clássica, a infraestrutura de acesso.</p></article>
+          <article class="arch-card"><h3>Harvard clássico</h3><div class="arch-diagram"><div class="arch-cpu">CPU</div><div class="arch-path">caminhos separados</div><div class="arch-memory"><span>Memória de instruções</span><span>Memória de dados</span></div></div><p>Instruções e dados são mantidos em espaços separados e podem utilizar caminhos independentes.</p></article>
         </div>
         <div class="study-table-wrap"><table class="study-table"><thead><tr><th>Aspecto</th><th>von Neumann clássico</th><th>Harvard clássico</th></tr></thead><tbody>
-          <tr><td>Memória</td><td>Espaço unificado para código e dados.</td><td>Espaços fisicamente separados para código e dados.</td></tr>
-          <tr><td>Caminhos</td><td>Acesso compartilhado no modelo simples.</td><td>Acesso separado para instruções e dados.</td></tr>
-          <tr><td>Flexibilidade</td><td>Um mesmo espaço pode ser usado dinamicamente para ambos.</td><td>A separação pode impor regras distintas para cada espaço.</td></tr>
-          <tr><td>Potencial de acesso simultâneo</td><td>Limitado pelo caminho compartilhado no modelo clássico.</td><td>Instrução e dado podem ser acessados em paralelo.</td></tr>
+          <tr><td>Organização da memória</td><td>Espaço compartilhado para instruções e dados.</td><td>Espaços separados para instruções e dados.</td></tr>
+          <tr><td>Caminhos de acesso</td><td>Compartilhados no modelo simples.</td><td>Separados no modelo clássico.</td></tr>
+          <tr><td>Flexibilidade</td><td>Um espaço unificado pode ser usado para código e dados conforme a arquitetura.</td><td>Cada espaço pode possuir regras e larguras próprias.</td></tr>
+          <tr><td>Acesso simultâneo</td><td>Instruções e dados competem pelo recurso compartilhado no modelo clássico.</td><td>A separação permite acessos independentes.</td></tr>
         </tbody></table></div>
-        <div class="study-callout teal"><strong>Máquinas atuais frequentemente são híbridas</strong><p>É comum que o software enxergue um espaço de memória unificado, enquanto o processador usa caches L1 separadas para instruções e dados. Por isso, classificar um processador moderno apenas como “Harvard” ou “von Neumann” pode esconder detalhes importantes da organização real.</p></div>
-        <h3 style="margin-top:2rem">E o chamado gargalo de von Neumann?</h3>
-        <p style="max-width:900px;color:var(--muted)">A expressão chama atenção para a limitação causada quando processamento e memória precisam trocar instruções e dados por um caminho cuja capacidade é finita. O ponto central não é que toda máquina moderna possua literalmente um único fio compartilhado, mas que <strong>mover informação entre processador e memória custa tempo e energia</strong>. Caches, prefetch, múltiplos canais e interconexões mais rápidas são respostas organizacionais a esse problema mais geral.</p>
+        <div class="study-callout teal"><strong>Máquinas modernas frequentemente combinam características</strong><p>Um processador pode oferecer ao software uma memória logicamente unificada e, internamente, separar caminhos ou caches de instruções e dados. Por isso, os dois modelos funcionam melhor como instrumentos de análise do que como rótulos absolutos.</p></div>
+        <div class="bottleneck"><p class="study-kicker">Uma consequência importante</p><h3>O gargalo de von Neumann</h3><p>Quando processador e memória precisam trocar continuamente instruções e dados por recursos de comunicação de capacidade finita, a movimentação de informação pode limitar o desempenho. A formulação moderna do problema é mais ampla do que “um único barramento lento”: <strong>mover informação entre processador e memória tem custo de tempo e energia</strong>. Caches, prefetch, múltiplos canais e interconexões mais rápidas são respostas organizacionais estudadas em etapas posteriores da disciplina.</p></div>
       </div>
     </section>
 
     <section class="study-section alt" id="ciclo">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">6 · A CPU transforma bits em ações</p><h2>O ciclo de instrução é mais que “buscar, decodificar e executar”</h2><p>A fórmula de três etapas é uma excelente porta de entrada, mas uma execução real envolve transferências internas, busca de operandos, gravação de resultados e tratamento de eventos externos.</p></div>
+        <div class="study-heading"><p class="study-kicker">6 · Da instrução armazenada à ação</p><h2>Buscar, decodificar e executar</h2><p>Esse ciclo é uma abstração didática. Ele descreve responsabilidades fundamentais sem afirmar que cada instrução de um processador moderno percorra exatamente três etapas físicas isoladas.</p></div>
         <div class="cycle">
-          <article class="cycle-step"><b>1</b><strong>Busca</strong><p>Localizar e trazer a próxima instrução para o processador.</p></article>
-          <article class="cycle-step"><b>2</b><strong>Interpretação</strong><p>Decodificar o opcode e descobrir operandos, endereços e recursos necessários.</p></article>
-          <article class="cycle-step"><b>3</b><strong>Execução</strong><p>Realizar a operação: calcular, transferir, comparar, desviar, ler memória ou acionar E/S.</p></article>
-          <article class="cycle-step"><b>4</b><strong>Conclusão</strong><p>Registrar o resultado, atualizar estado e decidir qual será a próxima instrução ou evento.</p></article>
+          <article class="cycle-step"><b>1</b><strong>Busca</strong><p>Localizar e trazer a próxima instrução da memória para o processador.</p></article>
+          <article class="cycle-step"><b>2</b><strong>Decodificação</strong><p>Identificar o opcode, operandos e recursos necessários para realizar a instrução.</p></article>
+          <article class="cycle-step"><b>3</b><strong>Execução</strong><p>Realizar a operação e atualizar o estado necessário, o que pode envolver registradores, ULA, memória ou E/S.</p></article>
         </div>
         <div class="study-grid">
           <div class="study-prose">
-            <h3>Decompondo a busca em micro-operações</h3>
-            <p>No modelo clássico usado por Stallings, a fase de busca pode ser detalhada como pequenas transferências internas. Uma representação didática é:</p>
+            <h3>Uma busca pode ser decomposta</h3>
+            <p>Usando o vocabulário clássico do IAS, podemos representar a busca por pequenas transferências internas:</p>
             <div class="microflow"><span>PC → MAR</span><span>Memória → MBR</span><span>PC ← PC + 1</span><span>MBR → IR</span><span>Decodificar IR</span></div>
-            <p>Esse encadeamento mostra por que “buscar uma instrução” não é uma ação mágica e indivisível: endereços precisam ser colocados em caminhos adequados, a memória precisa responder, os bits precisam chegar ao processador e o estado interno precisa ser atualizado.</p>
-            <h3>Execução depende do opcode</h3>
-            <p>Depois da decodificação, não existe uma única sequência universal. Uma soma pode exigir busca de operandos e uso da ULA; uma instrução de armazenamento escreve na memória; um salto modifica o fluxo de controle; uma operação de E/S pode interagir com um módulo externo.</p>
-            <h3>Interrupções quebram a ilusão de fluxo contínuo</h3>
-            <p>Dispositivos e temporizadores podem sinalizar eventos que exigem atenção. O processador precisa preservar estado suficiente para executar uma rotina apropriada e depois retomar a atividade anterior. Esse mecanismo será fundamental quando entrarmos em sistemas operacionais.</p>
+            <p>A sequência é útil porque mostra que “buscar” não é um ato mágico: o processador precisa fornecer um endereço, aguardar a memória, receber o conteúdo e atualizar seu estado interno.</p>
+            <h3>A execução depende da instrução</h3>
+            <p>Não existe uma sequência de execução universal. Uma soma usa operandos e uma unidade aritmética; uma instrução de armazenamento transfere um valor para memória; um salto altera o fluxo; uma instrução de E/S pode interagir com um módulo externo.</p>
+            <h3>PC e IR aparecem aqui por necessidade</h3>
+            <p>O <strong>PC</strong> ajuda a explicar como a CPU localiza a próxima instrução no modelo sequencial. O <strong>IR</strong> ajuda a explicar como a instrução corrente permanece disponível para decodificação e controle. Outros registradores e caminhos internos ficam para o estudo específico da CPU.</p>
           </div>
           <div class="study-stack">
-            <article class="study-card"><strong>Busca de instrução</strong><p>O processador precisa saber onde está a próxima instrução e trazê-la para uma estrutura interna.</p></article>
-            <article class="study-card"><strong>Busca de dados</strong><p>Muitas instruções também precisam localizar operandos em registradores, memória ou E/S.</p></article>
-            <article class="study-card"><strong>Processamento</strong><p>A ULA e outras unidades executam operações sobre valores já disponíveis internamente.</p></article>
-            <article class="study-card"><strong>Escrita de resultado</strong><p>O resultado pode permanecer em registrador, voltar para a memória ou ser encaminhado a E/S.</p></article>
+            <article class="study-card"><strong>Busca de instrução</strong><p>Qual instrução vem a seguir e como seus bits chegam ao processador?</p></article>
+            <article class="study-card"><strong>Busca de operandos</strong><p>Que dados a operação exige e onde eles estão disponíveis?</p></article>
+            <article class="study-card"><strong>Execução</strong><p>Que unidade ou transferência realiza o efeito especificado pelo opcode?</p></article>
+            <article class="study-card"><strong>Atualização de estado</strong><p>Que resultado, registrador, posição de memória ou fluxo de controle muda ao final?</p></article>
           </div>
         </div>
-        <div class="boundary"><strong>Importante: ciclo de instrução não é igual a um ciclo de clock.</strong><p>Uma instrução pode envolver várias etapas internas; processadores modernos ainda sobrepõem etapas por pipeline, executam várias operações em paralelo e usam mecanismos de previsão. Esses detalhes ficam para as aulas específicas de CPU.</p></div>
+        <div class="boundary"><strong>Ciclo de instrução não é sinônimo de ciclo de clock.</strong><p>Uma instrução pode envolver várias operações internas. Processadores modernos sobrepõem e reordenam trabalho de maneiras que serão estudadas depois; a abstração buscar → decodificar → executar continua útil para explicar responsabilidades fundamentais.</p></div>
       </div>
     </section>
 
     <section class="study-section" id="io">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">7 · O computador precisa conversar com o mundo</p><h2>Entrada/saída não é apenas “um periférico ligado à CPU”</h2><p>Dispositivos possuem velocidades, formatos e protocolos muito diferentes. Por isso, controladores e módulos de E/S mediam a relação entre o processador, a memória e o dispositivo físico.</p></div>
-        <div class="mini-grid">
-          <article class="mini-card"><span class="tag">E/S programada</span><h4>A CPU acompanha a operação</h4><p>O processador consulta o estado do dispositivo e participa diretamente da transferência. É simples, mas pode desperdiçar processamento esperando um componente lento.</p></article>
-          <article class="mini-card"><span class="tag">Interrupção</span><h4>O dispositivo avisa quando precisa</h4><p>A CPU inicia ou prepara uma operação e continua outro trabalho. Quando há um evento relevante, o controlador sinaliza uma interrupção.</p></article>
-          <article class="mini-card"><span class="tag">DMA</span><h4>Dados podem fluir sem cópia palavra a palavra pela CPU</h4><p>Um controlador especializado transfere blocos entre dispositivo e memória, reduzindo o trabalho direto do processador.</p></article>
-          <article class="mini-card"><span class="tag">Driver</span><h4>O SO oferece uma interface de software</h4><p>Drivers conhecem detalhes do dispositivo e permitem que aplicações usem abstrações mais estáveis do que registradores e protocolos de hardware.</p></article>
+        <div class="study-heading"><p class="study-kicker">7 · Entrada e saída no recorte desta aula</p><h2>Periférico, módulo de E/S e CPU não são a mesma camada</h2><p>Tanenbaum &amp; Bos e Stallings tratam E/S como uma interface entre o computador e o ambiente. Para a Aula 03, o ponto essencial é reconhecer que dispositivos externos são mediados por hardware de E/S e, em sistemas operacionais, também por software especializado.</p></div>
+        <div class="io-chain">CPU / memória ↔ módulo ou controlador de E/S ↔ dispositivo externo</div>
+        <div class="study-grid" style="margin-top:1.5rem">
+          <div class="study-prose">
+            <h3>Por que existe mediação?</h3>
+            <p>Dispositivos têm velocidades, formatos e protocolos muito diferentes. Um controlador ou módulo de E/S adapta a comunicação entre a organização interna do computador e o dispositivo físico.</p>
+            <h3>Onde o sistema operacional entra?</h3>
+            <p>Em sistemas de propósito geral, o software de aplicação normalmente não manipula registradores de dispositivos diretamente. O sistema operacional e seus drivers fornecem interfaces mais estáveis e controlam o compartilhamento dos recursos.</p>
+          </div>
+          <div class="study-stack">
+            <article class="study-card"><strong>Na Aula 03</strong><p>Precisamos reconhecer E/S como grande componente estrutural e distinguir módulo/controlador de dispositivo.</p></article>
+            <article class="study-card"><strong>Mais adiante</strong><p>Interrupções, DMA, drivers e políticas de E/S serão estudados quando entrarem explicitamente no percurso de sistemas operacionais.</p></article>
+          </div>
         </div>
-        <div class="study-callout violet"><strong>Ponte para Sistemas Operacionais</strong><p>Tanenbaum e Bos enfatizam que aplicações comuns não deveriam lidar diretamente com a complexidade do hardware. O sistema operacional fornece abstrações e gerencia o compartilhamento de processador, memória e dispositivos.</p></div>
+        <div class="study-callout violet"><strong>Limite deliberado</strong><p>Interrupções e DMA ajudam a explicar por que a CPU não precisa realizar todas as transferências palavra por palavra, mas não são conteúdo central desta aula. Aqui eles aparecem apenas como ponte conceitual para tópicos posteriores.</p></div>
       </div>
     </section>
 
     <section class="study-section alt" id="software">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">8 · Voltando ao projeto da disciplina</p><h2>Uma linha de Python não é uma instrução da CPU</h2><p>Para conectar a arquitetura ao baseline sequencial, precisamos preservar as camadas discutidas na Aula 02.</p></div>
-        <div class="flow"><span>Código Python</span><span>Runtime / bibliotecas</span><span>Instruções de máquina</span><span>CPU + caches</span><span>Memória</span><span>SO + E/S</span><span>Resultado observável</span></div>
+        <div class="study-heading"><p class="study-kicker">8 · Voltando às camadas da disciplina</p><h2>Do código Python à execução física</h2><p>A Aula 03 abre a camada de hardware, mas não elimina as camadas estudadas antes. Uma linha de Python não corresponde a uma única instrução da CPU.</p></div>
+        <div class="flow"><span>Código Python</span><span>Runtime / bibliotecas</span><span>Instruções de máquina</span><span>CPU + memória</span><span>SO + E/S</span><span>Resultado observável</span></div>
         <div class="study-grid">
           <div class="study-prose">
             <h3>Computação</h3>
-            <p>Quando o baseline realiza cálculos, a CPU não interpreta diretamente a sintaxe Python escrita pelo estudante. O runtime executa código nativo e implementa a semântica da linguagem; esse trabalho se decompõe em muitas instruções de máquina.</p>
+            <p>O runtime da linguagem implementa a semântica do programa e executa código nativo. Uma operação simples no código-fonte pode resultar em muitas instruções de máquina e em diferentes acessos a memória.</p>
             <h3>Dados</h3>
-            <p>Os objetos e estruturas usados pelo programa pertencem ao espaço de memória do processo. Enquanto são manipulados, dados circulam pela hierarquia de memória e chegam a registradores e unidades de execução conforme necessário.</p>
+            <p>Objetos e estruturas usados pelo programa ocupam memória do processo. Para que uma operação ocorra, valores precisam chegar às unidades de execução e resultados precisam ser mantidos em registradores ou memória conforme a organização da máquina.</p>
             <h3>Entrada e saída</h3>
-            <p>Quando o programa lê tarefas ou grava resultados, bibliotecas recorrem a serviços do sistema operacional. O SO coordena sistemas de arquivos, drivers e dispositivos; no hardware, controladores, interrupções e mecanismos de transferência participam do caminho.</p>
-            <div class="study-callout"><strong>Consequência para o PBL</strong><p>O tempo de execução do baseline não pertence exclusivamente à “CPU”. Ele emerge do algoritmo, runtime, escalonamento, memória, caches, interconexões e E/S. Por isso, otimização exige medir antes de concluir onde está o gargalo.</p></div>
+            <p>Quando o baseline lê tarefas ou grava resultados, bibliotecas recorrem a serviços do sistema operacional. O SO coordena abstrações de arquivo e dispositivos; o hardware de E/S realiza a comunicação física correspondente.</p>
           </div>
-          <aside class="study-card"><strong>Rastreamento conceitual de uma tarefa</strong><ol style="margin:.7rem 0 0;padding-left:1.2rem;color:var(--muted)"><li>Entrada é solicitada ao sistema operacional.</li><li>Dados necessários chegam à memória do processo.</li><li>O runtime executa a lógica do programa.</li><li>Instruções de máquina são buscadas e executadas.</li><li>Operandos e resultados passam por registradores, caches e memória.</li><li>A saída cruza novamente interfaces do SO e de E/S.</li></ol></aside>
+          <aside class="study-card"><strong>Aplicando ao baseline sequencial</strong><ol style="margin:.7rem 0 0;padding-left:1.2rem;color:var(--muted)"><li>O programa solicita a leitura da entrada.</li><li>Dados ficam disponíveis na memória do processo.</li><li>O runtime executa a lógica programada.</li><li>Instruções de máquina são buscadas, decodificadas e executadas.</li><li>Resultados intermediários passam por registradores e memória.</li><li>A saída volta a cruzar serviços do SO e E/S.</li></ol></aside>
         </div>
+        <div class="study-callout"><strong>Por que essa ligação é importante para Engenharia de Software?</strong><p>Porque requisitos de desempenho e compatibilidade do software dependem de recursos físicos e de interfaces de sistema. Entender o caminho permite formular hipóteses melhores antes de medir ou otimizar.</p></div>
       </div>
     </section>
 
     <section class="study-section" id="limites">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">9 · O mapa é útil porque não tenta ser o território</p><h2>O que este modelo explica — e o que ele ainda esconde</h2><p>Aprofundar não significa antecipar todos os mecanismos da disciplina. O objetivo é tornar as simplificações conscientes.</p></div>
-        <div class="study-table-wrap"><table class="study-table"><thead><tr><th>Modelo desta aula</th><th>O que ele ajuda a explicar</th><th>O que fica para depois</th></tr></thead><tbody>
-          <tr><td>CPU = controle + ULA + registradores</td><td>Por que a CPU precisa coordenar, operar e manter estado interno.</td><td>Pipeline, superscalaridade, execução fora de ordem, previsão de desvios e unidades especializadas.</td></tr>
-          <tr><td>Memória principal</td><td>Por que instruções e dados precisam estar disponíveis para processamento.</td><td>Cache em detalhe, localidade, RAM/ROM, paginação, TLB e memória virtual.</td></tr>
-          <tr><td>Barramentos</td><td>Por que dados, endereços e controle precisam circular entre componentes.</td><td>Topologias modernas, enlaces ponto a ponto, controladores integrados e detalhes de PCIe.</td></tr>
-          <tr><td>von Neumann × Harvard</td><td>Como separar ou compartilhar caminhos de instruções e dados muda a organização.</td><td>Implementações híbridas, hierarquias de cache e detalhes de microarquiteturas comerciais.</td></tr>
-          <tr><td>Buscar → decodificar → executar</td><td>Como instruções armazenadas se tornam ações do processador.</td><td>Micro-operações completas, temporização, pipeline e paralelismo em nível de instrução.</td></tr>
+        <div class="study-heading"><p class="study-kicker">9 · Aprofundar sem antecipar todo o semestre</p><h2>O que o modelo explica e o que ele ainda esconde</h2><p>O material é mais profundo que a aula de sala, mas mantém o recorte da Aula 03 e explicita o que pertence a níveis posteriores.</p></div>
+        <div class="study-table-wrap"><table class="study-table"><thead><tr><th>Modelo usado agora</th><th>O que ele explica</th><th>O que fica para depois</th></tr></thead><tbody>
+          <tr><td>CPU = controle + ULA + registradores</td><td>Por que a CPU precisa coordenar, operar e manter estado interno.</td><td>Banco de registradores, clock, caminhos internos, pipeline, superscalaridade e execução fora de ordem.</td></tr>
+          <tr><td>Memória principal</td><td>Por que instruções e dados precisam estar disponíveis durante a execução.</td><td>Hierarquia de memória, caches, localidade, RAM/ROM, paginação, TLB e memória virtual.</td></tr>
+          <tr><td>Sistema de interconexão</td><td>Por que componentes precisam trocar dados, endereços e controle.</td><td>PCIe, topologias modernas, controladores integrados e protocolos específicos.</td></tr>
+          <tr><td>von Neumann × Harvard</td><td>Como compartilhar ou separar instruções e dados altera a organização.</td><td>Implementações híbridas, caches separadas e microarquiteturas comerciais.</td></tr>
+          <tr><td>Buscar → decodificar → executar</td><td>Como uma instrução armazenada se torna uma ação do processador.</td><td>Temporização detalhada, micro-operações completas e paralelismo em nível de instrução.</td></tr>
+          <tr><td>E/S como módulo/controlador + dispositivo</td><td>Por que o periférico não é acessado como uma extensão direta da ULA.</td><td>Interrupções, DMA, drivers e software de E/S em profundidade.</td></tr>
         </tbody></table></div>
         <div class="check-grid">
-          <article class="check-card"><span>01</span><strong>Arquitetura × organização</strong><p>Consigo explicar por que compatibilidade e implementação são perguntas diferentes.</p></article>
-          <article class="check-card"><span>02</span><strong>Estrutura × função</strong><p>Consigo relacionar processador, memória, E/S e interconexão às quatro funções gerais.</p></article>
-          <article class="check-card"><span>03</span><strong>Programa armazenado</strong><p>Consigo explicar por que instruções podem ser buscadas da memória e interpretadas pela CPU.</p></article>
-          <article class="check-card"><span>04</span><strong>von Neumann × Harvard</strong><p>Consigo comparar os modelos sem tratar processadores modernos como cópias literais de um deles.</p></article>
-          <article class="check-card"><span>05</span><strong>Ciclo de instrução</strong><p>Consigo decompor a busca e explicar que a execução depende do opcode e dos operandos.</p></article>
-          <article class="check-card"><span>06</span><strong>Software até hardware</strong><p>Consigo rastrear uma tarefa do baseline sem dizer que Python ou o arquivo acessam diretamente a CPU ou o SSD.</p></article>
+          <article class="check-card"><span>01</span><strong>Função × estrutura</strong><p>Consigo separar o que um componente faz da forma como ele se relaciona aos demais.</p></article>
+          <article class="check-card"><span>02</span><strong>Arquitetura × organização</strong><p>Consigo distinguir comportamento visível de implementação interna.</p></article>
+          <article class="check-card"><span>03</span><strong>Quatro componentes</strong><p>Consigo explicar CPU, memória, E/S e interconexão como estrutura de alto nível.</p></article>
+          <article class="check-card"><span>04</span><strong>Programa armazenado</strong><p>Consigo explicar por que instruções podem estar em memória e ser buscadas pela CPU.</p></article>
+          <article class="check-card"><span>05</span><strong>von Neumann × Harvard</strong><p>Consigo comparar os modelos sem tratá-los como rótulos absolutos para máquinas modernas.</p></article>
+          <article class="check-card"><span>06</span><strong>Ciclo de instrução</strong><p>Consigo explicar busca, decodificação e execução e o papel didático de PC, IR, MAR e MBR.</p></article>
         </div>
       </div>
     </section>
 
     <section class="study-section alt" id="referencias">
       <div class="container">
-        <div class="study-heading"><p class="study-kicker">10 · Base bibliográfica</p><h2>Leituras que sustentam este aprofundamento</h2><p>O material foi sintetizado a partir dos livros disponíveis no projeto e mantém o recorte da Aula 03 da disciplina.</p></div>
+        <div class="study-heading"><p class="study-kicker">10 · Base bibliográfica</p><h2>Leituras que sustentam este aprofundamento</h2><p>O recorte foi revisado para acompanhar tanto o conteúdo planejado da Aula 03 quanto as obras de referência disponíveis no projeto.</p></div>
         <div class="study-grid">
           <div class="study-prose">
             <h3>William Stallings — Arquitetura e Organização de Computadores</h3>
-            <ul class="references"><li><strong>Capítulo 1:</strong> organização e arquitetura; estrutura e função; programa armazenado e máquina IAS.</li><li><strong>Capítulo 3:</strong> componentes, função e estruturas de interconexão do computador.</li><li><strong>Capítulo 7:</strong> princípios de entrada/saída, interrupções e DMA.</li><li><strong>Capítulo 14:</strong> organização do processador, registradores e ciclo de instrução.</li></ul>
-            <h3>Tanenbaum &amp; Bos — Sistemas Operacionais Modernos</h3>
-            <ul class="references"><li><strong>Capítulo 1:</strong> revisão de hardware — processadores, memória, discos, dispositivos de E/S, barramentos e inicialização.</li><li><strong>Seção introdutória:</strong> sistema operacional como camada de abstração e gerenciador de recursos.</li><li><strong>Capítulo 5:</strong> controladores de dispositivos, E/S mapeada em memória, DMA, interrupções e drivers.</li></ul>
+            <ul class="references"><li><strong>Capítulo 1:</strong> organização e arquitetura; estrutura e função; programa armazenado e máquina IAS.</li><li><strong>Capítulo 3:</strong> componentes do computador, função e estruturas de interconexão.</li><li><strong>Capítulo 7:</strong> entrada/saída, interrupções e DMA — usados apenas como contexto para delimitar o papel da E/S.</li><li><strong>Capítulo 14:</strong> organização do processador, registradores e ciclo de instrução — usado como aprofundamento do modelo buscar/decodificar/executar.</li></ul>
+            <h3>Andrew S. Tanenbaum &amp; Herbert Bos — Sistemas Operacionais Modernos</h3>
+            <ul class="references"><li><strong>Capítulo 1:</strong> revisão de hardware — processadores, memória, discos, dispositivos de E/S, barramentos e inicialização.</li><li><strong>Seção 1.1:</strong> sistema operacional como abstração e gerenciador de recursos.</li><li><strong>Capítulo 5:</strong> controladores, interrupções, DMA e drivers — usados aqui apenas para contextualizar a mediação de E/S.</li></ul>
           </div>
           <div class="study-stack">
-            <article class="study-card"><strong>Sobre as edições</strong><p>Os PDFs disponíveis no projeto correspondem a Stallings, 10ª edição, e Tanenbaum &amp; Bos, 4ª edição. O PPC/plano vigente lista edições mais recentes dessas obras; os conceitos introdutórios usados neste material permanecem compatíveis com o recorte da Aula 03.</p></article>
-            <article class="study-card"><strong>Natureza deste material</strong><p>Esta página é uma síntese didática autoral. Ela organiza e explica os conceitos centrais sem reproduzir capítulos dos livros e não substitui a leitura das obras de referência.</p></article>
-            <article class="study-card"><strong>Próxima ponte</strong><p>Com esse modelo consolidado, as aulas seguintes podem ampliar a visão para a organização interna da CPU, arquiteturas x86/x64/ARM, memória, cache e mecanismos do sistema operacional.</p></article>
+            <article class="study-card"><strong>Recorte do plano da Aula 03</strong><p>Organização básica do computador; CPU, memória, barramentos, E/S e periféricos; programa armazenado; von Neumann e Harvard; ciclo de busca, decodificação e execução; gargalo de von Neumann.</p></article>
+            <article class="study-card"><strong>Sobre as edições</strong><p>Os PDFs disponíveis no projeto correspondem a Stallings, 10ª edição, e Tanenbaum &amp; Bos, 4ª edição. O PPC vigente lista edições mais recentes, mas os conceitos introdutórios usados neste material são os mesmos fundamentos cobertos pelas obras disponíveis.</p></article>
+            <article class="study-card"><strong>Natureza do material</strong><p>Esta página é uma síntese didática autoral baseada nas referências da disciplina. Ela organiza os conceitos para estudo e não substitui os capítulos originais.</p></article>
           </div>
         </div>
       </div>
