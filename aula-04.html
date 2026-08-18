@@ -93,11 +93,11 @@
     .exercise-kicker:before{content:"?";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--blue)}
     .exercise-head h3{margin:.35rem 0 0}
     .exercise-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:var(--paper);border:1px solid var(--line-local);color:var(--muted);font-size:.78rem;font-weight:800}
-    .exercise-body{padding:1.4rem;display:grid;grid-template-columns:.95fr 1.05fr;gap:28px}
+    .exercise-body{padding:1.4rem}
+    .exercise-two-col{display:grid;grid-template-columns:.95fr 1.05fr;gap:28px}
     .prompt-list{margin:0;padding-left:1.25rem;color:var(--muted)}
     .prompt-list li+li{margin-top:.5rem}
-    .worksheet textarea{width:100%;min-height:126px;resize:vertical;border:1px solid var(--line-local);border-radius:13px;padding:.85rem;background:var(--paper);color:var(--text)}
-    .save-note{display:block;margin-top:.45rem;font-size:.78rem;color:var(--muted)}
+    .exercise-note{margin:1rem 0 0;padding:14px 16px;border-left:3px solid var(--teal);border-radius:0 12px 12px 0;background:color-mix(in srgb,var(--teal) 8%,var(--paper));color:var(--muted)}
     details.solution{margin-top:16px;padding:14px 16px;border:1px solid var(--line-local);border-radius:14px;background:var(--soft)}
     details.solution summary{cursor:pointer;font-weight:800;color:var(--blue)}
     details.solution p,details.solution ul{margin-bottom:0;color:var(--muted)}
@@ -143,9 +143,7 @@
     .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line-local);border-radius:15px;background:var(--paper)}
     .check-item:before{content:"□";color:var(--teal);font-size:1.3rem;font-weight:900}
-    .reference-box{margin-top:30px;padding:22px;border:1px solid var(--line-local);border-radius:18px;background:var(--paper)}
-    .reference-box p:last-child{margin-bottom:0}
-    @media(max-width:980px){.hero-grid,.overview-grid,.split-heading,.memory-layout,.assembly-why,.exercise-body{grid-template-columns:1fr}.lesson-path{grid-template-columns:repeat(3,1fr)}.engineer-grid,.instruction-anatomy,.os-chain{grid-template-columns:repeat(2,1fr)}.operation-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:980px){.hero-grid,.overview-grid,.split-heading,.memory-layout,.assembly-why,.exercise-two-col{grid-template-columns:1fr}.lesson-path{grid-template-columns:repeat(3,1fr)}.engineer-grid,.instruction-anatomy,.os-chain{grid-template-columns:repeat(2,1fr)}.operation-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:680px){.lesson-page .container{width:min(var(--content-local),calc(100% - 26px))}.section{padding:62px 0}.lesson-path,.engineer-grid,.concept-grid,.instruction-anatomy,.operation-grid,.lab-grid,.os-chain,.checklist,.topic-list{grid-template-columns:1fr}.topic-list div:last-child{grid-column:auto}.warmup{grid-template-columns:1fr}.memory-row{grid-template-columns:105px 1fr 1fr}.exercise-head{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
@@ -211,7 +209,7 @@
 
     <section class="section section-soft" id="interface">
       <div class="container">
-        <div class="section-heading"><p class="eyebrow">Primeira distinção</p><h2>Arquitetura é aquilo que pode mudar o comportamento visível do programa</h2><p>Stallings distingue arquitetura e organização. A arquitetura reúne atributos visíveis ao programador de linguagem de máquina; a organização descreve como o hardware implementa esses atributos.</p></div>
+        <div class="section-heading"><p class="eyebrow">Primeira distinção</p><h2>Arquitetura é aquilo que pode mudar o comportamento visível do programa</h2><p>Uma distinção fundamental separa arquitetura e organização. A arquitetura reúne atributos visíveis ao programador de linguagem de máquina; a organização descreve como o hardware implementa esses atributos.</p></div>
         <div class="concept-grid">
           <article class="concept-card"><span class="concept-label">Arquitetura</span><h3>O contrato visível</h3><p>Inclui conjunto de instruções, registradores, modos de endereçamento, representação de dados e mecanismos que afetam diretamente a execução lógica do programa.</p></article>
           <article class="concept-card"><span class="concept-label">Organização</span><h3>Como o contrato é realizado</h3><p>Inclui detalhes internos de implementação, interconexões e decisões de hardware que podem mudar desempenho sem necessariamente mudar o programa visível à ISA.</p></article>
@@ -228,7 +226,7 @@
           <div class="exercise-head"><div><span class="exercise-kicker">Exercício 1</span><h3>Arquitetura ou organização?</h3></div><span class="exercise-tag">Classificação guiada</span></div>
           <div class="exercise-body">
             <ol class="prompt-list"><li>O processador possui uma instrução de multiplicação.</li><li>O processador possui 16 registradores visíveis ao programa.</li><li>A multiplicação usa um circuito dedicado ou reutiliza outra unidade interna.</li><li>Uma instrução usa operandos de 64 bits.</li><li>A memória cache tem uma determinada tecnologia interna.</li></ol>
-            <div class="worksheet"><textarea data-save="ex1" placeholder="Para cada item: arquitetura ou organização? Explique em uma frase o critério usado."></textarea><span class="save-note">Procure usar a ideia de “visível ao programa” como critério, não apenas decorar os exemplos.</span></div>
+            <p class="exercise-note">Classifique cada item como arquitetura ou organização e justifique oralmente ou em seu caderno usando a ideia de <strong>visível ao programa</strong> como critério.</p>
           </div>
           <details class="solution"><summary>Conferir raciocínio</summary><p>Os itens 1, 2 e 4 descrevem atributos arquiteturais. Os itens 3 e 5 descrevem decisões organizacionais. O ponto importante é justificar a classificação pela interface observada pelo software.</p></details>
         </article>
@@ -256,11 +254,11 @@
 
         <article class="exercise">
           <div class="exercise-head"><div><span class="exercise-kicker">Exercício 2</span><h3>De uma expressão a operações elementares</h3></div><span class="exercise-tag">Previsão antes da resposta</span></div>
-          <div class="exercise-body">
+          <div class="exercise-body exercise-two-col">
             <div><div class="code-card"><div class="code-head"><span>C · expressão de alto nível</span><span>exemplo</span></div><pre><code>int a = 7;
 int b = 5;
 int resultado = (a + b) * 2;</code></pre></div></div>
-            <div class="worksheet"><textarea data-save="ex2" placeholder="Sem escrever Assembly real: que operações elementares precisam ocorrer para produzir resultado? Pense em carregar valores, operar e armazenar."></textarea><span class="save-note">Não existe obrigação de uma linha C virar uma instrução. O objetivo é decompor a intenção.</span></div>
+            <div><p>Sem escrever Assembly real, identifique uma sequência plausível de operações elementares para produzir <code>resultado</code>.</p><ol class="prompt-list"><li>Que valores precisam estar disponíveis?</li><li>Que operação acontece primeiro?</li><li>Que operação acontece depois?</li><li>Em que momento o resultado precisa ser mantido ou armazenado?</li></ol><p class="exercise-note">Não existe obrigação de uma linha C virar uma instrução. O objetivo é decompor a intenção do código.</p></div>
           </div>
           <details class="solution"><summary>Uma decomposição possível</summary><p>Carregar ou tornar disponíveis os valores de <code>a</code> e <code>b</code>; somá-los; multiplicar o resultado por 2; manter ou armazenar o valor produzido. Um compilador real pode reorganizar ou substituir essas operações por instruções equivalentes.</p></details>
         </article>
@@ -288,12 +286,12 @@ int resultado = (a + b) * 2;</code></pre></div></div>
 
         <article class="exercise">
           <div class="exercise-head"><div><span class="exercise-kicker">Exercício 3</span><h3>Rastreie o estado, não apenas a resposta final</h3></div><span class="exercise-tag">Memória + registradores</span></div>
-          <div class="exercise-body">
+          <div class="exercise-body exercise-two-col">
             <div class="code-card"><div class="code-head"><span>Pseudo-ISA didática</span><span>não é x86</span></div><pre><code>LOAD  R1, [0x1000]
 LOAD  R2, [0x1004]
 ADD   R3, R1, R2
 STORE [0x1008], R3</code></pre></div>
-            <div class="worksheet"><textarea data-save="ex3" placeholder="Depois de cada instrução, anote R1, R2, R3 e Mem[0x1008]. Em que momento 12 está apenas na CPU? Em que momento ele aparece na memória?"></textarea><span class="save-note">Esse tipo de rastreamento prepara a leitura de depuradores e traces reais.</span></div>
+            <div><p>Acompanhe a sequência e anote em seu caderno o estado depois de cada instrução.</p><ol class="prompt-list"><li>Qual é o valor de R1?</li><li>Qual é o valor de R2?</li><li>Quando R3 passa a conter 12?</li><li>Em que momento 12 está apenas na CPU?</li><li>Em que momento 12 aparece na memória?</li></ol><p class="exercise-note">Esse tipo de rastreamento prepara a leitura de depuradores e traces reais.</p></div>
           </div>
           <details class="solution"><summary>Conferir estados principais</summary><p>Após os dois <code>LOAD</code>, R1=7 e R2=5. Após <code>ADD</code>, R3=12, mas a memória de destino ainda não foi alterada. Somente após <code>STORE</code> o valor 12 aparece em <code>0x1008</code>.</p></details>
         </article>
@@ -302,7 +300,7 @@ STORE [0x1008], R3</code></pre></div>
 
     <section class="section" id="assembly">
       <div class="container">
-        <div class="section-heading"><p class="eyebrow">Por que olhar Assembly?</p><h2>Não para substituir linguagens de alto nível — para enxergar melhor a execução</h2><p>Stallings apresenta a linguagem de montagem como uma forma de esclarecer como instruções executam, como dados são representados e como programas se relacionam com processador, memória, sistema operacional e E/S.</p></div>
+        <div class="section-heading"><p class="eyebrow">Por que olhar Assembly?</p><h2>Não para substituir linguagens de alto nível — para enxergar melhor a execução</h2><p>A linguagem de montagem ajuda a tornar explícitos aspectos que linguagens de alto nível normalmente escondem: instruções executadas, representação dos dados, registradores e relação com memória, sistema operacional e E/S.</p></div>
         <div class="assembly-why">
           <div class="reason-list">
             <div class="reason"><b>1</b><div><strong>Entender execução</strong><p>Uma sequência curta permite observar explicitamente operações, operandos e mudanças de estado.</p></div></div>
@@ -342,7 +340,7 @@ print(memoria)</code></pre></div><ol class="step-list"><li>Preencha as duas lacu
           <div class="exercise-head"><div><span class="exercise-kicker">Exercício 4</span><h3>Compare abstrações</h3></div><span class="exercise-tag">Síntese técnica</span></div>
           <div class="exercise-body">
             <ol class="prompt-list"><li>No Python, onde está escondida a ideia de “registrador”?</li><li>No x86-64, quais elementos ficam explícitos?</li><li>Qual representação é melhor para desenvolver uma aplicação? E qual é melhor para investigar a execução da CPU?</li><li>Por que respostas diferentes podem ser corretas dependendo do objetivo?</li></ol>
-            <div class="worksheet"><textarea data-save="ex4" placeholder="Compare as duas representações usando as palavras abstração, estado, arquitetura e objetivo."></textarea><span class="save-note">A habilidade esperada é escolher o nível de abstração adequado ao problema técnico.</span></div>
+            <p class="exercise-note">Discuta as respostas usando as palavras <strong>abstração</strong>, <strong>estado</strong>, <strong>arquitetura</strong> e <strong>objetivo</strong>. A habilidade esperada é escolher o nível de abstração adequado ao problema técnico.</p>
           </div>
         </article>
 
@@ -352,7 +350,7 @@ print(memoria)</code></pre></div><ol class="step-list"><li>Preencha as duas lacu
 
     <section class="section" id="so">
       <div class="container">
-        <div class="section-heading"><p class="eyebrow">Uma fronteira importante</p><h2>O programa não recebe acesso irrestrito à máquina</h2><p>Tanenbaum e Bos mostram o sistema operacional como uma camada que oferece abstrações mais convenientes e gerencia recursos. Programas em modo usuário não podem simplesmente executar qualquer operação privilegiada ou controlar diretamente todos os dispositivos.</p></div>
+        <div class="section-heading"><p class="eyebrow">Uma fronteira importante</p><h2>O programa não recebe acesso irrestrito à máquina</h2><p>O sistema operacional funciona como uma camada que oferece abstrações mais convenientes e gerencia recursos. Programas em modo usuário não podem simplesmente executar qualquer operação privilegiada ou controlar diretamente todos os dispositivos.</p></div>
         <div class="os-chain">
           <article class="os-node"><small>Aplicação</small><strong>Expressa a intenção</strong><p>Ex.: ler arquivo, imprimir saída, abrir conexão.</p></article>
           <article class="os-node"><small>Runtime / bibliotecas</small><strong>Oferecem APIs</strong><p>Transformam operações da linguagem em chamadas apropriadas.</p></article>
@@ -367,7 +365,6 @@ print(memoria)</code></pre></div><ol class="step-list"><li>Preencha as duas lacu
       <div class="container">
         <div class="section-heading"><p class="eyebrow">Checklist de saída</p><h2>O que você precisa conseguir explicar</h2><p>Não é necessário memorizar sintaxe de Assembly. O domínio esperado está nas relações entre os conceitos.</p></div>
         <div class="checklist"><div class="check-item">A diferença entre arquitetura e organização do computador.</div><div class="check-item">Por que a ISA funciona como uma interface entre software de baixo nível e processador.</div><div class="check-item">O que operação, operandos, destino e próxima instrução representam.</div><div class="check-item">A diferença entre nome, valor, endereço e registrador.</div><div class="check-item">Por que uma linha de alto nível não precisa corresponder a uma instrução de máquina.</div><div class="check-item">Por que vale a pena saber ler Assembly sem usá-lo como linguagem principal.</div><div class="check-item">Como x86-64 e ARM podem afetar compatibilidade de binários.</div><div class="check-item">Por que o sistema operacional oferece abstrações em vez de expor o hardware bruto às aplicações.</div></div>
-        <div class="reference-box"><p class="eyebrow">Base conceitual</p><h3>Leituras que sustentam esta aula</h3><p><strong>Stallings:</strong> Cap. 1 (arquitetura × organização); Cap. 12 (características das instruções de máquina e tipos de operações); Cap. 13 (modos, formatos e linguagem de montagem); Cap. 14 (registradores e ciclo de instrução); Apêndice B (por que estudar Assembly).</p><p><strong>Tanenbaum &amp; Bos:</strong> Cap. 1, especialmente sistema operacional como máquina estendida e gerenciador de recursos, revisão de hardware, chamadas de sistema e modelo de execução em C.</p></div>
       </div>
     </section>
   </main>
@@ -380,7 +377,6 @@ print(memoria)</code></pre></div><ol class="step-list"><li>Preencha as duas lacu
     const sections=anchors.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
     function updateProgress(){const max=document.documentElement.scrollHeight-window.innerHeight;const pct=max>0?(window.scrollY/max)*100:0;if(progress)progress.style.width=`${Math.min(100,Math.max(0,pct))}%`}
     function updateActiveLink(){const marker=window.scrollY+130;let active=sections[0]?.id;sections.forEach(s=>{if(s.offsetTop<=marker)active=s.id});anchors.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${active}`))}
-    document.querySelectorAll('[data-save]').forEach(field=>{const key=`arquitetura:aula04:${field.dataset.save}`;const value=localStorage.getItem(key);if(value!==null)field.value=value;field.addEventListener('input',()=>localStorage.setItem(key,field.value))});
     updateProgress();updateActiveLink();window.addEventListener('scroll',()=>{updateProgress();updateActiveLink()},{passive:true});
   </script>
 </body>
