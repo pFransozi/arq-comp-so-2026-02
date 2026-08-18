@@ -349,20 +349,34 @@
         <div class="precision-note"><strong>Limite da aula:</strong> não vamos decorar opcodes nem formatos binários. Queremos aprender a ler a intenção de uma instrução e reconhecer de onde vêm seus operandos e para onde vai o resultado.</div>
 
         <article class="exercise">
-          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 2</span><h3>Quebre uma expressão em passos menores</h3></div><span class="exercise-tag">Do conhecido ao novo</span></div>
+          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 2</span><h3>Da expressão no código às etapas da execução</h3></div><span class="exercise-tag">Passo a passo</span></div>
           <div class="exercise-body">
-            <p class="exercise-goal"><strong>Objetivo:</strong> perceber que uma expressão simples da linguagem C representa uma intenção de alto nível e que a máquina precisa realizá-la por meio de operações menores.</p>
-            <div class="worked-example"><strong>Exemplo resolvido primeiro</strong><p>Para <code>resultado = a + b</code>, podemos pensar, sem usar Assembly real, em três ideias: <strong>obter a</strong> → <strong>obter b e somar</strong> → <strong>manter o resultado</strong>.</p></div>
-            <div class="exercise-two-col">
-              <div><div class="code-card"><div class="code-head"><span>C · expressão de alto nível</span><span>agora é sua vez</span></div><pre><code>int a = 7;
-int b = 5;
-int resultado = (a + b) * 2;</code></pre></div></div>
-              <div><h4>Resolva sem pensar em sintaxe de Assembly</h4><ol class="exercise-steps"><li><strong>Calcule primeiro:</strong> qual deve ser o valor final de <code>resultado</code>?</li><li><strong>Identifique as entradas:</strong> quais valores precisam estar disponíveis antes do cálculo?</li><li><strong>Separe as operações:</strong> o que deve acontecer antes, a soma ou a multiplicação?</li><li><strong>Pense no estado temporário:</strong> onde o valor da soma precisa ficar enquanto a multiplicação ainda não aconteceu?</li><li><strong>Finalize:</strong> depois da multiplicação, qual valor precisa ser mantido como resultado?</li></ol></div>
+            <p class="exercise-goal"><strong>Objetivo:</strong> perceber que uma expressão de alto nível descreve <em>o que queremos calcular</em>, enquanto a máquina precisa realizar esse cálculo em etapas menores, mantendo valores temporários durante a execução.</p>
+
+            <div class="worked-example">
+              <strong>Primeiro, acompanhe um exemplo completo</strong>
+              <p>Considere <code>resultado = (7 + 5) * 2</code>. Antes de pensar em Assembly, basta acompanhar a ordem das operações e observar como um resultado intermediário é produzido.</p>
+              <div class="exercise-table-wrap"><table class="exercise-table"><thead><tr><th>Etapa</th><th>O que acontece</th><th>Valor disponível</th></tr></thead><tbody><tr><td>1</td><td>Os valores 7 e 5 precisam estar disponíveis para o cálculo.</td><td>7 e 5</td></tr><tr><td>2</td><td>A soma é realizada.</td><td>12</td></tr><tr><td>3</td><td>O valor 12 precisa permanecer disponível porque ainda será usado.</td><td>12 temporário</td></tr><tr><td>4</td><td>O valor temporário é multiplicado por 2.</td><td>24</td></tr><tr><td>5</td><td>O resultado final pode ser mantido ou armazenado.</td><td>24</td></tr></tbody></table></div>
+              <p class="exercise-note"><strong>Ideia importante:</strong> o valor <code>12</code> não é a resposta final, mas precisa existir em algum lugar durante a execução. Mais adiante veremos que valores temporários podem ficar em registradores ou na memória.</p>
             </div>
-            <p class="attention-tip"><strong>Atalho mental:</strong> não tente imaginar instruções reais ainda. Leia a expressão da mesma forma que resolveria uma conta no papel, uma etapa por vez.</p>
-            <p class="exercise-note"><strong>Desafio curto:</strong> troque a expressão para <code>(a - b) * 3</code>. Quais etapas mudam? A estrutura geral continua a mesma?</p>
+
+            <div class="exercise-two-col">
+              <div>
+                <div class="code-card"><div class="code-head"><span>C · expressão de alto nível</span><span>agora é sua vez</span></div><pre><code>int a = 7;
+int b = 5;
+int resultado = (a + b) * 2;</code></pre></div>
+              </div>
+              <div>
+                <h4>Leia o código como uma sequência de decisões</h4>
+                <ol class="exercise-steps"><li><strong>Descubra a resposta:</strong> qual valor deve aparecer em <code>resultado</code> no final?</li><li><strong>Localize as entradas:</strong> quais valores participam do cálculo?</li><li><strong>Respeite a ordem:</strong> qual operação precisa acontecer primeiro?</li><li><strong>Encontre o valor intermediário:</strong> qual resultado precisa ser mantido antes da multiplicação?</li><li><strong>Finalize:</strong> depois da multiplicação, qual valor deve ser guardado em <code>resultado</code>?</li></ol>
+              </div>
+            </div>
+
+            <div class="exercise-table-wrap"><table class="exercise-table"><thead><tr><th>Passo</th><th>Complete com suas palavras</th></tr></thead><tbody><tr><td>1</td><td>Obter os valores de <code>a</code> e <code>b</code>.</td></tr><tr><td>2</td><td class="blank">________________________________________________</td></tr><tr><td>3</td><td class="blank">________________________________________________</td></tr><tr><td>4</td><td class="blank">________________________________________________</td></tr></tbody></table></div>
+
+            <p class="attention-tip"><strong>Não tente escrever Assembly:</strong> neste momento, queremos apenas decompor a intenção do programa. Pense como se estivesse explicando para outra pessoa quais pequenas ações precisam acontecer para chegar ao resultado.</p>
+            <p class="exercise-note"><strong>Desafio curto:</strong> substitua a expressão por <code>resultado = (a - b) * 3</code>. O que muda nas operações? O que permanece igual na estrutura do raciocínio?</p>
           </div>
-          <details class="solution"><summary>Conferir uma decomposição possível</summary><p>O resultado final é 24. Uma sequência conceitual é: disponibilizar 7 e 5 → somar 7 + 5 → manter temporariamente 12 → multiplicar 12 por 2 → manter ou armazenar 24. Um compilador real pode usar instruções diferentes, reorganizar etapas ou otimizar a sequência.</p></details>
         </article>
       </div>
     </section>
