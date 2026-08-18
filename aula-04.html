@@ -3,78 +3,61 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: do código-fonte à execução, representações, memória, registradores, ISA, x86-64 e práticas guiadas em Python.">
+  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: ISA, instruções, dados, registradores, memória, Assembly como instrumento de leitura e práticas guiadas em x86-64 e Python.">
   <meta name="theme-color" content="#101a24">
-  <title>Aula 04 — Do código-fonte à execução</title>
+  <title>Aula 04 — Do software à máquina</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
   <style>
-    :root {
-      --ink:#172033;
-      --muted:#647087;
-      --line:#dfe5ef;
-      --soft:#f4f7fb;
-      --paper:#ffffff;
-      --navy:#0f172a;
-      --blue:#176b87;
-      --blue-soft:#e8f5f8;
-      --violet:#8a5a35;
-      --violet-soft:#f8efe8;
-      --teal:#2c9277;
-      --teal-soft:#e9f7f2;
-      --amber:#b66a07;
-      --amber-soft:#fff7e8;
-      --radius:22px;
-      --shadow:0 18px 48px rgba(35,50,78,.09);
-      --content:1160px;
+    :root{
+      --ink:var(--text);
+      --muted:var(--muted);
+      --line-local:var(--line);
+      --paper:var(--surface);
+      --soft:var(--surface-soft);
+      --navy:var(--dark);
+      --blue:var(--primary);
+      --violet:var(--secondary);
+      --teal:var(--accent);
+      --radius-local:22px;
+      --shadow-local:var(--shadow);
+      --content-local:1160px;
     }
-
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
-    button,input,textarea,select{font:inherit}
-    a{color:inherit}
+    body{margin:0;color:var(--text);background:var(--bg);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
     h1,h2,h3,h4,p{margin-top:0}
     h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}
     h1{font-size:clamp(2.7rem,6vw,5.8rem);max-width:12ch;margin-bottom:1.2rem}
     h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}
-    h3{font-size:1.2rem}
     p{color:var(--muted)}
     code,pre{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
-
     .progress{position:fixed;inset:0 auto auto 0;height:4px;width:0;z-index:999;background:linear-gradient(90deg,var(--blue),var(--violet),var(--teal))}
-    .container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}
+    .lesson-page .container{width:min(var(--content-local),calc(100% - 40px));margin-inline:auto}
     .section{padding:88px 0;scroll-margin-top:88px}
     .section-soft{background:var(--soft)}
     .section-dark{background:var(--navy);color:#fff}
-    .section-dark p{color:#b9c3d7}
-
-    .eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
-    .eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}
-    .section-dark .eyebrow{color:#9bd4e5}
-
-    .site-header{position:sticky;top:0;z-index:100;backdrop-filter:blur(18px);background:rgba(255,255,255,.9);border-bottom:1px solid rgba(223,229,239,.88)}
-    .nav-wrap{min-height:70px}
-    .brand-mark{background:linear-gradient(145deg,var(--blue),var(--violet));box-shadow:0 10px 24px rgba(23,107,135,.18)}
-    .main-nav a.active{color:var(--blue)}
-
-    .hero{position:relative;overflow:hidden;min-height:auto;padding:92px 0 76px;background:radial-gradient(circle at 87% 20%,rgba(138,90,53,.14),transparent 27%),radial-gradient(circle at 75% 75%,rgba(44,146,119,.12),transparent 22%),linear-gradient(180deg,#fbfcff 0%,#fff 100%)}
-    .hero:after{content:"";position:absolute;width:520px;height:520px;right:-250px;top:-180px;border:1px solid rgba(23,107,135,.13);border-radius:50%;box-shadow:0 0 0 70px rgba(23,107,135,.025),0 0 0 140px rgba(138,90,53,.018)}
-    .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}
-    .hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:720px}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
-    .button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.15rem;border-radius:13px;text-decoration:none;font-weight:800;border:1px solid transparent}
-    .button-primary{background:var(--navy);color:#fff;box-shadow:0 12px 28px rgba(15,23,42,.16)}
-    .button-secondary{background:var(--paper);border-color:var(--line);color:var(--ink)}
-    .guiding-card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}
-    .guiding-card span{display:block;color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}
-    .guiding-card blockquote{margin:0;font-size:1.2rem;line-height:1.45;font-weight:760}
-
+    .section-dark p{color:#c5cee0}
     .section-heading{max-width:790px;margin-bottom:2.4rem}
     .section-heading p{font-size:1.04rem}
     .split-heading{max-width:none;display:grid;grid-template-columns:1fr .8fr;gap:48px;align-items:end}
+    .lesson-page .eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+    .lesson-page .eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}
+    .section-dark .eyebrow{color:#9bd4e5}
+    .lesson-page .site-header{background:color-mix(in srgb,var(--paper) 92%,transparent);border-bottom:1px solid var(--line-local)}
+    .lesson-page .nav-wrap{min-height:70px}
+    .lesson-page .brand-mark{background:linear-gradient(145deg,var(--blue),var(--violet));box-shadow:0 10px 24px color-mix(in srgb,var(--blue) 24%,transparent)}
+    .main-nav a.active{color:var(--blue)!important}
+    .lesson-page .hero{position:relative;overflow:hidden;min-height:auto;padding:92px 0 76px;background:radial-gradient(circle at 87% 20%,color-mix(in srgb,var(--violet) 15%,transparent),transparent 27%),radial-gradient(circle at 75% 75%,color-mix(in srgb,var(--teal) 12%,transparent),transparent 22%),var(--bg)}
+    .lesson-page .hero:after{content:"";position:absolute;width:520px;height:520px;right:-250px;top:-180px;border:1px solid color-mix(in srgb,var(--blue) 16%,transparent);border-radius:50%;box-shadow:0 0 0 70px color-mix(in srgb,var(--blue) 4%,transparent),0 0 0 140px color-mix(in srgb,var(--violet) 3%,transparent)}
+    .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}
+    .hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:730px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+    .guiding-card{background:var(--paper);border:1px solid var(--line-local);border-radius:var(--radius-local);padding:1.5rem;box-shadow:var(--shadow-local)}
+    .guiding-card span{display:block;color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}
+    .guiding-card blockquote{margin:0;font-size:1.18rem;line-height:1.45;font-weight:760;color:var(--text)}
     .overview-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}
-    .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:0 12px 32px rgba(35,50,78,.055)}
+    .card{background:var(--paper);border:1px solid var(--line-local);border-radius:var(--radius-local);padding:1.5rem;box-shadow:0 12px 32px color-mix(in srgb,var(--text) 8%,transparent)}
     .topics-card{grid-row:span 2}
     .topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.2rem}
     .topic-list div{padding:.9rem 1rem;border-radius:14px;background:var(--soft);font-weight:750}
@@ -82,189 +65,105 @@
     .competency{border-left:4px solid var(--blue)}
     .competency.c6{border-left-color:var(--violet)}
     .skill{display:grid;grid-template-columns:58px 1fr;gap:.7rem;align-items:start;margin-top:.9rem}
-    .skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:var(--blue-soft);color:var(--blue);font-size:.82rem}
-    .c6 .skill strong{background:var(--violet-soft);color:var(--violet)}
+    .skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:color-mix(in srgb,var(--blue) 12%,var(--paper));color:var(--blue);font-size:.82rem}
+    .c6 .skill strong{background:color-mix(in srgb,var(--violet) 12%,var(--paper));color:var(--violet)}
     .skill span{color:var(--muted)}
-
     .lesson-path{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;counter-reset:path}
-    .lesson-path a{counter-increment:path;position:relative;min-height:142px;padding:1rem;text-decoration:none;border:1px solid var(--line);background:var(--paper);border-radius:17px;transition:.2s}
+    .lesson-path a{counter-increment:path;position:relative;min-height:142px;padding:1rem;text-decoration:none;border:1px solid var(--line-local);background:var(--paper);border-radius:17px;transition:.2s}
     .lesson-path a:before{content:counter(path,decimal-leading-zero);display:block;color:var(--blue);font-weight:850;font-size:.74rem;letter-spacing:.08em;margin-bottom:2rem}
-    .lesson-path a:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
-
-    .warmup{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px;background:linear-gradient(135deg,var(--navy),#173047);border-radius:28px;padding:2rem;color:#fff}
+    .lesson-path a:hover{transform:translateY(-4px);box-shadow:var(--shadow-local)}
+    .warmup{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px;background:linear-gradient(135deg,var(--navy),color-mix(in srgb,var(--navy) 82%,var(--blue)));border-radius:28px;padding:2rem;color:#fff}
     .warmup p{color:#cbd5e1}
     .question-cloud{display:grid;gap:.75rem}
     .question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}
-
-    .bridge-question{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:var(--teal-soft);border:1px solid rgba(44,146,119,.22);font-size:1.08rem;font-weight:750;color:var(--ink)}
-    .precision-note{margin-top:22px;padding:18px 20px;border-left:4px solid var(--amber);background:var(--amber-soft);border-radius:0 14px 14px 0;color:var(--ink)}
-
-    .representation-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;gap:12px;align-items:stretch;margin-top:28px}
-    .rep-node{display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:0 10px 28px rgba(35,50,78,.055)}
-    .rep-node.source{border-color:#b9d9e4;background:linear-gradient(145deg,var(--paper),var(--blue-soft))}
-    .rep-node.cpu{border-color:#d9c2ad;background:linear-gradient(145deg,var(--paper),var(--violet-soft))}
-    .rep-node small{color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}
-    .rep-node strong{margin:.45rem 0;font-size:1.05rem}
-    .rep-node span{color:var(--muted);font-size:.9rem}
-    .rep-arrow{display:grid;place-items:center;color:var(--blue);font-size:1.65rem;font-weight:900}
-
-    .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:26px}
-    .compare-card{padding:24px;border:1px solid var(--line);border-radius:22px;background:var(--paper);box-shadow:0 12px 32px rgba(35,50,78,.05)}
-    .compare-card h3{margin-bottom:.55rem}
-    .mini-flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:15px}
-    .mini-flow span{padding:.55rem .75rem;border-radius:10px;background:var(--soft);font-size:.86rem;font-weight:800}
-    .mini-flow b{color:var(--blue)}
-
-    .code-card{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:#0d1624;box-shadow:var(--shadow)}
-    .code-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:.8rem 1rem;background:#132033;color:#d6e2f0;font-size:.82rem;font-weight:800}
-    .code-card pre{margin:0;padding:1.25rem;overflow:auto;color:#f2f6fb;line-height:1.72;font-size:.92rem}
-    .code-caption{padding:13px 16px;border-top:1px solid rgba(255,255,255,.08);color:#aebcd0;font-size:.82rem}
-
-    .exercise{margin:34px 0;border:1px solid #cbdde4;background:var(--paper);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px rgba(23,107,135,.07)}
-    .exercise-head{padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--line);background:linear-gradient(135deg,var(--blue-soft),var(--paper))}
+    .concept-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .concept-card{padding:24px;border:1px solid var(--line-local);border-radius:20px;background:var(--paper)}
+    .concept-card h3{margin:.2rem 0 .6rem}
+    .concept-card p:last-child{margin-bottom:0}
+    .concept-label{display:inline-flex;padding:.35rem .58rem;border-radius:999px;background:color-mix(in srgb,var(--blue) 11%,var(--paper));color:var(--blue);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em}
+    .engineer-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+    .engineer-card{padding:20px;border:1px solid var(--line-local);border-radius:18px;background:var(--paper)}
+    .engineer-card strong{display:block;margin-bottom:.45rem}
+    .engineer-card p{margin:0;font-size:.92rem}
+    .bridge-question{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:color-mix(in srgb,var(--teal) 12%,var(--paper));border:1px solid color-mix(in srgb,var(--teal) 30%,var(--line-local));font-size:1.06rem;font-weight:750;color:var(--text)}
+    .precision-note{margin-top:22px;padding:18px 20px;border-left:4px solid #c68218;background:color-mix(in srgb,#c68218 10%,var(--paper));border-radius:0 14px 14px 0;color:var(--text)}
+    .exercise{margin:34px 0;border:1px solid var(--line-local);background:var(--paper);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px color-mix(in srgb,var(--blue) 10%,transparent)}
+    .exercise-head{padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--line-local);background:linear-gradient(135deg,color-mix(in srgb,var(--blue) 10%,var(--paper)),var(--paper))}
     .exercise-kicker{display:inline-flex;align-items:center;gap:.45rem;color:var(--blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}
     .exercise-kicker:before{content:"?";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--blue)}
     .exercise-head h3{margin:.35rem 0 0}
-    .exercise-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:var(--paper);border:1px solid var(--line);color:var(--muted);font-size:.78rem;font-weight:800}
-    .exercise-body{padding:1.4rem;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px}
+    .exercise-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:var(--paper);border:1px solid var(--line-local);color:var(--muted);font-size:.78rem;font-weight:800}
+    .exercise-body{padding:1.4rem;display:grid;grid-template-columns:.95fr 1.05fr;gap:28px}
     .prompt-list{margin:0;padding-left:1.25rem;color:var(--muted)}
     .prompt-list li+li{margin-top:.5rem}
-    .worksheet{display:grid;gap:.7rem}
-    .worksheet textarea{width:100%;min-height:126px;resize:vertical;border:1px solid var(--line);border-radius:13px;padding:.85rem;background:var(--paper);color:var(--ink)}
-    .save-note{font-size:.78rem;color:var(--muted)}
-    details.solution{margin-top:16px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--soft)}
+    .worksheet textarea{width:100%;min-height:126px;resize:vertical;border:1px solid var(--line-local);border-radius:13px;padding:.85rem;background:var(--paper);color:var(--text)}
+    .save-note{display:block;margin-top:.45rem;font-size:.78rem;color:var(--muted)}
+    details.solution{margin-top:16px;padding:14px 16px;border:1px solid var(--line-local);border-radius:14px;background:var(--soft)}
     details.solution summary{cursor:pointer;font-weight:800;color:var(--blue)}
     details.solution p,details.solution ul{margin-bottom:0;color:var(--muted)}
-
-    .memory-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px;align-items:start}
+    .instruction-anatomy{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+    .anatomy-card{padding:20px;border:1px solid var(--line-local);border-radius:18px;background:var(--paper)}
+    .anatomy-card span{display:grid;place-items:center;width:34px;height:34px;margin-bottom:12px;border-radius:10px;color:#fff;background:linear-gradient(145deg,var(--blue),var(--violet));font-size:.78rem;font-weight:900}
+    .anatomy-card h3{margin-bottom:.45rem}
+    .anatomy-card p{margin:0;font-size:.92rem}
+    .operation-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px}
+    .operation{padding:16px;border:1px solid var(--line-local);border-radius:15px;background:var(--paper)}
+    .operation code{color:var(--blue);font-weight:850}
+    .memory-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
     .concept-stack{display:grid;gap:12px}
-    .concept-item{padding:19px;border:1px solid var(--line);border-radius:18px;background:var(--paper)}
-    .concept-item strong{display:block;margin-bottom:.35rem}
+    .concept-item{padding:18px;border:1px solid var(--line-local);border-radius:17px;background:var(--paper)}
+    .concept-item strong{display:block;margin-bottom:.3rem}
     .concept-item code{color:var(--blue);font-weight:850}
-    .memory-table{overflow:hidden;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:var(--shadow)}
-    .memory-row{display:grid;grid-template-columns:130px 1fr 1fr;border-bottom:1px solid var(--line)}
+    .memory-table{overflow:hidden;border:1px solid var(--line-local);border-radius:20px;background:var(--paper);box-shadow:var(--shadow-local)}
+    .memory-row{display:grid;grid-template-columns:130px 1fr 1fr;border-bottom:1px solid var(--line-local)}
     .memory-row:last-child{border-bottom:0}
     .memory-row>*{padding:12px 14px}
     .memory-row.header>*{background:var(--soft);font-weight:850}
     .memory-row code{font-weight:850;color:var(--teal)}
-
-    .isa-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
-    .isa-card{padding:24px;border:1px solid var(--line);border-radius:22px;background:var(--paper)}
-    .isa-card h3{margin-bottom:.55rem}
-    .instruction-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
-    .instruction-chips span{padding:.45rem .7rem;border-radius:999px;background:var(--soft);border:1px solid var(--line);font-family:Consolas,monospace;font-size:.82rem;font-weight:800}
-
-    .simulator{overflow:hidden;border:1px solid var(--line);border-radius:24px;background:var(--paper);box-shadow:var(--shadow)}
-    .sim-head{padding:20px 22px;border-bottom:1px solid var(--line)}
-    .machine-state{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:18px 22px}
-    .state-box{padding:12px;border-radius:13px;background:var(--soft)}
-    .state-box small{display:block;color:var(--muted);font-weight:700}
-    .state-box strong{display:block;margin-top:4px;font-family:Consolas,monospace;font-size:1.15rem}
-    .sim-message{margin:0 22px 18px;padding:16px;border-radius:14px;background:var(--blue-soft);min-height:82px;color:var(--ink)}
-    .sim-controls{display:flex;gap:10px;padding:0 22px 22px}
-    .sim-controls button{cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:.72rem 1rem;background:var(--paper);color:var(--ink);font-weight:800}
-    .sim-controls .primary{background:var(--navy);color:#fff;border-color:var(--navy)}
-    .trace-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:var(--paper);margin-top:28px}
-    .trace-table{width:100%;min-width:800px;border-collapse:collapse}
-    .trace-table th,.trace-table td{padding:12px;border:1px solid var(--line);text-align:left}
-    .trace-table thead th{background:var(--soft);font-size:.8rem}
-    .trace-table code{font-weight:850;color:var(--blue)}
-
-    .platform-layout{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:stretch}
-    .platform-card{padding:24px;border:1px solid var(--line);border-radius:22px;background:var(--paper);box-shadow:var(--shadow)}
-    .platform-label{display:inline-block;padding:.36rem .6rem;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:.74rem;font-weight:900;text-transform:uppercase;letter-spacing:.07em}
-    .platform-card h3{margin:.9rem 0 .6rem}
-    .platform-steps{margin:1rem 0 0;padding-left:1.25rem;color:var(--muted)}
-    .platform-steps li+li{margin-top:.45rem}
-
-    .python-lab{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
-    .todo-card{padding:22px;border:1px solid var(--line);border-radius:20px;background:var(--paper)}
-    .todo-card ul{color:var(--muted);padding-left:1.2rem}
-
-    .engineering-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-    .engineering-card{padding:1.35rem;border-radius:19px;border:1px solid var(--line);background:var(--paper)}
-    .engineering-card span{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 .7rem;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:900}
-    .engineering-card h3{margin-top:1.1rem}
-
-    .aps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .aps-card{padding:22px;border:1px solid var(--line);border-radius:20px;background:var(--paper)}
-    .aps-card span{display:inline-grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:900}
-    .aps-card h3{margin-top:1rem}
-    .aps-card ul{padding-left:1.2rem;color:var(--muted)}
-    .delivery{margin-top:28px;padding:24px;border-radius:22px;background:var(--navy);color:#fff}
-    .delivery p{color:#cbd5e1}
-
+    .code-card{overflow:hidden;border:1px solid var(--line-local);border-radius:20px;background:#0d1624;box-shadow:var(--shadow-local)}
+    .code-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:.78rem 1rem;background:#132033;color:#d6e2f0;font-size:.82rem;font-weight:800}
+    .code-card pre{margin:0;padding:1.25rem;overflow:auto;color:#f2f6fb;line-height:1.72;font-size:.92rem}
+    .code-caption{padding:13px 16px;border-top:1px solid rgba(255,255,255,.08);color:#aebcd0;font-size:.82rem}
+    .assembly-why{display:grid;grid-template-columns:1.05fr .95fr;gap:24px;align-items:start}
+    .reason-list{display:grid;gap:10px}
+    .reason{display:grid;grid-template-columns:38px 1fr;gap:12px;padding:16px;border:1px solid var(--line-local);border-radius:16px;background:var(--paper)}
+    .reason b{display:grid;place-items:center;width:36px;height:36px;border-radius:11px;background:color-mix(in srgb,var(--blue) 12%,var(--paper));color:var(--blue)}
+    .reason p{margin:2px 0 0}
+    .lab-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .lab-card{padding:22px;border:1px solid var(--line-local);border-radius:20px;background:var(--paper)}
+    .lab-card h3{margin:.3rem 0 .55rem}
+    .lab-card p{margin-bottom:1rem}
+    .lab-card .button{margin-top:.2rem}
+    .step-list{margin:1rem 0 0;padding-left:1.2rem;color:var(--muted)}
+    .step-list li+li{margin-top:.45rem}
+    .os-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px}
+    .os-node{padding:20px;border:1px solid var(--line-local);border-radius:18px;background:var(--paper)}
+    .os-node small{display:block;color:var(--blue);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.45rem}
+    .os-node p{margin:0}
     .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line);border-radius:15px;background:var(--paper)}
+    .check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line-local);border-radius:15px;background:var(--paper)}
     .check-item:before{content:"□";color:var(--teal);font-size:1.3rem;font-weight:900}
-    .references{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);font-size:.9rem;color:var(--muted)}
-
-    body.arch-page.theme-dark{
-      --ink:#eef4ff;
-      --muted:#aab7cc;
-      --line:#2a3750;
-      --soft:#0d1422;
-      --paper:#101725;
-      --navy:#070b14;
-      --blue:#69c4e0;
-      --blue-soft:#122b36;
-      --violet:#e0a16e;
-      --violet-soft:#302318;
-      --teal:#5ed0ad;
-      --teal-soft:#102b26;
-      --amber:#e6b35f;
-      --amber-soft:#2b2315;
-      --shadow:0 18px 48px rgba(0,0,0,.28);
-    }
-    body.arch-page.theme-dark .site-header{background:rgba(16,23,37,.9);border-color:rgba(42,55,80,.92)}
-    body.arch-page.theme-dark .hero{background:radial-gradient(circle at 87% 20%,rgba(224,161,110,.16),transparent 27%),radial-gradient(circle at 75% 75%,rgba(94,208,173,.10),transparent 22%),var(--paper)}
-    body.arch-page.theme-dark .hero:after{border-color:rgba(105,196,224,.14);box-shadow:0 0 0 70px rgba(105,196,224,.035),0 0 0 140px rgba(224,161,110,.025)}
-    body.arch-page.theme-dark .rep-node.source{border-color:#285064}
-    body.arch-page.theme-dark .rep-node.cpu{border-color:#5a4130}
-    body.arch-page.theme-dark .exercise{border-color:#284352}
-    body.arch-page.theme-dark .exercise-head{background:linear-gradient(135deg,var(--blue-soft),var(--paper))}
-
-    @media(max-width:980px){
-      .hero-grid,.overview-grid,.split-heading,.memory-layout,.platform-layout,.python-lab,.exercise-body{grid-template-columns:1fr}
-      .lesson-path{grid-template-columns:repeat(3,1fr)}
-      .representation-flow{grid-template-columns:1fr}
-      .rep-arrow{transform:rotate(90deg);min-height:22px}
-      .compare-grid,.isa-grid,.engineering-grid,.aps-grid{grid-template-columns:1fr 1fr}
-    }
-    @media(max-width:680px){
-      .container{width:min(var(--content),calc(100% - 26px))}
-      .section{padding:64px 0}
-      .hero{padding-top:68px}
-      .lesson-path,.compare-grid,.isa-grid,.engineering-grid,.aps-grid,.checklist{grid-template-columns:1fr}
-      .topic-list{grid-template-columns:1fr}
-      .topic-list div:last-child{grid-column:auto}
-      .warmup{grid-template-columns:1fr}
-      .machine-state{grid-template-columns:1fr 1fr}
-      .memory-row{grid-template-columns:105px 1fr 1fr}
-      .exercise-head{align-items:flex-start;flex-direction:column}
-    }
+    .reference-box{margin-top:30px;padding:22px;border:1px solid var(--line-local);border-radius:18px;background:var(--paper)}
+    .reference-box p:last-child{margin-bottom:0}
+    @media(max-width:980px){.hero-grid,.overview-grid,.split-heading,.memory-layout,.assembly-why,.exercise-body{grid-template-columns:1fr}.lesson-path{grid-template-columns:repeat(3,1fr)}.engineer-grid,.instruction-anatomy,.os-chain{grid-template-columns:repeat(2,1fr)}.operation-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:680px){.lesson-page .container{width:min(var(--content-local),calc(100% - 26px))}.section{padding:62px 0}.lesson-path,.engineer-grid,.concept-grid,.instruction-anatomy,.operation-grid,.lab-grid,.os-chain,.checklist,.topic-list{grid-template-columns:1fr}.topic-list div:last-child{grid-column:auto}.warmup{grid-template-columns:1fr}.memory-row{grid-template-columns:105px 1fr 1fr}.exercise-head{align-items:flex-start;flex-direction:column}}
   </style>
 </head>
 <body class="lesson-page arch-page">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
-
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
-        <span class="brand-mark" aria-hidden="true">SO</span>
-        <span><strong>Arquitetura &amp; SO</strong><small>Aula 04</small></span>
-      </a>
+      <a class="brand" href="index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal"><span class="brand-mark" aria-hidden="true">SO</span><span><strong>Arquitetura &amp; SO</strong><small>Aula 04</small></span></a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
       <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
         <a href="index.html">Página principal</a>
         <a href="curso.html">Visão geral</a>
-        <a href="#representacoes">Representações</a>
-        <a href="#memoria">Memória</a>
-        <a href="#isa">ISA</a>
-        <a href="#x86">x86-64</a>
-        <a href="#python">Python</a>
-        <a class="nav-highlight" href="#aps">APS 1</a>
+        <a href="#interface">Software × máquina</a>
+        <a href="#instrucao">Instruções</a>
+        <a href="#dados">Dados</a>
+        <a href="#assembly">Assembly</a>
+        <a class="nav-highlight" href="#pratica">Prática</a>
         <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
       </nav>
     </div>
@@ -274,411 +173,201 @@
     <section class="hero" id="inicio">
       <div class="container hero-grid">
         <div>
-          <p class="eyebrow">Aula 04 · Do código à máquina</p>
-          <h1>Do código-fonte à execução</h1>
-          <p class="hero-lead">Na Aula 03 vimos a CPU buscar, interpretar e executar instruções. Agora vamos conectar esse modelo ao trabalho cotidiano de quem desenvolve software: o que existe entre uma linha de código e as operações que o processador realmente executa?</p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#visao">Começar a aula</a>
-            <a class="button button-secondary" href="#percurso">Ver percurso</a>
-          </div>
+          <p class="eyebrow">Aula 04 · Software encontra a arquitetura</p>
+          <h1>Do software à máquina</h1>
+          <p class="hero-lead">Na aula anterior vimos CPU, memória e ciclo de instrução. Agora mudamos o ponto de vista: o que dessa arquitetura realmente aparece para quem projeta, escreve, testa e depura software?</p>
+          <div class="hero-actions"><a class="button button-primary" href="#visao">Começar a aula</a><a class="button button-secondary" href="#percurso">Ver percurso</a></div>
         </div>
-        <aside class="guiding-card">
-          <span>Pergunta orientadora</span>
-          <blockquote>Quando escrevemos <code>resultado = a + b</code>, o que precisa acontecer até que o computador produza o resultado?</blockquote>
-        </aside>
+        <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Que partes da máquina um engenheiro de software precisa compreender para explicar como um programa executa — sem precisar se tornar programador de Assembly?</blockquote></aside>
       </div>
     </section>
 
     <section class="section section-soft" id="visao">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Visão da aula</p>
-          <h2>Uma ponte entre programação e arquitetura</h2>
-          <p>O objetivo não é formar programadores Assembly. É aprender a reconhecer as representações que existem entre o código-fonte e o hardware, interpretar um pequeno rastreamento e compreender por que arquitetura, compilação e sistema operacional importam para a Engenharia de Software.</p>
-        </div>
+        <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>A interface entre o que programamos e o que a máquina executa</h2><p>O foco não é aprender uma nova linguagem de programação. É construir um modelo que permita ler representações de baixo nível, interpretar comportamento e entender por que arquitetura, compatibilidade e execução importam para software.</p></div>
         <div class="overview-grid">
-          <article class="card topics-card">
-            <h3>Conteúdo programático</h3>
-            <div class="topic-list">
-              <div>Código-fonte, tradução e execução</div>
-              <div>Compilação, interpretação e runtime</div>
-              <div>Variável, valor e endereço</div>
-              <div>Registradores e operações elementares</div>
-              <div>ISA, Assembly e x86-64</div>
-              <div>Relação com sistema operacional e software</div>
-            </div>
-          </article>
-          <article class="card competency">
-            <h3>C3 — Analisar e selecionar tecnologias</h3>
-            <div class="skill"><strong>H9</strong><span>Reconhecer como escolhas de linguagem, runtime e plataforma influenciam a execução do software.</span></div>
-          </article>
-          <article class="card competency c6">
-            <h3>C6 — Integrar sistemas de software</h3>
-            <div class="skill"><strong>H20</strong><span>Distinguir representações e arquiteturas de máquina relevantes para compatibilidade.</span></div>
-            <div class="skill"><strong>H21</strong><span>Usar ferramentas para observar a relação entre código, instruções, registradores e execução.</span></div>
-          </article>
+          <article class="card topics-card"><h3>Conteúdo programático</h3><div class="topic-list"><div>Arquitetura × organização</div><div>ISA como interface</div><div>Operação, operandos e destino</div><div>Valor, endereço e registrador</div><div>Assembly como instrumento de leitura</div><div>x86-64 e Python em práticas guiadas</div></div></article>
+          <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H9</strong><span>Reconhecer restrições de arquitetura que afetam a execução e a compatibilidade do software.</span></div></article>
+          <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir atributos da arquitetura que são visíveis ao software.</span></div><div class="skill"><strong>H21</strong><span>Empregar ferramentas de observação para relacionar código e execução.</span></div></article>
         </div>
       </div>
     </section>
 
     <section class="section" id="percurso">
       <div class="container">
-        <div class="section-heading split-heading">
-          <div><p class="eyebrow">Percurso de 4 horas</p><h2>Do que escrevemos ao que a CPU executa</h2></div>
-          <p>A dificuldade cresce de forma controlada: primeiro representações conceituais, depois uma máquina didática, então uma observação real de x86-64 e, por fim, uma prática em Python.</p>
-        </div>
-        <div class="lesson-path">
-          <a href="#retomada"><strong>Retomar o ciclo de instrução</strong></a>
-          <a href="#representacoes"><strong>Separar as representações</strong></a>
-          <a href="#memoria"><strong>Relacionar código e estado</strong></a>
-          <a href="#isa"><strong>Entender ISA e Assembly</strong></a>
-          <a href="#x86"><strong>Observar x86-64</strong></a>
-          <a href="#python"><strong>Simular em Python</strong></a>
-        </div>
+        <div class="section-heading split-heading"><div><p class="eyebrow">Percurso da aula</p><h2>Começar pelo software, descer apenas o necessário</h2></div><p>A progressão acompanha a abordagem top-down: partimos de uma operação conhecida no código e descemos até o nível em que a arquitetura define o que a CPU consegue executar.</p></div>
+        <div class="lesson-path"><a href="#retomada"><strong>Retomar o ciclo de instrução</strong></a><a href="#interface"><strong>Arquitetura visível ao software</strong></a><a href="#instrucao"><strong>O que uma instrução precisa dizer</strong></a><a href="#dados"><strong>Valor, endereço e registrador</strong></a><a href="#assembly"><strong>Assembly como lente</strong></a><a href="#pratica"><strong>Observar uma execução real</strong></a></div>
       </div>
     </section>
 
     <section class="section" id="retomada">
       <div class="container">
         <div class="warmup">
-          <div>
-            <p class="eyebrow" style="color:#9bd4e5">Retomada da Aula 03</p>
-            <h2>Já sabemos como a CPU executa. Falta explicar de onde vêm as instruções.</h2>
-            <p>Na aula anterior, usamos uma máquina didática com instruções como <code>LOAD</code>, <code>ADD</code> e <code>STORE</code>. Agora precisamos conectar esse nível ao código escrito por um desenvolvedor.</p>
-          </div>
-          <div class="question-cloud">
-            <div>A CPU executa diretamente uma linha escrita em Python ou C?</div>
-            <div>Uma variável do código é a mesma coisa que uma posição de memória?</div>
-            <div>Por que um mesmo programa pode executar em x86-64 e ARM?</div>
-            <div>O sistema operacional participa antes, durante ou depois da execução?</div>
-            <div><strong>Hipótese inicial:</strong> desenhe, em cinco caixas, o caminho que você imagina entre código-fonte e CPU.</div>
-          </div>
+          <div><p class="eyebrow" style="color:#9bd4e5">Retomada da Aula 03</p><h2>Na aula passada, olhamos de dentro da máquina</h2><p>Vimos que a CPU busca, decodifica e executa instruções, usando registradores, memória e unidades de execução.</p></div>
+          <div class="question-cloud"><div>Se a CPU executa instruções de máquina, onde fica a instrução <code>resultado = a + b</code> que escrevemos?</div><div>Uma variável do nosso código é a mesma coisa que um registrador?</div><div>Uma linha de código corresponde sempre a uma única instrução?</div><div>Por que o mesmo programa pode precisar de versões diferentes para x86-64 e ARM?</div><div><strong>Para abrir a Aula 04:</strong> qual é o ponto de encontro entre a linguagem usada pelo desenvolvedor e a arquitetura da máquina?</div></div>
         </div>
       </div>
     </section>
 
-    <section class="section section-soft" id="representacoes">
+    <section class="section section-soft" id="interface">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Primeira ideia-chave</p>
-          <h2>O mesmo programa aparece em representações diferentes</h2>
-          <p>Uma linguagem de alto nível foi construída para pessoas expressarem algoritmos e regras. A CPU, por outro lado, interpreta instruções definidas pela arquitetura do processador. Entre esses níveis existe tradução.</p>
+        <div class="section-heading"><p class="eyebrow">Primeira distinção</p><h2>Arquitetura é aquilo que pode mudar o comportamento visível do programa</h2><p>Stallings distingue arquitetura e organização. A arquitetura reúne atributos visíveis ao programador de linguagem de máquina; a organização descreve como o hardware implementa esses atributos.</p></div>
+        <div class="concept-grid">
+          <article class="concept-card"><span class="concept-label">Arquitetura</span><h3>O contrato visível</h3><p>Inclui conjunto de instruções, registradores, modos de endereçamento, representação de dados e mecanismos que afetam diretamente a execução lógica do programa.</p></article>
+          <article class="concept-card"><span class="concept-label">Organização</span><h3>Como o contrato é realizado</h3><p>Inclui detalhes internos de implementação, interconexões e decisões de hardware que podem mudar desempenho sem necessariamente mudar o programa visível à ISA.</p></article>
         </div>
-
-        <div class="representation-flow" aria-label="Fluxo de representações do programa">
-          <div class="rep-node source"><small>1 · Código-fonte</small><strong>Expressão para pessoas</strong><span><code>resultado = a + b</code></span></div>
-          <div class="rep-arrow" aria-hidden="true">→</div>
-          <div class="rep-node"><small>2 · Tradução</small><strong>Compilador, interpretador ou runtime</strong><span>Transforma ou coordena a execução.</span></div>
-          <div class="rep-arrow" aria-hidden="true">→</div>
-          <div class="rep-node"><small>3 · Instruções</small><strong>Operações compatíveis com uma ISA</strong><span>Movimentar, somar, comparar, desviar...</span></div>
-          <div class="rep-arrow" aria-hidden="true">→</div>
-          <div class="rep-node cpu"><small>4 · Hardware</small><strong>CPU executa instruções de máquina</strong><span>Registradores, ALU, memória e controle participam.</span></div>
+        <div class="bridge-question"><strong>Uma ideia central:</strong> para o engenheiro de software, não é preciso conhecer cada circuito interno. É preciso reconhecer quais propriedades da plataforma atravessam a fronteira e afetam compatibilidade, desempenho, depuração ou integração.</div>
+        <div class="engineer-grid">
+          <article class="engineer-card"><strong>Compatibilidade</strong><p>Um binário produzido para uma ISA não é automaticamente executável em outra.</p></article>
+          <article class="engineer-card"><strong>Depuração</strong><p>Falhas podem exigir entender estado, endereços, registradores e a sequência efetivamente executada.</p></article>
+          <article class="engineer-card"><strong>Desempenho</strong><p>Uma mesma intenção no código pode resultar em sequências de instruções diferentes.</p></article>
+          <article class="engineer-card"><strong>Portabilidade</strong><p>Compiladores, runtimes e sistemas operacionais ajudam a esconder diferenças, mas não as eliminam.</p></article>
         </div>
-
-        <div class="precision-note"><strong>Importante:</strong> esse fluxo é uma abstração didática. Compiladores, máquinas virtuais, bytecode, bibliotecas, loaders e otimizações podem acrescentar etapas. Hoje queremos compreender a relação essencial entre os níveis.</div>
 
         <article class="exercise">
-          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 1 · previsão</span><h3>Qual representação a CPU realmente executa?</h3></div><span class="exercise-tag">5–8 min</span></div>
+          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 1</span><h3>Arquitetura ou organização?</h3></div><span class="exercise-tag">Classificação guiada</span></div>
           <div class="exercise-body">
-            <ol class="prompt-list">
-              <li>Ordene: código-fonte, instruções da ISA, execução pela CPU, tradução/runtime.</li>
-              <li>Explique por que <code>resultado = a + b</code> não é, por si só, uma instrução x86-64.</li>
-              <li>O que provavelmente muda se o mesmo programa for executado em um processador ARM?</li>
-            </ol>
-            <div class="worksheet"><textarea data-save="ex1" placeholder="Nossa hipótese...&#10;O que muda entre as representações...&#10;O que ainda não sabemos..."></textarea><span class="save-note">Registre antes de abrir a resposta orientadora.</span></div>
+            <ol class="prompt-list"><li>O processador possui uma instrução de multiplicação.</li><li>O processador possui 16 registradores visíveis ao programa.</li><li>A multiplicação usa um circuito dedicado ou reutiliza outra unidade interna.</li><li>Uma instrução usa operandos de 64 bits.</li><li>A memória cache tem uma determinada tecnologia interna.</li></ol>
+            <div class="worksheet"><textarea data-save="ex1" placeholder="Para cada item: arquitetura ou organização? Explique em uma frase o critério usado."></textarea><span class="save-note">Procure usar a ideia de “visível ao programa” como critério, não apenas decorar os exemplos.</span></div>
           </div>
-          <div style="padding:0 1.4rem 1.4rem"><details class="solution"><summary>Ver resposta orientadora</summary><p>O código-fonte passa por tradução ou por um ambiente de execução; a CPU executa instruções compatíveis com sua ISA. Em outra arquitetura, o algoritmo pode ser o mesmo, mas as instruções de máquina e os registradores disponíveis podem mudar.</p></details></div>
+          <details class="solution"><summary>Conferir raciocínio</summary><p>Os itens 1, 2 e 4 descrevem atributos arquiteturais. Os itens 3 e 5 descrevem decisões organizacionais. O ponto importante é justificar a classificação pela interface observada pelo software.</p></details>
         </article>
       </div>
     </section>
 
-    <section class="section" id="linguagens">
+    <section class="section" id="instrucao">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Caminhos diferentes</p>
-          <h2>Compilado e interpretado não significam “hardware” e “não hardware”</h2>
-          <p>C e Python são úteis para comparar caminhos de execução. O ponto central é que, cedo ou tarde, instruções nativas precisam ser executadas por um processador.</p>
+        <div class="section-heading"><p class="eyebrow">ISA · conjunto de instruções</p><h2>A CPU não recebe intenções: recebe instruções com operações e operandos</h2><p>O conjunto de instruções é o limite em que projetistas de hardware e programadores de baixo nível enxergam a mesma máquina. Ele define quais operações a arquitetura oferece e como dados podem participar delas.</p></div>
+        <div class="instruction-anatomy">
+          <article class="anatomy-card"><span>01</span><h3>Operação</h3><p>O que deve acontecer: mover, somar, comparar, desviar, converter...</p></article>
+          <article class="anatomy-card"><span>02</span><h3>Operandos de origem</h3><p>Quais valores participam da operação: registradores, memória ou valores imediatos.</p></article>
+          <article class="anatomy-card"><span>03</span><h3>Destino</h3><p>Onde o resultado será colocado: outro registrador ou uma posição de memória, conforme a instrução.</p></article>
+          <article class="anatomy-card"><span>04</span><h3>Próxima instrução</h3><p>Normalmente o contador de programa mantém implicitamente a continuidade da execução.</p></article>
         </div>
-        <div class="compare-grid">
-          <article class="compare-card">
-            <h3>Um programa em C</h3>
-            <p>O compilador pode transformar o código-fonte em código de máquina para uma arquitetura-alvo antes da execução.</p>
-            <div class="mini-flow"><span>C</span><b>→</b><span>compilador</span><b>→</b><span>x86-64 / ARM64</span><b>→</b><span>CPU</span></div>
-          </article>
-          <article class="compare-card">
-            <h3>Um programa em Python</h3>
-            <p>O código normalmente passa pelo runtime da implementação Python. Esse runtime, por sua vez, é software nativo executado pelo processador.</p>
-            <div class="mini-flow"><span>Python</span><b>→</b><span>runtime</span><b>→</b><span>operações internas</span><b>→</b><span>CPU</span></div>
-          </article>
+        <div class="operation-grid">
+          <div class="operation"><code>MOV / LOAD / STORE</code><br><span>transferência de dados</span></div>
+          <div class="operation"><code>ADD / SUB</code><br><span>aritmética</span></div>
+          <div class="operation"><code>AND / OR / XOR</code><br><span>lógica</span></div>
+          <div class="operation"><code>CMP / TEST</code><br><span>teste e comparação</span></div>
+          <div class="operation"><code>JMP / CALL / RET</code><br><span>transferência de controle</span></div>
+          <div class="operation"><code>instruções do sistema</code><br><span>operações controladas ou privilegiadas</span></div>
         </div>
-        <div class="bridge-question">Para Engenharia de Software, a pergunta útil não é apenas “qual linguagem é mais rápida?”, mas <strong>qual caminho de execução, quais abstrações e quais custos a solução introduz para o problema em questão?</strong></div>
+        <div class="precision-note"><strong>Limite da aula:</strong> não vamos decorar opcodes nem formatos binários. Queremos aprender a ler a intenção de uma instrução e reconhecer de onde vêm seus operandos e para onde vai o resultado.</div>
+
+        <article class="exercise">
+          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 2</span><h3>De uma expressão a operações elementares</h3></div><span class="exercise-tag">Previsão antes da resposta</span></div>
+          <div class="exercise-body">
+            <div><div class="code-card"><div class="code-head"><span>C · expressão de alto nível</span><span>exemplo</span></div><pre><code>int a = 7;
+int b = 5;
+int resultado = (a + b) * 2;</code></pre></div></div>
+            <div class="worksheet"><textarea data-save="ex2" placeholder="Sem escrever Assembly real: que operações elementares precisam ocorrer para produzir resultado? Pense em carregar valores, operar e armazenar."></textarea><span class="save-note">Não existe obrigação de uma linha C virar uma instrução. O objetivo é decompor a intenção.</span></div>
+          </div>
+          <details class="solution"><summary>Uma decomposição possível</summary><p>Carregar ou tornar disponíveis os valores de <code>a</code> e <code>b</code>; somá-los; multiplicar o resultado por 2; manter ou armazenar o valor produzido. Um compilador real pode reorganizar ou substituir essas operações por instruções equivalentes.</p></details>
+        </article>
       </div>
     </section>
 
-    <section class="section section-soft" id="memoria">
+    <section class="section section-soft" id="dados">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Código precisa virar estado</p>
-          <h2>Nome, valor, endereço e registrador são coisas diferentes</h2>
-          <p>Em uma linguagem de programação usamos nomes. Durante a execução, valores precisam estar representados em algum lugar. Para raciocinar sobre a máquina, precisamos separar esses conceitos.</p>
-        </div>
+        <div class="section-heading"><p class="eyebrow">Estado durante a execução</p><h2>Nome, valor, endereço e registrador são conceitos diferentes</h2><p>Em linguagens de alto nível trabalhamos com nomes e tipos. No nível da máquina, a execução precisa manipular representações concretas em registradores e posições de memória.</p></div>
         <div class="memory-layout">
           <div class="concept-stack">
-            <article class="concept-item"><strong>Nome no código</strong><code>a</code><p>Identificador utilizado pelo programador.</p></article>
-            <article class="concept-item"><strong>Valor</strong><code>7</code><p>Informação que participa da computação.</p></article>
-            <article class="concept-item"><strong>Endereço</strong><code>0x1000</code><p>Representação didática de uma posição endereçável. Os endereços abaixo são fictícios.</p></article>
-            <article class="concept-item"><strong>Registrador</strong><code>R1</code><p>Armazenamento interno da CPU que pode manter operandos e resultados temporários.</p></article>
+            <article class="concept-item"><strong>Nome</strong><p><code>a</code> é um identificador que torna o programa legível para nós.</p></article>
+            <article class="concept-item"><strong>Valor</strong><p><code>7</code> é a informação associada à variável naquele momento.</p></article>
+            <article class="concept-item"><strong>Endereço</strong><p><code>0x1000</code> pode representar didaticamente uma posição onde um dado está armazenado.</p></article>
+            <article class="concept-item"><strong>Registrador</strong><p><code>R1</code> representa armazenamento interno da CPU usado durante a execução; não é sinônimo de variável.</p></article>
           </div>
-          <div class="memory-table" aria-label="Tabela conceitual de variáveis e memória">
-            <div class="memory-row header"><strong>Endereço</strong><strong>Valor</strong><strong>Associação didática</strong></div>
-            <div class="memory-row"><strong>0x1000</strong><code>7</code><span><code>a</code></span></div>
-            <div class="memory-row"><strong>0x1008</strong><code>5</code><span><code>b</code></span></div>
-            <div class="memory-row"><strong>0x1010</strong><code>?</code><span><code>resultado</code></span></div>
+          <div class="memory-table" aria-label="Exemplo didático de dados na memória">
+            <div class="memory-row header"><strong>Endereço</strong><strong>Valor</strong><strong>Leitura didática</strong></div>
+            <div class="memory-row"><strong>0x1000</strong><code>7</code><span>valor associado a <code>a</code></span></div>
+            <div class="memory-row"><strong>0x1004</strong><code>5</code><span>valor associado a <code>b</code></span></div>
+            <div class="memory-row"><strong>0x1008</strong><code>?</code><span>posição escolhida para o resultado no exemplo</span></div>
           </div>
         </div>
+        <div class="bridge-question">Um endereço visto pelo programa também é uma abstração. A relação completa com memória física será tratada quando estudarmos espaços de endereçamento e memória virtual.</div>
 
         <article class="exercise">
-          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 2 · rastreamento</span><h3>Antes de executar, acompanhe o estado</h3></div><span class="exercise-tag">10 min</span></div>
+          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 3</span><h3>Rastreie o estado, não apenas a resposta final</h3></div><span class="exercise-tag">Memória + registradores</span></div>
           <div class="exercise-body">
-            <ol class="prompt-list">
-              <li><code>R1 ← Mem[0x1000]</code>. Qual valor entra em R1?</li>
-              <li><code>R2 ← Mem[0x1008]</code>. Qual valor entra em R2?</li>
-              <li><code>R3 ← R1 + R2</code>. Qual passa a ser o valor de R3?</li>
-              <li><code>Mem[0x1010] ← R3</code>. Quando o resultado aparece na memória?</li>
-            </ol>
-            <div class="worksheet"><textarea data-save="ex2" placeholder="R1 = ...&#10;R2 = ...&#10;R3 = ...&#10;Mem[0x1010] = ..."></textarea><span class="save-note">Não confunda resultado no registrador com resultado já gravado em memória.</span></div>
+            <div class="code-card"><div class="code-head"><span>Pseudo-ISA didática</span><span>não é x86</span></div><pre><code>LOAD  R1, [0x1000]
+LOAD  R2, [0x1004]
+ADD   R3, R1, R2
+STORE [0x1008], R3</code></pre></div>
+            <div class="worksheet"><textarea data-save="ex3" placeholder="Depois de cada instrução, anote R1, R2, R3 e Mem[0x1008]. Em que momento 12 está apenas na CPU? Em que momento ele aparece na memória?"></textarea><span class="save-note">Esse tipo de rastreamento prepara a leitura de depuradores e traces reais.</span></div>
           </div>
+          <details class="solution"><summary>Conferir estados principais</summary><p>Após os dois <code>LOAD</code>, R1=7 e R2=5. Após <code>ADD</code>, R3=12, mas a memória de destino ainda não foi alterada. Somente após <code>STORE</code> o valor 12 aparece em <code>0x1008</code>.</p></details>
         </article>
       </div>
     </section>
 
-    <section class="section" id="isa">
+    <section class="section" id="assembly">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Contrato entre software e processador</p>
-          <h2>ISA: quais instruções a máquina oferece ao software?</h2>
-          <p>A arquitetura do conjunto de instruções — ISA — define aspectos visíveis para o software de baixo nível: instruções, registradores, formas de operar dados e regras de execução. x86-64 e ARM64 são exemplos de ISAs diferentes.</p>
-        </div>
-        <div class="isa-grid">
-          <article class="isa-card">
-            <h3>Assembly é uma representação simbólica</h3>
-            <p>Em vez de escrever sequências binárias, usamos mnemônicos como <code>MOV</code>, <code>ADD</code> e <code>CMP</code>. O montador transforma essa representação em código de máquina.</p>
-            <div class="instruction-chips"><span>MOV</span><span>ADD</span><span>SUB</span><span>CMP</span><span>JMP</span><span>RET</span></div>
-          </article>
-          <article class="isa-card">
-            <h3>Uma instrução faz uma coisa relativamente elementar</h3>
-            <p>Uma expressão de alto nível pode exigir várias instruções. Além disso, um compilador pode reorganizar ou substituir operações quando otimiza o programa.</p>
-            <div class="precision-note"><strong>Limite da aula:</strong> não vamos memorizar sintaxe x86-64, convenções de chamada, stack, flags ou modos de endereçamento. Vamos apenas observar instruções e estado.</div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="maquina">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Antes da arquitetura real</p>
-          <h2>Uma máquina didática para enxergar o movimento dos dados</h2>
-          <p>Primeiro usamos quatro instruções simplificadas. Avance um passo por vez e observe a diferença entre carregar, operar e armazenar.</p>
-        </div>
-        <div class="simulator">
-          <div class="sim-head"><p class="eyebrow">Simulador guiado</p><h3><code>LOAD → LOAD → ADD → STORE</code></h3><p>Memória inicial: <code>0x1000 → 7</code>, <code>0x1008 → 5</code>, <code>0x1010 → ?</code>.</p></div>
-          <div class="machine-state">
-            <div class="state-box"><small>R1</small><strong id="state-r1">—</strong></div>
-            <div class="state-box"><small>R2</small><strong id="state-r2">—</strong></div>
-            <div class="state-box"><small>R3</small><strong id="state-r3">—</strong></div>
-            <div class="state-box"><small>Mem[0x1010]</small><strong id="state-mem">?</strong></div>
+        <div class="section-heading"><p class="eyebrow">Por que olhar Assembly?</p><h2>Não para substituir linguagens de alto nível — para enxergar melhor a execução</h2><p>Stallings apresenta a linguagem de montagem como uma forma de esclarecer como instruções executam, como dados são representados e como programas se relacionam com processador, memória, sistema operacional e E/S.</p></div>
+        <div class="assembly-why">
+          <div class="reason-list">
+            <div class="reason"><b>1</b><div><strong>Entender execução</strong><p>Uma sequência curta permite observar explicitamente operações, operandos e mudanças de estado.</p></div></div>
+            <div class="reason"><b>2</b><div><strong>Entender representação</strong><p>Registradores, tamanhos e endereços deixam de ser apenas palavras abstratas.</p></div></div>
+            <div class="reason"><b>3</b><div><strong>Depurar melhor</strong><p>Quando a abstração de alto nível falha, traces e depuradores podem mostrar exatamente onde o estado mudou.</p></div></div>
+            <div class="reason"><b>4</b><div><strong>Entender a plataforma</strong><p>O Assembly evidencia que x86-64, ARM e outras ISAs oferecem contratos diferentes ao software.</p></div></div>
           </div>
-          <div class="sim-message" id="sim-message"><strong>Estado inicial.</strong> Nenhuma instrução foi executada.</div>
-          <div class="sim-controls"><button type="button" class="primary" id="next-step">Próxima instrução</button><button type="button" id="reset-step">Reiniciar</button></div>
-        </div>
-        <div class="trace-table-wrap"><table class="trace-table"><thead><tr><th>Passo</th><th>Instrução didática</th><th>Ação</th><th>Resultado esperado</th></tr></thead><tbody><tr><td>1</td><td><code>LOAD R1,[0x1000]</code></td><td>Carrega o primeiro valor</td><td>R1 = 7</td></tr><tr><td>2</td><td><code>LOAD R2,[0x1008]</code></td><td>Carrega o segundo valor</td><td>R2 = 5</td></tr><tr><td>3</td><td><code>ADD R3,R1,R2</code></td><td>Realiza a soma</td><td>R3 = 12</td></tr><tr><td>4</td><td><code>STORE [0x1010],R3</code></td><td>Grava o resultado</td><td>Mem[0x1010] = 12</td></tr></tbody></table></div>
-      </div>
-    </section>
-
-    <section class="section" id="x86">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Agora uma arquitetura real</p>
-          <h2>Observe x86-64 sem transformar a aula em um curso de Assembly</h2>
-          <p>Vamos usar uma ferramenta no navegador para executar e depurar um programa mínimo. O objetivo é observar registradores mudando após cada instrução.</p>
-        </div>
-
-        <div class="platform-layout">
-          <article class="platform-card">
-            <span class="platform-label">Ferramenta sugerida</span>
-            <h3>x86-64 Playground</h3>
-            <p>Editor, emulador e depurador x86-64 executado no navegador. Para esta atividade, use NASM e avance pelo programa instrução por instrução.</p>
-            <a class="button button-primary" href="https://x64.halb.it/" target="_blank" rel="noopener noreferrer">Abrir x86-64 Playground ↗</a>
-            <ol class="platform-steps"><li>Abra a ferramenta e escolha um exemplo/projeto NASM.</li><li>Substitua o código pelo exemplo ao lado.</li><li>Compile e entre no modo de depuração.</li><li>Avance até executar as três primeiras instruções.</li><li>Observe RAX e RBX após cada passo.</li></ol>
-          </article>
-          <div class="code-card">
-            <div class="code-head"><span>NASM · x86-64 Linux</span><span>foco: 3 primeiras instruções</span></div>
-            <pre><code>global _start
-section .text
-
-_start:
-    mov rax, 7
-    mov rbx, 5
-    add rax, rbx
-
-    ; encerramento do programa — não é o foco da aula
-    mov rdi, rax
-    mov rax, 60
-    syscall</code></pre>
-            <div class="code-caption">Depois de <code>mov rax, 7</code>, RAX deve conter 7. Depois de <code>mov rbx, 5</code>, RBX deve conter 5. Depois de <code>add rax, rbx</code>, RAX deve conter 12.</div>
-          </div>
-        </div>
-
-        <article class="exercise">
-          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 3 · evidência real</span><h3>Não apenas diga que deu 12: mostre como o estado mudou</h3></div><span class="exercise-tag">15–20 min</span></div>
-          <div class="exercise-body">
-            <ol class="prompt-list"><li>Qual registrador contém 7 depois da primeira instrução?</li><li>Qual registrador contém 5 depois da segunda?</li><li>Qual registrador é modificado pelo <code>add</code>?</li><li>O segundo operando é destruído pela soma nesse exemplo?</li><li>Que evidência da ferramenta sustenta sua resposta?</li></ol>
-            <div class="worksheet"><textarea data-save="ex3" placeholder="Passo 1...&#10;Passo 2...&#10;Passo 3...&#10;Evidência observada nos registradores..."></textarea><span class="save-note">Se a interface mostrar muitos registradores, acompanhe apenas RAX e RBX.</span></div>
-          </div>
-        </article>
-
-        <div class="precision-note"><strong>Por que x86-64?</strong> É uma arquitetura real muito comum em computadores pessoais e servidores. Na Aula 05 vamos comparar esse universo com outras arquiteturas, especialmente ARM, sem assumir que uma delas é “a forma universal” de executar programas.</div>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="compiler">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Do C para Assembly</p>
-          <h2>O compilador também pode ser observado</h2>
-          <p>Uma segunda ferramenta interessante para Engenharia de Software é o Compiler Explorer. Ela permite colocar uma função em C de um lado e visualizar o Assembly produzido por diferentes compiladores e arquiteturas do outro.</p>
-        </div>
-        <div class="platform-layout">
-          <div class="code-card"><div class="code-head"><span>C</span><span>função mínima</span></div><pre><code>int soma(int a, int b) {
-    return a + b;
-}</code></pre><div class="code-caption">O Assembly exato pode variar conforme compilador, versão, arquitetura e nível de otimização.</div></div>
-          <article class="platform-card"><span class="platform-label">Observação opcional</span><h3>Compiler Explorer</h3><p>Use a ferramenta para comparar a função com a saída x86-64. Não tente memorizar todas as instruções; procure reconhecer movimentação de dados, operação aritmética e retorno.</p><a class="button button-secondary" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a><ol class="platform-steps"><li>Selecione C.</li><li>Escolha um compilador x86-64 GCC ou Clang.</li><li>Cole a função <code>soma</code>.</li><li>Observe o Assembly.</li><li>Depois altere para <code>return a * 2 + b;</code> e compare.</li></ol></article>
+          <aside class="card"><p class="eyebrow">Perspectiva de Engenharia de Software</p><h3>Assembly é uma ferramenta de leitura</h3><p>Aplicações modernas são normalmente desenvolvidas em linguagens de alto nível porque elas reduzem custo de desenvolvimento, complexidade e risco. Nesta disciplina, o baixo nível entra como instrumento para compreender a plataforma e interpretar evidências — não como objetivo de programação.</p><div class="precision-note"><strong>O que não será exigido agora:</strong> convenções de chamada completas, pilha em detalhe, ponteiros complexos, linking, formatos ELF/PE ou programação extensa em Assembly.</div></aside>
         </div>
       </div>
     </section>
 
-    <section class="section" id="python">
+    <section class="section section-soft" id="pratica">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Prática com uma linguagem conhecida</p>
-          <h2>Use Python para modelar uma CPU mínima</h2>
-          <p>Como o foco não é dominar Assembly, podemos usar Python para tornar explícitos memória, registradores e instruções. O simulador abaixo é intencionalmente simples: ele não é uma CPU real, mas preserva a ideia de carregar, operar e armazenar.</p>
-        </div>
-        <div class="python-lab">
-          <div class="code-card"><div class="code-head"><span>Python</span><span>complete os TODOs</span></div><pre><code>memoria = {
-    0x1000: 7,
-    0x1008: 5,
-    0x1010: 0,
-}
-
+        <div class="section-heading"><p class="eyebrow">Prática guiada</p><h2>Observe o mesmo princípio em uma ISA real e em um modelo Python</h2><p>As duas práticas têm objetivos diferentes: no x86-64 observamos uma máquina realista; em Python construímos um modelo simples para tornar explícita a mudança de estado.</p></div>
+        <div class="lab-grid">
+          <article class="lab-card"><p class="eyebrow">Laboratório A · x86-64</p><h3>Avance instrução por instrução</h3><p>Use o x86-64 Playground para observar registradores durante uma sequência mínima de Assembly.</p><div class="code-card"><div class="code-head"><span>NASM · trecho central</span><span>x86-64</span></div><pre><code>mov rax, 7
+mov rbx, 5
+add rax, rbx</code></pre><div class="code-caption">O restante do arquivo pode ser fornecido apenas como infraestrutura para iniciar e encerrar o programa.</div></div><ol class="step-list"><li>Antes de executar, preveja RAX e RBX após cada linha.</li><li>Execute passo a passo.</li><li>Observe quais registradores mudam.</li><li>Explique por que <code>add rax, rbx</code> altera RAX e não RBX.</li></ol><a class="button button-primary" href="https://x64.halb.it" target="_blank" rel="noopener noreferrer">Abrir x86-64 Playground</a></article>
+          <article class="lab-card"><p class="eyebrow">Laboratório B · Python</p><h3>Modele uma máquina mínima</h3><p>Copie o exemplo para o Colab e complete apenas a lógica indicada. A meta é observar estados, não construir um emulador completo.</p><div class="code-card"><div class="code-head"><span>Python · modelo didático</span><span>guiado</span></div><pre><code>memoria = {100: 7, 104: 5, 108: 0}
 registradores = {"R1": 0, "R2": 0, "R3": 0}
 
-# LOAD R1, [0x1000]
-registradores["R1"] = memoria[0x1000]
+registradores["R1"] = memoria[100]
+registradores["R2"] = memoria[104]
 
-# LOAD R2, [0x1008]
-registradores["R2"] = memoria[0x1008]
+# complete a soma
+registradores["R3"] = ______
 
-# TODO 1: ADD R3, R1, R2
-registradores["R3"] = __________________________
-
-# TODO 2: STORE [0x1010], R3
-memoria[0x1010] = ______________________________
+# complete o armazenamento
+memoria[108] = ______
 
 print(registradores)
-print(memoria)</code></pre></div>
-          <article class="todo-card"><h3>O que praticar</h3><ul><li>Complete somente duas linhas.</li><li>Antes de executar, escreva o resultado esperado.</li><li>Confirme que R3 contém 12.</li><li>Confirme que <code>memoria[0x1010]</code> passa a conter 12.</li><li>Altere os valores 7 e 5 e faça uma nova previsão.</li></ul><div class="precision-note"><strong>Não confunda modelo com implementação:</strong> os dicionários Python representam memória e registradores apenas para facilitar nosso raciocínio.</div></article>
+print(memoria)</code></pre></div><ol class="step-list"><li>Preencha as duas lacunas.</li><li>Execute e confira o estado final.</li><li>Altere os valores 7 e 5 e preveja o resultado antes de rodar novamente.</li><li>Explique qual linha representa a ideia de <code>STORE</code>.</li></ol></article>
         </div>
 
         <article class="exercise">
-          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 4 · modificação</span><h3>Faça o simulador executar outra expressão</h3></div><span class="exercise-tag">15 min</span></div>
+          <div class="exercise-head"><div><span class="exercise-kicker">Exercício 4</span><h3>Compare abstrações</h3></div><span class="exercise-tag">Síntese técnica</span></div>
           <div class="exercise-body">
-            <ol class="prompt-list"><li>Modifique o programa para calcular <code>(a + b) * 2</code>.</li><li>Você precisa de outro registrador ou consegue reutilizar R3?</li><li>Em que momento o valor final deve ser gravado em memória?</li><li>Compare seu modelo Python com as três instruções x86-64 observadas anteriormente.</li></ol>
-            <div class="worksheet"><textarea data-save="ex4" placeholder="Minha modificação...&#10;Registradores usados...&#10;Estado final esperado...&#10;Comparação com x86-64..."></textarea><span class="save-note">O objetivo é justificar o estado, não produzir um simulador completo.</span></div>
+            <ol class="prompt-list"><li>No Python, onde está escondida a ideia de “registrador”?</li><li>No x86-64, quais elementos ficam explícitos?</li><li>Qual representação é melhor para desenvolver uma aplicação? E qual é melhor para investigar a execução da CPU?</li><li>Por que respostas diferentes podem ser corretas dependendo do objetivo?</li></ol>
+            <div class="worksheet"><textarea data-save="ex4" placeholder="Compare as duas representações usando as palavras abstração, estado, arquitetura e objetivo."></textarea><span class="save-note">A habilidade esperada é escolher o nível de abstração adequado ao problema técnico.</span></div>
           </div>
         </article>
-      </div>
-    </section>
 
-    <section class="section section-soft" id="runtime">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Python também tem níveis intermediários</p>
-          <h2>Uma função Python não vira diretamente <code>ADD RAX, RBX</code></h2>
-          <p>Uma experiência simples com o módulo <code>dis</code> permite observar instruções internas da máquina virtual Python. Elas não são instruções x86-64: são outra representação no caminho de execução.</p>
-        </div>
-        <div class="platform-layout">
-          <div class="code-card"><div class="code-head"><span>Python</span><span>execute no Colab ou Python local</span></div><pre><code>import dis
-
-def soma(a, b):
-    return a + b
-
-dis.dis(soma)</code></pre><div class="code-caption">A saída depende da versão do Python. Observe a existência de operações internas de carregamento, operação e retorno, sem memorizar os nomes.</div></div>
-          <article class="platform-card"><span class="platform-label">Perguntas</span><h3>Compare três níveis</h3><ol class="platform-steps"><li>O código-fonte tem a expressão <code>a + b</code>.</li><li>O <code>dis</code> mostra operações internas do Python.</li><li>O processador continua executando código nativo do runtime.</li><li>Por que isso ajuda a explicar que “Python é interpretado” não significa “Python não usa instruções da CPU”?</li></ol></article>
-        </div>
+        <div class="bridge-question"><strong>Extensão opcional:</strong> no Compiler Explorer, escreva uma função C muito pequena e observe o Assembly gerado. Não tente decorar a saída; procure apenas identificar operações e perceber que a correspondência entre código-fonte e instruções não é necessariamente um-para-um.</div>
       </div>
     </section>
 
     <section class="section" id="so">
       <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Onde o sistema operacional entra?</p>
-          <h2>O programa não recebe a máquina inteira para si</h2>
-          <p>Quando executamos um programa em um sistema operacional moderno, ele é colocado em um ambiente controlado. Nesta aula basta reconhecer quatro responsabilidades que estudaremos com mais profundidade depois.</p>
+        <div class="section-heading"><p class="eyebrow">Uma fronteira importante</p><h2>O programa não recebe acesso irrestrito à máquina</h2><p>Tanenbaum e Bos mostram o sistema operacional como uma camada que oferece abstrações mais convenientes e gerencia recursos. Programas em modo usuário não podem simplesmente executar qualquer operação privilegiada ou controlar diretamente todos os dispositivos.</p></div>
+        <div class="os-chain">
+          <article class="os-node"><small>Aplicação</small><strong>Expressa a intenção</strong><p>Ex.: ler arquivo, imprimir saída, abrir conexão.</p></article>
+          <article class="os-node"><small>Runtime / bibliotecas</small><strong>Oferecem APIs</strong><p>Transformam operações da linguagem em chamadas apropriadas.</p></article>
+          <article class="os-node"><small>Sistema operacional</small><strong>Protege e abstrai recursos</strong><p>Processos, memória, arquivos, dispositivos e tempo de CPU.</p></article>
+          <article class="os-node"><small>Hardware</small><strong>Realiza as operações físicas</strong><p>CPU, RAM, controladores e dispositivos.</p></article>
         </div>
-        <div class="engineering-grid">
-          <article class="engineering-card"><span>01</span><h3>Criar o processo</h3><p>O SO organiza uma instância de execução do programa.</p></article>
-          <article class="engineering-card"><span>02</span><h3>Organizar memória</h3><p>Código e dados precisam de um espaço de endereçamento utilizável pelo processo.</p></article>
-          <article class="engineering-card"><span>03</span><h3>Compartilhar CPU</h3><p>O programa compete por tempo de processador com outros processos e threads.</p></article>
-          <article class="engineering-card"><span>04</span><h3>Oferecer serviços</h3><p>Arquivos, rede e dispositivos são acessados por abstrações controladas pelo sistema operacional.</p></article>
-        </div>
-        <div class="bridge-question">Mais adiante veremos que esse ponto é decisivo para concorrência, desempenho, isolamento e segurança. Por enquanto, guarde a ideia: <strong>o software executa sobre abstrações fornecidas pelo SO e sobre instruções fornecidas pela arquitetura.</strong></div>
+        <div class="precision-note"><strong>Antecipação, não aprofundamento:</strong> chamadas de sistema, modo usuário e modo núcleo serão estudados depois. Aqui basta perceber que a ISA e o sistema operacional formam fronteiras diferentes, ambas relevantes para software.</div>
       </div>
     </section>
 
-    <section class="section section-dark" id="engenharia">
+    <section class="section section-soft" id="fechamento">
       <div class="container">
-        <div class="section-heading"><p class="eyebrow">Por que um engenheiro de software precisa disso?</p><h2>Porque “funciona no meu computador” é uma explicação insuficiente</h2><p>Entender a execução ajuda a raciocinar sobre compatibilidade, desempenho, depuração e limites das abstrações.</p></div>
-        <div class="engineering-grid">
-          <article class="engineering-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)"><span>01</span><h3 style="color:#fff">Compatibilidade</h3><p>Arquitetura, sistema operacional e runtime condicionam onde um artefato pode executar.</p></article>
-          <article class="engineering-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)"><span>02</span><h3 style="color:#fff">Desempenho</h3><p>Uma operação de alto nível pode resultar em várias operações de baixo nível e acessos à memória.</p></article>
-          <article class="engineering-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)"><span>03</span><h3 style="color:#fff">Depuração</h3><p>Logs e exceções mostram uma camada; depuradores, traces e perfis permitem observar outras.</p></article>
-          <article class="engineering-card" style="background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14)"><span>04</span><h3 style="color:#fff">Projeto</h3><p>Escolher linguagem, runtime e plataforma também é escolher custos e restrições de execução.</p></article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="aps">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">APS 1 · atividade assíncrona</p>
-          <h2>Do código-fonte à execução e leitura do baseline</h2>
-          <p>A entrega deve mostrar que você consegue interpretar representações, prever estados e sustentar uma explicação com evidências observáveis — sem exigir programação extensa.</p>
-        </div>
-        <div class="aps-grid">
-          <article class="aps-card"><span>1</span><h3>Rastreamento conceitual</h3><ul><li>Use o exemplo 7 + 5.</li><li>Registre o estado de R1, R2 e R3.</li><li>Indique quando o resultado chega à memória.</li></ul></article>
-          <article class="aps-card"><span>2</span><h3>Observação x86-64</h3><ul><li>Execute o exemplo no x86-64 Playground.</li><li>Registre RAX e RBX em três passos.</li><li>Anexe uma captura ou tabela com a evidência.</li></ul></article>
-          <article class="aps-card"><span>3</span><h3>Modelo em Python</h3><ul><li>Complete os dois TODOs.</li><li>Teste com outro par de valores.</li><li>Explique o que o modelo simplifica em relação a uma CPU real.</li></ul></article>
-        </div>
-        <div class="delivery"><h3>Entrega esperada</h3><p>Um registro curto contendo: hipótese inicial, rastreamento, evidência da execução x86-64, código Python concluído e uma síntese de aproximadamente 5 a 8 linhas respondendo: <strong>como uma expressão escrita pelo programador chega a uma operação executável pelo processador?</strong></p></div>
-      </div>
-    </section>
-
-    <section class="section" id="fechamento">
-      <div class="container">
-        <div class="section-heading"><p class="eyebrow">Checklist de saída</p><h2>O que você precisa conseguir explicar</h2></div>
-        <div class="checklist">
-          <div class="check-item">Por que código-fonte e instrução de máquina não são a mesma representação.</div>
-          <div class="check-item">A diferença entre código compilado, runtime e execução pela CPU em nível introdutório.</div>
-          <div class="check-item">A diferença entre nome, valor, endereço e registrador.</div>
-          <div class="check-item">Como carregar, operar e armazenar alteram o estado da máquina.</div>
-          <div class="check-item">O que significa ISA e por que x86-64 e ARM64 podem executar o mesmo algoritmo com instruções diferentes.</div>
-          <div class="check-item">Por que Assembly é uma representação simbólica próxima do código de máquina.</div>
-          <div class="check-item">Como usar um depurador para produzir evidência sobre registradores.</div>
-          <div class="check-item">Por que esse conhecimento importa para compatibilidade, desempenho e depuração de software.</div>
-        </div>
-        <div class="references"><strong>Referências-base da aula:</strong> William Stallings, <em>Arquitetura e Organização de Computadores</em>, especialmente os capítulos sobre estrutura do computador, conjunto de instruções e processador; Andrew S. Tanenbaum e Herbert Bos, <em>Sistemas Operacionais Modernos</em>, especialmente a introdução sobre a relação entre hardware, sistema operacional e programas.</div>
+        <div class="section-heading"><p class="eyebrow">Checklist de saída</p><h2>O que você precisa conseguir explicar</h2><p>Não é necessário memorizar sintaxe de Assembly. O domínio esperado está nas relações entre os conceitos.</p></div>
+        <div class="checklist"><div class="check-item">A diferença entre arquitetura e organização do computador.</div><div class="check-item">Por que a ISA funciona como uma interface entre software de baixo nível e processador.</div><div class="check-item">O que operação, operandos, destino e próxima instrução representam.</div><div class="check-item">A diferença entre nome, valor, endereço e registrador.</div><div class="check-item">Por que uma linha de alto nível não precisa corresponder a uma instrução de máquina.</div><div class="check-item">Por que vale a pena saber ler Assembly sem usá-lo como linguagem principal.</div><div class="check-item">Como x86-64 e ARM podem afetar compatibilidade de binários.</div><div class="check-item">Por que o sistema operacional oferece abstrações em vez de expor o hardware bruto às aplicações.</div></div>
+        <div class="reference-box"><p class="eyebrow">Base conceitual</p><h3>Leituras que sustentam esta aula</h3><p><strong>Stallings:</strong> Cap. 1 (arquitetura × organização); Cap. 12 (características das instruções de máquina e tipos de operações); Cap. 13 (modos, formatos e linguagem de montagem); Cap. 14 (registradores e ciclo de instrução); Apêndice B (por que estudar Assembly).</p><p><strong>Tanenbaum &amp; Bos:</strong> Cap. 1, especialmente sistema operacional como máquina estendida e gerenciador de recursos, revisão de hardware, chamadas de sistema e modelo de execução em C.</p></div>
       </div>
     </section>
   </main>
@@ -689,23 +378,10 @@ dis.dis(soma)</code></pre><div class="code-caption">A saída depende da versão 
     const progress=document.getElementById('progress');
     const anchors=[...document.querySelectorAll('.main-nav a[href^="#"]')];
     const sections=anchors.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    function updateProgress(){const max=document.documentElement.scrollHeight-window.innerHeight,pct=max>0?(window.scrollY/max)*100:0;if(progress)progress.style.width=`${Math.min(100,Math.max(0,pct))}%`}
+    function updateProgress(){const max=document.documentElement.scrollHeight-window.innerHeight;const pct=max>0?(window.scrollY/max)*100:0;if(progress)progress.style.width=`${Math.min(100,Math.max(0,pct))}%`}
     function updateActiveLink(){const marker=window.scrollY+130;let active=sections[0]?.id;sections.forEach(s=>{if(s.offsetTop<=marker)active=s.id});anchors.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${active}`))}
-    document.querySelectorAll('[data-save]').forEach(f=>{const k=`arquitetura:aula04:${f.dataset.save}`,v=localStorage.getItem(k);if(v!==null)f.value=v;['input','change'].forEach(e=>f.addEventListener(e,()=>localStorage.setItem(k,f.value)))})
-
-    const states=[
-      {r1:'—',r2:'—',r3:'—',mem:'?',msg:'<strong>Estado inicial.</strong> Nenhuma instrução foi executada.'},
-      {r1:'7',r2:'—',r3:'—',mem:'?',msg:'<strong>Passo 1.</strong> LOAD copia Mem[0x1000] para R1. Agora R1 contém 7.'},
-      {r1:'7',r2:'5',r3:'—',mem:'?',msg:'<strong>Passo 2.</strong> LOAD copia Mem[0x1008] para R2. Agora R2 contém 5.'},
-      {r1:'7',r2:'5',r3:'12',mem:'?',msg:'<strong>Passo 3.</strong> ADD usa R1 e R2 e coloca o resultado 12 em R3. A memória de resultado ainda não mudou.'},
-      {r1:'7',r2:'5',r3:'12',mem:'12',msg:'<strong>Passo 4.</strong> STORE grava o conteúdo de R3 em Mem[0x1010]. Agora o resultado está na memória.'}
-    ];
-    let i=0;
-    const r1=document.getElementById('state-r1'),r2=document.getElementById('state-r2'),r3=document.getElementById('state-r3'),mem=document.getElementById('state-mem'),msg=document.getElementById('sim-message');
-    function render(){const s=states[i];r1.textContent=s.r1;r2.textContent=s.r2;r3.textContent=s.r3;mem.textContent=s.mem;msg.innerHTML=s.msg}
-    document.getElementById('next-step')?.addEventListener('click',()=>{i=Math.min(states.length-1,i+1);render()});
-    document.getElementById('reset-step')?.addEventListener('click',()=>{i=0;render()});
-    render();updateProgress();updateActiveLink();window.addEventListener('scroll',()=>{updateProgress();updateActiveLink()},{passive:true});
+    document.querySelectorAll('[data-save]').forEach(field=>{const key=`arquitetura:aula04:${field.dataset.save}`;const value=localStorage.getItem(key);if(value!==null)field.value=value;field.addEventListener('input',()=>localStorage.setItem(key,field.value))});
+    updateProgress();updateActiveLink();window.addEventListener('scroll',()=>{updateProgress();updateActiveLink()},{passive:true});
   </script>
 </body>
 </html>
