@@ -239,6 +239,54 @@
     @media(max-width:980px){.hero-grid,.overview-grid,.split-heading,.memory-layout,.assembly-why,.exercise-two-col{grid-template-columns:1fr}.lesson-path{grid-template-columns:repeat(3,1fr)}.engineer-grid,.instruction-anatomy,.os-chain{grid-template-columns:repeat(2,1fr)}.operation-grid{grid-template-columns:repeat(2,1fr)}}
     @media(max-width:680px){.lesson-page .container{width:min(var(--content-local),calc(100% - 26px))}.section{padding:62px 0}.lesson-path,.engineer-grid,.concept-grid,.instruction-anatomy,.operation-grid,.lab-grid,.os-chain,.checklist,.topic-list{grid-template-columns:1fr}.topic-list div:last-child{grid-column:auto}.warmup{grid-template-columns:1fr}.memory-row{grid-template-columns:105px 1fr 1fr}.exercise-head{align-items:flex-start;flex-direction:column}}
   </style>
+
+  <style id="aula-04-memory-responsive">
+    @media (max-width: 420px) {
+      .lesson-page .memory-table {
+        max-width: 100%;
+        overflow: visible;
+      }
+
+      .lesson-page .memory-row {
+        display: block;
+        min-width: 0;
+        padding: .55rem 0;
+      }
+
+      .lesson-page .memory-row.header {
+        display: none;
+      }
+
+      .lesson-page .memory-row:not(.header) > * {
+        display: grid;
+        grid-template-columns: 5.5rem minmax(0, 1fr);
+        gap: .65rem;
+        align-items: start;
+        padding: .42rem .85rem;
+        overflow-wrap: anywhere;
+      }
+
+      .lesson-page .memory-row:not(.header) > *::before {
+        color: var(--muted);
+        font-size: .68rem;
+        font-weight: 850;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+      }
+
+      .lesson-page .memory-row:not(.header) > :nth-child(1)::before {
+        content: "Endereço";
+      }
+
+      .lesson-page .memory-row:not(.header) > :nth-child(2)::before {
+        content: "Valor";
+      }
+
+      .lesson-page .memory-row:not(.header) > :nth-child(3)::before {
+        content: "Leitura";
+      }
+    }
+  </style>
 </head>
 <body class="lesson-page arch-page">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
