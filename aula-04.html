@@ -519,11 +519,11 @@ return 0;</code>
           <article class="contract-card">
             <h3>O que esse contrato define?</h3>
             <div class="contract-list">
-              <div><strong>Instruções disponíveis</strong><span>Quais operações podem ser representadas, como somar valores, comparar, desviar a execução, mover dados e acessar memória.</span></div>
-              <div><strong>Registradores visíveis ao software</strong><span>Quais registradores podem ser usados pelas instruções e como eles são identificados. Foi isso que apareceu no Compiler Explorer com nomes diferentes em x86-64 e ARM64.</span></div>
-              <div><strong>Formato das instruções</strong><span>Como os bits de uma instrução identificam a operação e seus operandos. O Assembly é uma forma legível de representar essas instruções.</span></div>
-              <div><strong>Dados e operandos</strong><span>Quais tamanhos e representações de dados podem ser manipulados e como as instruções recebem os valores com os quais irão trabalhar.</span></div>
-              <div><strong>Acesso à memória</strong><span>Como as instruções podem localizar e acessar dados armazenados na memória.</span></div>
+              <div><strong>Instruções disponíveis</strong><span>Quais operações podem ser representadas, como somar valores, comparar, desviar a execução, mover dados e acessar memória.<br><em>Exemplos:</em> em x86-64 podem aparecer <code>add</code>, <code>cmp</code> e <code>mov</code>; em ARM64, <code>add</code>, <code>cmp</code>, <code>ldr</code> e <code>str</code>.</span></div>
+              <div><strong>Registradores visíveis ao software</strong><span>Quais registradores podem ser usados pelas instruções e como eles são identificados. Foi isso que apareceu no Compiler Explorer com nomes diferentes em x86-64 e ARM64.<br><em>Exemplos:</em> <code>eax</code>, <code>rax</code> e <code>edi</code> em x86-64; <code>w0</code>, <code>x0</code> e <code>w1</code> em ARM64.</span></div>
+              <div><strong>Formato das instruções</strong><span>Como os bits de uma instrução identificam a operação e seus operandos. O Assembly é uma forma legível de representar essas instruções.<br><em>Exemplos:</em> <code>add eax, edi</code> em x86-64 e <code>add w0, w0, w1</code> em ARM64 mostram, de forma legível, uma operação e os registradores envolvidos.</span></div>
+              <div><strong>Dados e operandos</strong><span>Quais tamanhos e representações de dados podem ser manipulados e como as instruções recebem os valores com os quais irão trabalhar.<br><em>Exemplos:</em> em x86-64, <code>eax</code> representa a parte de 32 bits e <code>rax</code> a de 64 bits; em ARM64, <code>w0</code> trabalha com 32 bits e <code>x0</code> com 64 bits.</span></div>
+              <div><strong>Acesso à memória</strong><span>Como as instruções podem localizar e acessar dados armazenados na memória.<br><em>Exemplos:</em> em x86-64 pode aparecer <code>mov eax, [rbx]</code>; em ARM64, <code>ldr w0, [x1]</code>. Nos dois casos, a instrução está buscando um valor armazenado na memória.</span></div>
             </div>
           </article>
           <aside class="not-now">
