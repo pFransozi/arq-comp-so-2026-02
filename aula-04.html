@@ -449,11 +449,12 @@ return 0;</code>
 
         <article class="activity" id="atividade-2">
           <div class="activity-head">
-            <div><span class="activity-kicker">Experimento 2</span><h3>Mantenha o fonte; mude apenas o alvo</h3></div>
+            <div><span class="activity-kicker">Experimento 2</span><h3>Valide o que muda quando trocamos o alvo</h3></div>
             <span class="activity-tag">x86-64 × ARM64</span>
           </div>
           <div class="activity-body">
-            <p class="activity-goal"><strong>Objetivo:</strong> isolar uma variável do experimento: o código-fonte permanece igual e somente a arquitetura-alvo muda.</p>
+            <p class="activity-goal"><strong>Objetivo:</strong> usar o Compiler Explorer para confirmar uma ideia já apresentada: o código-fonte e o comportamento esperado permanecem iguais, mas a arquitetura pode usar registradores e instruções diferentes.</p>
+
             <div class="two-col">
               <div class="code-card">
                 <div class="code-head"><span>C</span><span>mesmo nas duas compilações</span></div>
@@ -461,26 +462,42 @@ return 0;</code>
     return x * 2;
 }</code></pre>
               </div>
-              <div>
-                <ol class="activity-steps">
-                  <li>Compile a função para um alvo <strong>x86-64</strong>.</li>
-                  <li>Abra uma segunda saída de compilador e escolha um compilador <strong>ARM64/AArch64</strong>.</li>
-                  <li>Confirme que o código C é exatamente o mesmo nos dois casos.</li>
-                  <li>Observe diferenças nos nomes dos registradores e nas instruções.</li>
-                </ol>
-              </div>
+              <article class="card">
+                <h3>Antes de abrir a ferramenta</h3>
+                <p><strong>Registradores</strong> são pequenos espaços internos usados pelo processador para manter valores durante a execução. Os nomes mudam entre arquiteturas: em x86-64 podem aparecer <code>eax</code>, <code>edi</code> ou <code>rax</code>; em ARM64 são comuns nomes como <code>w0</code>, <code>w1</code>, <code>x0</code> e <code>x1</code>.</p>
+                <p><strong>Instruções</strong> são operações disponíveis naquela arquitetura. No Assembly, normalmente aparecem no início da linha, como <code>lea</code>, <code>add</code>, <code>lsl</code> ou <code>ret</code>.</p>
+                <p>Não precisamos compreender cada instrução. Nesta atividade, vamos apenas <strong>localizar essas evidências e comparar as duas saídas</strong>.</p>
+              </article>
             </div>
+
             <div class="activity-table-wrap">
               <table class="activity-table">
-                <thead><tr><th>O que observar</th><th>x86-64</th><th>ARM64</th><th>O que isso sugere?</th></tr></thead>
+                <thead><tr><th>O que vamos validar</th><th>x86-64 · exemplos comuns</th><th>ARM64 · exemplos comuns</th><th>O que isso mostra?</th></tr></thead>
                 <tbody>
-                  <tr><td>Nomes de registradores</td><td class="blank">________________</td><td class="blank">________________</td><td class="blank">________________</td></tr>
-                  <tr><td>Instruções visíveis</td><td class="blank">________________</td><td class="blank">________________</td><td class="blank">________________</td></tr>
-                  <tr><td>Comportamento da função</td><td>dobro</td><td>dobro</td><td class="blank">________________</td></tr>
+                  <tr><td><strong>Registradores</strong><br><small>Nomes usados para trabalhar com valores dentro do processador.</small></td><td><code>eax</code>, <code>edi</code>, <code>rax</code></td><td><code>w0</code>, <code>w1</code>, <code>x0</code>, <code>x1</code></td><td>Cada arquitetura expõe seus próprios registradores.</td></tr>
+                  <tr><td><strong>Instruções</strong><br><small>Operações disponíveis para realizar o trabalho.</small></td><td>Podem aparecer <code>lea</code>, <code>add</code>, <code>ret</code></td><td>Podem aparecer <code>lsl</code>, <code>add</code>, <code>ret</code></td><td>O vocabulário de máquina pode mudar entre os alvos.</td></tr>
+                  <tr><td><strong>Código-fonte</strong></td><td><code>return x * 2;</code></td><td><code>return x * 2;</code></td><td>O programa que escrevemos permanece igual.</td></tr>
+                  <tr><td><strong>Comportamento esperado</strong></td><td>devolver <code>2 × x</code></td><td>devolver <code>2 × x</code></td><td>Formas diferentes podem implementar o mesmo comportamento.</td></tr>
                 </tbody>
               </table>
             </div>
-            <div class="precision-note"><strong>Não procure uma correspondência linha a linha entre as duas saídas.</strong> A pergunta importante é: como duas arquiteturas diferentes conseguem implementar o mesmo comportamento do programa?</div>
+
+            <h3 style="margin-top:1.5rem">Agora valide no Compiler Explorer</h3>
+            <ol class="activity-steps">
+              <li>Compile a função para <strong>x86-64</strong> e use a opção <code>-O2</code>.</li>
+              <li>Procure na saída nomes de registradores e instruções semelhantes aos exemplos da tabela. Não é necessário que a saída seja idêntica.</li>
+              <li>Abra uma segunda saída usando um compilador <strong>ARM64/AArch64</strong>, também com <code>-O2</code>.</li>
+              <li>Localize registradores e instruções da segunda arquitetura.</li>
+              <li>Confirme que o código C continua exatamente o mesmo nas duas compilações.</li>
+            </ol>
+            <a class="tool-link" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a>
+
+            <div class="activity-questions">
+              <div>Você encontrou nomes de registradores diferentes nas duas saídas?</div>
+              <div>As instruções geradas foram exatamente as mesmas?</div>
+              <div>Mesmo com diferenças no Assembly, o que a função continua fazendo?</div>
+            </div>
+            <div class="precision-note"><strong>A saída pode variar.</strong> Compiladores e versões diferentes podem escolher instruções diferentes mesmo para a mesma arquitetura. O que estamos validando é o padrão geral: ao trocar a arquitetura-alvo, o compilador passa a trabalhar com os recursos disponíveis naquele alvo, enquanto o comportamento pretendido pelo código permanece o mesmo.</div>
           </div>
         </article>
 
