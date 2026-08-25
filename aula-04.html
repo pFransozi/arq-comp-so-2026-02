@@ -509,34 +509,67 @@ return 0;</code>
       <div class="container">
         <div class="section-heading">
           <p class="eyebrow">Formalizando o que observamos</p>
-          <h2>A ISA funciona como um contrato entre software de baixo nível e processador</h2>
-          <p>A <strong>Instruction Set Architecture</strong> define a interface arquitetural que o código de máquina utiliza. O compilador não pode inventar qualquer operação: ele precisa produzir instruções pertencentes ao conjunto oferecido pelo alvo.</p>
+          <h2>A ISA funciona como um contrato entre software e processador</h2>
+          <p>Quando o compilador produz código para um alvo como <strong>x86-64</strong> ou <strong>ARM64</strong>, ele não pode escolher qualquer operação. O resultado precisa respeitar a <strong>Instruction Set Architecture (ISA)</strong>: a interface arquitetural que define quais instruções e recursos o software pode usar ao conversar com o processador.</p>
         </div>
+
+        <div class="big-idea"><strong>Pense na ISA como um acordo entre os dois lados:</strong> o software produz instruções seguindo uma especificação conhecida, e o processador implementa essa especificação para conseguir interpretá-las e executá-las.</div>
 
         <div class="isa-grid">
           <article class="contract-card">
-            <h3>O que esse contrato descreve?</h3>
+            <h3>O que esse contrato define?</h3>
             <div class="contract-list">
-              <div><strong>Instruções disponíveis</strong><span>Quais operações podem ser solicitadas ao processador.</span></div>
-              <div><strong>Registradores visíveis</strong><span>Quais registradores fazem parte da interface arquitetural.</span></div>
-              <div><strong>Operandos e acesso a dados</strong><span>Como as instruções trabalham com valores, registradores e memória.</span></div>
-              <div><strong>Representações suportadas</strong><span>Quais tamanhos e formatos de dados a arquitetura expõe.</span></div>
+              <div><strong>Instruções disponíveis</strong><span>Quais operações podem ser representadas, como somar valores, comparar, desviar a execução, mover dados e acessar memória.</span></div>
+              <div><strong>Registradores visíveis ao software</strong><span>Quais registradores podem ser usados pelas instruções e como eles são identificados. Foi isso que apareceu no Compiler Explorer com nomes diferentes em x86-64 e ARM64.</span></div>
+              <div><strong>Formato das instruções</strong><span>Como os bits de uma instrução identificam a operação e seus operandos. O Assembly é uma forma legível de representar essas instruções.</span></div>
+              <div><strong>Dados e operandos</strong><span>Quais tamanhos e representações de dados podem ser manipulados e como as instruções recebem os valores com os quais irão trabalhar.</span></div>
+              <div><strong>Acesso à memória</strong><span>Como as instruções podem localizar e acessar dados armazenados na memória.</span></div>
             </div>
           </article>
           <aside class="not-now">
-            <p class="eyebrow">Limite didático</p>
-            <h3>ISA não significa decorar Assembly</h3>
-            <p>O objetivo desta aula é reconhecer a existência do contrato e suas consequências para software.</p>
+            <p class="eyebrow">Uma distinção importante</p>
+            <h3>A ISA não é o processador inteiro</h3>
+            <p>Dois processadores podem implementar a mesma ISA e ainda serem bastante diferentes por dentro.</p>
             <ul>
-              <li>Não memorizar listas de instruções.</li>
-              <li>Não decorar todos os registradores.</li>
-              <li>Não estudar modos de endereçamento em detalhe.</li>
-              <li>Não escrever aplicações extensas em Assembly.</li>
+              <li>Podem ter caches de tamanhos e organizações diferentes.</li>
+              <li>Podem usar pipelines e unidades de execução diferentes.</li>
+              <li>Podem ter frequências e quantidades de núcleos diferentes.</li>
+              <li>A implementação interna pode mudar sem alterar o contrato visto pelo software.</li>
             </ul>
           </aside>
         </div>
 
-        <div class="precision-note"><strong>Retome a Aula 03:</strong> arquitetura e organização não são a mesma coisa. Dois processadores podem implementar a mesma ISA e ter organizações internas diferentes. Para compatibilidade de binários, o contrato arquitetural importa diretamente.</div>
+        <div class="precision-note"><strong>Arquitetura × organização:</strong> a ISA faz parte da arquitetura visível ao software. A organização descreve como o processador implementa esse contrato internamente. Em uma frase: <strong>a ISA diz o que a máquina oferece ao software; a organização diz como o processador realiza isso.</strong></div>
+
+        <div class="two-col" style="margin-top:24px">
+          <div class="code-card">
+            <div class="code-head"><span>C · mesmo código-fonte</span><span>retomando o experimento</span></div>
+            <pre><code>int dobro(int x) {
+    return x * 2;
+}</code></pre>
+            <div class="code-caption">O comportamento desejado continua sendo receber <code>x</code>, calcular seu dobro e devolver o resultado.</div>
+          </div>
+          <article class="card">
+            <h3>Por que o Assembly mudou?</h3>
+            <p>Ao trocar o <strong>target</strong>, o compilador passa a trabalhar com outro contrato arquitetural. Em x86-64 ele escolhe registradores e instruções definidos por essa ISA; em ARM64 ele precisa escolher recursos válidos para a ISA ARM64.</p>
+            <p>Por isso o código C pode permanecer igual enquanto a representação de máquina muda. O que muda é a forma de realizar o comportamento dentro das regras da arquitetura escolhida.</p>
+          </article>
+        </div>
+
+        <div class="pipeline" aria-label="Relação entre código-fonte, compilador, ISA e binário">
+          <article class="pipe-node"><small>1 · Fonte</small><strong>Código-fonte</strong><p>Expressa o comportamento desejado usando abstrações da linguagem.</p></article>
+          <article class="pipe-node"><small>2 · Tradução</small><strong>Compilador</strong><p>Recebe o target e escolhe como representar o programa.</p></article>
+          <article class="pipe-node"><small>3 · Contrato</small><strong>ISA do alvo</strong><p>Define quais instruções, registradores e formas de acesso podem ser usados.</p></article>
+          <article class="pipe-node"><small>4 · Artefato</small><strong>Binário</strong><p>Contém instruções produzidas para aquela arquitetura.</p></article>
+        </div>
+
+        <div class="target-grid">
+          <article class="target-card"><span>Engenharia de Software</span><h3>Compilação</h3><p>O compilador precisa conhecer o target para produzir instruções pertencentes à ISA correta.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Distribuição</h3><p>Uma equipe pode precisar gerar artefatos diferentes para x86-64 e ARM64 mesmo mantendo a mesma base de código.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Compatibilidade</h3><p>Um binário só pode usar instruções que façam sentido para a arquitetura na qual deverá executar.</p></article>
+        </div>
+
+        <div class="big-idea"><strong>A ISA é necessária, mas ainda não descreve toda a plataforma.</strong> Dois computadores podem compartilhar a mesma ISA e ainda usar sistemas operacionais e convenções binárias diferentes. É por isso que, na sequência, vamos ampliar a discussão de arquitetura para <strong>compatibilidade de software</strong>.</div>
 
         <article class="activity" id="atividade-3">
           <div class="activity-head">
