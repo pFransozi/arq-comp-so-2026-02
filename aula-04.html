@@ -540,17 +540,30 @@ return 0;</code>
 
         <article class="activity" id="atividade-3">
           <div class="activity-head">
-            <div><span class="activity-kicker">Atividade 3</span><h3>Explique a diferença sem usar sintaxe de Assembly</h3></div>
-            <span class="activity-tag">síntese em dupla</span>
+            <div><span class="activity-kicker">Atividade 3</span><h3>Pesquisa aplicada: preparando uma aplicação para diferentes usuários</h3></div>
+            <span class="activity-tag">pesquisa · Engenharia de Software</span>
           </div>
           <div class="activity-body">
-            <p class="activity-goal"><strong>Desafio:</strong> escreva uma explicação de 3 a 5 linhas para um colega que faltou à aula.</p>
-            <p>Use obrigatoriamente os termos <strong>código-fonte</strong>, <strong>compilador</strong>, <strong>target</strong> e <strong>ISA</strong>. Sua explicação deve responder:</p>
-            <div class="activity-questions">
-              <div>Por que o mesmo C pode gerar Assembly diferente?</div>
-              <div>Por que isso não muda necessariamente o comportamento desejado?</div>
-              <div>Por que um binário precisa respeitar a arquitetura para a qual foi produzido?</div>
-            </div>
+            <p class="activity-goal"><strong>Objetivo:</strong> investigar como arquitetura, sistema operacional, build e distribuição influenciam a entrega e a compatibilidade de uma aplicação.</p>
+            <div class="precision-note" style="margin-top:0"><strong>Cenário:</strong> sua equipe desenvolveu uma aplicação nativa e precisa publicá-la para diferentes usuários. O código-fonte é o mesmo, mas os usuários utilizam máquinas e sistemas diferentes. A equipe precisa decidir quais artefatos gerar, como organizá-los e como orientar quem fará o download.</div>
+
+            <ol class="activity-steps">
+              <li><strong>Quais informações sobre o ambiente do usuário precisam ser conhecidas antes de gerar um executável?</strong> Pesquise e explique por que a arquitetura do processador e o sistema operacional são relevantes.</li>
+              <li><strong>Considere quatro usuários: Windows x86-64, Windows ARM64, Linux x86-64 e Linux ARM64. Quantos artefatos sua equipe deveria prever inicialmente?</strong> Monte uma matriz de distribuição e justifique sua resposta.
+                <div class="activity-table-wrap">
+                  <table class="activity-table">
+                    <thead><tr><th>Sistema operacional</th><th>Arquitetura</th><th>Artefato previsto</th><th>Usuário atendido</th></tr></thead>
+                  </table>
+                </div>
+              </li>
+              <li><strong>Por que não basta simplesmente entregar o código-fonte para todos?</strong> Explique a diferença entre o código mantido no repositório da equipe e o artefato entregue ao usuário.</li>
+              <li><strong>Onde entra o compilador no processo de build?</strong> Explique como o mesmo código-fonte pode ser usado para produzir artefatos destinados a arquiteturas diferentes. Relacione sua resposta aos conceitos de <em>target</em> e ISA.</li>
+              <li><strong>O que pode acontecer se a equipe publicar apenas uma versão x86-64 e um usuário utilizar ARM64?</strong> Pesquise as possíveis consequências e explique por que isso se torna um problema de compatibilidade e suporte.</li>
+              <li><strong>Como um projeto real pode automatizar essas diferentes compilações?</strong> Pesquise o conceito de <strong>matriz de builds</strong> em integração contínua e explique como combinações de sistema operacional e arquitetura poderiam ser geradas ou testadas automaticamente.</li>
+              <li><strong>Que informações você colocaria na página de download ou na documentação para evitar que o usuário escolha o arquivo errado?</strong> Proponha uma forma de nomear os artefatos e de orientar o usuário sobre qual versão utilizar.</li>
+            </ol>
+
+            <div class="big-idea"><strong>Entrega:</strong> produza um documento com as respostas às sete questões, a matriz de distribuição e as fontes consultadas. Ao final, sintetize em um parágrafo por que uma equipe pode manter uma única base de código e, ainda assim, distribuir vários artefatos diferentes.</div>
           </div>
         </article>
       </div>
