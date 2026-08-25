@@ -79,10 +79,17 @@
     .lesson-path a:before{content:counter(path,decimal-leading-zero);display:block;color:var(--a4-blue);font-weight:850;font-size:.74rem;letter-spacing:.08em;margin-bottom:2rem}
     .lesson-path a:hover{transform:translateY(-4px);box-shadow:var(--a4-shadow)}
 
-    .warmup{display:grid;grid-template-columns:.78fr 1.22fr;gap:28px;background:linear-gradient(135deg,#101a24,#192747);border-radius:28px;padding:2rem;color:#fff}
+    .warmup{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;background:linear-gradient(135deg,#101a24,#192747);border-radius:28px;padding:2rem;color:#fff}
+    .warmup-copy{display:flex;flex-direction:column;justify-content:center}
+    .warmup h2{max-width:14ch;font-size:clamp(2.15rem,3.8vw,3.65rem);margin-bottom:1rem}
     .warmup p{color:#cbd5e1}
+    .lmc-trace{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:.35rem}
+    .lmc-step{padding:.55rem .72rem;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.78rem;font-weight:800;color:#e8eef8}
+    .lmc-arrow{color:#9fb4ff;font-weight:900}
     .question-cloud{display:grid;gap:.75rem}
     .question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}
+    .question-cloud strong{display:block;color:#9fb4ff;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem}
+    .question-cloud span{display:block;color:#f4f7fb;font-weight:650;line-height:1.5}
 
     .source-layout,.two-col{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
     .code-card{overflow:hidden;border:1px solid var(--a4-line);border-radius:20px;background:#0d1624;box-shadow:var(--a4-shadow)}
@@ -284,16 +291,22 @@
     <section class="section" id="retomada">
       <div class="container">
         <div class="warmup">
-          <div>
+          <div class="warmup-copy">
             <p class="eyebrow" style="color:#9fb4ff">Retomada da Aula 03</p>
-            <h2>A CPU executa instruções. Mas de onde elas vêm?</h2>
-            <p>Na máquina didática acompanhamos <code>LOAD</code>, <code>ADD</code>, <code>STORE</code> e o ciclo buscar → decodificar → executar. Não vamos repetir esse mecanismo: vamos voltar um passo e olhar para o lado do software.</p>
+            <h2>Do Little Man Computer ao código que escrevemos</h2>
+            <p>No exercício com o <strong>Little Man Computer</strong>, acompanhamos instruções como <code>LDA</code>, <code>ADD</code> e <code>STA</code> sendo buscadas e executadas. Agora vamos voltar um passo: quem produz essas instruções quando programamos em uma linguagem como C?</p>
+            <div class="lmc-trace" aria-label="Ponte entre a atividade anterior e esta aula">
+              <span class="lmc-step">Programa no LMC</span>
+              <span class="lmc-arrow">→</span>
+              <span class="lmc-step">LDA · ADD · STA</span>
+              <span class="lmc-arrow">→</span>
+              <span class="lmc-step">buscar · decodificar · executar</span>
+            </div>
           </div>
-          <div class="question-cloud">
-            <div>Quando escrevemos <code>return a + b;</code>, a CPU recebe exatamente essa frase?</div>
-            <div>Onde ficam <code>if</code>, <code>for</code> e os nomes das variáveis depois da compilação?</div>
-            <div>O compilador pode gerar qualquer instrução que quiser?</div>
-            <div>Por que um mesmo software pode ter download “x64” e “ARM64”?</div>
+          <div class="question-cloud" aria-label="Perguntas para retomar a discussão">
+            <div><strong>1 · Código-fonte</strong><span>O processador recebe o código C exatamente como nós o escrevemos?</span></div>
+            <div><strong>2 · Tradução</strong><span>Se no LMC executávamos <code>LDA</code>, <code>ADD</code> e <code>STA</code>, de onde vêm as instruções de um programa escrito em C?</span></div>
+            <div><strong>3 · Arquitetura</strong><span>Por que o mesmo código-fonte pode gerar instruções diferentes para x86-64 e ARM64?</span></div>
           </div>
         </div>
       </div>
