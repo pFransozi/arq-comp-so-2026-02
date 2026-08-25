@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: código-fonte, compilação, arquitetura-alvo, ISA, x86-64, ARM64, 32 e 64 bits, binários, compatibilidade e experimentos no Compiler Explorer.">
+  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: código-fonte, compilação, arquitetura-alvo, ISA, x86-64, ARM64, binários, compatibilidade e experimentos no Compiler Explorer.">
   <meta name="theme-color" content="#101a24">
   <title>Aula 04 — Do código-fonte ao programa executável</title>
   <link rel="stylesheet" href="styles.css">
@@ -164,41 +164,25 @@
     .compare-card{padding:22px;border:1px solid var(--a4-line);border-radius:20px;background:var(--a4-paper)}
     .compare-card p:last-child{margin-bottom:0}
 
-    .bits-layout{display:grid;grid-template-columns:.85fr 1.15fr;gap:24px;align-items:start}
-    .download-list{display:grid;gap:10px}
-    .download-item{display:grid;grid-template-columns:130px 1fr;gap:14px;padding:16px;border:1px solid var(--a4-line);border-radius:15px;background:var(--a4-paper)}
-    .download-item strong{color:var(--a4-blue)}
-    .download-item p{margin:0}
-    .platform-stack{display:grid;gap:10px}
-    .platform-layer{padding:16px 18px;border:1px solid var(--a4-line);border-radius:15px;background:var(--a4-paper)}
-    .platform-layer strong{display:block;margin-bottom:.25rem}
-    .platform-layer p{margin:0}
-
-    .decision-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}
-    .decision-card{padding:18px;border:1px solid var(--a4-line);border-radius:16px;background:var(--a4-paper)}
-    .decision-card small{display:block;color:var(--a4-blue);font-weight:850;margin-bottom:.5rem;text-transform:uppercase;letter-spacing:.05em}
-    .decision-card p{margin:0}
-
     .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
     .check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--a4-line);border-radius:15px;background:var(--a4-paper)}
     .check-item:before{content:"□";color:var(--a4-teal);font-size:1.25rem;font-weight:900}
     .site-footer{border-top:1px solid var(--a4-line)}
 
     @media(max-width:980px){
-      .hero-grid,.overview-grid,.split-heading,.source-layout,.two-col,.isa-grid,.bits-layout{grid-template-columns:1fr}
+      .hero-grid,.overview-grid,.split-heading,.source-layout,.two-col,.isa-grid{grid-template-columns:1fr}
       .lesson-path{grid-template-columns:repeat(3,1fr)}
       .pipeline{grid-template-columns:repeat(2,1fr)}
       .pipe-node:after{display:none}
-      .target-grid,.activity-questions,.decision-grid{grid-template-columns:repeat(2,1fr)}
+      .target-grid,.activity-questions{grid-template-columns:repeat(2,1fr)}
     }
     @media(max-width:680px){
       .lesson-page .container{width:min(var(--a4-content),calc(100% - 26px))}
       .section{padding:62px 0}
-      .lesson-path,.topic-list,.pipeline,.target-grid,.compare-grid,.activity-questions,.decision-grid,.checklist{grid-template-columns:1fr}
+      .lesson-path,.topic-list,.pipeline,.target-grid,.compare-grid,.activity-questions,.checklist{grid-template-columns:1fr}
       .warmup{grid-template-columns:1fr}
       .activity-head{align-items:flex-start;flex-direction:column}
       .activity-tag{white-space:normal}
-      .download-item{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -219,8 +203,7 @@
         <a href="#traducao">Tradução</a>
         <a href="#alvo">Alvo</a>
         <a href="#isa">ISA</a>
-        <a href="#arquiteturas">Arquiteturas</a>
-        <a href="#compatibilidade">Compatibilidade</a>
+        <a href="#atividade-3">Engenharia de Software</a>
         <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
       </nav>
     </div>
@@ -260,8 +243,8 @@
               <div>Compilação e arquitetura-alvo</div>
               <div>ISA como contrato</div>
               <div>x86-64 e ARM64</div>
-              <div>32 × 64 bits</div>
-              <div>Binários e compatibilidade</div>
+              <div>Builds e distribuição</div>
+              <div>Compatibilidade de software</div>
             </div>
           </article>
           <article class="card competency">
@@ -281,15 +264,15 @@
       <div class="container">
         <div class="section-heading split-heading">
           <div><p class="eyebrow">Percurso da aula</p><h2>Do código-fonte à compatibilidade</h2></div>
-          <p>Seguiremos a transformação do programa até o binário, observando onde entram arquitetura-alvo, ISA e compatibilidade.</p>
+          <p>Seguiremos a transformação do programa até o binário, observando onde entram arquitetura-alvo, ISA e decisões de Engenharia de Software.</p>
         </div>
         <div class="lesson-path">
           <a href="#retomada"><strong>Partir do que a Aula 03 já mostrou</strong></a>
           <a href="#traducao"><strong>Prever e observar uma tradução</strong></a>
           <a href="#alvo"><strong>Descobrir por que existe um target</strong></a>
-          <a href="#arquiteturas"><strong>Comparar x86-64 e ARM64</strong></a>
+          <a href="#atividade-2"><strong>Comparar x86-64 e ARM64</strong></a>
           <a href="#isa"><strong>Formalizar a ideia de ISA</strong></a>
-          <a href="#compatibilidade"><strong>Decidir qual binário pode executar</strong></a>
+          <a href="#atividade-3"><strong>Aplicar à Engenharia de Software</strong></a>
         </div>
       </div>
     </section>
@@ -602,125 +585,6 @@ return 0;</code>
             <div class="big-idea"><strong>Entrega:</strong> produza um documento com as respostas às sete questões, a matriz de distribuição e as fontes consultadas. Ao final, sintetize em um parágrafo por que uma equipe pode manter uma única base de código e, ainda assim, distribuir vários artefatos diferentes.</div>
           </div>
         </article>
-      </div>
-    </section>
-
-    <section class="section" id="arquiteturas">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">32 × 64 bits</p>
-          <h2>O rótulo do download representa uma característica real do alvo</h2>
-          <p>Termos como <strong>x86</strong>, <strong>x64</strong> e <strong>ARM64</strong> aparecem em instaladores, builds e documentação. Para Engenharia de Software, interessa compreender o suficiente para escolher, produzir e distribuir o artefato correto.</p>
-        </div>
-
-        <div class="bits-layout">
-          <div class="download-list">
-            <div class="download-item"><strong>x86 / 32 bits</strong><p>Geralmente identifica uma variante de 32 bits da família x86.</p></div>
-            <div class="download-item"><strong>x64 / x86-64</strong><p>Identifica a extensão de 64 bits da família x86 usada amplamente em PCs e servidores.</p></div>
-            <div class="download-item"><strong>ARM64</strong><p>Identifica a arquitetura ARM de 64 bits, também chamada AArch64.</p></div>
-          </div>
-          <article class="card">
-            <h3>O que “64 bits” não quer dizer</h3>
-            <p>Não significa automaticamente “duas vezes mais rápido”. A largura arquitetural está associada a aspectos como registradores, endereçamento e instruções disponíveis, mas desempenho depende de muitos outros fatores.</p>
-            <div class="precision-note"><strong>Para esta aula:</strong> não precisamos calcular limites de espaço de endereçamento nem aprofundar ponteiros. Precisamos reconhecer que 32 e 64 bits fazem parte do contrato da plataforma e afetam compatibilidade.</div>
-          </article>
-        </div>
-
-        <article class="activity" id="atividade-4">
-          <div class="activity-head">
-            <div><span class="activity-kicker">Atividade 4</span><h3>Qual arquivo você entregaria para cada usuário?</h3></div>
-            <span class="activity-tag">situação de Engenharia de Software</span>
-          </div>
-          <div class="activity-body">
-            <p class="activity-goal"><strong>Cenário:</strong> sua equipe precisa publicar uma ferramenta nativa e recebeu quatro relatos de ambiente.</p>
-            <div class="decision-grid">
-              <article class="decision-card"><small>Usuário A</small><strong>Windows · x86-64</strong><p>Qual build você ofereceria?</p></article>
-              <article class="decision-card"><small>Usuário B</small><strong>Windows · ARM64</strong><p>O mesmo arquivo do usuário A é necessariamente o melhor alvo?</p></article>
-              <article class="decision-card"><small>Usuário C</small><strong>Linux · x86-64</strong><p>Ter a mesma ISA do usuário A basta para garantir o mesmo executável?</p></article>
-              <article class="decision-card"><small>Usuário D</small><strong>Linux · ARM64</strong><p>Quais duas dimensões do ambiente já sabemos que mudaram?</p></article>
-            </div>
-            <p class="precision-note"><strong>Objetivo da atividade:</strong> perceber que escolher um artefato não depende apenas do nome do processador. A arquitetura é uma parte da plataforma, mas não a plataforma inteira.</p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section section-soft" id="compatibilidade">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Binário e plataforma</p>
-          <h2>Mesma ISA não significa automaticamente mesmo ambiente de execução</h2>
-          <p>Quando o código-fonte vira um artefato nativo, a arquitetura-alvo é apenas uma das restrições. O sistema operacional e as interfaces binárias esperadas pelo programa também participam da compatibilidade.</p>
-        </div>
-
-        <div class="two-col">
-          <div class="platform-stack">
-            <div class="platform-layer"><strong>Código-fonte</strong><p>É a representação mantida pela equipe de desenvolvimento.</p></div>
-            <div class="platform-layer"><strong>Arquitetura / ISA</strong><p>Define o vocabulário de máquina que o binário pode usar.</p></div>
-            <div class="platform-layer"><strong>Sistema operacional e ABI</strong><p>Definem convenções e interfaces que o programa nativo espera encontrar.</p></div>
-            <div class="platform-layer"><strong>Bibliotecas e runtime</strong><p>Podem acrescentar outras dependências ao ambiente de execução.</p></div>
-          </div>
-          <article class="card">
-            <h3>Exemplo de raciocínio</h3>
-            <p>Um computador Windows x86-64 e um computador Linux x86-64 compartilham a arquitetura de processador, mas isso não transforma automaticamente um executável nativo produzido para Windows em um executável Linux.</p>
-            <p>Da mesma forma, duas máquinas usando o mesmo sistema operacional podem precisar de artefatos diferentes se uma for x86-64 e outra ARM64.</p>
-            <div class="big-idea"><strong>Compatibilidade é uma interseção:</strong> o artefato precisa ser adequado à arquitetura e ao ambiente para o qual foi construído.</div>
-          </article>
-        </div>
-
-        <article class="activity" id="atividade-5">
-          <div class="activity-head">
-            <div><span class="activity-kicker">Experimento 5</span><h3>Mesmo target, outra compilação</h3></div>
-            <span class="activity-tag">extensão · otimização</span>
-          </div>
-          <div class="activity-body">
-            <p class="activity-goal"><strong>Objetivo:</strong> perceber que o código de máquina também pode mudar sem trocar o código-fonte nem a ISA.</p>
-            <div class="two-col">
-              <div class="code-card">
-                <div class="code-head"><span>C</span><span>laço simples</span></div>
-                <pre><code>int soma_vetor(const int *v, int n) {
-    int total = 0;
-
-    for (int i = 0; i &lt; n; i++) {
-        total += v[i];
-    }
-
-    return total;
-}</code></pre>
-              </div>
-              <div>
-                <ol class="activity-steps">
-                  <li>Mantenha um compilador <strong>x86-64</strong>.</li>
-                  <li>Observe a saída sem otimização ou com <code>-O0</code>.</li>
-                  <li>Depois compare com <code>-O2</code>.</li>
-                  <li>Registre mudanças visíveis na saída.</li>
-                </ol>
-                <div class="precision-note"><strong>Não conclua “mais rápido” apenas porque há menos linhas.</strong> O experimento mostra que o compilador toma decisões diferentes. Medir desempenho é outro problema, que será tratado em outro momento.</div>
-              </div>
-            </div>
-            <div class="activity-questions">
-              <div>O código-fonte mudou?</div>
-              <div>A arquitetura-alvo mudou?</div>
-              <div>O código gerado mudou? O que isso revela sobre o papel do compilador?</div>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section section-dark" id="engenharia">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Voltando à Engenharia de Software</p>
-          <h2>Uma base de código pode gerar vários artefatos</h2>
-          <p>Aquilo que vimos aparece em decisões reais de build, distribuição, integração contínua e suporte a plataformas.</p>
-        </div>
-        <div class="pipeline">
-          <article class="pipe-node"><small>Fonte</small><strong>Mesmo repositório</strong><p>O algoritmo e grande parte do código podem ser compartilhados.</p></article>
-          <article class="pipe-node"><small>Build</small><strong>Matriz de targets</strong><p>Windows/Linux, x86-64/ARM64 e outras combinações podem exigir builds próprios.</p></article>
-          <article class="pipe-node"><small>Artefatos</small><strong>Binários diferentes</strong><p>Cada artefato carrega pressupostos sobre onde executará.</p></article>
-          <article class="pipe-node"><small>Entrega</small><strong>Compatibilidade</strong><p>O usuário precisa receber o artefato adequado ao ambiente.</p></article>
-        </div>
       </div>
     </section>
 
