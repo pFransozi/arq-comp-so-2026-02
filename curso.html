@@ -95,7 +95,7 @@
 
     <section id="sobre"><div class="section-intro"><h2>Sobre a disciplina</h2><p>A disciplina conecta hardware, sistema operacional e software por meio de modelos, experimentos e um projeto PBL evolutivo. O objetivo é compreender como decisões de arquitetura e mecanismos do sistema operacional alteram correção, desempenho, isolamento e recuperação.</p></div><ul class="simple-list"><li><span class="num">01</span><div><strong>Relacionar</strong><small>Conectar código, runtime, processos, sistema operacional, CPU, memória, armazenamento e dispositivos.</small></div></li><li><span class="num">02</span><div><strong>Diagnosticar</strong><small>Reconhecer gargalos, contenção, condições de corrida, pressão de memória e falhas de persistência.</small></div></li><li><span class="num">03</span><div><strong>Experimentar</strong><small>Comparar versões e configurações com testes repetíveis, métricas, logs e hipóteses explícitas.</small></div></li><li><span class="num">04</span><div><strong>Justificar</strong><small>Defender escolhas de arquitetura, sincronização e ambiente considerando desempenho, custo e limitações.</small></div></li></ul></section>
 
-    <section id="percurso"><div class="section-intro"><h2>Percurso da disciplina</h2><p>O semestre parte das camadas do sistema, avança pelos recursos computacionais e mecanismos do sistema operacional e culmina na validação e defesa de uma aplicação concorrente.</p></div><figure class="figure-wide"><button type="button" data-open-figure aria-label="Ampliar infográfico do percurso"><img src="./assets/percurso-arquitetura.svg" alt="Infográfico com seis etapas do percurso da disciplina e o projeto PBL no centro."></button><figcaption>Infográfico do percurso da disciplina. Clique para ampliar.</figcaption></figure></section>
+    <section id="percurso"><div class="section-intro"><h2>Percurso da disciplina</h2><p>O semestre parte das camadas do sistema, avança pelos recursos computacionais e mecanismos do sistema operacional e culmina na validação e defesa de uma aplicação concorrente.</p></div><figure class="figure-wide"><button type="button" data-open-figure aria-label="Ampliar infográfico do percurso"><img data-theme-figure src="./assets/percurso-arquitetura.svg" alt="Infográfico com seis etapas do percurso da disciplina e o projeto PBL no centro."></button><figcaption>Infográfico do percurso da disciplina. Clique para ampliar.</figcaption></figure></section>
 
     <section id="calendario"><div class="section-intro"><h2>Calendário das aulas</h2><p>Os encontros são apresentados como índice do semestre, com acesso direto às aulas já publicadas.</p></div><div class="calendar-groups">
       <div class="month"><h3>Julho</h3><div class="lesson-list"><div class="lesson"><span class="lesson-number">01</span><span class="lesson-date">28/07</span><div><span class="lesson-title">Open UniSENAI</span><small>Programação institucional.</small></div><span class="badge">Evento</span></div></div></div>
@@ -127,10 +127,21 @@
 </div>
 
 <footer><div class="shell">Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software · 2026/2</div></footer>
-<dialog id="figure-dialog"><div class="dialog-bar"><button class="dialog-close" type="button" aria-label="Fechar imagem">×</button></div><img src="./assets/percurso-arquitetura.svg" alt="Infográfico ampliado do percurso da disciplina."></dialog>
+<dialog id="figure-dialog"><div class="dialog-bar"><button class="dialog-close" type="button" aria-label="Fechar imagem">×</button></div><img data-theme-figure src="./assets/percurso-arquitetura.svg" alt="Infográfico ampliado do percurso da disciplina."></dialog>
 <script>
+  const syncThemeFigures=()=>{
+    const src=document.body.classList.contains('dark')?'./assets/percurso-arquitetura-dark.svg':'./assets/percurso-arquitetura.svg';
+    document.querySelectorAll('[data-theme-figure]').forEach(img=>{
+      if(img.getAttribute('src')!==src)img.setAttribute('src',src);
+    });
+  };
+
   const toggle=document.querySelector('.theme-toggle');
-  toggle?.addEventListener('click',()=>document.body.classList.toggle('dark'));
+  toggle?.addEventListener('click',()=>{
+    document.body.classList.toggle('dark');
+    syncThemeFigures();
+  });
+  syncThemeFigures();
 
   const tocToggle=document.querySelector('.toc-toggle');
   tocToggle?.addEventListener('click',()=>{
