@@ -17,7 +17,7 @@ baseScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@e8a8
 baseScript.defer = true;
 
 const loadAula02Clean = () => {
-  if (!isAula02 || document.querySelector('script[data-aula-02-clean]')) return;
+  if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
   lessonScript.src = 'aula-02-clean.js';
   lessonScript.defer = true;
