@@ -7,6 +7,11 @@
   const main = document.querySelector('main#conteudo');
   if (!main) return;
 
+  const guidingQuestion = main.querySelector('#inicio .guiding-card blockquote');
+  if (guidingQuestion) {
+    guidingQuestion.textContent = 'O que acontece entre clicar em “executar” e o computador produzir um resultado?';
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
