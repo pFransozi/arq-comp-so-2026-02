@@ -12,6 +12,10 @@
     guidingQuestion.textContent = 'O que acontece entre clicar em “executar” e o computador produzir um resultado?';
   }
 
+  const lessonPathSection = main.querySelector('#percurso');
+  lessonPathSection?.remove();
+  main.querySelector('#inicio .hero-actions a[href="#percurso"]')?.remove();
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
