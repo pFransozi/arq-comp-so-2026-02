@@ -2,20 +2,10 @@
   const path = window.location.pathname;
   const isAula06 = /(?:^|\/)(?:rascunhos\/)?aula-06\.html$/.test(path);
 
-  const cleanAula06Exercise = () => {
+  const formatAula06Exercise = () => {
     if (!isAula06) return;
     const perfis = document.querySelector('#perfis');
     if (!perfis) return;
-
-    perfis.querySelectorAll('.inquiry ol').forEach((list) => {
-      list.style.listStyle = 'none';
-      list.style.paddingLeft = '0';
-      list.style.marginLeft = '0';
-    });
-
-    perfis.querySelectorAll('.inquiry li').forEach((item) => {
-      item.style.marginLeft = '0';
-    });
 
     perfis.querySelectorAll('.inquiry li > strong:first-child').forEach((label) => {
       if (/^[A-I]\.$/.test(label.textContent.trim())) label.remove();
@@ -26,6 +16,17 @@
         heading.textContent = 'Uma aplicação em vários momentos';
       }
     });
+
+    perfis.querySelectorAll('.inquiry ol').forEach((list) => {
+      list.style.listStyleType = 'decimal';
+      list.style.listStylePosition = 'outside';
+      list.style.paddingLeft = '1.5rem';
+      list.style.marginLeft = '0';
+    });
+
+    perfis.querySelectorAll('.inquiry li').forEach((item) => {
+      item.style.marginLeft = '0';
+    });
   };
 
   const previousScript = document.createElement('script');
@@ -35,10 +36,10 @@
 
   let attempts = 0;
   const timer = window.setInterval(() => {
-    cleanAula06Exercise();
+    formatAula06Exercise();
     attempts += 1;
     if (attempts >= 30) window.clearInterval(timer);
   }, 150);
 
-  window.addEventListener('load', cleanAula06Exercise);
+  window.addEventListener('load', formatAula06Exercise);
 })();
