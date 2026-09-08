@@ -10,7 +10,18 @@
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
+  const sectionLabels = {
+    visao: 'Visão geral',
+    percurso: 'Percurso',
+    retomada: 'LMC e código',
+    traducao: 'Código e máquina',
+    alvo: 'Compilador e alvo',
+    isa: 'ISA e software',
+    fechamento: 'Fechamento'
+  };
+
   const getSectionLabel = (section) => {
+    if (sectionLabels[section.id]) return sectionLabels[section.id];
     const heading = section.querySelector('.section-heading h2, .warmup h2, h2');
     if (heading?.textContent.trim()) return heading.textContent.trim();
     return section.id.replaceAll('-', ' ');
