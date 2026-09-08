@@ -4,6 +4,32 @@
   base.defer = true;
 
   base.addEventListener('load', () => {
+    const cycleSection = document.querySelector('#ciclo');
+    if (cycleSection) {
+      const cycleIntro = cycleSection.querySelector('.study-heading > p:last-child');
+      if (cycleIntro) {
+        cycleIntro.textContent = 'Um programa não é executado “de uma vez”. A CPU repete continuamente um ciclo: localiza a próxima instrução, entende o que ela pede e realiza a operação correspondente. Esse modelo permite acompanhar as responsabilidades fundamentais da execução sem reproduzir toda a complexidade interna de um processador moderno.';
+      }
+
+      const cycleBoundary = cycleSection.querySelector('.boundary');
+      if (cycleBoundary?.textContent.includes('Ciclo de instrução não é sinônimo de ciclo de clock')) {
+        cycleBoundary.innerHTML = `
+          <strong>Ciclo de instrução não é sinônimo de ciclo de clock.</strong>
+          <p>Uma instrução pode envolver várias operações internas. Em processadores modernos, busca, decodificação e execução podem ser sobrepostas ou reorganizadas internamente. Ainda assim, a abstração <strong>buscar → decodificar → executar</strong> continua útil para identificar as responsabilidades fundamentais da CPU.</p>
+        `;
+      }
+    }
+
+    const ioSection = document.querySelector('#io');
+    if (ioSection) {
+      const kicker = ioSection.querySelector('.study-heading .study-kicker');
+      const intro = ioSection.querySelector('.study-heading > p:last-child');
+      if (kicker) kicker.textContent = '7 · Entrada e saída';
+      if (intro) {
+        intro.textContent = 'Entrada e saída formam a interface entre o computador e o ambiente externo. O ponto central é reconhecer que dispositivos externos são mediados por módulos ou controladores de E/S e que essa comunicação precisa ser coordenada com o restante do sistema.';
+      }
+    }
+
     const reviewSection = document.querySelector('#limites');
     const reviewContainer = reviewSection?.querySelector('.container');
 
@@ -12,7 +38,7 @@
         <div class="study-heading">
           <p class="study-kicker">9 · Revisão</p>
           <h2>Retome os principais conceitos</h2>
-          <p>Use esta síntese para verificar se você consegue relacionar as ideias centrais da aula e explicar como elas se conectam durante a execução de um programa.</p>
+          <p>Use esta síntese para verificar se você consegue relacionar as ideias centrais e explicar como elas se conectam durante a execução de um programa.</p>
         </div>
 
         <div class="check-grid">
@@ -67,7 +93,7 @@
 
         <div class="boundary">
           <strong>Uma forma de conectar tudo</strong>
-          <p>Uma instrução armazenada precisa ser localizada na memória, transferida até a CPU, interpretada e executada. Dependendo da operação, a CPU pode usar registradores, acessar dados na memória, alterar o fluxo de execução ou comunicar-se com um dispositivo de E/S. É essa sequência de relações que une os conceitos trabalhados nesta aula.</p>
+          <p>Uma instrução armazenada precisa ser localizada na memória, transferida até a CPU, interpretada e executada. Dependendo da operação, a CPU pode usar registradores, acessar dados na memória, alterar o fluxo de execução ou comunicar-se com um dispositivo de E/S. É essa sequência de relações que une os conceitos trabalhados neste material.</p>
         </div>
       `;
     }
