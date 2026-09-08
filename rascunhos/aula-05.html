@@ -8,83 +8,39 @@
   <meta name="theme-color" content="#101a24">
   <title>Rascunho · Aula 05 — Do código ao desempenho</title>
   <link rel="stylesheet" href="../styles.css">
-  <link rel="stylesheet" href="../aula-03-clean.css">
   <script defer src="../script.js"></script>
+
+  <!-- Base visual copiada do mesmo sistema de layout da Aula 03. -->
   <style>
-    .draft-bar{padding:.62rem 1rem;border-bottom:1px solid var(--clean-line);background:var(--clean-accent-soft);color:var(--clean-accent);text-align:center;font-size:.8rem;font-weight:800}
-    body.aula03-clean.theme-dark .draft-bar{background:var(--clean-accent-soft);color:var(--clean-accent);border-color:var(--clean-line)}
-
-    .aula05-toc{position:sticky;top:92px;align-self:start;min-width:0;padding-left:18px;border-left:1px solid var(--clean-line)}
-    .aula05-toc-label{display:block;margin-bottom:10px;color:#9ca3af;font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .aula05-toc nav{display:grid;gap:2px}
-    .aula05-toc a{position:relative;display:block;padding:6px 0;color:var(--clean-muted);font-size:.84rem;line-height:1.35;text-decoration:none}
-    .aula05-toc a:before{content:"";position:absolute;left:-22px;top:50%;width:7px;height:7px;border-radius:50%;background:var(--clean-bg);border:1px solid transparent;transform:translateY(-50%)}
-    .aula05-toc a:hover,.aula05-toc a.active{color:var(--clean-text)}
-    .aula05-toc a.active{font-weight:700}
-    .aula05-toc a.active:before{background:var(--clean-accent);border-color:var(--clean-accent)}
-
-    .formula-block{margin:24px 0;padding:20px 22px;border-left:3px solid var(--clean-accent);background:var(--clean-surface)}
-    .formula-block .formula{display:block;margin-bottom:8px;color:var(--clean-text);font-family:"SFMono-Regular",Consolas,monospace;font-size:clamp(1rem,2.4vw,1.35rem);font-weight:800}
-    .formula-block p{margin:0}
-
-    .three-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
-    .plain-card{padding:18px;border:1px solid var(--clean-line);border-radius:8px;background:transparent}
-    .plain-card .eyebrow{display:block;margin:0 0 8px;color:var(--clean-accent);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .plain-card h3{margin:0 0 8px;font-size:1rem}
-    .plain-card p{margin:0;font-size:.93rem}
-
-    .activity-box{margin-top:26px;border:1px solid var(--clean-line);border-radius:8px;background:transparent;overflow:hidden}
-    .activity-head{padding:18px 20px;border-bottom:1px solid var(--clean-line);background:var(--clean-surface)}
-    .activity-head .eyebrow{display:block;margin:0 0 6px;color:var(--clean-accent);font-size:.72rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .activity-head h3{margin:0;font-size:1.15rem}
-    .activity-body{padding:20px}
-    .activity-body ol{margin:18px 0 0;padding-left:1.25rem;color:var(--clean-muted)}
-    .activity-body li+li{margin-top:.75rem}
-    .activity-body strong{color:var(--clean-text)}
-
-    .problem-note{padding:16px 18px;border-left:3px solid var(--clean-accent);background:var(--clean-accent-soft)}
-    .problem-note p:last-child{margin-bottom:0}
-
-    .question-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0 20px;margin-top:20px;border-top:1px solid var(--clean-line)}
-    .question-list div{padding:14px 0;border-bottom:1px solid var(--clean-line);color:var(--clean-text);font-size:.92rem;font-weight:650}
-
-    .code-clean{margin-top:20px;overflow:hidden;border:1px solid var(--clean-line);border-radius:8px;background:#121417}
-    .code-clean header{padding:.7rem .9rem;border-bottom:1px solid #2d323a;color:#a5abb4;font-size:.78rem;font-weight:800}
-    .code-clean pre{margin:0;padding:1rem;overflow:auto;color:#e7e9ec;line-height:1.62;font-size:.88rem}
-    .code-clean footer{padding:.7rem .9rem;border-top:1px solid #2d323a;color:#a5abb4;font-size:.78rem}
-
-    .measure-table{width:100%;border-collapse:collapse;margin-top:20px}
-    .measure-table th,.measure-table td{padding:.72rem .8rem;border-bottom:1px solid var(--clean-line);text-align:left}
-    .measure-table th{color:var(--clean-text);background:var(--clean-surface);font-size:.78rem;text-transform:uppercase;letter-spacing:.05em}
-    .measure-table td{height:44px;color:var(--clean-muted)}
-    .table-wrap{overflow:auto}
-
-    .takeaways{display:grid;grid-template-columns:1fr 1fr;gap:0 24px;border-top:1px solid var(--clean-line)}
-    .takeaway{padding:15px 0;border-bottom:1px solid var(--clean-line);font-weight:650;color:var(--clean-text)}
-
-    .references-clean{margin:0;padding:0;list-style:none;border-top:1px solid var(--clean-line)}
-    .references-clean li{padding:15px 0;border-bottom:1px solid var(--clean-line);color:var(--clean-muted)}
-    .references-clean strong{color:var(--clean-text)}
-
-    @media(max-width:1050px){
-      body.aula03-clean .aula03-page-grid{grid-template-columns:minmax(0,1fr);gap:0}
-      .aula05-toc{display:none}
-    }
-    @media(max-width:760px){
-      .three-grid,.question-list,.takeaways{grid-template-columns:1fr}
-    }
+    :root{--ink:#172033;--muted:#647087;--line:#dfe5ef;--soft:#f4f7fb;--paper:#fff;--navy:#0f172a;--blue:#176b87;--blue-soft:#e8f5f8;--violet:#8a5a35;--violet-soft:#f8efe8;--teal:#2c9277;--teal-soft:#e9f7f2;--amber:#b66a07;--amber-soft:#fff7e8;--radius:22px;--shadow:0 18px 48px rgba(35,50,78,.09);--content:1160px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}button,input,textarea,select{font:inherit}a{color:inherit}h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}h1{font-size:clamp(2.7rem,6vw,5.8rem);max-width:12ch;margin-bottom:1.2rem}h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}p{color:var(--muted)}code,pre{font-family:"SFMono-Regular",Consolas,monospace}.container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}.section{padding:88px 0;scroll-margin-top:88px}.section-soft{background:var(--soft)}.section-dark{background:var(--navy);color:#fff}.section-dark p{color:#b9c3d7}.eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}.section-dark .eyebrow{color:#9bd4e5}
+    .hero{position:relative;overflow:hidden;padding:92px 0 76px;background:radial-gradient(circle at 87% 20%,rgba(138,90,53,.14),transparent 27%),radial-gradient(circle at 75% 75%,rgba(44,146,119,.12),transparent 22%),linear-gradient(180deg,#fbfcff 0%,#fff 100%)}.hero:after{content:"";position:absolute;width:520px;height:520px;right:-250px;top:-180px;border:1px solid rgba(23,107,135,.13);border-radius:50%;box-shadow:0 0 0 70px rgba(23,107,135,.025),0 0 0 140px rgba(138,90,53,.018)}.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}.hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:760px}.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.15rem;border-radius:13px;text-decoration:none;font-weight:800;border:1px solid transparent}.button-primary{background:var(--navy);color:#fff}.button-secondary{background:#fff;border-color:var(--line)}.guiding-card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}.guiding-card span{display:block;color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}.guiding-card blockquote{margin:0;font-size:1.2rem;line-height:1.45;font-weight:760}
+    .section-heading{max-width:840px;margin-bottom:2.4rem}.overview-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:0 12px 32px rgba(35,50,78,.055)}.topics-card{grid-row:span 2}.topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.2rem}.topic-list div{padding:.9rem 1rem;border-radius:14px;background:var(--soft);font-weight:750}.competency{border-left:4px solid var(--blue)}.competency.c6{border-left-color:var(--violet)}.skill{display:grid;grid-template-columns:58px 1fr;gap:.7rem;align-items:start;margin-top:.9rem}.skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:var(--blue-soft);color:var(--blue);font-size:.82rem}.c6 .skill strong{background:var(--violet-soft);color:var(--violet)}.skill span{color:var(--muted)}
+    .warmup{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px;background:linear-gradient(135deg,var(--navy),#173047);border-radius:28px;padding:2rem;color:#fff}.warmup p{color:#cbd5e1}.question-cloud{display:grid;gap:.75rem}.question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}
+    .function-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.function-card{padding:1.35rem;border-radius:19px;border:1px solid var(--line);background:#fff}.function-card span{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 .7rem;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:900}.function-card h3{margin-top:1.1rem}.bridge-question{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:var(--teal-soft);border:1px solid rgba(44,146,119,.22);font-size:1.08rem;font-weight:750}
+    .concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}.concept-card{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}.concept-card h3{margin-bottom:1rem}.concept-pair{display:grid;gap:12px}.concept-item{padding:14px 15px;border-radius:14px;background:var(--soft)}.concept-item strong{display:block;margin-bottom:.25rem}.concept-item p{margin:0;font-size:.93rem}
+    .precision-note{margin-top:22px;padding:18px 20px;border-left:4px solid var(--amber);background:var(--amber-soft);border-radius:0 14px 14px 0}
+    .stored-definition{margin:0 0 32px;padding:22px 24px;border-radius:20px;background:var(--navy);color:#fff}.stored-definition .eyebrow{color:#9bd4e5;margin-bottom:.65rem}.stored-definition h3{font-size:1.45rem;margin-bottom:.55rem}.stored-definition p{color:#cbd5e1;margin-bottom:0;max-width:920px}.stored-callout{padding:22px;border-radius:20px;background:var(--navy);color:#fff}.stored-callout p{color:#cbd5e1}.stored-callout strong{color:#9bd4e5}
+    .execution-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}.execution-step{position:relative;padding:20px;border:1px solid var(--line);border-radius:18px;background:#fff}.execution-step b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--blue-soft);color:var(--blue);margin-bottom:12px}.execution-step h3{margin:0 0 8px}.execution-step p{margin-bottom:0}
+    .inquiry{margin:34px 0;border:1px solid #cbdde4;background:linear-gradient(135deg,#f3fafc,#fff);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px rgba(23,107,135,.07)}.inquiry-head{padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid #d9e8ed}.inquiry-kicker{display:inline-flex;align-items:center;gap:.45rem;color:var(--blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}.inquiry-kicker:before{content:"?";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--blue)}.inquiry-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.78rem;font-weight:800}.inquiry-body{padding:1.4rem;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px}.prompt-list{margin:0;padding-left:1.25rem;color:var(--muted)}.prompt-list li+li{margin-top:.65rem}
+    .trace-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:#fff}.trace-table{width:100%;min-width:760px;border-collapse:collapse}.trace-table th,.trace-table td{padding:12px;border:1px solid var(--line);text-align:left}.trace-table thead th{background:var(--soft);font-size:.8rem}
+    .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line);border-radius:15px;background:#fff}.check-item:before{content:"□";color:var(--teal);font-size:1.3rem;font-weight:900}
+    @media(max-width:960px){.hero-grid,.overview-grid,.concept-grid{grid-template-columns:1fr}.function-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.section{padding:68px 0}.function-grid,.checklist,.execution-preview{grid-template-columns:1fr}.topic-list{grid-template-columns:1fr}.warmup,.inquiry-body{grid-template-columns:1fr}}
   </style>
+
+  <!-- O mesmo acabamento clean que compõe a Aula 03 publicada. -->
+  <link rel="stylesheet" href="../aula-03-clean.css">
 </head>
 <body class="lesson-page arch-page aula03-clean">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
   <div class="progress" id="progress" aria-hidden="true"></div>
-  <div class="draft-bar">Rascunho interno · Aula 05 ainda não publicada na navegação da disciplina</div>
 
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="../index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
         <span class="brand-mark" aria-hidden="true">SO</span>
-        <span><strong>Arquitetura &amp; SO</strong><small>Rascunho · Aula 05</small></span>
+        <span><strong>Arquitetura &amp; SO</strong><small>Aula 05</small></span>
       </a>
       <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
       <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
@@ -95,186 +51,186 @@
     </div>
   </header>
 
-  <div class="aula03-shell">
-    <div class="aula03-page-grid">
-      <main id="conteudo">
-        <section class="hero" id="inicio">
-          <div class="container hero-grid">
+  <main id="conteudo">
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Aula 05 · CPU e desempenho</p>
+          <h1>Do código ao desempenho</h1>
+          <p class="hero-lead">Na aula anterior vimos como o código-fonte é traduzido para instruções de uma arquitetura-alvo. Agora a pergunta muda: <strong>quanto trabalho o software exige da CPU e como isso aparece no tempo de execução?</strong></p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#retomada">Começar a aula</a>
+            <a class="button button-secondary" href="#experimento">Ir ao experimento</a>
+          </div>
+        </div>
+        <aside class="guiding-card">
+          <span>Pergunta orientadora</span>
+          <blockquote>Por que dois programas que resolvem o mesmo problema podem apresentar tempos de execução diferentes?</blockquote>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="visao">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Visão da aula</p>
+          <h2>Desempenho pelo olhar da Engenharia de Software</h2>
+          <p>O objetivo não é aprofundar microarquitetura. Vamos conectar características da CPU a uma pergunta prática: como decisões de software alteram o custo de execução?</p>
+        </div>
+        <div class="overview-grid">
+          <article class="card topics-card">
+            <h3>Conteúdo programático</h3>
+            <div class="topic-list">
+              <div>Tempo de execução</div>
+              <div>Clock e frequência</div>
+              <div>CPI e IPC</div>
+              <div>Processador e cores</div>
+              <div>Processador lógico</div>
+              <div>Carga CPU-bound</div>
+            </div>
+          </article>
+          <article class="card competency">
+            <h3>C3 — Analisar e selecionar tecnologias</h3>
+            <div class="skill"><strong>H10</strong><span>Comparar alternativas considerando evidências de desempenho, e não apenas especificações isoladas.</span></div>
+          </article>
+          <article class="card competency c6">
+            <h3>C6 — Integrar sistemas de software</h3>
+            <div class="skill"><strong>H20</strong><span>Relacionar características do processador ao comportamento observado por uma aplicação.</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="retomada">
+      <div class="container">
+        <div class="warmup">
+          <div>
+            <p class="eyebrow">Retomada da Aula 04</p>
+            <h2>Já vimos o que a máquina executa. Agora vamos perguntar quanto isso custa.</h2>
+            <p>A ISA, x86-64, ARM64, target, build e compatibilidade não serão retomados como conteúdos novos. O foco muda da forma das instruções para o trabalho necessário para executar um programa.</p>
+          </div>
+          <div class="question-cloud">
+            <div><strong>1 · Frequência</strong><span>Um processador com mais GHz é necessariamente mais rápido para qualquer programa?</span></div>
+            <div><strong>2 · Software</strong><span>Duas implementações corretas do mesmo requisito precisam exigir a mesma quantidade de trabalho?</span></div>
+            <div><strong>3 · Cores</strong><span>Se a máquina possui vários cores, um programa sequencial passa automaticamente a usar todos eles?</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="desempenho">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">1 · Engenharia de Software</p>
+          <h2>Desempenho começa no comportamento observado pela aplicação</h2>
+          <p>Para quem desenvolve software, a especificação da CPU é apenas parte da história. Primeiro precisamos saber qual operação importa, quanto tempo ela leva e o que está produzindo esse custo.</p>
+        </div>
+        <div class="function-grid">
+          <article class="function-card"><span>1</span><h3>Requisito</h3><p>Uma busca, um cálculo ou uma transformação precisa responder dentro de um tempo aceitável.</p></article>
+          <article class="function-card"><span>2</span><h3>Medição</h3><p>Antes de otimizar, observamos o tempo real de execução em condições controladas.</p></article>
+          <article class="function-card"><span>3</span><h3>Hipótese</h3><p>Formulamos uma explicação para o custo observado, em vez de assumir que o problema é simplesmente “a CPU”.</p></article>
+          <article class="function-card"><span>4</span><h3>Decisão</h3><p>Alteramos software ou ambiente somente depois de termos evidências para justificar a mudança.</p></article>
+        </div>
+        <div class="bridge-question"><strong>Ideia-chave:</strong> hardware fornece capacidade; o software determina quanto trabalho será solicitado e como essa capacidade será utilizada.</div>
+      </div>
+    </section>
+
+    <section class="section" id="clock">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">2 · Clock e trabalho</p>
+          <h2>GHz não é sinônimo de desempenho da aplicação</h2>
+          <p>O clock cadencia o funcionamento do processador, mas a frequência isolada não informa quanto trabalho o programa precisa realizar nem quanto custa, em média, cada instrução executada.</p>
+        </div>
+
+        <div class="execution-preview">
+          <article class="execution-step"><b>1</b><h3>Frequência</h3><p>Indica quantos ciclos de clock ocorrem por segundo. 1 GHz corresponde a aproximadamente 1 bilhão de ciclos por segundo.</p></article>
+          <article class="execution-step"><b>2</b><h3>CPI</h3><p><em>Cycles Per Instruction</em>: quantos ciclos são necessários, em média, para as instruções executadas em determinado contexto.</p></article>
+          <article class="execution-step"><b>3</b><h3>IPC</h3><p><em>Instructions Per Cycle</em>: quantas instruções podem ser concluídas, em média, por ciclo em determinado contexto de execução.</p></article>
+        </div>
+
+        <div class="stored-definition" style="margin-top:28px">
+          <p class="eyebrow">Relação conceitual</p>
+          <h3><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></h3>
+          <p>A relação serve como uma lente: o tempo depende da quantidade de trabalho, do custo médio desse trabalho e da frequência do processador.</p>
+        </div>
+
+        <div class="precision-note"><strong>Cuidado:</strong> uma linha de Python, C ou outra linguagem não corresponde a uma instrução de máquina. A Aula 04 já mostrou que existe uma etapa de tradução entre código-fonte e instruções.</div>
+      </div>
+    </section>
+
+    <section class="section" id="cores">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">3 · Capacidade de processamento</p>
+          <h2>Mais cores não tornam automaticamente um programa sequencial mais rápido</h2>
+          <p>Antes de estudar processos, threads e paralelismo, precisamos apenas distinguir os termos que aparecem nas especificações de uma máquina.</p>
+        </div>
+
+        <div class="execution-preview">
+          <article class="execution-step"><b>1</b><h3>Processador</h3><p>Componente físico que contém um ou mais cores e interpreta e executa instruções.</p></article>
+          <article class="execution-step"><b>2</b><h3>Core</h3><p>Unidade de processamento individual dentro do processador, capaz de buscar e executar instruções.</p></article>
+          <article class="execution-step"><b>3</b><h3>Processador lógico</h3><p>Contexto de execução apresentado pelo hardware e pelo sistema operacional. Não é sinônimo automático de core físico.</p></article>
+        </div>
+
+        <div class="bridge-question"><strong>Por enquanto:</strong> vários cores oferecem capacidade para executar trabalho em paralelo, mas o software precisa ser organizado para explorá-la. Como fazer isso será assunto das aulas de processos e threads.</div>
+      </div>
+    </section>
+
+    <section class="section" id="cpu-bound">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">4 · Tipo de carga</p>
+          <h2>Quando o tempo está principalmente no processamento</h2>
+          <p>Chamamos de <strong>CPU-bound</strong> uma carga cujo tempo de execução é dominado pelo trabalho realizado pela CPU. Nesta aula basta reconhecer esse padrão.</p>
+        </div>
+
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Indícios de uma carga CPU-bound</h3>
+            <div class="concept-pair">
+              <div class="concept-item"><strong>Muito cálculo</strong><p>O programa executa repetidamente operações e decisões, com pouco tempo esperando entrada ou saída.</p></div>
+              <div class="concept-item"><strong>Mais trabalho, mais tempo</strong><p>Quando aumentamos a quantidade de trabalho computacional, o tempo de execução cresce de forma observável.</p></div>
+            </div>
+          </article>
+          <article class="concept-card">
+            <h3>O que um engenheiro de software faz</h3>
+            <div class="concept-pair">
+              <div class="concept-item"><strong>Formula uma hipótese</strong><p>Identifica qual parte da aplicação parece concentrar o custo antes de propor mudanças.</p></div>
+              <div class="concept-item"><strong>Mede antes de concluir</strong><p>Uma única execução ou uma especificação de hardware isolada não basta para explicar desempenho.</p></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experimento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Experimento final</p>
+          <h2>O hardware é o mesmo. O software pode fazer diferença?</h2>
+          <p>Você construirá uma solução básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem trocar de máquina.</p>
+        </div>
+
+        <article class="inquiry">
+          <div class="inquiry-head">
+            <div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div>
+            <span class="inquiry-tag">Construir → testar → medir</span>
+          </div>
+          <div class="inquiry-body" style="grid-template-columns:1fr">
             <div>
-              <p class="eyebrow">Aula 05 · CPU e desempenho</p>
-              <h1>Do código ao desempenho</h1>
-              <p class="hero-lead">Na aula anterior vimos como o código-fonte é traduzido para instruções de uma arquitetura-alvo. Agora a pergunta muda: <strong>quanto trabalho o software exige da CPU e como isso aparece no tempo de execução?</strong></p>
-              <div class="hero-actions">
-                <a class="button button-primary" href="#desempenho">Começar a aula</a>
-                <a class="button button-secondary" href="#experimento">Ir ao experimento</a>
-              </div>
-            </div>
-            <aside class="guiding-card">
-              <span>Pergunta orientadora</span>
-              <blockquote>Por que dois programas que resolvem o mesmo problema podem apresentar tempos de execução diferentes?</blockquote>
-            </aside>
-          </div>
-        </section>
+              <p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p>
+              <ol class="prompt-list">
+                <li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li>
+                <li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo não será fornecido.</li>
+                <li><strong>Teste a correção com valores pequenos.</strong> Só depois passe para medições maiores.</li>
+                <li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li>
+              </ol>
 
-        <section class="section" id="visao">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">Visão da aula</p>
-              <h2>Desempenho pelo olhar da Engenharia de Software</h2>
-              <p>O objetivo não é aprofundar microarquitetura. Vamos conectar características da CPU a uma pergunta prática: como decisões de software alteram o custo de execução?</p>
-            </div>
-
-            <div class="overview-grid">
-              <article class="card topics-card">
-                <h3>Conteúdo programático</h3>
-                <div class="topic-list">
-                  <div>Tempo de execução</div>
-                  <div>Clock e frequência</div>
-                  <div>CPI e IPC</div>
-                  <div>Processador e cores</div>
-                  <div>Processadores lógicos</div>
-                  <div>Carga CPU-bound</div>
-                </div>
-              </article>
-              <article class="card competency">
-                <h3>C3 — Analisar e selecionar tecnologias</h3>
-                <div class="skill"><strong>H10</strong><span>Comparar alternativas considerando evidências de desempenho, e não apenas especificações isoladas.</span></div>
-              </article>
-              <article class="card competency c6">
-                <h3>C6 — Integrar sistemas de software</h3>
-                <div class="skill"><strong>H20</strong><span>Relacionar características do processador ao comportamento observado por uma aplicação.</span></div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="retomada">
-          <div class="container">
-            <div class="warmup">
-              <div>
-                <p class="eyebrow" style="color:var(--clean-accent)">Retomada</p>
-                <h2>Na Aula 04 vimos o que a máquina executa. Agora vamos perguntar quanto isso custa.</h2>
-                <p>A ISA, x86-64, ARM64, target, build e compatibilidade não serão retomados como conteúdos novos. O foco muda da <strong>forma da instrução</strong> para o <strong>tempo necessário para realizar trabalho</strong>.</p>
-              </div>
-              <div class="question-cloud">
-                <div><strong>1 · Frequência</strong><span>Um processador com mais GHz é necessariamente mais rápido para qualquer programa?</span></div>
-                <div><strong>2 · Software</strong><span>Duas implementações corretas do mesmo requisito precisam exigir a mesma quantidade de trabalho?</span></div>
-                <div><strong>3 · Cores</strong><span>Se a máquina possui vários cores, um programa sequencial passa automaticamente a usar todos eles?</span></div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="desempenho">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">1 · Engenharia de Software</p>
-              <h2>Desempenho começa no comportamento observado pela aplicação</h2>
-              <p>Para quem desenvolve software, a especificação da CPU é apenas parte da história. Primeiro precisamos saber qual operação importa, quanto tempo ela leva e o que está produzindo esse custo.</p>
-            </div>
-
-            <div class="function-grid">
-              <article class="function-card"><span>01</span><h3>Requisito</h3><p>Uma busca, um cálculo ou uma transformação precisa responder dentro de um tempo aceitável.</p></article>
-              <article class="function-card"><span>02</span><h3>Medição</h3><p>Antes de otimizar, observamos o tempo real de execução em condições controladas.</p></article>
-              <article class="function-card"><span>03</span><h3>Hipótese</h3><p>Formulamos uma explicação para o custo: quantidade de trabalho, CPU, memória, E/S ou outra restrição.</p></article>
-              <article class="function-card"><span>04</span><h3>Decisão</h3><p>Alteramos software ou ambiente somente depois de termos evidência suficiente para justificar a mudança.</p></article>
-            </div>
-
-            <div class="bridge-question"><strong>Ideia-chave:</strong> hardware fornece capacidade; o software determina quanto trabalho será solicitado e como essa capacidade será utilizada.</div>
-          </div>
-        </section>
-
-        <section class="section" id="clock">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">2 · Clock e trabalho</p>
-              <h2>GHz não é sinônimo de desempenho da aplicação</h2>
-              <p>O clock cadencia o funcionamento do processador, mas a frequência isolada não informa quanto trabalho um programa precisa realizar nem quanto custa, em média, cada instrução executada.</p>
-            </div>
-
-            <div class="three-grid">
-              <article class="plain-card"><span class="eyebrow">Frequência</span><h3>Ciclos por segundo</h3><p>1 GHz corresponde a aproximadamente 1 bilhão de ciclos de clock por segundo.</p></article>
-              <article class="plain-card"><span class="eyebrow">CPI</span><h3>Cycles Per Instruction</h3><p>Representa quantos ciclos são necessários, em média, para as instruções executadas por determinado programa.</p></article>
-              <article class="plain-card"><span class="eyebrow">IPC</span><h3>Instructions Per Cycle</h3><p>Expressa quantas instruções podem ser concluídas, em média, por ciclo em determinado contexto de execução.</p></article>
-            </div>
-
-            <div class="formula-block">
-              <span class="formula">Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</span>
-              <p>Use a relação como uma lente conceitual: o tempo depende da quantidade de trabalho, do custo médio desse trabalho e da frequência do processador.</p>
-            </div>
-
-            <div class="precision-note"><strong>Cuidado:</strong> uma linha de Python, C ou outra linguagem não corresponde a uma instrução de máquina. A Aula 04 já mostrou que existe uma etapa de tradução entre código-fonte e instruções.</div>
-          </div>
-        </section>
-
-        <section class="section" id="cores">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">3 · Capacidade de processamento</p>
-              <h2>Mais cores não tornam automaticamente um programa sequencial mais rápido</h2>
-              <p>Por enquanto, precisamos apenas distinguir os termos que aparecem nas especificações de uma máquina. Concorrência e paralelismo serão estudados depois.</p>
-            </div>
-
-            <div class="three-grid">
-              <article class="plain-card"><span class="eyebrow">Processador</span><h3>Componente físico</h3><p>É o chip que contém um ou mais cores e outras estruturas necessárias ao processamento.</p></article>
-              <article class="plain-card"><span class="eyebrow">Core</span><h3>Unidade de processamento</h3><p>É uma unidade capaz de buscar e executar instruções dentro do processador.</p></article>
-              <article class="plain-card"><span class="eyebrow">Processador lógico</span><h3>Contexto de execução</h3><p>É uma unidade lógica de execução apresentada pelo hardware e pelo sistema operacional; não é automaticamente sinônimo de core físico.</p></article>
-            </div>
-
-            <div class="bridge-question"><strong>Por enquanto:</strong> vários cores significam que existe capacidade para executar trabalho em paralelo. O software precisa estar organizado para explorar essa capacidade.</div>
-          </div>
-        </section>
-
-        <section class="section" id="cpu-bound">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">4 · Tipo de carga</p>
-              <h2>Quando o tempo está principalmente no processamento</h2>
-              <p>Chamamos de <strong>CPU-bound</strong> uma carga cujo tempo de execução é dominado pelo trabalho realizado pela CPU.</p>
-            </div>
-
-            <div class="three-grid">
-              <article class="plain-card"><span class="eyebrow">Indício 1</span><h3>Muito cálculo</h3><p>O programa executa operações e decisões repetidamente, com pouco tempo esperando entrada ou saída.</p></article>
-              <article class="plain-card"><span class="eyebrow">Indício 2</span><h3>Mais trabalho, mais tempo</h3><p>Quando aumentamos a quantidade de trabalho computacional, o tempo cresce de maneira observável.</p></article>
-              <article class="plain-card"><span class="eyebrow">Cuidado</span><h3>Hipótese não é prova</h3><p>Uma execução isolada não explica desempenho. Precisamos comparar medições e manter as condições do teste.</p></article>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="experimento">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">Experimento final</p>
-              <h2>O hardware é o mesmo. O software pode fazer diferença?</h2>
-              <p>Você construirá uma implementação básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem receber o algoritmo pronto.</p>
-            </div>
-
-            <div class="activity-box">
-              <div class="activity-head">
-                <span class="eyebrow">Problema</span>
-                <h3>Conte quantos números primos existem entre 2 e N</h3>
-              </div>
-              <div class="activity-body">
-                <div class="problem-note">
-                  <p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong></p>
-                  <p>Escreva um programa que defina um valor <code>N</code>, percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p>
-                </div>
-
-                <div class="question-list">
-                  <div>Como verificar se um número possui algum divisor além de 1 e dele próprio?</div>
-                  <div>Quais estruturas de repetição e condição serão necessárias?</div>
-                  <div>O que você prevê que acontecerá com o tempo quando N aumentar?</div>
-                </div>
-
-                <ol>
-                  <li><strong>Construa sua primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador.</li>
-                  <li><strong>Teste a correção com valores pequenos.</strong> Antes de medir desempenho, confirme se sua solução funciona.</li>
-                  <li><strong>Meça a execução.</strong> Use o trecho abaixo somente como infraestrutura para medir o tempo.</li>
-                </ol>
-
-                <div class="code-clean">
-                  <header>Infraestrutura fornecida · medição</header>
-                  <pre><code>import time
+              <div class="stored-callout" style="margin-top:22px">
+                <p class="eyebrow">Infraestrutura fornecida</p>
+                <p>Use apenas este trecho para medir o código que você construiu:</p>
+                <pre style="margin:0;overflow:auto;white-space:pre"><code>import time
 
 inicio = time.perf_counter()
 
@@ -282,101 +238,171 @@ inicio = time.perf_counter()
 
 fim = time.perf_counter()
 print(f"Tempo: {fim - inicio:.4f} s")</code></pre>
-                  <footer>O algoritmo de verificação de números primos não foi fornecido de propósito.</footer>
-                </div>
-
-                <ol start="4">
-                  <li><strong>Repita com diferentes valores de N.</strong> Comece com 5.000, 10.000, 20.000 e 40.000. Ajuste se necessário para sua máquina.</li>
-                </ol>
-
-                <div class="table-wrap">
-                  <table class="measure-table">
-                    <thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead>
-                    <tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr><tr><td>40.000</td><td></td><td></td><td></td></tr></tbody>
-                  </table>
-                </div>
-
-                <div class="precision-note"><strong>Pense antes de alterar o código:</strong> quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</div>
-
-                <ol start="5">
-                  <li><strong>Modifique sua solução para evitar trabalho que você considera desnecessário.</strong> Não mude o problema nem a máquina.</li>
-                  <li><strong>Repita exatamente os mesmos testes</strong> e complete a última coluna da tabela.</li>
-                  <li><strong>Explique o resultado.</strong> A CPU, a frequência e o número de cores permaneceram os mesmos. O que mudou no software?</li>
-                </ol>
-
-                <div class="bridge-question"><strong>Desafio opcional:</strong> investigue se, para decidir que um número é primo, realmente precisamos testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</div>
               </div>
             </div>
           </div>
-        </section>
+        </article>
 
-        <section class="section" id="fechamento">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">Síntese</p>
-              <h2>O que precisa ficar claro ao final</h2>
-            </div>
-            <div class="takeaways">
-              <div class="takeaway">GHz representa frequência de clock, não diretamente o desempenho de uma aplicação.</div>
-              <div class="takeaway">Tempo de execução depende do trabalho exigido pelo software e de características do processador.</div>
-              <div class="takeaway">Vários cores não aceleram automaticamente uma execução sequencial.</div>
-              <div class="takeaway">Um engenheiro de software mede e investiga antes de decidir como otimizar.</div>
+        <div class="trace-table-wrap" style="margin-top:28px">
+          <table class="trace-table">
+            <thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead>
+            <tbody>
+              <tr><td>5.000</td><td></td><td></td><td></td></tr>
+              <tr><td>10.000</td><td></td><td></td><td></td></tr>
+              <tr><td>20.000</td><td></td><td></td><td></td></tr>
+              <tr><td>40.000</td><td></td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <article class="inquiry">
+          <div class="inquiry-head">
+            <div><span class="inquiry-kicker">Parte 2</span><h3>Reduza trabalho sem trocar o hardware</h3></div>
+            <span class="inquiry-tag">Hipótese → modificação → comparação</span>
+          </div>
+          <div class="inquiry-body" style="grid-template-columns:1fr">
+            <div>
+              <p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p>
+              <ol class="prompt-list">
+                <li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li>
+                <li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li>
+                <li>Compare os tempos. A CPU, a frequência e o número de cores permaneceram os mesmos. <strong>O que mudou no software?</strong></li>
+                <li><strong>Desafio opcional:</strong> investigue se é necessário testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</li>
+              </ol>
             </div>
           </div>
-        </section>
+        </article>
+      </div>
+    </section>
 
-        <section class="section" id="bibliografia">
-          <div class="container">
-            <div class="section-heading">
-              <p class="eyebrow">Base bibliográfica</p>
-              <h2>Referências utilizadas no recorte da aula</h2>
-              <p>O conteúdo foi mantido no nível necessário para relacionar desempenho de CPU a decisões de software.</p>
-            </div>
-            <ul class="references-clean">
-              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. Capítulo 2 — questões de desempenho: clock, taxa de execução de instruções, CPI e medidas de desempenho.</li>
-              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. Capítulo 1 — estrutura de computadores contemporâneos e distinção entre processador e core.</li>
-              <li><strong>Plano de Aula e Ensino — Arquitetura de Computadores e Sistemas Operacionais, 2026/2.</strong> Competências C3 e C6 e conteúdos relacionados a frequência, IPC, núcleos e carga CPU-bound.</li>
-            </ul>
-          </div>
-        </section>
-      </main>
+    <section class="section" id="fechamento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Síntese da aula</p>
+          <h2>O que você deve conseguir explicar</h2>
+          <p>O objetivo é conectar uma característica da CPU a decisões concretas de implementação e medição de software.</p>
+        </div>
+        <div class="checklist">
+          <div class="check-item"><strong>Frequência:</strong>&nbsp; explicar por que GHz não representa sozinho o desempenho de uma aplicação.</div>
+          <div class="check-item"><strong>Custo de execução:</strong>&nbsp; relacionar quantidade de trabalho, CPI e frequência ao tempo de CPU.</div>
+          <div class="check-item"><strong>Cores:</strong>&nbsp; explicar por que vários cores não aceleram automaticamente uma execução sequencial.</div>
+          <div class="check-item"><strong>Engenharia de Software:</strong>&nbsp; medir e investigar antes de decidir como otimizar.</div>
+        </div>
+      </div>
+    </section>
 
-      <aside class="aula05-toc" aria-label="Nesta aula">
-        <span class="aula05-toc-label">Nesta aula</span>
-        <nav>
-          <a href="#inicio">Início</a>
-          <a href="#visao">Visão geral</a>
-          <a href="#retomada">Retomada</a>
-          <a href="#desempenho">Desempenho</a>
-          <a href="#clock">Clock e CPI</a>
-          <a href="#cores">Cores</a>
-          <a href="#cpu-bound">CPU-bound</a>
-          <a href="#experimento">Experimento</a>
-          <a href="#fechamento">Síntese</a>
-          <a href="#bibliografia">Bibliografia</a>
-        </nav>
-      </aside>
-    </div>
-  </div>
+    <section class="section" id="referencias">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Referências</p>
+          <h2>Referências bibliográficas</h2>
+          <p>Obras utilizadas como base conceitual para o recorte desta aula.</p>
+        </div>
+        <div style="display:grid;gap:16px;border-top:1px solid var(--clean-line);padding-top:18px">
+          <p style="margin:0"><strong>STALLINGS, William.</strong> Arquitetura e organização de computadores: projetando com foco em desempenho. Capítulos 1 e 2.</p>
+          <p style="margin:0"><strong>TANENBAUM, Andrew Stuart; BOS, Herbert.</strong> Sistemas operacionais modernos. Revisão de hardware e relação entre processadores, recursos e execução.</p>
+          <p style="margin:0"><strong>Plano de Aula e Ensino — Arquitetura de Computadores e Sistemas Operacionais, 2026/2.</strong> Competências C3 e C6 e conteúdos de frequência, IPC, núcleos e caracterização de carga CPU-bound.</p>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <div class="container footer-grid">
-      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Rascunho · Aula 05 · desempenho da CPU sob a perspectiva do software</p></div>
+      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 05 · CPU e desempenho</p></div>
       <a href="#inicio">Voltar ao início ↑</a>
     </div>
   </footer>
 
   <script>
     (() => {
-      const links=[...document.querySelectorAll('.aula05-toc a')];
-      const sections=links.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-      const update=()=>{
-        let current=sections[0];
-        for(const section of sections){if(section.getBoundingClientRect().top<=120) current=section;}
-        links.forEach(a=>a.classList.toggle('active',a.getAttribute('href')==='#'+current.id));
+      const main = document.querySelector('main#conteudo');
+      if (!main || document.body.dataset.aula05LayoutReady === 'true') return;
+      document.body.dataset.aula05LayoutReady = 'true';
+
+      const sections = [...main.querySelectorAll(':scope > section[id]')]
+        .filter((section) => section.id !== 'inicio');
+
+      const getSectionLabel = (section) => {
+        const heading = section.querySelector('.section-heading h2, .warmup h2, h2');
+        return heading?.textContent.trim() || section.id.replaceAll('-', ' ');
       };
-      update();
-      window.addEventListener('scroll',update,{passive:true});
+
+      const shell = document.createElement('div');
+      shell.className = 'aula03-shell aula03-page-grid';
+      main.parentNode.insertBefore(shell, main);
+      shell.appendChild(main);
+
+      const toc = document.createElement('aside');
+      toc.className = 'aula03-toc';
+      toc.setAttribute('aria-label', 'Índice desta aula');
+
+      const tocHead = document.createElement('div');
+      tocHead.className = 'aula03-toc-head';
+      const tocLabel = document.createElement('span');
+      tocLabel.className = 'aula03-toc-label';
+      tocLabel.textContent = 'Nesta aula';
+      const tocToggle = document.createElement('button');
+      tocToggle.className = 'aula03-toc-toggle';
+      tocToggle.type = 'button';
+      tocToggle.setAttribute('aria-expanded', 'true');
+      tocToggle.setAttribute('aria-label', 'Recolher índice');
+      tocToggle.title = 'Recolher índice';
+      tocToggle.textContent = '›';
+      tocHead.append(tocLabel, tocToggle);
+
+      const tocNav = document.createElement('nav');
+      const tocLinks = sections.map((section) => {
+        const link = document.createElement('a');
+        link.href = `#${section.id}`;
+        link.textContent = getSectionLabel(section);
+        tocNav.appendChild(link);
+        return link;
+      });
+
+      const currentDot = document.createElement('span');
+      currentDot.className = 'aula03-toc-current';
+      currentDot.setAttribute('aria-hidden', 'true');
+      toc.append(tocHead, tocNav, currentDot);
+      shell.appendChild(toc);
+
+      tocToggle.addEventListener('click', () => {
+        const collapsed = document.body.classList.toggle('toc-collapsed');
+        tocToggle.setAttribute('aria-expanded', String(!collapsed));
+        tocToggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Recolher índice');
+        tocToggle.title = collapsed ? 'Expandir índice' : 'Recolher índice';
+      });
+
+      const heroContainer = main.querySelector('#inicio .container');
+      if (heroContainer && sections.length) {
+        const mobileToc = document.createElement('details');
+        mobileToc.className = 'aula03-mobile-toc';
+        const summary = document.createElement('summary');
+        summary.textContent = 'Nesta aula';
+        const mobileNav = document.createElement('nav');
+        sections.forEach((section) => {
+          const link = document.createElement('a');
+          link.href = `#${section.id}`;
+          link.textContent = getSectionLabel(section);
+          mobileNav.appendChild(link);
+        });
+        mobileToc.append(summary, mobileNav);
+        heroContainer.appendChild(mobileToc);
+      }
+
+      const setActive = (id) => {
+        tocLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
+      };
+
+      if ('IntersectionObserver' in window && sections.length) {
+        const observer = new IntersectionObserver((entries) => {
+          const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          if (visible[0]) setActive(visible[0].target.id);
+        }, {rootMargin:'-20% 0px -68% 0px', threshold:[0,.1,.5]});
+        sections.forEach((section) => observer.observe(section));
+      } else if (sections[0]) {
+        setActive(sections[0].id);
+      }
     })();
   </script>
 </body>
