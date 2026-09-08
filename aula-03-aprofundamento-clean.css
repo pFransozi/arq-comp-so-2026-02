@@ -151,6 +151,50 @@ body.study-page.study-clean .microflow span {
   font-weight:700;
 }
 
+/* Comunicação interna: o exemplo precisa de largura para manter a leitura contínua. */
+body.study-page.study-clean #interconexao .study-grid {
+  grid-template-columns:1fr;
+  gap:24px;
+}
+body.study-page.study-clean #interconexao .study-stack {
+  display:block;
+}
+body.study-page.study-clean #interconexao .study-card {
+  padding:18px 0 18px 20px;
+  border:0;
+  border-left:3px solid var(--clean-accent);
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+}
+body.study-page.study-clean #interconexao .study-card > strong {
+  display:block;
+  margin:0 0 10px;
+  color:var(--clean-accent);
+}
+body.study-page.study-clean #interconexao .study-card p {
+  margin:0 0 10px;
+  color:var(--clean-muted);
+  line-height:1.65;
+}
+body.study-page.study-clean #interconexao .study-card ol {
+  margin:12px 0 14px;
+  padding-left:1.4rem;
+  color:var(--clean-muted);
+}
+body.study-page.study-clean #interconexao .study-card li {
+  margin:0 0 8px;
+  padding-left:3px;
+  color:var(--clean-muted);
+  line-height:1.6;
+}
+body.study-page.study-clean #interconexao .study-card li strong,
+body.study-page.study-clean #interconexao .study-card p strong {
+  display:inline;
+  margin:0;
+  color:var(--clean-accent);
+}
+
 body.study-page.study-clean.theme-dark .arch-cpu,
 body.study-page.study-clean.theme-dark .arch-memory span,
 body.study-page.study-clean.theme-dark .arch-path {
@@ -172,4 +216,5 @@ body.study-page.study-clean.theme-dark .arch-path {
   body.study-page.study-clean .microflow { grid-template-columns:1fr; }
   body.study-page.study-clean .system-block.interconnect { grid-column:auto; }
   body.study-page.study-clean .bus { grid-template-columns:1fr; gap:4px; }
+  body.study-page.study-clean #interconexao .study-card { padding-left:14px; }
 }
