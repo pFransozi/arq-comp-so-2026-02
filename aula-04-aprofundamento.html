@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aprofundamento da Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: compilação, código objeto, ligação, carregamento, ISA, x86-64, ARM64, API, ABI e execução de programas.">
+  <meta name="theme-color" content="#101a24">
+  <title>Aula 04 — Aprofundamento | Arquitetura de Computadores e Sistemas Operacionais</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="aula-04-aprofundamento.css">
+  <script defer src="script.js"></script>
+</head>
+<body class="study-page study-clean arch-page">
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="site-header" id="inicio">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal">
+        <span class="brand-mark" aria-hidden="true">SO</span>
+        <span><strong>Arquitetura &amp; SO</strong><small>Aula 04 · aprofundamento</small></span>
+      </a>
+      <nav class="main-nav study-nav" aria-label="Navegação principal">
+        <a href="aula-04.html">Aula 04</a>
+        <a class="nav-highlight" href="aula-04-aprofundamento.html">Aprofundamento</a>
+        <a href="index.html">Portal</a>
+        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="study-clean-layout">
+      <div class="study-clean-content">
+        <section class="study-hero">
+          <div class="container study-hero-grid">
+            <div>
+              <p class="eyebrow">Aula 04 · aprofundamento teórico</p>
+              <h1>Do código-fonte ao binário e do binário à execução</h1>
+              <p class="study-lead">Na aula principal observamos que o mesmo código-fonte pode gerar instruções diferentes para arquiteturas diferentes. Agora vamos abrir esse caminho: o que o compilador produz, como a ISA condiciona o resultado, onde entram ligação e carregamento e por que compatibilidade binária envolve mais do que apenas “ser x64” ou “ser ARM64”.</p>
+              <div class="study-meta">
+                <span>Compilação</span><span>ISA</span><span>x86-64 e ARM64</span><span>API e ABI</span><span>Ligação e carregamento</span>
+              </div>
+              <div class="study-actions">
+                <a class="button button-primary" href="#mapa">Começar</a>
+                <a class="button button-secondary" href="aula-04.html">Voltar à Aula 04</a>
+              </div>
+              <p class="study-source-note"><strong>Base conceitual:</strong> Stallings, especialmente os capítulos sobre sistema operacional e interfaces, conjuntos de instruções, formatos de instrução e o apêndice sobre linguagem de montagem, ligação e carregamento; Tanenbaum e Bos, nas seções sobre chamadas de sistema, processos e <code>exec</code>.</p>
+            </div>
+            <aside class="study-card">
+              <strong>Pergunta central</strong>
+              <p>O que precisa permanecer compatível para que um programa escrito em uma linguagem de alto nível possa ser transformado em um artefato que o sistema operacional carregue e o processador execute?</p>
+              <p>Responder a isso exige separar <strong>código-fonte</strong>, <strong>código objeto</strong>, <strong>executável</strong>, <strong>ISA</strong>, <strong>ABI</strong> e <strong>processo</strong>.</p>
+            </aside>
+          </div>
+        </section>
+
+        <details class="study-mobile-toc">
+          <summary>Neste material</summary>
+          <nav>
+            <a href="#mapa">Mapa da tradução</a>
+            <a href="#compilacao">Compilação</a>
+            <a href="#isa">ISA por dentro</a>
+            <a href="#arquiteturas">x86-64 e ARM64</a>
+            <a href="#interfaces">API, ABI e ISA</a>
+            <a href="#ligacao">Ligação e carregamento</a>
+            <a href="#processo">Do executável ao processo</a>
+            <a href="#engenharia">Engenharia de Software</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </details>
+
+        <section class="study-section" id="mapa">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">1 · Mapa da tradução</p>
+              <h2>“Compilar” não é uma única transformação</h2>
+              <p>Na linguagem cotidiana, dizemos que o código foi “compilado” e virou um executável. Para compreender o que acontece entre esses dois pontos, vale separar as representações intermediárias e as ferramentas que participam do processo.</p>
+            </div>
+
+            <div class="toolchain-flow" aria-label="Fluxo conceitual do código-fonte até a execução">
+              <div class="toolchain-step"><small>1 · Fonte</small><strong>Código-fonte</strong><span>Programa escrito em linguagem de alto nível.</span></div>
+              <div class="toolchain-step"><small>2 · Tradução</small><strong>Compilador</strong><span>Converte o programa para código objeto ou, em alguns casos, para linguagem de montagem.</span></div>
+              <div class="toolchain-step"><small>3 · Representação</small><strong>Código objeto</strong><span>Código de máquina produzido a partir de um módulo do programa.</span></div>
+              <div class="toolchain-step"><small>4 · Integração</small><strong>Ligador</strong><span>Combina módulos objeto e resolve referências entre eles.</span></div>
+              <div class="toolchain-step"><small>5 · Artefato</small><strong>Executável</strong><span>Código de máquina em forma adequada para ser carregado.</span></div>
+              <div class="toolchain-step"><small>6 · Execução</small><strong>Carregador + SO</strong><span>Colocam o programa em memória e preparam sua execução.</span></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Por que separar essas etapas?</h3>
+                <p>Stallings define o <strong>compilador</strong> como o programa que converte uma linguagem-fonte para linguagem de máquina, podendo também gerar linguagem de montagem como saída intermediária. O <strong>código objeto</strong> é a representação de linguagem de máquina criada pelo compilador ou montador. O <strong>ligador</strong> combina módulos objeto em um módulo carregável ou executável, e o <strong>carregador</strong> coloca esse programa na memória para execução.</p>
+                <p>Isso explica por que um projeto real pode ter vários arquivos-fonte, bibliotecas e módulos e ainda assim produzir um único artefato executável. O binário final é o resultado de uma cadeia de transformações, não uma cópia direta do código-fonte.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Distinção essencial</strong><p><strong>Código objeto</strong> e <strong>executável</strong> não são sinônimos. O primeiro pode ainda conter referências que precisam ser resolvidas pelo ligador.</p></div>
+                <div class="study-callout"><strong>Outra distinção</strong><p>Um <strong>executável</strong> ainda é um arquivo. Ele só se torna parte de uma execução quando o sistema o carrega e cria o estado necessário para executá-lo.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="compilacao">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">2 · Código de alto nível e código de máquina</p>
+              <h2>O compilador precisa reconstruir a intenção usando operações da máquina</h2>
+              <p>Uma linguagem de alto nível oferece estruturas que não correspondem diretamente a instruções individuais do processador. O trabalho do compilador é expressar o comportamento do programa utilizando as operações disponíveis no alvo escolhido.</p>
+            </div>
+
+            <div class="code-reading">
+              <div class="study-code">
+                <div class="study-code-head"><span>C</span><span>exemplo de alto nível</span></div>
+                <pre><code>int maior(int a, int b) {
+    if (a > b) {
+        return a;
+    }
+    return b;
+}</code></pre>
+              </div>
+              <div class="reading-list">
+                <div class="reading-item"><strong>Comparar</strong><p>A máquina precisa produzir uma operação que permita decidir a relação entre os dois valores.</p></div>
+                <div class="reading-item"><strong>Controlar o fluxo</strong><p>A decisão do <code>if</code> precisa ser representada por operações capazes de escolher o caminho de execução.</p></div>
+                <div class="reading-item"><strong>Movimentar valores</strong><p>Os operandos e o resultado precisam estar em locais que as instruções possam referenciar.</p></div>
+                <div class="reading-item"><strong>Retornar</strong><p>A execução precisa seguir as regras do ambiente binário usado para transferir o resultado e continuar o programa.</p></div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Não existe correspondência fixa entre linha de código e instrução</strong>
+              <p>Stallings destaca que, diferentemente do montador, um compilador não trabalha com uma correspondência em que cada comando de entrada equivale necessariamente a uma única instrução de máquina ou a uma sequência fixa. Uma construção de alto nível pode exigir várias operações e sua tradução depende das escolhas do compilador e da arquitetura-alvo.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Por que observar Assembly continua sendo útil?</h3>
+              <p>A linguagem de montagem é uma representação simbólica das instruções de máquina. Ela é mais legível do que a representação binária e permite observar quais operações, registradores e referências estão sendo usados sem precisar interpretar diretamente os bits da instrução.</p>
+              <p>Esse é exatamente o papel do Compiler Explorer na aula principal: não transformar a disciplina em um curso de Assembly, mas revelar a distância entre a expressão de alto nível e a representação que respeita a máquina-alvo.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="isa">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">3 · ISA por dentro</p>
+              <h2>A ISA define mais do que uma lista de nomes de instruções</h2>
+              <p>Stallings apresenta a arquitetura do conjunto de instruções como a interface entre hardware e software. Para compreender por que dois targets geram saídas diferentes, precisamos olhar para os elementos que compõem esse contrato.</p>
+            </div>
+
+            <div class="design-list">
+              <div class="design-row"><strong>Repertório de operações</strong><span>Quais operações a máquina oferece e qual é o nível de complexidade dessas operações.</span></div>
+              <div class="design-row"><strong>Tipos de dados</strong><span>Quais categorias de dados podem ser manipuladas diretamente pelas instruções.</span></div>
+              <div class="design-row"><strong>Formato das instruções</strong><span>Como os bits são distribuídos para representar operação, operandos e demais campos necessários.</span></div>
+              <div class="design-row"><strong>Registradores</strong><span>Quantos registradores podem ser referenciados pelas instruções e como são utilizados.</span></div>
+              <div class="design-row"><strong>Endereçamento</strong><span>Como uma instrução especifica onde encontrar seus operandos.</span></div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Uma instrução precisa representar operação e operandos</h3>
+              <p>Dentro do computador, uma instrução é uma sequência de bits dividida em campos. Um desses campos identifica a operação; outros podem indicar registradores, valores ou referências necessárias para localizar os operandos.</p>
+            </div>
+
+            <div class="instruction-anatomy" aria-label="Anatomia conceitual de uma instrução">
+              <div class="instruction-field"><small>Campo</small><strong>Operação</strong></div>
+              <div class="instruction-field"><small>Referência</small><strong>Operando A</strong></div>
+              <div class="instruction-field"><small>Referência</small><strong>Operando B</strong></div>
+              <div class="instruction-field"><small>Referência</small><strong>Destino</strong></div>
+            </div>
+            <p class="instruction-caption">Representação didática. A quantidade e a organização dos campos variam de acordo com o conjunto de instruções e com o formato usado.</p>
+
+            <h3>Onde um operando pode estar?</h3>
+            <div class="operand-grid">
+              <div class="operand-card"><strong>Memória</strong><p>A instrução pode precisar fornecer informação suficiente para localizar um dado na memória.</p></div>
+              <div class="operand-card"><strong>Registrador</strong><p>A instrução pode referenciar um registrador do processador pelo identificador definido pela arquitetura.</p></div>
+              <div class="operand-card"><strong>Imediato</strong><p>O próprio valor pode estar contido em um campo da instrução.</p></div>
+              <div class="operand-card"><strong>Entrada/Saída</strong><p>Em arquiteturas que usam instruções específicas para E/S, a instrução pode identificar o módulo ou dispositivo envolvido.</p></div>
+            </div>
+
+            <div class="study-callout"><strong>Conexão com a Aula 03</strong><p>Na máquina didática, <code>ADD 21</code> indicava uma operação e uma referência de operando. Agora estamos generalizando aquela ideia: arquiteturas reais precisam definir como operações e operandos são representados e localizados.</p></div>
+          </div>
+        </section>
+
+        <section class="study-section" id="arquiteturas">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">4 · Dois alvos reais</p>
+              <h2>x86-64 e ARM64 expressam o mesmo software com contratos diferentes</h2>
+              <p>Stallings utiliza as famílias Intel x86 e ARM como exemplos recorrentes de arquiteturas. A comparação ajuda a perceber que a diferença não é apenas estética: cada família define seu próprio conjunto de instruções, registradores, formatos e formas de endereçamento.</p>
+            </div>
+
+            <div class="architecture-compare">
+              <article class="architecture-side">
+                <small>Família x86</small>
+                <h3>x86-64</h3>
+                <p>A evolução da arquitetura x86 é apresentada por Stallings como um exemplo de uma tradição de conjunto complexo de instruções, desenvolvida ao longo de sucessivas gerações de processadores.</p>
+                <p>Ao gerar código para x86-64, o compilador precisa utilizar instruções, registradores e formas de representação válidas para esse alvo.</p>
+              </article>
+              <article class="architecture-side">
+                <small>Família ARM</small>
+                <h3>ARM64 / AArch64</h3>
+                <p>A arquitetura ARM é apresentada como um exemplo importante da tradição de computadores com conjunto reduzido de instruções e aparece em uma ampla variedade de sistemas.</p>
+                <p>Ao gerar código para ARM64, o compilador trabalha com outro repertório de instruções, outros registradores e outras regras arquiteturais.</p>
+              </article>
+            </div>
+
+            <div class="boundary">
+              <strong>O contraste RISC × CISC é contexto, não ranking</strong>
+              <p>Para esta disciplina, o ponto central não é declarar uma família “melhor”. O que importa é reconhecer que arquiteturas diferentes oferecem contratos diferentes ao software e que o compilador precisa produzir uma representação válida para o alvo escolhido.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>O que deve permanecer igual?</h3>
+                <p>O comportamento definido pelo programa-fonte pode permanecer o mesmo. Uma função que soma, compara ou percorre uma estrutura continua descrevendo a mesma intenção lógica.</p>
+                <h3>O que pode mudar?</h3>
+                <p>A sequência de instruções, os registradores usados, o formato das instruções e as formas de referenciar operandos podem mudar. É por isso que o Assembly observado no Compiler Explorer pode ser bastante diferente quando alteramos o target.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Regra prática</strong><p>Mesmo código-fonte não implica mesmo código de máquina.</p></div>
+                <div class="study-callout"><strong>Outra regra</strong><p>Mesmo comportamento não exige a mesma sequência de instruções.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="interfaces">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">5 · API, ABI e ISA</p>
+              <h2>Compatibilidade aparece em níveis diferentes</h2>
+              <p>Uma das distinções mais úteis de Stallings é separar três interfaces: API, ABI e ISA. Elas ajudam a explicar por que “meu código compila” e “meu binário executa” são afirmações diferentes.</p>
+            </div>
+
+            <div class="interface-stack">
+              <div class="interface-layer"><strong>API</strong><p><strong>Application Programming Interface.</strong> É a interface usada por programas em linguagem de alto nível para acessar serviços por meio de bibliotecas. Stallings destaca que uma API favorece a portabilidade do software por <strong>recompilação</strong> em outros sistemas que aceitem essa API.</p></div>
+              <div class="interface-layer"><strong>ABI</strong><p><strong>Application Binary Interface.</strong> Define um padrão para a portabilidade <strong>binária</strong> e a interface utilizada pelo programa para acessar o sistema operacional e os serviços disponíveis no ambiente.</p></div>
+              <div class="interface-layer"><strong>ISA</strong><p><strong>Instruction Set Architecture.</strong> Define o repertório de instruções de linguagem de máquina que o computador pode seguir e constitui a fronteira arquitetural entre software e hardware.</p></div>
+            </div>
+
+            <div class="compatibility-grid">
+              <div class="compatibility-card"><small>Cenário 1</small><strong>Mesma API, outro alvo</strong><p>O código-fonte pode continuar válido, mas precisa ser recompilado para gerar código de máquina compatível com a nova arquitetura.</p></div>
+              <div class="compatibility-card"><small>Cenário 2</small><strong>Mesma ISA, outro ambiente binário</strong><p>Compartilhar a arquitetura de processador não basta, por si só, para garantir que o mesmo executável use corretamente os serviços esperados pelo sistema.</p></div>
+              <div class="compatibility-card"><small>Cenário 3</small><strong>ISA diferente</strong><p>O código de máquina produzido para uma arquitetura não corresponde automaticamente ao repertório de instruções de outra arquitetura.</p></div>
+            </div>
+
+            <div class="boundary">
+              <strong>Fonte portátil × binário portátil</strong>
+              <p>Essa distinção é especialmente importante em Engenharia de Software. A portabilidade do código-fonte pode ser obtida mantendo interfaces e recompilando. Portabilidade binária exige que o artefato já produzido seja compatível com o ambiente binário e com a arquitetura para os quais foi construído.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="ligacao">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">6 · Ligação e carregamento</p>
+              <h2>O executável ainda precisa ser integrado e colocado em memória</h2>
+              <p>O Apêndice B de Stallings detalha duas etapas que normalmente ficam escondidas quando apertamos “Build” ou “Run”: a ligação de módulos e o carregamento do programa.</p>
+            </div>
+
+            <div class="link-load-flow" aria-label="Fluxo de módulos objeto até a memória">
+              <div class="link-load-node"><strong>Módulo objeto A</strong><span>Código traduzido de uma parte do programa.</span></div>
+              <div class="link-load-node"><strong>Módulo objeto B</strong><span>Outro módulo compilado separadamente.</span></div>
+              <div class="link-load-node"><strong>Ligador</strong><span>Combina módulos e resolve referências entre eles.</span></div>
+              <div class="link-load-node"><strong>Módulo carregável</strong><span>Artefato integrado, preparado para carregamento.</span></div>
+              <div class="link-load-node"><strong>Carregador</strong><span>Posiciona o programa na memória para execução.</span></div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Por que existem referências a resolver?</h3>
+              <p>Um módulo pode chamar uma função ou acessar dados definidos em outro módulo. Antes da ligação, essa referência pode ser apenas simbólica. O ligador reúne os módulos e transforma essas referências em posições que façam sentido dentro do módulo carregável.</p>
+
+              <h3>Ligação estática e ligação dinâmica</h3>
+              <p>Stallings mostra que a resolução de referências externas pode ocorrer em momentos diferentes. Em uma estratégia de ligação antecipada, os módulos são combinados antes do carregamento. Na <strong>ligação dinâmica</strong>, parte dessa resolução é adiada e um módulo externo pode ser associado mais tarde, inclusive durante a execução.</p>
+
+              <h3>O endereço final nem sempre é conhecido na compilação</h3>
+              <p>Um programa pode ser preparado para ser carregado em diferentes regiões da memória. Por isso, Stallings distingue carregamento absoluto, carregamento relocável e carregamento dinâmico em tempo de execução.</p>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="addressing-table">
+                <thead><tr><th>Momento</th><th>O que pode acontecer com os endereços</th><th>Consequência</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Compilação / montagem</strong></td><td>Referências simbólicas podem ser convertidas para uma forma apropriada ao módulo produzido.</td><td>Parte do trabalho de localização já é resolvida antes do carregamento.</td></tr>
+                  <tr><td><strong>Ligação</strong></td><td>Referências entre módulos podem ser resolvidas quando os objetos são reunidos.</td><td>O programa passa a formar um módulo carregável integrado.</td></tr>
+                  <tr><td><strong>Carregamento</strong></td><td>Endereços relativos podem ser ajustados de acordo com a região em que o programa será colocado.</td><td>O módulo pode ser carregado em locais diferentes da memória.</td></tr>
+                  <tr><td><strong>Execução</strong></td><td>Algumas traduções de endereço podem ser realizadas dinamicamente com suporte do hardware.</td><td>A posição física pode variar sem exigir que o programa use endereços físicos fixos.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="processo">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">7 · Do arquivo ao processo</p>
+              <h2>Um executável no disco ainda não é um programa em execução</h2>
+              <p>Tanenbaum e Bos ajudam a completar o percurso: o sistema operacional precisa transformar o arquivo executável em uma imagem de processo que possa receber tempo de CPU e usar memória e demais recursos.</p>
+            </div>
+
+            <div class="process-view">
+              <div class="process-stack" aria-label="Representação didática de uma imagem de processo">
+                <div class="process-segment"><strong>Texto</strong><span>Código do programa.</span></div>
+                <div class="process-segment"><strong>Dados</strong><span>Variáveis e dados do processo.</span></div>
+                <div class="process-segment"><strong>Espaço livre / crescimento</strong><span>Região disponível no espaço de endereçamento.</span></div>
+                <div class="process-segment"><strong>Pilha</strong><span>Estado associado à execução de chamadas e dados temporários.</span></div>
+              </div>
+              <div class="process-explanation">
+                <h3>O papel de <code>exec</code> em sistemas UNIX</h3>
+                <p>Tanenbaum descreve <code>exec</code> como a chamada que substitui a imagem de memória de um processo pelo arquivo executável indicado. Isso mostra uma diferença importante: <strong>o arquivo é um artefato armazenado; o processo é o estado de uma execução</strong>.</p>
+                <p>O sistema operacional participa da preparação dessa execução, enquanto o processador executa as instruções que compõem a nova imagem carregada.</p>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Programa ≠ processo</strong>
+              <p>O programa é a representação armazenada. O processo inclui o programa carregado e o estado necessário para sua execução. Essa distinção será retomada quando a disciplina entrar formalmente em processos e sistemas operacionais.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="engenharia">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">8 · Engenharia de Software</p>
+              <h2>Compatibilidade precisa ser tratada como requisito de build e distribuição</h2>
+              <p>A ementa da disciplina relaciona diretamente arquiteturas de hardware à construção de software compatível. A consequência prática é que arquitetura e ambiente de execução precisam aparecer nas decisões de projeto, build, teste e entrega.</p>
+            </div>
+
+            <div class="compatibility-grid">
+              <div class="compatibility-card"><small>Build</small><strong>Qual artefato estamos produzindo?</strong><p>O processo de construção precisa gerar código adequado à arquitetura e ao ambiente binário que receberá o programa.</p></div>
+              <div class="compatibility-card"><small>Distribuição</small><strong>Quem pode usar este artefato?</strong><p>Um release precisa tornar explícito para qual combinação de plataforma o arquivo foi preparado.</p></div>
+              <div class="compatibility-card"><small>Teste</small><strong>O que realmente foi validado?</strong><p>Testar uma combinação de arquitetura e ambiente não demonstra automaticamente compatibilidade com todas as demais combinações.</p></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Uma única base de código pode produzir vários binários</h3>
+                <p>Essa é uma consequência direta da separação entre código-fonte e código de máquina. O repositório pode manter uma mesma implementação em linguagem de alto nível enquanto o processo de construção produz artefatos diferentes para diferentes arquiteturas e ambientes.</p>
+                <h3>O problema não termina na ISA</h3>
+                <p>A ISA responde se o processador entende as instruções. A ABI responde se o binário está preparado para interagir com o ambiente esperado. A API ajuda a manter a portabilidade no nível do código-fonte. São níveis distintos de compatibilidade.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>H9</strong><p>Identificar necessidades tecnológicas específicas do projeto inclui reconhecer quais plataformas precisam ser suportadas.</p></div>
+                <div class="study-callout"><strong>H20</strong><p>Distinguir arquiteturas de hardware permite planejar software compatível com os ambientes que realmente serão atendidos.</p></div>
+                <div class="study-callout"><strong>H21</strong><p>Ferramentas e linguagens precisam ser empregadas considerando os contextos concretos de integração e execução.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="sintese">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">9 · Síntese</p>
+              <h2>Você consegue reconstruir o percurso inteiro?</h2>
+              <p>Use as perguntas abaixo como checagem conceitual. A resposta adequada deve conectar as etapas, e não apenas definir termos isolados.</p>
+            </div>
+
+            <div class="question-set">
+              <div class="question"><span>01</span><p>Por que uma linha de C não corresponde necessariamente a uma instrução de máquina?</p></div>
+              <div class="question"><span>02</span><p>Qual é a diferença entre código objeto e código executável?</p></div>
+              <div class="question"><span>03</span><p>Que elementos do projeto de uma ISA ajudam a explicar diferenças entre o Assembly de x86-64 e ARM64?</p></div>
+              <div class="question"><span>04</span><p>Por que compartilhar a mesma ISA não é suficiente para garantir compatibilidade binária completa?</p></div>
+              <div class="question"><span>05</span><p>Qual é a diferença entre portabilidade de código-fonte por API e portabilidade binária por ABI?</p></div>
+              <div class="question"><span>06</span><p>O que o ligador resolve que o compilador de um único módulo ainda não consegue resolver sozinho?</p></div>
+              <div class="question"><span>07</span><p>Por que o carregador precisa participar antes de o processador começar a executar o programa?</p></div>
+              <div class="question"><span>08</span><p>Qual é a diferença entre um arquivo executável e um processo em execução?</p></div>
+            </div>
+
+            <div class="boundary">
+              <strong>Uma resposta-síntese possível</strong>
+              <p>O código-fonte descreve o comportamento usando abstrações de uma linguagem. O compilador traduz esse comportamento para uma representação compatível com uma arquitetura-alvo; módulos objeto podem ser ligados em um executável; o carregador e o sistema operacional preparam esse artefato na memória; e o processador executa as instruções previstas pela ISA. A compatibilidade final depende, portanto, de várias interfaces e etapas.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="referencias">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">Referências</p>
+              <h2>Base bibliográfica deste aprofundamento</h2>
+              <p>O conteúdo desta página foi elaborado a partir dos materiais bibliográficos anexados ao projeto e da ementa institucional da disciplina.</p>
+            </div>
+            <div class="reference-list">
+              <p><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. 10. ed. Seções utilizadas principalmente: interface ISA/ABI/API; Capítulo 12 — conjuntos de instruções; Capítulo 13 — modos e formatos de endereçamento e linguagem de montagem; Apêndice B — compilador, código objeto, ligação e carregamento.</p>
+              <p><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas Operacionais Modernos</em>. 4. ed. Seções utilizadas principalmente: chamadas de sistema, criação e execução de processos em UNIX/Linux, <code>exec</code> e organização da imagem de processo.</p>
+              <p><strong>EMENTÁRIO GERAL — Engenharia de Software.</strong> Componente curricular Arquitetura de Computadores e Sistemas Operacionais: competências C3 e C6, habilidades H9, H20 e H21 e conteúdo formativo sobre arquiteturas x86, x64 e ARM.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <aside class="study-clean-aside" aria-label="Índice deste aprofundamento">
+        <div class="study-clean-toc-head">
+          <span class="study-clean-toc-label">Neste material</span>
+        </div>
+        <div class="study-toc-shell">
+          <nav class="study-toc">
+            <a href="#mapa">Mapa da tradução</a>
+            <a href="#compilacao">Compilação</a>
+            <a href="#isa">ISA por dentro</a>
+            <a href="#arquiteturas">x86-64 e ARM64</a>
+            <a href="#interfaces">API, ABI e ISA</a>
+            <a href="#ligacao">Ligação e carregamento</a>
+            <a href="#processo">Executável e processo</a>
+            <a href="#engenharia">Engenharia de Software</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 04 · aprofundamento teórico</p></div>
+      <a href="#inicio">Voltar ao início ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
