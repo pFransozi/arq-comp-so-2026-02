@@ -87,6 +87,40 @@
       height:auto;
     }
 
+    body.aula03-clean .architecture-tradeoff {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:22px;
+    }
+    body.aula03-clean .tradeoff-card {
+      padding:17px 18px;
+      border:1px solid var(--clean-line);
+      border-radius:8px;
+      background:transparent;
+    }
+    body.aula03-clean .tradeoff-card h3 {
+      margin:0 0 10px;
+      font-size:1rem;
+    }
+    body.aula03-clean .tradeoff-card p {
+      margin:0 0 9px;
+      font-size:.93rem;
+    }
+    body.aula03-clean .tradeoff-card p:last-child { margin-bottom:0; }
+    body.aula03-clean .tradeoff-card strong { color:var(--clean-text); }
+    body.aula03-clean .modern-architecture-note {
+      margin-top:22px;
+      padding:17px 19px;
+      border-left:3px solid var(--clean-accent);
+      background:var(--clean-surface);
+    }
+    body.aula03-clean .modern-architecture-note h3 {
+      margin:0 0 8px;
+      font-size:1.08rem;
+    }
+    body.aula03-clean .modern-architecture-note p:last-child { margin-bottom:0; }
+
     body.aula03-clean.theme-dark .site-header,
     body.aula03-clean.theme-dark .inquiry-head,
     body.aula03-clean.theme-dark .stored-definition,
@@ -98,7 +132,8 @@
     body.aula03-clean.theme-dark .memory-row.header > *,
     body.aula03-clean.theme-dark .memory-row > strong:first-child,
     body.aula03-clean.theme-dark .organization-infographic,
-    body.aula03-clean.theme-dark .cpu-infographic {
+    body.aula03-clean.theme-dark .cpu-infographic,
+    body.aula03-clean.theme-dark .modern-architecture-note {
       background:var(--clean-surface) !important;
       color:var(--clean-text) !important;
       border-color:var(--clean-line) !important;
@@ -120,7 +155,8 @@
     body.aula03-clean.theme-dark .memory-table,
     body.aula03-clean.theme-dark .trace-table-wrap,
     body.aula03-clean.theme-dark .record-table-wrap,
-    body.aula03-clean.theme-dark .inquiry {
+    body.aula03-clean.theme-dark .inquiry,
+    body.aula03-clean.theme-dark .tradeoff-card {
       background:transparent !important;
       color:var(--clean-text) !important;
       border-color:var(--clean-line) !important;
@@ -174,6 +210,10 @@
       color:var(--clean-text) !important;
       border-color:var(--clean-line) !important;
     }
+
+    @media(max-width:760px){
+      body.aula03-clean .architecture-tradeoff{grid-template-columns:1fr}
+    }
   `;
   document.head.appendChild(visualFixes);
 
@@ -212,6 +252,67 @@
   const legend = main.querySelectorAll('#programa .stored-legend span');
   if (legend[0]) legend[0].textContent = 'Azul · instrução';
   if (legend[1]) legend[1].textContent = 'Laranja · dado';
+
+  const architectureSection = main.querySelector('#arquiteturas');
+  if (architectureSection) {
+    const intro = architectureSection.querySelector('.section-heading > p:last-child');
+    if (intro) {
+      intro.innerHTML = 'A diferença central está em <strong>como instruções e dados chegam ao processador</strong>. Não existe uma arquitetura simplesmente “melhor”: separar os caminhos pode aumentar a vazão, enquanto compartilhá-los simplifica a organização e oferece maior flexibilidade.';
+    }
+
+    const cards = architectureSection.querySelectorAll('.architecture-grid .arch-card');
+    if (cards[0]) {
+      const description = cards[0].querySelector('p');
+      if (description) description.textContent = 'No modelo clássico, instruções e dados compartilham o mesmo espaço de memória e o mesmo caminho principal de acesso. Isso simplifica a organização e permite usar a memória de forma flexível.';
+    }
+    if (cards[1]) {
+      const description = cards[1].querySelector('p');
+      if (description) description.textContent = 'No modelo Harvard clássico, instruções e dados usam memórias e caminhos de acesso separados. A CPU pode, por exemplo, buscar a próxima instrução ao mesmo tempo em que acessa um dado.';
+    }
+
+    const oldPrecision = architectureSection.querySelector('.precision-note');
+    oldPrecision?.remove();
+
+    const grid = architectureSection.querySelector('.architecture-grid');
+    if (grid && !architectureSection.querySelector('.architecture-tradeoff')) {
+      grid.insertAdjacentHTML('afterend', `
+        <div class="architecture-tradeoff" aria-label="Comparação entre von Neumann e Harvard">
+          <article class="tradeoff-card">
+            <h3>von Neumann · simplicidade e flexibilidade</h3>
+            <p><strong>Vantagem:</strong> um espaço unificado facilita o uso da memória e a programação de sistemas de propósito geral.</p>
+            <p><strong>Trade-off:</strong> instruções e dados podem disputar o mesmo caminho entre processador e memória.</p>
+            <p><strong>Exemplos:</strong> é o modelo conceitual predominante para computadores pessoais e servidores de propósito geral.</p>
+          </article>
+          <article class="tradeoff-card">
+            <h3>Harvard · acessos independentes</h3>
+            <p><strong>Vantagem:</strong> a busca de instruções e o acesso a dados podem ocorrer em paralelo, aumentando a vazão.</p>
+            <p><strong>Trade-off:</strong> exige mais caminhos e controle e pode impor espaços de memória distintos para código e dados.</p>
+            <p><strong>Exemplos:</strong> aparece com frequência em microcontroladores e processadores voltados a processamento de sinais; o ARM Cortex-M3 é um exemplo apresentado por Stallings.</p>
+          </article>
+          <article class="tradeoff-card">
+            <h3>Na prática · arquiteturas híbridas</h3>
+            <p>Processadores atuais frequentemente misturam as duas ideias.</p>
+            <p><strong>Exemplo:</strong> um processador pode apresentar ao software um espaço de memória unificado, mas internamente manter caches e caminhos separados para instruções e dados.</p>
+            <p>Por isso, classificar um processador moderno apenas como “von Neumann” ou “Harvard” pode esconder detalhes importantes da organização interna.</p>
+          </article>
+        </div>
+        <div class="modern-architecture-note">
+          <h3>Então, onde cada modelo aparece?</h3>
+          <p><strong>Como regra didática:</strong> von Neumann está associado ao computador de propósito geral e Harvard aparece bastante em sistemas embarcados e aplicações especializadas. <strong>Mas não é uma divisão rígida.</strong> Microcontroladores como o Cortex-M3 usam barramentos separados para instruções e dados, enquanto processadores modernos de PCs, servidores e smartphones frequentemente adotam uma organização chamada de <em>Harvard modificada</em>: memória logicamente unificada, mas caches de instruções e dados separadas próximas ao núcleo.</p>
+        </div>
+      `);
+    }
+
+    const bottleneck = architectureSection.querySelector('.bottleneck');
+    if (bottleneck) {
+      bottleneck.innerHTML = `
+        <p class="eyebrow">O custo do caminho compartilhado</p>
+        <h3>Por que falamos em gargalo de von Neumann?</h3>
+        <p>No modelo clássico, a CPU precisa buscar instruções e movimentar dados pelo mesmo sistema de comunicação com a memória. Se o processador consegue trabalhar mais rápido do que esses dados chegam, ele precisa esperar. O problema não é simplesmente “a memória ser lenta”, mas a diferença entre a capacidade de processamento e a capacidade de alimentar o processador com instruções e dados.</p>
+        <p style="margin-bottom:0">Separar caminhos, como no modelo Harvard, reduz parte dessa disputa, mas aumenta a complexidade da organização. Processadores modernos combinam técnicas como caches separadas, pré-busca e múltiplos níveis de memória para diminuir esse custo.</p>
+      `;
+    }
+  }
 
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
