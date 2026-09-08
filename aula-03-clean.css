@@ -23,15 +23,16 @@ body.aula03-clean #perfis > .container > .bridge-question{
   display:none;
 }
 
-/* Aula 06 · os cenários usam apenas as letras A–I como referência. */
+/* Aula 06 · cenários numerados apenas com números. */
 body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list{
-  list-style:none !important;
-  padding-left:0 !important;
+  list-style-type:decimal !important;
+  list-style-position:outside !important;
+  padding-left:1.5rem !important;
   margin-left:0 !important;
 }
 body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li{
   margin-left:0 !important;
 }
 body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li::marker{
-  content:"";
+  content:normal !important;
 }
