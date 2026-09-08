@@ -7,6 +7,7 @@ const isAula02 = /(?:^|\/)aula-02\.html$/.test(window.location.pathname);
 const isAula02Aprofundamento = /(?:^|\/)aula-02-aprofundamento\.html$/.test(window.location.pathname);
 const isAula03 = /(?:^|\/)aula-03\.html$/.test(window.location.pathname);
 const isAula03Aprofundamento = /(?:^|\/)aula-03-aprofundamento\.html$/.test(window.location.pathname);
+const isAula06 = /(?:^|\/)aula-06\.html$/.test(window.location.pathname);
 
 if (isAula02) {
   document.body.classList.add('lesson-clean');
@@ -303,6 +304,120 @@ const improveAula03AprofundamentoInterconexao = () => {
   `;
 };
 
+const improveAula06Hierarchy = () => {
+  if (!isAula06) return;
+
+  const section = document.querySelector('#hierarquia');
+  const container = section?.querySelector('.container');
+  const grid = section?.querySelector('.function-grid');
+  if (!container || !grid || section.dataset.hierarchyEnhanced === 'true') return;
+  section.dataset.hierarchyEnhanced = 'true';
+
+  const intro = section.querySelector('.section-heading > p:last-child');
+  if (intro) {
+    intro.textContent = 'Durante a execução, a aplicação depende de dados que podem estar em diferentes níveis de armazenamento. Quanto mais próximo o dado estiver do processador, menor tende a ser o tempo de acesso. Em compensação, a capacidade disponível costuma ser menor.';
+  }
+
+  const style = document.createElement('style');
+  style.dataset.aula06Hierarchy = 'true';
+  style.textContent = `
+    body.aula03-clean #hierarquia .hierarchy-figure{margin:24px 0 28px;padding:18px;border:1px solid var(--clean-line);border-radius:8px;background:transparent}
+    body.aula03-clean #hierarquia .hierarchy-figure svg{display:block;width:100%;height:auto;max-height:520px}
+    body.aula03-clean #hierarquia .hierarchy-caption{margin:12px 0 0;color:var(--clean-muted);font-size:.94rem;line-height:1.6}
+    body.aula03-clean #hierarquia .function-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:18px}
+    body.aula03-clean #hierarquia .function-card{padding:16px 0;border-width:1px 0 0;border-radius:0}
+    body.aula03-clean #hierarquia .function-card span{display:block;margin-bottom:8px}
+    body.aula03-clean #hierarquia .function-card h3{margin:0 0 8px;font-size:1rem}
+    body.aula03-clean #hierarquia .function-card p{font-size:1rem}
+    body.aula03-clean #hierarquia .precision-note{margin-top:22px}
+    @media(max-width:760px){
+      body.aula03-clean #hierarquia .hierarchy-figure{padding:10px}
+      body.aula03-clean #hierarquia .hierarchy-figure svg{min-width:720px}
+      body.aula03-clean #hierarquia .hierarchy-figure{overflow-x:auto}
+      body.aula03-clean #hierarquia .function-grid{grid-template-columns:1fr}
+    }
+  `;
+  document.head.appendChild(style);
+
+  const figure = document.createElement('div');
+  figure.className = 'hierarchy-figure';
+  figure.setAttribute('aria-label', 'Diagrama da hierarquia de memória e armazenamento');
+  figure.innerHTML = `
+    <svg viewBox="0 0 980 520" role="img" aria-labelledby="hierarquiaTitulo hierarquiaDesc">
+      <title id="hierarquiaTitulo">Hierarquia de memória e armazenamento</title>
+      <desc id="hierarquiaDesc">Diagrama vertical com CPU no topo, seguida de registradores, cache, RAM e armazenamento. Nos níveis superiores, o acesso tende a ser mais rápido e a capacidade menor. Nos níveis inferiores, a capacidade aumenta e o custo de acesso tende a ser maior.</desc>
+      <defs>
+        <marker id="hierarchy-arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L7,3 z" fill="var(--clean-line)"></path>
+        </marker>
+      </defs>
+      <style>
+        .h-box{fill:var(--clean-surface);stroke:var(--clean-line);stroke-width:1.4}
+        .h-box-accent{fill:var(--clean-accent-soft);stroke:var(--clean-accent);stroke-width:1.4}
+        .h-text{fill:var(--clean-text);font:600 18px Inter,system-ui,sans-serif}
+        .h-sub{fill:var(--clean-muted);font:400 14px Inter,system-ui,sans-serif}
+        .h-label{fill:var(--clean-accent);font:700 13px Inter,system-ui,sans-serif;letter-spacing:.08em}
+        .h-arrow{stroke:var(--clean-line);stroke-width:2.4;fill:none;marker-end:url(#hierarchy-arrow)}
+        .h-guide{fill:var(--clean-accent-soft);stroke:var(--clean-accent);stroke-width:1.1}
+        .h-guide-text{fill:var(--clean-text);font:600 14px Inter,system-ui,sans-serif}
+      </style>
+
+      <rect class="h-guide" x="58" y="24" rx="8" ry="8" width="282" height="42"></rect>
+      <text class="h-guide-text" x="199" y="50" text-anchor="middle">↑ Mais rápido · menor capacidade</text>
+
+      <rect class="h-box-accent" x="390" y="26" rx="10" ry="10" width="200" height="56"></rect>
+      <text class="h-text" x="490" y="61" text-anchor="middle">CPU</text>
+      <path class="h-arrow" d="M490 82 L490 110"></path>
+
+      <rect class="h-box" x="340" y="110" rx="10" ry="10" width="300" height="70"></rect>
+      <text class="h-label" x="490" y="136" text-anchor="middle">01</text>
+      <text class="h-text" x="490" y="159" text-anchor="middle">Registradores</text>
+      <text class="h-sub" x="490" y="176" text-anchor="middle">operandos e resultados imediatos</text>
+      <path class="h-arrow" d="M490 180 L490 210"></path>
+
+      <rect class="h-box" x="310" y="210" rx="10" ry="10" width="360" height="76"></rect>
+      <text class="h-label" x="490" y="237" text-anchor="middle">02</text>
+      <text class="h-text" x="490" y="260" text-anchor="middle">Cache</text>
+      <text class="h-sub" x="490" y="279" text-anchor="middle">dados e instruções com alta chance de reutilização</text>
+      <path class="h-arrow" d="M490 286 L490 316"></path>
+
+      <rect class="h-box" x="275" y="316" rx="10" ry="10" width="430" height="78"></rect>
+      <text class="h-label" x="490" y="343" text-anchor="middle">03</text>
+      <text class="h-text" x="490" y="366" text-anchor="middle">RAM</text>
+      <text class="h-sub" x="490" y="385" text-anchor="middle">memória principal usada pela aplicação em execução</text>
+      <path class="h-arrow" d="M490 394 L490 424"></path>
+
+      <rect class="h-box" x="235" y="424" rx="10" ry="10" width="510" height="78"></rect>
+      <text class="h-label" x="490" y="451" text-anchor="middle">04</text>
+      <text class="h-text" x="490" y="474" text-anchor="middle">Armazenamento</text>
+      <text class="h-sub" x="490" y="493" text-anchor="middle">SSD, NVMe e HDD · persistência e maior capacidade</text>
+
+      <rect class="h-guide" x="648" y="454" rx="8" ry="8" width="282" height="42"></rect>
+      <text class="h-guide-text" x="789" y="480" text-anchor="middle">↓ Mais lento · maior capacidade</text>
+    </svg>
+    <p class="hierarchy-caption">A hierarquia combina tecnologias com diferentes tempos de acesso e capacidades. Para o software, isso significa que o desempenho depende também de onde os dados estão e de como são acessados.</p>
+  `;
+
+  grid.insertAdjacentElement('beforebegin', figure);
+
+  const cards = [...grid.querySelectorAll('.function-card')];
+  const descriptions = [
+    'Pequenos espaços internos ao processador usados para operandos e resultados imediatos durante a execução.',
+    'Memória pequena e rápida que ajuda a manter próximos dados e instruções com alta chance de reutilização.',
+    'Memória principal onde ficam dados e instruções necessários para a aplicação em execução.',
+    'SSD, NVMe e HDD oferecem persistência e maior capacidade, mas com custo de acesso mais alto.'
+  ];
+  cards.forEach((card,index)=>{
+    const paragraph = card.querySelector('p');
+    if (paragraph && descriptions[index]) paragraph.textContent = descriptions[index];
+  });
+
+  const note = section.querySelector('.precision-note');
+  if (note) {
+    note.innerHTML = '<strong>Onde entra ROM/flash?</strong> Memórias não voláteis aparecem principalmente em firmware e no armazenamento persistente. Nesta aula, vamos observar sobretudo o caminho que mais afeta a execução cotidiana da aplicação: <strong>cache → RAM → armazenamento</strong>.';
+  }
+};
+
 const loadAula02Clean = () => {
   if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
@@ -355,6 +470,7 @@ const preparePages = () => {
   improveAula02Closing();
   addAula02References();
   improveAula03AprofundamentoInterconexao();
+  improveAula06Hierarchy();
   loadAula02Clean();
   loadAula02AprofundamentoClean();
   loadAula03AprofundamentoClean();
