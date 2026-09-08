@@ -318,6 +318,53 @@
     }
   }
 
+  const fechamento = main.querySelector('#fechamento');
+  if (fechamento) {
+    const heading = fechamento.querySelector('.section-heading');
+    const checklist = fechamento.querySelector('.checklist');
+
+    if (heading) {
+      heading.innerHTML = `
+        <p class="eyebrow">Síntese da aula</p>
+        <h2>O que você deve conseguir explicar</h2>
+        <p>O objetivo não é memorizar uma lista de nomes. Ao final desta aula, você deve conseguir usar os conceitos para construir uma explicação coerente de como um computador organiza e executa instruções.</p>
+      `;
+    }
+
+    if (checklist) {
+      checklist.innerHTML = `
+        <div class="check-item"><strong>Organização do computador:</strong> explicar como CPU, memória, entrada/saída e interconexão cooperam para realizar processamento, armazenamento e movimentação de dados.</div>
+        <div class="check-item"><strong>Estrutura e arquitetura:</strong> distinguir estrutura de função e compreender, em nível introdutório, a diferença entre arquitetura e organização de computadores.</div>
+        <div class="check-item"><strong>Programa armazenado:</strong> explicar por que instruções e dados podem ser mantidos na memória e como a CPU utiliza endereços para localizar cada conteúdo.</div>
+        <div class="check-item"><strong>von Neumann e Harvard:</strong> comparar os dois modelos, indicando suas vantagens, limitações e por que processadores atuais frequentemente combinam características de ambos.</div>
+        <div class="check-item"><strong>Ciclo de instrução:</strong> acompanhar a sequência busca → decodificação → execução e explicar o papel do PC e do IR na máquina didática apresentada.</div>
+        <div class="check-item"><strong>Do modelo à máquina real:</strong> reconhecer que caches, múltiplos caminhos internos, pipeline e outros mecanismos tornam processadores reais mais complexos, sem invalidar o modelo conceitual usado nesta aula.</div>
+      `;
+    }
+  }
+
+  if (!main.querySelector('#referencias')) {
+    const referencias = document.createElement('section');
+    referencias.className = 'section';
+    referencias.id = 'referencias';
+    referencias.innerHTML = `
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Referências</p>
+          <h2>Referências bibliográficas</h2>
+          <p>Obras utilizadas como base conceitual para esta aula e para o percurso da disciplina.</p>
+        </div>
+        <div style="display:grid;gap:16px;border-top:1px solid var(--clean-line);padding-top:18px">
+          <p style="margin:0"><strong>STALLINGS, William.</strong> Arquitetura e organização de computadores: projetando com foco em desempenho. 11. ed. Porto Alegre: Bookman, 2024.</p>
+          <p style="margin:0"><strong>SILVA, Luiz Ricardo Mantovani da.</strong> Organização e arquitetura de computadores: uma jornada do fundamental ao inovador. Rio de Janeiro: Freitas Bastos, 2023.</p>
+          <p style="margin:0"><strong>TANENBAUM, Andrew Stuart; BOS, Herbert.</strong> Sistemas operacionais modernos. 5. ed. Porto Alegre: Bookman, 2024.</p>
+        </div>
+      </div>
+    `;
+    if (fechamento) fechamento.insertAdjacentElement('afterend', referencias);
+    else main.appendChild(referencias);
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
