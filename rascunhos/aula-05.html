@@ -340,7 +340,20 @@ print(f"Tempo: {fim - inicio:.4f} s")</code></pre>
       const sections = [...main.querySelectorAll(':scope > section[id]')]
         .filter((section) => section.id !== 'inicio');
 
+      const tocLabels = {
+        visao: 'Visão da aula',
+        retomada: 'Retomada',
+        desempenho: 'Desempenho',
+        clock: 'Clock, CPI e IPC',
+        nucleos: 'Processador e núcleos',
+        'cpu-bound': 'Carga CPU-bound',
+        experimento: 'Experimento',
+        fechamento: 'Síntese',
+        referencias: 'Referências'
+      };
+
       const getSectionLabel = (section) => {
+        if (tocLabels[section.id]) return tocLabels[section.id];
         const heading = section.querySelector('.section-heading h2, .warmup h2, h2');
         return heading?.textContent.trim() || section.id.replaceAll('-', ' ');
       };
