@@ -1,0 +1,123 @@
+/* Aula 03 — organização didática da seção Execução de uma instrução */
+body.aula03-clean #ciclo .container {
+  display:grid;
+  grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);
+  gap:20px;
+  align-items:start;
+}
+
+body.aula03-clean #ciclo .section-heading,
+body.aula03-clean #ciclo .cycle-overview,
+body.aula03-clean #ciclo .inquiry {
+  grid-column:1 / -1;
+}
+
+body.aula03-clean #ciclo .cycle-layout {
+  display:contents;
+}
+
+body.aula03-clean #ciclo .cycle-overview {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:0 0 4px;
+}
+
+body.aula03-clean #ciclo .cycle-phase {
+  min-height:100%;
+}
+
+body.aula03-clean #ciclo .simulator {
+  grid-column:1;
+  min-width:0;
+  align-self:stretch;
+}
+
+body.aula03-clean #ciclo .trace-table-wrap {
+  grid-column:2;
+  min-width:0;
+  margin-top:0 !important;
+  overflow:hidden;
+  align-self:stretch;
+}
+
+body.aula03-clean #ciclo .trace-table-wrap::before {
+  content:"Instruções usadas pela máquina";
+  display:block;
+  padding:16px 16px 11px;
+  border-bottom:1px solid var(--clean-line);
+  color:var(--clean-accent);
+  font-size:.74rem;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+body.aula03-clean #ciclo .trace-table {
+  width:100%;
+  min-width:0;
+  table-layout:fixed;
+  font-size:.81rem;
+  line-height:1.35;
+}
+
+body.aula03-clean #ciclo .trace-table th,
+body.aula03-clean #ciclo .trace-table td {
+  padding:9px 7px;
+  vertical-align:top;
+  overflow-wrap:anywhere;
+}
+
+body.aula03-clean #ciclo .trace-table th:nth-child(1),
+body.aula03-clean #ciclo .trace-table td:nth-child(1) { width:8%; }
+body.aula03-clean #ciclo .trace-table th:nth-child(2),
+body.aula03-clean #ciclo .trace-table td:nth-child(2) { width:9%; }
+body.aula03-clean #ciclo .trace-table th:nth-child(3),
+body.aula03-clean #ciclo .trace-table td:nth-child(3) { width:23%; }
+body.aula03-clean #ciclo .trace-table th:nth-child(4),
+body.aula03-clean #ciclo .trace-table td:nth-child(4) { width:28%; }
+body.aula03-clean #ciclo .trace-table th:nth-child(5),
+body.aula03-clean #ciclo .trace-table td:nth-child(5) { width:13%; }
+body.aula03-clean #ciclo .trace-table th:nth-child(6),
+body.aula03-clean #ciclo .trace-table td:nth-child(6) { width:19%; }
+
+body.aula03-clean #ciclo .trace-table code {
+  white-space:normal;
+  font-size:.78rem;
+}
+
+body.aula03-clean #ciclo .inquiry {
+  margin-top:8px;
+}
+
+body.aula03-clean.theme-dark #ciclo .trace-table-wrap::before {
+  border-bottom-color:var(--clean-line);
+  color:var(--clean-accent);
+}
+
+@media(max-width:820px) {
+  body.aula03-clean #ciclo .container {
+    grid-template-columns:1fr;
+  }
+
+  body.aula03-clean #ciclo .section-heading,
+  body.aula03-clean #ciclo .cycle-overview,
+  body.aula03-clean #ciclo .simulator,
+  body.aula03-clean #ciclo .trace-table-wrap,
+  body.aula03-clean #ciclo .inquiry {
+    grid-column:1;
+  }
+
+  body.aula03-clean #ciclo .cycle-overview {
+    grid-template-columns:1fr;
+  }
+
+  body.aula03-clean #ciclo .trace-table-wrap {
+    margin-top:2px !important;
+    overflow-x:auto;
+  }
+
+  body.aula03-clean #ciclo .trace-table {
+    min-width:620px;
+  }
+}
