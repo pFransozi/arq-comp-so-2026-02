@@ -125,6 +125,56 @@
         <p>Instruções e dados são ambos codificados como bits. O que muda é <strong>como aquele conteúdo é interpretado e utilizado durante a execução</strong>. Essa é a mesma ideia que a máquina didática da aula tornou visível de forma simplificada.</p>
       `;
     }
+
+    const iasGrid = programSection.querySelector('.ias-grid');
+    const registerBoundary = programSection.querySelector('.boundary');
+
+    if (iasGrid) {
+      if (!programSection.querySelector('[data-register-intro]')) {
+        iasGrid.insertAdjacentHTML('beforebegin', `
+          <div class="study-prose" data-register-intro>
+            <h3>Registradores: o estado de trabalho da CPU</h3>
+            <p><strong>Registradores</strong> são pequenas áreas de armazenamento dentro da CPU. Eles mantêm, por pouco tempo, as informações de que o processador precisa imediatamente: um endereço, uma instrução, um valor que acabou de chegar da memória ou um resultado intermediário.</p>
+            <p>Isso ajuda a entender por que a CPU não é apenas “a parte que calcula”. Para executar uma instrução, ela também precisa <strong>lembrar onde está no programa, qual operação está tratando e quais informações estão sendo transferidas</strong>.</p>
+            <p>No aprofundamento, vamos observar quatro registradores porque eles tornam o ciclo de busca especialmente visível. Eles aparecem tanto no estudo da IAS quanto em modelos introdutórios de operação do processador.</p>
+          </div>
+        `);
+      }
+
+      iasGrid.innerHTML = `
+        <article class="ias-card">
+          <strong>PC · contador de programa</strong>
+          <p>Guarda o endereço associado à próxima instrução que deverá ser buscada. No IAS, ele aponta para o próximo par de instruções armazenado em uma palavra de memória.</p>
+        </article>
+        <article class="ias-card">
+          <strong>IR · registrador de instrução</strong>
+          <p>Mantém a operação que está sendo tratada pela unidade de controle. No IAS, o IR contém o código de operação da instrução em execução.</p>
+        </article>
+        <article class="ias-card">
+          <strong>MAR · registrador de endereço de memória</strong>
+          <p>Guarda o endereço da posição de memória que será acessada. Antes de uma leitura ou escrita, é o MAR que indica <em>onde</em> a operação deve ocorrer.</p>
+        </article>
+        <article class="ias-card">
+          <strong>MBR · registrador de buffer de memória</strong>
+          <p>Mantém temporariamente a palavra que está sendo transferida entre memória e processador. Em uma leitura, recebe o conteúdo vindo da memória; em uma escrita, mantém o conteúdo que será enviado a ela.</p>
+        </article>
+      `;
+    }
+
+    if (registerBoundary) {
+      registerBoundary.innerHTML = `
+        <strong>Como esses registradores trabalham juntos?</strong>
+        <p>Em um ciclo de busca simplificado, podemos acompanhar a movimentação da informação em quatro momentos. O objetivo não é decorar micro-operações, mas perceber que cada registrador assume uma responsabilidade diferente.</p>
+        <div class="microflow" aria-label="Fluxo simplificado entre registradores durante a busca">
+          <span>1 · PC → MAR<br>onde buscar</span>
+          <span>2 · Memória → MBR<br>o que foi lido</span>
+          <span>3 · MBR → IR<br>qual instrução tratar</span>
+          <span>4 · PC avança<br>preparar a próxima busca</span>
+        </div>
+        <p><strong>Uma precisão importante:</strong> o IAS completo possui outros registradores. O <strong>IBR</strong> mantém temporariamente uma das instruções da palavra de memória, enquanto <strong>AC</strong> e <strong>MQ</strong> participam do armazenamento de operandos e resultados da ULA. Aqui concentramos PC, IR, MAR e MBR porque eles deixam mais clara a relação entre <strong>sequenciamento, memória e busca de instruções</strong>.</p>
+        <p style="margin-bottom:0">Processadores atuais podem organizar essas responsabilidades de maneiras diferentes e usar muitos outros registradores internos. Por isso, o mais importante é compreender <strong>a função que precisa ser realizada</strong>, e não tratar esses quatro nomes como uma lista universal de toda CPU.</p>
+      `;
+    }
   }
 
   replaceText(
