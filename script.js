@@ -2,6 +2,7 @@
   const path = window.location.pathname;
   const isAula03 = /(?:^|\/)aula-03\.html$/.test(path);
   const isAula04 = /(?:^|\/)aula-04\.html$/.test(path);
+  const isAula04Aprofundamento = /(?:^|\/)aula-04-aprofundamento\.html$/.test(path);
 
   const loadScript = (src, datasetKey) => {
     if (datasetKey && document.querySelector(`script[data-${datasetKey}]`)) return;
@@ -85,6 +86,20 @@
     baseScript.addEventListener('load', finish);
     baseScript.addEventListener('error', finish);
     document.head.appendChild(baseScript);
+    return;
+  }
+
+  if (isAula04Aprofundamento) {
+    const referenceIntro = document.querySelector('#referencias .study-heading > p:last-child');
+    if (referenceIntro) {
+      referenceIntro.textContent = 'O conteúdo desta página foi elaborado a partir dos materiais bibliográficos anexados ao projeto.';
+    }
+
+    document.querySelectorAll('#referencias .reference-list > p').forEach((reference) => {
+      if (reference.textContent.trim().startsWith('EMENTÁRIO GERAL')) reference.remove();
+    });
+
+    loadScript('https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@cb4518d7dc92a1c5b03218cd231bdca68aeed111/script.js');
     return;
   }
 
