@@ -114,7 +114,6 @@
                 <li>Escolha entre <strong>CPU-bound</strong>, <strong>memory-bound</strong> e <strong>I/O-bound</strong>.</li>
                 <li>Indique qual <strong>pista do enunciado</strong> levou à sua classificação.</li>
               </ol>
-              <div class="cache-boundary" style="margin-top:18px"><strong>Regra de leitura:</strong> classifique o recurso que parece dominar o trecho descrito. A classificação inicial é uma hipótese; a confirmação depende de medição.</div>
             </div>
           </div>
           <div class="inquiry-body" style="grid-template-columns:1.1fr .9fr;border-top:1px solid var(--line)">
