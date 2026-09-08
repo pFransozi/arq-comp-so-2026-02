@@ -16,6 +16,19 @@
   lessonPathSection?.remove();
   main.querySelector('#inicio .hero-actions a[href="#percurso"]')?.remove();
 
+  const exploratoryBlock = main.querySelector('#aquecimento .warmup');
+  if (exploratoryBlock) {
+    const eyebrow = exploratoryBlock.querySelector('.eyebrow');
+    const title = exploratoryBlock.querySelector('h2');
+    const intro = exploratoryBlock.querySelector('p:not(.eyebrow)');
+
+    if (eyebrow) eyebrow.textContent = 'Perguntas exploratórias';
+    if (title) title.textContent = 'O que acontece durante a execução de um programa?';
+    if (intro) {
+      intro.textContent = 'Use estas perguntas para organizar uma primeira explicação sobre o que acontece quando um programa é executado.';
+    }
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
