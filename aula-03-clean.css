@@ -24,15 +24,26 @@ body.aula03-clean #perfis > .container > .bridge-question{
 }
 
 /* Aula 06 · cenários numerados apenas com números. */
-body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list{
-  list-style-type:decimal !important;
-  list-style-position:outside !important;
-  padding-left:1.5rem !important;
+body.aula03-clean #perfis .precision-note + .inquiry > .inquiry-body > div:first-child > ol.prompt-list{
+  list-style:none !important;
+  padding-left:0 !important;
   margin-left:0 !important;
+  counter-reset:cenario;
 }
-body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li{
+body.aula03-clean #perfis .precision-note + .inquiry > .inquiry-body > div:first-child > ol.prompt-list > li{
+  position:relative;
   margin-left:0 !important;
+  padding-left:2rem;
+  counter-increment:cenario;
 }
-body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li::marker{
-  content:normal !important;
+body.aula03-clean #perfis .precision-note + .inquiry > .inquiry-body > div:first-child > ol.prompt-list > li::before{
+  content:counter(cenario) ".";
+  position:absolute;
+  left:0;
+  top:0;
+  font-weight:800;
+  color:var(--clean-text);
+}
+body.aula03-clean #perfis .precision-note + .inquiry > .inquiry-body > div:first-child > ol.prompt-list > li > strong:first-child{
+  display:none;
 }
