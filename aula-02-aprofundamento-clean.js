@@ -12,6 +12,15 @@
   const sections = [...main.querySelectorAll(':scope > .study-section[id]')];
   if (!hero || !tocShell || !sections.length) return;
 
+  const roleCard = hero.querySelector('.study-card');
+  if (roleCard) {
+    [...roleCard.querySelectorAll('p')].forEach((paragraph) => {
+      if (paragraph.textContent.trim() === 'O foco é teórico: não há roteiro de laboratório, configuração de ferramentas ou procedimentos de medição.') {
+        paragraph.remove();
+      }
+    });
+  }
+
   const layout = document.createElement('div');
   layout.className = 'study-clean-layout';
 
