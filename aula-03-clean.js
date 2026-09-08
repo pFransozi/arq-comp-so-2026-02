@@ -21,6 +21,19 @@
     `;
   }
 
+  const storedDefinition = main.querySelector('#programa .stored-definition');
+  if (storedDefinition) {
+    const eyebrow = storedDefinition.querySelector('.eyebrow');
+    const title = storedDefinition.querySelector('h3');
+    const text = storedDefinition.querySelector('p');
+
+    if (eyebrow) eyebrow.textContent = 'Ideia-chave';
+    if (title) title.textContent = 'O princípio do programa armazenado';
+    if (text) {
+      text.textContent = 'Uma ideia fundamental dos computadores de propósito geral é manter na memória não apenas os dados utilizados durante a execução, mas também as instruções que orientam o processamento. Isso permite que a CPU busque, interprete e execute uma sequência de operações armazenadas. A máquina didática a seguir simplifica esse princípio para acompanharmos uma execução passo a passo.';
+    }
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
