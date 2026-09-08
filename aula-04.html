@@ -3,84 +3,617 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: código-fonte, compilação, arquitetura-alvo, ISA, x86-64, ARM64, binários e compatibilidade.">
+  <meta name="description" content="Aula 04 de Arquitetura de Computadores e Sistemas Operacionais: código-fonte, compilação, arquitetura-alvo, ISA, x86-64, ARM64, binários, compatibilidade e experimentos no Compiler Explorer.">
   <meta name="theme-color" content="#101a24">
   <title>Aula 04 — Do código-fonte ao programa executável</title>
   <link rel="stylesheet" href="styles.css">
   <script defer src="script.js"></script>
   <style>
-    :root{--ink:#172033;--muted:#647087;--line:#dfe5ef;--soft:#f4f7fb;--paper:#fff;--navy:#0f172a;--blue:#176b87;--blue-soft:#e8f5f8;--violet:#8a5a35;--violet-soft:#f8efe8;--teal:#2c9277;--teal-soft:#e9f7f2;--amber:#b66a07;--amber-soft:#fff7e8;--radius:22px;--shadow:0 18px 48px rgba(35,50,78,.09);--content:1160px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}button,input,textarea,select{font:inherit}a{color:inherit}h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}h1{font-size:clamp(2.7rem,6vw,5.8rem);max-width:12ch;margin-bottom:1.2rem}h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}p{color:var(--muted)}code{font-family:"SFMono-Regular",Consolas,monospace}.container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}.section{padding:88px 0;scroll-margin-top:88px}.section-soft{background:var(--soft)}.section-dark{background:var(--navy);color:#fff}.section-dark p{color:#b9c3d7}.eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}.section-dark .eyebrow{color:#9bd4e5}
-    .hero{position:relative;overflow:hidden;padding:92px 0 76px;background:radial-gradient(circle at 87% 20%,rgba(138,90,53,.14),transparent 27%),radial-gradient(circle at 75% 75%,rgba(44,146,119,.12),transparent 22%),linear-gradient(180deg,#fbfcff 0%,#fff 100%)}.hero:after{content:"";position:absolute;width:520px;height:520px;right:-250px;top:-180px;border:1px solid rgba(23,107,135,.13);border-radius:50%;box-shadow:0 0 0 70px rgba(23,107,135,.025),0 0 0 140px rgba(138,90,53,.018)}.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}.hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:760px}.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.15rem;border-radius:13px;text-decoration:none;font-weight:800;border:1px solid transparent}.button-primary{background:var(--navy);color:#fff}.button-secondary{background:#fff;border-color:var(--line)}.guiding-card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}.guiding-card span{display:block;color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}.guiding-card blockquote{margin:0;font-size:1.2rem;line-height:1.45;font-weight:760}
-    .section-heading{max-width:840px;margin-bottom:2.4rem}.split-heading{max-width:none;display:grid;grid-template-columns:1fr .8fr;gap:48px;align-items:end}.overview-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:0 12px 32px rgba(35,50,78,.055)}.topics-card{grid-row:span 2}.topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.2rem}.topic-list div{padding:.9rem 1rem;border-radius:14px;background:var(--soft);font-weight:750}.competency{border-left:4px solid var(--blue)}.competency.c6{border-left-color:var(--violet)}.skill{display:grid;grid-template-columns:58px 1fr;gap:.7rem;align-items:start;margin-top:.9rem}.skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:var(--blue-soft);color:var(--blue);font-size:.82rem}.c6 .skill strong{background:var(--violet-soft);color:var(--violet)}.skill span{color:var(--muted)}
-    .lesson-path{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;counter-reset:path}.lesson-path a{counter-increment:path;position:relative;min-height:142px;padding:1rem;text-decoration:none;border:1px solid var(--line);background:#fff;border-radius:17px;transition:.2s}.lesson-path a:before{content:counter(path,decimal-leading-zero);display:block;color:var(--blue);font-weight:850;font-size:.74rem;letter-spacing:.08em;margin-bottom:2rem}.lesson-path a:hover{transform:translateY(-4px);box-shadow:var(--shadow)}.warmup{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px;background:linear-gradient(135deg,var(--navy),#173047);border-radius:28px;padding:2rem;color:#fff}.warmup p{color:#cbd5e1}.question-cloud{display:grid;gap:.75rem}.question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}
-    .function-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.function-card{padding:1.35rem;border-radius:19px;border:1px solid var(--line);background:#fff}.function-card span{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 .7rem;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:900}.function-card h3{margin-top:1.1rem}.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}.concept-card{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}.concept-card h3{margin-bottom:1rem}.concept-pair{display:grid;gap:12px}.concept-item{padding:14px 15px;border-radius:14px;background:var(--soft)}.concept-item strong{display:block;margin-bottom:.25rem}.concept-item p{margin:0;font-size:.93rem}.bridge-question{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:var(--teal-soft);border:1px solid rgba(44,146,119,.22);font-size:1.08rem;font-weight:750}
-    .cpu-zoom{display:grid;grid-template-columns:1.05fr .95fr;gap:24px}.cpu-diagram{padding:28px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:var(--shadow)}.precision-note{margin-top:22px;padding:18px 20px;border-left:4px solid var(--amber);background:var(--amber-soft);border-radius:0 14px 14px 0}
-    .inquiry{margin:34px 0;border:1px solid #cbdde4;background:linear-gradient(135deg,#f3fafc,#fff);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px rgba(23,107,135,.07)}.inquiry-head{padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid #d9e8ed}.inquiry-kicker{display:inline-flex;align-items:center;gap:.45rem;color:var(--blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}.inquiry-kicker:before{content:"?";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--blue)}.inquiry-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.78rem;font-weight:800}.inquiry-body{padding:1.4rem;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px}.prompt-list{margin:0;padding-left:1.25rem;color:var(--muted)}.worksheet{display:grid;gap:.7rem}.worksheet textarea{width:100%;min-height:118px;resize:vertical;border:1px solid var(--line);border-radius:13px;padding:.85rem;background:#fff;color:var(--ink)}.save-note{font-size:.78rem;color:var(--muted)}
-    .stored-flow{display:grid;grid-template-columns:1fr auto 1.15fr auto 1fr;gap:12px;align-items:stretch;margin:8px 0 28px}.stored-node{display:flex;flex-direction:column;justify-content:center;min-height:150px;padding:20px;border:1px solid var(--line);border-radius:20px;background:#fff;box-shadow:0 10px 28px rgba(35,50,78,.055)}.stored-node.memory{border-color:#b9d9e4;background:linear-gradient(145deg,#fff,var(--blue-soft))}.stored-node.cpu{border-color:#d9c2ad;background:linear-gradient(145deg,#fff,var(--violet-soft))}.stored-node small{color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.06em}.stored-node strong{margin:.4rem 0;font-size:1.05rem}.stored-node span{color:var(--muted);font-size:.9rem}.stored-arrow{display:grid;place-items:center;color:var(--blue);font-size:1.7rem;font-weight:900}.stored-definition{margin:0 0 32px;padding:22px 24px;border-radius:20px;background:var(--navy);color:#fff}.stored-definition .eyebrow{color:#9bd4e5;margin-bottom:.65rem}.stored-definition h3{font-size:1.45rem;margin-bottom:.55rem}.stored-definition p{color:#cbd5e1;margin-bottom:0;max-width:920px}
-    .architecture-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}.arch-card{padding:24px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 12px 32px rgba(35,50,78,.06)}
-    .project-flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.project-step{position:relative;padding:18px 14px;border:1px solid var(--line);border-radius:17px;background:#fff}.project-step:after{content:"→";position:absolute;right:-12px;top:50%;color:var(--blue);font-weight:900}.project-step:last-child:after{display:none}.resource-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}.resource-tags span{padding:.3rem .5rem;border-radius:999px;background:var(--blue-soft);color:var(--blue);font-size:.72rem;font-weight:800}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line);border-radius:15px;background:#fff}.check-item:before{content:"□";color:var(--teal);font-size:1.3rem;font-weight:900}.record-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:#fff}.record-table{width:100%;min-width:820px;border-collapse:collapse}.record-table th,.record-table td{padding:12px;border:1px solid var(--line);text-align:left}.record-table thead th{background:var(--soft);font-size:.8rem}.site-footer{border-top:1px solid var(--line)}
-    .code-panel{overflow:hidden;border-radius:18px;background:#0d1624}.code-panel-head{padding:.75rem 1rem;background:#132033;color:#d6e2f0;font-size:.82rem;font-weight:800}.code-panel pre{margin:0;padding:1.15rem;overflow:auto;color:#f2f6fb;line-height:1.7;font-family:"SFMono-Regular",Consolas,monospace;font-size:.9rem}.tool-link{display:inline-flex;align-items:center;gap:.45rem;margin-top:16px;padding:.68rem .9rem;border-radius:11px;text-decoration:none;background:var(--navy);color:#fff;font-weight:800}.tool-link:hover{opacity:.92}
-    @media(max-width:960px){.hero-grid,.overview-grid,.split-heading,.cpu-zoom,.concept-grid,.architecture-grid{grid-template-columns:1fr}.lesson-path{grid-template-columns:repeat(3,1fr)}.function-grid{grid-template-columns:repeat(2,1fr)}.stored-flow{grid-template-columns:1fr}.stored-arrow{transform:rotate(90deg);min-height:22px}.project-flow{grid-template-columns:1fr 1fr}.project-step:after{display:none}}@media(max-width:640px){.section{padding:68px 0}.lesson-path,.function-grid,.project-flow,.checklist{grid-template-columns:1fr}.topic-list{grid-template-columns:1fr}.warmup,.inquiry-body{grid-template-columns:1fr}}
+    :root{
+      --a4-paper:var(--surface);
+      --a4-soft:var(--surface-soft);
+      --a4-line:var(--line);
+      --a4-ink:var(--text);
+      --a4-muted:var(--muted);
+      --a4-blue:var(--primary);
+      --a4-violet:var(--secondary);
+      --a4-teal:var(--accent);
+      --a4-dark:var(--dark);
+      --a4-shadow:var(--shadow);
+      --a4-radius:22px;
+      --a4-content:1160px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--a4-ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}
+    h1,h2,h3,h4,p{margin-top:0}
+    h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}
+    h1{font-size:clamp(2.7rem,6vw,5.6rem);max-width:12ch;margin-bottom:1.2rem}
+    h2{font-size:clamp(2rem,4vw,3.35rem);margin-bottom:1rem}
+    h3{font-size:1.25rem}
+    p{color:var(--a4-muted)}
+    code,pre{font-family:"SFMono-Regular",Consolas,"Liberation Mono",monospace}
+    .progress{position:fixed;inset:0 auto auto 0;height:4px;width:0;z-index:999;background:linear-gradient(90deg,var(--a4-blue),var(--a4-violet),var(--a4-teal))}
+    .lesson-page .container{width:min(var(--a4-content),calc(100% - 40px));margin-inline:auto}
+    .section{padding:80px 0;scroll-margin-top:84px}
+    .section-soft{background:var(--a4-soft)}
+    .section-dark{background:var(--a4-dark);color:#fff}
+    .section-dark p{color:#c7d1e2}
+    .section-heading{max-width:830px;margin:0 0 2.3rem;text-align:left}
+    .section-heading p{font-size:1.04rem}
+    .split-heading{max-width:none;display:grid;grid-template-columns:1fr .82fr;gap:46px;align-items:end}
+    .lesson-page .eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--a4-blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}
+    .lesson-page .eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}
+    .section-dark .eyebrow{color:#9fb4ff}
+    .lesson-page .site-header{background:rgba(247,249,252,.92);border-bottom:1px solid var(--a4-line)}
+    body.theme-dark.lesson-page .site-header{background:rgba(16,23,37,.92)}
+    .lesson-page .nav-wrap{min-height:70px}
+    .lesson-page .brand-mark{background:linear-gradient(145deg,var(--a4-blue),var(--a4-violet))}
+    .main-nav a.active{color:var(--a4-blue)!important}
+
+    .lesson-page .hero{position:relative;overflow:hidden;min-height:auto;padding:92px 0 76px;background:radial-gradient(circle at 86% 20%,rgba(124,103,232,.14),transparent 28%),radial-gradient(circle at 72% 78%,rgba(22,165,163,.10),transparent 24%),var(--bg)}
+    .lesson-page .hero:after{content:"";position:absolute;width:520px;height:520px;right:-250px;top:-180px;border:1px solid rgba(49,94,251,.14);border-radius:50%;box-shadow:0 0 0 70px rgba(49,94,251,.025),0 0 0 140px rgba(124,103,232,.018)}
+    .hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}
+    .hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:780px}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}
+    .guiding-card{background:var(--a4-paper);border:1px solid var(--a4-line);border-radius:var(--a4-radius);padding:1.5rem;box-shadow:var(--a4-shadow)}
+    .guiding-card span{display:block;color:var(--a4-blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}
+    .guiding-card blockquote{margin:0;font-size:1.18rem;line-height:1.45;font-weight:760;color:var(--a4-ink)}
+
+    .overview-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}
+    .card{background:var(--a4-paper);border:1px solid var(--a4-line);border-radius:var(--a4-radius);padding:1.5rem;box-shadow:0 12px 32px rgba(35,50,78,.055)}
+    .topics-card{grid-row:span 2}
+    .topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.2rem}
+    .topic-list div{padding:.9rem 1rem;border-radius:14px;background:var(--a4-soft);font-weight:750}
+    .competency{border-left:4px solid var(--a4-blue)}
+    .competency.c6{border-left-color:var(--a4-violet)}
+    .skill{display:grid;grid-template-columns:58px 1fr;gap:.7rem;align-items:start;margin-top:.9rem}
+    .skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:#edf2ff;color:var(--a4-blue);font-size:.82rem}
+    .c6 .skill strong{background:#f2efff;color:var(--a4-violet)}
+    body.theme-dark .skill strong{background:#162443}
+    body.theme-dark .c6 .skill strong{background:#231d3e}
+    .skill span{color:var(--a4-muted)}
+
+    .lesson-path{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;counter-reset:path}
+    .lesson-path a{counter-increment:path;position:relative;min-height:142px;padding:1rem;text-decoration:none;border:1px solid var(--a4-line);background:var(--a4-paper);border-radius:17px;transition:.2s}
+    .lesson-path a:before{content:counter(path,decimal-leading-zero);display:block;color:var(--a4-blue);font-weight:850;font-size:.74rem;letter-spacing:.08em;margin-bottom:2rem}
+    .lesson-path a:hover{transform:translateY(-4px);box-shadow:var(--a4-shadow)}
+
+    .warmup{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;background:linear-gradient(135deg,#101a24,#192747);border-radius:28px;padding:2rem;color:#fff}
+    .warmup-copy{display:flex;flex-direction:column;justify-content:center}
+    .warmup h2{max-width:14ch;font-size:clamp(2.15rem,3.8vw,3.65rem);margin-bottom:1rem}
+    .warmup p{color:#cbd5e1}
+    .lmc-trace{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:.35rem}
+    .lmc-step{padding:.55rem .72rem;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);font-size:.78rem;font-weight:800;color:#e8eef8}
+    .lmc-arrow{color:#9fb4ff;font-weight:900}
+    .question-cloud{display:grid;gap:.75rem}
+    .question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}
+    .question-cloud strong{display:block;color:#9fb4ff;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;margin-bottom:.28rem}
+    .question-cloud span{display:block;color:#f4f7fb;font-weight:650;line-height:1.5}
+
+    .source-layout,.two-col{display:grid;grid-template-columns:.9fr 1.1fr;gap:24px;align-items:start}
+    .code-card{overflow:hidden;border:1px solid var(--a4-line);border-radius:20px;background:#0d1624;box-shadow:var(--a4-shadow)}
+    .code-head{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:.78rem 1rem;background:#132033;color:#d6e2f0;font-size:.82rem;font-weight:800}
+    .code-card pre{margin:0;padding:1.25rem;overflow:auto;color:#f2f6fb;line-height:1.72;font-size:.92rem}
+    .code-caption{padding:13px 16px;border-top:1px solid rgba(255,255,255,.08);color:#aebcd0;font-size:.82rem}
+    .translation-list{display:grid;gap:12px}
+    .translation-item{padding:18px;border:1px solid var(--a4-line);border-radius:17px;background:var(--a4-paper)}
+    .translation-item strong{display:block;margin-bottom:.35rem}
+    .translation-item p{margin:0}
+    .translation-example{margin-top:1rem;padding:14px 15px;border:1px solid var(--a4-line);border-radius:13px;background:var(--a4-soft)}
+    .translation-example p{margin:.55rem 0 0;font-size:.92rem}
+    .translation-code{display:block;white-space:pre-wrap;color:var(--a4-ink);font-weight:700;line-height:1.55}
+    .translation-flow{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:.85rem}
+    .translation-flow .flow-step{padding:.45rem .62rem;border-radius:9px;background:var(--a4-paper);border:1px solid var(--a4-line);font-size:.78rem;font-weight:800;color:var(--a4-ink)}
+    .translation-flow .flow-arrow{color:var(--a4-blue);font-weight:900}
+
+    .big-idea{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:#eaf8f6;border:1px solid #b6e5df;font-size:1.05rem;font-weight:750;color:var(--a4-ink)}
+    body.theme-dark .big-idea{background:#102d2c;border-color:#27524f}
+    .precision-note{margin-top:20px;padding:18px 20px;border-left:4px solid #c68218;background:#fff7e8;border-radius:0 14px 14px 0;color:var(--a4-ink)}
+    body.theme-dark .precision-note{background:#2b2113;border-left-color:#f0b35f}
+
+    .pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:stretch;margin-top:26px}
+    .pipe-node{position:relative;padding:20px;border:1px solid var(--a4-line);border-radius:18px;background:var(--a4-paper)}
+    .pipe-node:not(:last-child):after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);z-index:2;color:var(--a4-blue);font-weight:900;font-size:1.25rem}
+    .pipe-node small{display:block;color:var(--a4-blue);font-weight:850;text-transform:uppercase;letter-spacing:.07em;margin-bottom:.45rem}
+    .pipe-node strong{display:block;font-size:1.08rem;margin-bottom:.35rem}
+    .pipe-node p{margin:0;font-size:.92rem}
+
+    .target-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px}
+    .target-card{padding:20px;border:1px solid var(--a4-line);border-radius:18px;background:var(--a4-paper)}
+    .target-card span,.tag{display:inline-flex;padding:.32rem .56rem;border-radius:999px;background:#edf2ff;color:var(--a4-blue);font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.06em}
+    body.theme-dark .target-card span,body.theme-dark .tag{background:#162443}
+    .target-card h3{margin:.8rem 0 .5rem}
+    .target-card p{margin:0}
+
+    .isa-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+    .contract-card{padding:24px;border:1px solid var(--a4-line);border-radius:22px;background:var(--a4-paper)}
+    .contract-list{display:grid;gap:10px;margin-top:16px}
+    .contract-list div{padding:13px 14px;border-radius:13px;background:var(--a4-soft)}
+    .contract-list strong{display:block;margin-bottom:.15rem}
+    .not-now{padding:24px;border-radius:22px;background:var(--a4-dark);color:#fff}
+    .not-now p,.not-now ul{color:#cbd5e1}
+    .not-now ul{margin:0;padding-left:1.2rem}
+    .not-now li+li{margin-top:.45rem}
+
+    .activity{margin:34px 0;border:1px solid var(--a4-line);background:var(--a4-paper);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px rgba(23,107,135,.07)}
+    .activity-head{padding:1.2rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--a4-line);background:linear-gradient(135deg,#edf2ff,var(--a4-paper))}
+    body.theme-dark .activity-head{background:linear-gradient(135deg,#162443,var(--a4-paper))}
+    .activity-kicker{display:inline-flex;align-items:center;gap:.45rem;color:var(--a4-blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}
+    .activity-kicker:before{content:"▶";display:grid;place-items:center;width:27px;height:27px;border-radius:50%;color:#fff;background:var(--a4-blue);font-size:.65rem}
+    .activity-head h3{margin:.35rem 0 0}
+    .activity-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:var(--a4-paper);border:1px solid var(--a4-line);color:var(--a4-muted);font-size:.78rem;font-weight:800}
+    .activity-body{padding:1.4rem}
+    .activity-goal{margin:0 0 18px;padding:15px 17px;border-radius:14px;background:#eef4ff;color:var(--a4-ink)}
+    body.theme-dark .activity-goal{background:#162443}
+    .activity-goal strong{color:var(--a4-blue)}
+    .activity-steps{margin:.5rem 0 0;padding-left:1.35rem;color:var(--a4-muted)}
+    .activity-steps li+li{margin-top:.5rem}
+    .activity-questions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:18px}
+    .activity-questions div{padding:14px;border:1px solid var(--a4-line);border-radius:14px;background:var(--a4-soft);color:var(--a4-ink);font-weight:650}
+    .activity-table-wrap{margin-top:18px;overflow-x:auto;border:1px solid var(--a4-line);border-radius:15px}
+    .activity-table{width:100%;min-width:720px;border-collapse:collapse;background:var(--a4-paper)}
+    .activity-table th,.activity-table td{padding:11px 12px;border-bottom:1px solid var(--a4-line);text-align:left;vertical-align:top}
+    .activity-table th{background:var(--a4-soft);font-size:.82rem}
+    .activity-table tr:last-child td{border-bottom:0}
+    .blank{color:var(--a4-muted);letter-spacing:.04em}
+    .tool-link{display:inline-flex;align-items:center;gap:.45rem;margin-top:16px;padding:.68rem .9rem;border-radius:11px;text-decoration:none;background:var(--a4-dark);color:#fff;font-weight:800}
+    .tool-link:hover{opacity:.92}
+
+    .compare-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:24px}
+    .compare-card{padding:22px;border:1px solid var(--a4-line);border-radius:20px;background:var(--a4-paper)}
+    .compare-card p:last-child{margin-bottom:0}
+
+    .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+    .check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--a4-line);border-radius:15px;background:var(--a4-paper)}
+    .check-item:before{content:"□";color:var(--a4-teal);font-size:1.25rem;font-weight:900}
+    .site-footer{border-top:1px solid var(--a4-line)}
+
+    @media(max-width:980px){
+      .hero-grid,.overview-grid,.split-heading,.source-layout,.two-col,.isa-grid{grid-template-columns:1fr}
+      .lesson-path{grid-template-columns:repeat(3,1fr)}
+      .pipeline{grid-template-columns:repeat(2,1fr)}
+      .pipe-node:after{display:none}
+      .target-grid,.activity-questions{grid-template-columns:repeat(2,1fr)}
+    }
+    @media(max-width:680px){
+      .lesson-page .container{width:min(var(--a4-content),calc(100% - 26px))}
+      .section{padding:62px 0}
+      .lesson-path,.topic-list,.pipeline,.target-grid,.compare-grid,.activity-questions,.checklist{grid-template-columns:1fr}
+      .warmup{grid-template-columns:1fr}
+      .activity-head{align-items:flex-start;flex-direction:column}
+      .activity-tag{white-space:normal}
+    }
   </style>
 </head>
 <body class="lesson-page arch-page">
-  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a><div class="progress" id="progress" aria-hidden="true"></div>
-  <header class="site-header"><div class="container nav-wrap"><a class="brand" href="index.html"><span class="brand-mark">SO</span><span><strong>Arquitetura &amp; SO</strong><small>Aula 04</small></span></a><button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button><nav id="menu-principal" class="main-nav"><a href="index.html">Página principal</a><a href="curso.html">Visão geral</a><a href="#traducao">Tradução</a><a href="#alvo">Alvo</a><a href="#isa">ISA</a><a href="#engenharia">Engenharia de Software</a><a class="nav-highlight" href="#atividade-3">Atividade 3</a><button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon">☾</span><span class="theme-text">Modo noturno</span></button></nav></div></header>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
+        <span class="brand-mark" aria-hidden="true">SO</span>
+        <span><strong>Arquitetura &amp; SO</strong><small>Aula 04</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+      <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
+        <a href="index.html">Página principal</a>
+        <a href="curso.html">Visão geral</a>
+        <a href="#traducao">Tradução</a>
+        <a href="#alvo">Alvo</a>
+        <a href="#isa">ISA</a>
+        <a href="#atividade-3">Engenharia de Software</a>
+        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+      </nav>
+    </div>
+  </header>
 
   <main id="conteudo">
-    <section class="hero" id="inicio"><div class="container hero-grid"><div><p class="eyebrow">Aula 04 · Código e plataforma</p><h1>Do código-fonte ao programa executável</h1><p class="hero-lead">Na Aula 03 vimos a CPU buscando, decodificando e executando instruções. Agora mudamos o sentido da investigação: partimos do código que escrevemos e observamos como ele é traduzido para uma arquitetura concreta.</p><div class="hero-actions"><a class="button button-primary" href="#visao">Começar a aula</a><a class="button button-secondary" href="#percurso">Ver percurso</a></div></div><aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Como o mesmo código-fonte pode se transformar em programas diferentes para arquiteturas e plataformas diferentes?</blockquote></aside></div></section>
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Aula 04 · Código e plataforma</p>
+          <h1>Do código-fonte ao programa executável</h1>
+          <p class="hero-lead">Na Aula 03 vimos a CPU buscando, decodificando e executando instruções. Agora mudamos o sentido da investigação: partimos do código que escrevemos e descobrimos como ele chega a instruções e a um programa compatível com uma plataforma concreta.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#retomada">Começar a aula</a>
+            <a class="button button-secondary" href="#percurso">Ver percurso</a>
+          </div>
+        </div>
+        <aside class="guiding-card">
+          <span>Pergunta orientadora</span>
+          <blockquote>Como o mesmo código-fonte pode se transformar em programas diferentes para arquiteturas e plataformas diferentes?</blockquote>
+        </aside>
+      </div>
+    </section>
 
-    <section class="section section-soft" id="visao"><div class="container"><div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Do código-fonte à compatibilidade</h2><p>A progressão parte do código que escrevemos, passa pela tradução realizada pelo compilador, introduz arquitetura-alvo e ISA e termina nas consequências para build, distribuição e compatibilidade.</p></div><div class="overview-grid"><article class="card topics-card"><h3>Conteúdo programático</h3><div class="topic-list"><div>Código-fonte × instruções</div><div>Compilação e arquitetura-alvo</div><div>ISA como contrato</div><div>x86-64 e ARM64</div><div>Builds e distribuição</div><div>Compatibilidade de software</div></div></article><article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H9</strong><span>Reconhecer requisitos de plataforma que condicionam a construção, distribuição e execução de software.</span></div></article><article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir arquiteturas de hardware relevantes para compatibilidade de software.</span></div><div class="skill"><strong>H21</strong><span>Empregar ferramentas para observar como código-fonte é traduzido para diferentes alvos.</span></div></article></div></div></section>
+    <section class="section section-soft" id="visao">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Visão da aula</p>
+          <h2>Aprender observando a transformação</h2>
+          <p>O Compiler Explorer será nossa lente para observar como o software se aproxima do hardware e o que muda quando alteramos a arquitetura de destino.</p>
+        </div>
+        <div class="overview-grid">
+          <article class="card topics-card">
+            <h3>Conteúdo programático</h3>
+            <div class="topic-list">
+              <div>Código-fonte × instruções</div>
+              <div>Compilação e arquitetura-alvo</div>
+              <div>ISA como contrato</div>
+              <div>x86-64 e ARM64</div>
+              <div>Builds e distribuição</div>
+              <div>Compatibilidade de software</div>
+            </div>
+          </article>
+          <article class="card competency">
+            <h3>C3 — Analisar e selecionar tecnologias</h3>
+            <div class="skill"><strong>H9</strong><span>Reconhecer requisitos de plataforma que condicionam a construção, distribuição e execução de software.</span></div>
+          </article>
+          <article class="card competency c6">
+            <h3>C6 — Integrar sistemas de software</h3>
+            <div class="skill"><strong>H20</strong><span>Distinguir arquiteturas de hardware relevantes para compatibilidade de software.</span></div>
+            <div class="skill"><strong>H21</strong><span>Empregar ferramentas para observar como código-fonte é traduzido para diferentes alvos.</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
 
-    <section class="section" id="percurso"><div class="container"><div class="section-heading split-heading"><div><p class="eyebrow">Percurso de 4 horas</p><h2>Uma representação por vez</h2></div><p>Primeiro retomamos a execução vista na Aula 03. Depois acompanhamos a tradução até formalizar target, ISA e compatibilidade.</p></div><div class="lesson-path"><a href="#retomada"><strong>Retomar a Aula 03</strong></a><a href="#traducao"><strong>Código-fonte e tradução</strong></a><a href="#alvo"><strong>Arquitetura-alvo</strong></a><a href="#isa"><strong>ISA como contrato</strong></a><a href="#engenharia"><strong>Build e compatibilidade</strong></a><a href="#atividade-3"><strong>Aplicar à Engenharia de Software</strong></a></div></div></section>
+    <section class="section" id="percurso">
+      <div class="container">
+        <div class="section-heading split-heading">
+          <div><p class="eyebrow">Percurso da aula</p><h2>Do código-fonte à compatibilidade</h2></div>
+          <p>Seguiremos a transformação do programa até o binário, observando onde entram arquitetura-alvo, ISA e decisões de Engenharia de Software.</p>
+        </div>
+        <div class="lesson-path">
+          <a href="#retomada"><strong>Partir do que a Aula 03 já mostrou</strong></a>
+          <a href="#traducao"><strong>Prever e observar uma tradução</strong></a>
+          <a href="#alvo"><strong>Descobrir por que existe um target</strong></a>
+          <a href="#atividade-2"><strong>Comparar x86-64 e ARM64</strong></a>
+          <a href="#isa"><strong>Formalizar a ideia de ISA</strong></a>
+          <a href="#atividade-3"><strong>Aplicar à Engenharia de Software</strong></a>
+        </div>
+      </div>
+    </section>
 
-    <section class="section" id="retomada"><div class="container"><div class="warmup"><div><p class="eyebrow" style="color:#9bd4e5">Retomada da Aula 03</p><h2>Na aula passada, paramos aqui</h2><p>No Little Man Computer acompanhamos instruções como <code>LDA</code>, <code>ADD</code> e <code>STA</code> sendo buscadas, decodificadas e executadas pela CPU.</p></div><div class="question-cloud"><div>O processador recebe o código C exatamente como escrevemos?</div><div>De onde vêm as instruções que a CPU realmente executa?</div><div>O que muda quando o mesmo código é preparado para x86-64 e ARM64?</div><div><strong>Para abrir a Aula 04:</strong> quem transforma nossa intenção em instruções válidas para uma máquina concreta?</div></div></div></div></section>
+    <section class="section" id="retomada">
+      <div class="container">
+        <div class="warmup">
+          <div class="warmup-copy">
+            <p class="eyebrow" style="color:#9fb4ff">Retomada da Aula 03</p>
+            <h2>Do Little Man Computer ao código que escrevemos</h2>
+            <p>No exercício com o <strong>Little Man Computer</strong>, acompanhamos instruções como <code>LDA</code>, <code>ADD</code> e <code>STA</code> sendo buscadas e executadas. Agora vamos voltar um passo: quem produz essas instruções quando programamos em uma linguagem como C?</p>
+            <div class="lmc-trace" aria-label="Ponte entre a atividade anterior e esta aula">
+              <span class="lmc-step">Programa no LMC</span>
+              <span class="lmc-arrow">→</span>
+              <span class="lmc-step">LDA · ADD · STA</span>
+              <span class="lmc-arrow">→</span>
+              <span class="lmc-step">buscar · decodificar · executar</span>
+            </div>
+          </div>
+          <div class="question-cloud" aria-label="Perguntas para retomar a discussão">
+            <div><strong>1 · Código-fonte</strong><span>O processador recebe o código C exatamente como nós o escrevemos?</span></div>
+            <div><strong>2 · Tradução</strong><span>Se no LMC executávamos <code>LDA</code>, <code>ADD</code> e <code>STA</code>, de onde vêm as instruções de um programa escrito em C?</span></div>
+            <div><strong>3 · Arquitetura</strong><span>Por que o mesmo código-fonte pode gerar instruções diferentes para x86-64 e ARM64?</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <section class="section section-soft" id="traducao"><div class="container"><div class="section-heading"><p class="eyebrow">Primeira ideia</p><h2>O código-fonte expressa uma intenção; a máquina executa instruções</h2><p>Linguagens de alto nível nos permitem trabalhar com nomes, tipos, decisões, repetições e funções. Essas abstrações precisam ser traduzidas para operações pertencentes à máquina que executará o programa.</p></div>
-      <div class="cpu-zoom"><div class="cpu-diagram"><div class="code-panel"><div class="code-panel-head">C · código-fonte</div><pre><code>int soma(int a, int b) {
+    <section class="section section-soft" id="traducao">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Primeira ideia</p>
+          <h2>O código-fonte expressa uma intenção; a máquina executa operações mais elementares</h2>
+          <p>Linguagens de alto nível nos permitem trabalhar com nomes, tipos, decisões, repetições e funções. Essas abstrações precisam ser traduzidas para operações pertencentes à máquina que executará o programa.</p>
+        </div>
+
+        <div class="source-layout">
+          <div class="code-card">
+            <div class="code-head"><span>C · código-fonte</span><span>comece simples</span></div>
+            <pre><code>int soma(int a, int b) {
     return a + b;
-}</code></pre></div></div><article class="card"><h3>O que essa função expressa?</h3><p>Para nós, a intenção é direta: receber dois inteiros, somá-los e devolver o resultado.</p><p>Mas a CPU não recebe os nomes <code>a</code> e <code>b</code> dessa forma. Na execução nativa, ela trabalha com instruções, registradores, endereços e valores.</p><div class="precision-note"><strong>Uma linha de C não corresponde a uma instrução da CPU.</strong> Uma construção de alto nível pode gerar várias operações; com otimizações, algumas também podem ser combinadas ou eliminadas.</div></article></div>
-      <div class="concept-grid"><article class="concept-card"><p class="eyebrow">Abstração</p><h3>O código ajuda quem programa</h3><div class="concept-pair"><div class="concept-item"><strong>Nomes e tipos</strong><p><code>preco</code>, <code>frete</code> e <code>total</code> carregam significado para o desenvolvedor.</p></div><div class="concept-item"><strong>Estruturas</strong><p><code>if</code>, <code>for</code> e funções expressam comportamento sem exigir detalhes da máquina.</p></div></div></article><article class="concept-card"><p class="eyebrow">Tradução</p><h3>O compilador aproxima o programa da máquina</h3><div class="concept-pair"><div class="concept-item"><strong>Decisões de baixo nível</strong><p>O compilador escolhe instruções, registradores e formas de acesso adequadas ao alvo.</p></div><div class="concept-item"><strong>Mesmo comportamento</strong><p>Representações de máquina diferentes podem implementar a mesma intenção do código-fonte.</p></div></div></article></div>
-      <div class="bridge-question">O código que escrevemos não é o código que a CPU executa. Entre essas duas representações existe uma etapa de tradução.</div>
-      <article class="inquiry" id="atividade-1"><div class="inquiry-head"><div><span class="inquiry-kicker">Experimento 1</span><h3>Faça uma previsão e abra o Compiler Explorer</h3></div><span class="inquiry-tag">hipótese → observação</span></div><div class="inquiry-body"><ol class="prompt-list"><li>Antes de abrir a ferramenta, descreva o que a máquina precisa fazer para executar <code>return a + b;</code>.</li><li>Abra o Compiler Explorer com a linguagem C.</li><li>Escolha um compilador x86-64.</li><li>Cole a função <code>soma</code> e observe o Assembly.</li><li>Procure apenas evidências de valores, operação e retorno.</li></ol><div class="worksheet"><textarea data-save="exp1" placeholder="Nossa previsão...&#10;O que observamos...&#10;O que mudou na nossa explicação..."></textarea><a class="tool-link" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a><span class="save-note">Não é necessário traduzir cada instrução.</span></div></div></article>
-    </div></section>
+}</code></pre>
+            <div class="code-caption">A intenção é simples para nós: receber dois inteiros, somá-los e devolver o resultado.</div>
+          </div>
+          <div class="translation-list">
+            <article class="translation-item">
+              <strong>Os nomes ajudam quem programa</strong>
+              <p>No código-fonte, nomes como <code>preco</code>, <code>frete</code> e <code>total</code> dão significado aos dados. Depois da compilação, o processador trabalha com valores, registradores, endereços de memória e instruções — não com esses conceitos da mesma forma que nós.</p>
+              <div class="translation-example">
+                <code class="translation-code">int total = preco + frete;
+int c = a + b;</code>
+                <p>Os nomes são diferentes, mas o trabalho essencial é o mesmo: obter dois valores, somá-los e guardar o resultado.</p>
+              </div>
+            </article>
+            <article class="translation-item">
+              <strong>O compilador transforma a intenção em operações da máquina</strong>
+              <p>Quando escrevemos <code>return a + b;</code>, descrevemos o comportamento desejado. Não dizemos em qual registrador colocar cada valor nem qual instrução específica usar. O compilador toma essas decisões de acordo com a arquitetura-alvo.</p>
+              <div class="translation-example">
+                <code class="translation-code">return a + b;</code>
+                <div class="translation-flow" aria-label="Etapas conceituais necessárias para realizar a soma">
+                  <span class="flow-step">obter a</span><span class="flow-arrow">→</span>
+                  <span class="flow-step">obter b</span><span class="flow-arrow">→</span>
+                  <span class="flow-step">somar</span><span class="flow-arrow">→</span>
+                  <span class="flow-step">retornar</span>
+                </div>
+                <p>No Compiler Explorer veremos que arquiteturas diferentes podem realizar esse mesmo comportamento com registradores e instruções diferentes.</p>
+              </div>
+            </article>
+            <article class="translation-item">
+              <strong>Uma linha de código não corresponde a uma instrução</strong>
+              <p>Não existe uma regra do tipo “1 linha de C = 1 instrução da CPU”. Uma construção de alto nível pode exigir várias operações; com otimizações, algumas delas também podem ser combinadas ou até eliminadas.</p>
+              <div class="translation-example">
+                <code class="translation-code">if (idade >= 18) {
+    return 1;
+}
+return 0;</code>
+                <p>Essa decisão envolve, conceitualmente, comparar um valor, decidir qual caminho seguir e produzir um resultado. Um <code>for</code> pode acrescentar ainda inicialização, comparação, incremento e repetição.</p>
+              </div>
+            </article>
+          </div>
+        </div>
 
-    <section class="section" id="alvo"><div class="container"><div class="section-heading"><p class="eyebrow">Segunda ideia</p><h2>O compilador precisa saber para qual máquina produzir código</h2><p>Ao instalar um programa, opções como <strong>x64</strong> e <strong>ARM64</strong> indicam que um programa nativo precisa ser preparado para uma arquitetura capaz de compreender as instruções geradas.</p></div>
-      <div class="stored-flow"><div class="stored-node"><small>1 · Fonte</small><strong>Código-fonte</strong><span>Expressa o comportamento usando abstrações da linguagem.</span></div><div class="stored-arrow">→</div><div class="stored-node memory"><small>2 · Tradução</small><strong>Compilador</strong><span>Recebe o código e considera o destino escolhido.</span></div><div class="stored-arrow">→</div><div class="stored-node cpu"><small>3 · Destino</small><strong>Arquitetura-alvo</strong><span>Define para qual família de processadores o código será produzido.</span></div></div>
-      <div class="architecture-grid"><article class="arch-card"><p class="eyebrow">Target A</p><h3>x86-64</h3><p>Arquitetura amplamente usada em desktops, notebooks e servidores com processadores Intel e AMD.</p><div class="concept-item"><strong>Exemplos de registradores</strong><p><code>eax</code>, <code>edi</code>, <code>rax</code>.</p></div></article><article class="arch-card"><p class="eyebrow">Target B</p><h3>ARM64 / AArch64</h3><p>Arquitetura comum em smartphones, sistemas embarcados, computadores e servidores modernos.</p><div class="concept-item"><strong>Exemplos de registradores</strong><p><code>w0</code>, <code>w1</code>, <code>x0</code>, <code>x1</code>.</p></div></article></div>
-      <div class="precision-note"><strong>A saída pode variar.</strong> Compiladores e versões diferentes podem escolher instruções distintas mesmo para a mesma arquitetura. O padrão importante é que, ao trocar o alvo, o compilador passa a trabalhar com os recursos disponíveis naquele alvo.</div>
-      <article class="inquiry" id="atividade-2"><div class="inquiry-head"><div><span class="inquiry-kicker">Experimento 2</span><h3>Compare x86-64 e ARM64</h3></div><span class="inquiry-tag">mesmo código · alvos diferentes</span></div><div class="inquiry-body"><ol class="prompt-list"><li>Use a função <code>int dobro(int x){ return x * 2; }</code>.</li><li>Compile para x86-64 com <code>-O2</code>.</li><li>Abra uma segunda saída ARM64/AArch64, também com <code>-O2</code>.</li><li>Localize nomes de registradores e instruções nas duas saídas.</li><li>Confirme que o código C e o comportamento esperado permanecem iguais.</li></ol><div class="worksheet"><textarea data-save="exp2" placeholder="x86-64: o que vimos...&#10;ARM64: o que vimos...&#10;Conclusão..."></textarea><a class="tool-link" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a><span class="save-note">O objetivo é comparar evidências, não decorar Assembly.</span></div></div></article>
-    </div></section>
+        <article class="activity" id="atividade-1">
+          <div class="activity-head">
+            <div><span class="activity-kicker">Experimento 1</span><h3>Faça uma previsão e abra o Compiler Explorer</h3></div>
+            <span class="activity-tag">primeiro contato</span>
+          </div>
+          <div class="activity-body">
+            <p class="activity-goal"><strong>Objetivo:</strong> verificar que o código-fonte e as instruções geradas são representações diferentes do mesmo comportamento.</p>
+            <ol class="activity-steps">
+              <li>Antes de abrir a ferramenta, observe novamente a função <code>soma</code> e escreva: <strong>o que a máquina precisará fazer</strong> para executá-la?
+                <div class="translation-example">
+                  <code class="translation-code">int soma(int a, int b) {
+    return a + b;
+}</code>
+                </div>
+              </li>
+              <li>Abra o Compiler Explorer e mantenha a linguagem C.</li>
+              <li>Escolha um compilador para <strong>x86-64</strong>. Não se preocupe com a versão específica disponível.</li>
+              <li>Cole a função e observe o painel de Assembly.</li>
+              <li>Não traduza cada instrução. Procure apenas evidências de <strong>valores, operação e retorno</strong>.</li>
+            </ol>
+            <a class="tool-link" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a>
+            <div class="activity-questions">
+              <div>Os nomes <code>a</code> e <code>b</code> aparecem como no código-fonte?</div>
+              <div>Você consegue localizar alguma operação relacionada à soma?</div>
+              <div>Quantas linhas de Assembly apareceram? Isso prova quantas instruções a CPU executará em qualquer situação?</div>
+            </div>
+            <div class="precision-note"><strong>Cuidado com a última pergunta:</strong> contar linhas é uma observação, não uma medida completa de execução ou desempenho. Por enquanto, queremos apenas perceber a transformação.</div>
+          </div>
+        </article>
 
-    <section class="section section-soft" id="isa"><div class="container"><div class="section-heading"><p class="eyebrow">Formalizando o que observamos</p><h2>A ISA funciona como um contrato entre software e processador</h2><p>Quando o compilador produz código para x86-64 ou ARM64, o resultado precisa respeitar a <strong>Instruction Set Architecture (ISA)</strong> daquele alvo.</p></div>
-      <div class="stored-definition"><span class="eyebrow">Ideia-chave</span><h3>A ISA define o que a máquina oferece ao software</h3><p>Ela especifica o vocabulário arquitetural visível ao software de baixo nível: instruções, registradores, formatos de instrução, dados e formas de acesso à memória.</p></div>
-      <div class="concept-grid"><article class="concept-card"><p class="eyebrow">O contrato define</p><h3>Recursos visíveis ao software</h3><div class="concept-pair"><div class="concept-item"><strong>Instruções</strong><p>Operações como somar, comparar, mover dados e desviar a execução.</p></div><div class="concept-item"><strong>Registradores</strong><p>Quais registradores podem ser usados e como são identificados.</p></div><div class="concept-item"><strong>Formatos e operandos</strong><p>Como uma instrução representa a operação e os valores envolvidos.</p></div><div class="concept-item"><strong>Acesso à memória</strong><p>Como instruções podem localizar e manipular dados armazenados.</p></div></div></article><article class="concept-card"><p class="eyebrow">Uma distinção importante</p><h3>A ISA não é o processador inteiro</h3><div class="concept-pair"><div class="concept-item"><strong>Mesma ISA, organizações diferentes</strong><p>Dois processadores podem executar a mesma ISA e ter caches, pipelines, frequências e números de núcleos diferentes.</p></div><div class="concept-item"><strong>Arquitetura × organização</strong><p>A ISA pertence à arquitetura visível ao software; a organização descreve como esse contrato é implementado internamente.</p></div></div></article></div>
-      <div class="precision-note"><strong>Em uma frase:</strong> a ISA diz o que a máquina oferece ao software; a organização diz como o processador realiza isso.</div>
-      <div class="stored-flow" style="margin-top:28px"><div class="stored-node"><small>1 · Fonte</small><strong>Código-fonte</strong><span>Comportamento desejado.</span></div><div class="stored-arrow">→</div><div class="stored-node memory"><small>2 · Tradução</small><strong>Compilador + target</strong><span>Escolhe uma representação válida.</span></div><div class="stored-arrow">→</div><div class="stored-node cpu"><small>3 · Contrato</small><strong>ISA do alvo</strong><span>Limita as instruções e recursos que podem ser usados.</span></div></div>
-    </div></section>
+        <div class="big-idea"><strong>O que o experimento mostrou:</strong> o código que escrevemos não é o código que a CPU executa. Entre essas duas representações existe uma etapa de tradução.</div>
+      </div>
+    </section>
 
-    <section class="section" id="engenharia"><div class="container"><div class="section-heading"><p class="eyebrow">Engenharia de Software</p><h2>A arquitetura-alvo afeta mais do que o compilador</h2><p>Uma decisão tomada no build se propaga para distribuição, testes, documentação, manutenção e suporte.</p></div>
-      <div class="project-flow"><article class="project-step"><strong>Compilação</strong><small>produzir o artefato</small><div class="resource-tags"><span>target</span><span>compilador</span></div></article><article class="project-step"><strong>Distribuição</strong><small>entregar o arquivo correto</small><div class="resource-tags"><span>x64</span><span>ARM64</span></div></article><article class="project-step"><strong>Compatibilidade</strong><small>combinar plataforma</small><div class="resource-tags"><span>SO</span><span>ABI</span></div></article><article class="project-step"><strong>Teste</strong><small>validar combinações</small><div class="resource-tags"><span>CI</span><span>matriz</span></div></article><article class="project-step"><strong>Suporte</strong><small>manter as versões</small><div class="resource-tags"><span>docs</span><span>release</span></div></article></div>
-      <div class="precision-note"><strong>A ISA é necessária, mas não descreve toda a plataforma.</strong> Windows x86-64 e Linux x86-64 compartilham a arquitetura do processador, mas ainda diferem em sistema operacional, ABI, bibliotecas e convenções de execução.</div>
-    </div></section>
+    <section class="section" id="alvo">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Segunda ideia</p>
+          <h2>O compilador precisa saber para qual máquina está produzindo código</h2>
+          <p>Ao instalar um programa, talvez você já tenha visto opções como <strong>x64</strong> e <strong>ARM64</strong>. Esses nomes não estão ali por acaso: um programa nativo precisa ser preparado para um tipo de processador capaz de entender as instruções que foram geradas.</p>
+        </div>
 
-    <section class="section section-soft" id="atividade-3"><div class="container"><div class="section-heading"><p class="eyebrow">Atividade aplicada</p><h2>Prepare uma aplicação para diferentes usuários</h2><p>Considere uma aplicação nativa com uma única base de código que precisa ser distribuída para usuários com sistemas e arquiteturas diferentes.</p></div>
-      <div class="record-table-wrap"><table class="record-table"><thead><tr><th>Sistema operacional</th><th>Arquitetura</th><th>Artefato previsto</th><th>Usuário atendido</th></tr></thead><tbody><tr><td>Windows</td><td>x86-64</td><td>________________</td><td>________________</td></tr><tr><td>Windows</td><td>ARM64</td><td>________________</td><td>________________</td></tr><tr><td>Linux</td><td>x86-64</td><td>________________</td><td>________________</td></tr><tr><td>Linux</td><td>ARM64</td><td>________________</td><td>________________</td></tr></tbody></table></div>
-      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Pesquisa aplicada</span><h3>Explique as decisões da equipe</h3></div><span class="inquiry-tag">Atividade 3</span></div><div class="inquiry-body"><ol class="prompt-list"><li>Quais informações do ambiente do usuário precisam ser conhecidas antes de gerar um executável?</li><li>Por que não basta entregar o mesmo binário para todas as combinações?</li><li>Onde entram compilador, target e ISA no processo de build?</li><li>O que pode ocorrer se só existir uma versão x86-64 e o usuário estiver em ARM64?</li><li>Como uma matriz de builds em CI pode automatizar essas combinações?</li><li>Que informações devem aparecer na página de download para evitar que o usuário escolha o arquivo errado?</li></ol><div class="worksheet"><textarea data-save="atividade3" placeholder="Respostas e justificativas...&#10;&#10;Síntese: por que uma única base de código pode gerar vários artefatos?"></textarea><span class="save-note">Inclua as fontes consultadas na entrega.</span></div></div></article>
-      <div class="bridge-question"><strong>Entrega:</strong> respostas às questões, matriz de distribuição e uma síntese explicando por que uma equipe pode manter uma única base de código e ainda distribuir vários artefatos.</div>
-    </div></section>
+        <div class="two-col">
+          <article class="card">
+            <h3>O mesmo programa pode precisar de versões diferentes</h3>
+            <p>Imagine que uma equipe desenvolveu uma única aplicação. O código-fonte pode ser praticamente o mesmo, mas na hora de distribuir o programa podem existir arquivos diferentes para computadores <strong>x86-64</strong> e <strong>ARM64</strong>.</p>
+            <p>Isso acontece porque o código que escrevemos ainda não é o conjunto de instruções executado pelo processador. Em algum momento, a tradução precisa considerar <strong>qual máquina receberá o programa</strong>.</p>
+          </article>
+          <article class="card">
+            <h3>Qual pergunta o compilador precisa responder?</h3>
+            <p>Considere novamente uma função simples:</p>
+            <div class="translation-example">
+              <code class="translation-code">int dobro(int x) {
+    return x * 2;
+}</code>
+              <p>Para nós, a intenção é apenas receber um número, calcular seu dobro e devolver o resultado. Para o compilador ainda falta uma informação: <strong>para qual arquitetura devo gerar as instruções?</strong></p>
+            </div>
+          </article>
+        </div>
 
-    <section class="section" id="fechamento"><div class="container"><div class="section-heading"><p class="eyebrow">Checklist de saída</p><h2>O que você precisa conseguir explicar</h2></div><div class="checklist"><div class="check-item">Por que o código-fonte não é executado diretamente pela CPU.</div><div class="check-item">Por que o compilador precisa conhecer a arquitetura-alvo.</div><div class="check-item">O que significa target em uma compilação.</div><div class="check-item">A ISA como contrato entre software e processador.</div><div class="check-item">Por que x86-64 e ARM64 podem gerar Assembly diferente para o mesmo código.</div><div class="check-item">Por que mesma ISA não garante o mesmo binário em sistemas operacionais diferentes.</div><div class="check-item">Como usar o Compiler Explorer para formular uma hipótese e observar evidências.</div><div class="check-item">Como arquitetura e plataforma afetam build, distribuição, testes e suporte.</div></div></div></section>
+        <div class="big-idea"><strong>Essa informação é o target, ou alvo da compilação.</strong> Nesta parte da aula vamos isolar uma dimensão do alvo: a <strong>arquitetura do processador</strong>. Assim podemos comparar o que acontece quando o mesmo código é traduzido para x86-64 e para ARM64.</div>
+
+        <div class="pipeline" aria-label="Fluxo simplificado da compilação">
+          <article class="pipe-node"><small>1 · Fonte</small><strong>Código-fonte</strong><p>É o programa que escrevemos usando as abstrações da linguagem.</p></article>
+          <article class="pipe-node"><small>2 · Tradução</small><strong>Compilador</strong><p>Analisa o código e gera uma representação adequada ao destino escolhido.</p></article>
+          <article class="pipe-node"><small>3 · Destino</small><strong>Arquitetura-alvo</strong><p>Responde para qual família de processadores estamos produzindo código.</p></article>
+          <article class="pipe-node"><small>4 · Resultado</small><strong>Instruções para o alvo</strong><p>O resultado usa instruções compatíveis com a arquitetura escolhida.</p></article>
+        </div>
+
+        <div class="target-grid">
+          <article class="target-card"><span>Target A</span><h3>x86-64</h3><p>Arquitetura amplamente usada em desktops, notebooks e servidores com processadores Intel e AMD.</p></article>
+          <article class="target-card"><span>Target B</span><h3>ARM64 / AArch64</h3><p>Arquitetura comum em smartphones, sistemas embarcados, computadores e servidores modernos.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Build target</h3><p>Um projeto pode gerar artefatos diferentes a partir do mesmo repositório porque cada build pode mirar um alvo diferente.</p></article>
+        </div>
+
+        <article class="activity" id="atividade-2">
+          <div class="activity-head">
+            <div><span class="activity-kicker">Experimento 2</span><h3>Valide o que muda quando trocamos o alvo</h3></div>
+            <span class="activity-tag">x86-64 × ARM64</span>
+          </div>
+          <div class="activity-body">
+            <p class="activity-goal"><strong>Objetivo:</strong> usar o Compiler Explorer para confirmar uma ideia já apresentada: o código-fonte e o comportamento esperado permanecem iguais, mas a arquitetura pode usar registradores e instruções diferentes.</p>
+
+            <div class="two-col">
+              <div class="code-card">
+                <div class="code-head"><span>C</span><span>mesmo nas duas compilações</span></div>
+                <pre><code>int dobro(int x) {
+    return x * 2;
+}</code></pre>
+              </div>
+              <article class="card">
+                <h3>Antes de abrir a ferramenta</h3>
+                <p><strong>Registradores</strong> são pequenos espaços internos usados pelo processador para manter valores durante a execução. Os nomes mudam entre arquiteturas: em x86-64 podem aparecer <code>eax</code>, <code>edi</code> ou <code>rax</code>; em ARM64 são comuns nomes como <code>w0</code>, <code>w1</code>, <code>x0</code> e <code>x1</code>.</p>
+                <p><strong>Instruções</strong> são operações disponíveis naquela arquitetura. No Assembly, normalmente aparecem no início da linha, como <code>lea</code>, <code>add</code>, <code>lsl</code> ou <code>ret</code>.</p>
+                <p>Não precisamos compreender cada instrução. Nesta atividade, vamos apenas <strong>localizar essas evidências e comparar as duas saídas</strong>.</p>
+              </article>
+            </div>
+
+            <div class="activity-table-wrap">
+              <table class="activity-table">
+                <thead><tr><th>O que vamos validar</th><th>x86-64 · exemplos comuns</th><th>ARM64 · exemplos comuns</th><th>O que isso mostra?</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Registradores</strong><br><small>Nomes usados para trabalhar com valores dentro do processador.</small></td><td><code>eax</code>, <code>edi</code>, <code>rax</code></td><td><code>w0</code>, <code>w1</code>, <code>x0</code>, <code>x1</code></td><td>Cada arquitetura expõe seus próprios registradores.</td></tr>
+                  <tr><td><strong>Instruções</strong><br><small>Operações disponíveis para realizar o trabalho.</small></td><td>Podem aparecer <code>lea</code>, <code>add</code>, <code>ret</code></td><td>Podem aparecer <code>lsl</code>, <code>add</code>, <code>ret</code></td><td>O vocabulário de máquina pode mudar entre os alvos.</td></tr>
+                  <tr><td><strong>Código-fonte</strong></td><td><code>return x * 2;</code></td><td><code>return x * 2;</code></td><td>O programa que escrevemos permanece igual.</td></tr>
+                  <tr><td><strong>Comportamento esperado</strong></td><td>devolver <code>2 × x</code></td><td>devolver <code>2 × x</code></td><td>Formas diferentes podem implementar o mesmo comportamento.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <h3 style="margin-top:1.5rem">Agora valide no Compiler Explorer</h3>
+            <ol class="activity-steps">
+              <li>Compile a função para <strong>x86-64</strong> e use a opção <code>-O2</code>.</li>
+              <li>Procure na saída nomes de registradores e instruções semelhantes aos exemplos da tabela. Não é necessário que a saída seja idêntica.</li>
+              <li>Abra uma segunda saída usando um compilador <strong>ARM64/AArch64</strong>, também com <code>-O2</code>.</li>
+              <li>Localize registradores e instruções da segunda arquitetura.</li>
+              <li>Confirme que o código C continua exatamente o mesmo nas duas compilações.</li>
+            </ol>
+            <a class="tool-link" href="https://godbolt.org/" target="_blank" rel="noopener noreferrer">Abrir Compiler Explorer ↗</a>
+
+            <div class="activity-questions">
+              <div>Você encontrou nomes de registradores diferentes nas duas saídas?</div>
+              <div>As instruções geradas foram exatamente as mesmas?</div>
+              <div>Mesmo com diferenças no Assembly, o que a função continua fazendo?</div>
+            </div>
+            <div class="precision-note"><strong>A saída pode variar.</strong> Compiladores e versões diferentes podem escolher instruções diferentes mesmo para a mesma arquitetura. O que estamos validando é o padrão geral: ao trocar a arquitetura-alvo, o compilador passa a trabalhar com os recursos disponíveis naquele alvo, enquanto o comportamento pretendido pelo código permanece o mesmo.</div>
+          </div>
+        </article>
+
+        <div class="big-idea"><strong>O que mudou?</strong> Não foi o algoritmo. Mudou o vocabulário de máquina disponível para realizar esse algoritmo. Agora temos evidência suficiente para formalizar a ideia de ISA.</div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="isa">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Formalizando o que observamos</p>
+          <h2>A ISA funciona como um contrato entre software e processador</h2>
+          <p>Quando o compilador produz código para um alvo como <strong>x86-64</strong> ou <strong>ARM64</strong>, ele não pode escolher qualquer operação. O resultado precisa respeitar a <strong>Instruction Set Architecture (ISA)</strong>: a interface arquitetural que define quais instruções e recursos o software pode usar ao conversar com o processador.</p>
+        </div>
+
+        <div class="big-idea"><strong>Pense na ISA como um acordo entre os dois lados:</strong> o software produz instruções seguindo uma especificação conhecida, e o processador implementa essa especificação para conseguir interpretá-las e executá-las.</div>
+
+        <div class="isa-grid">
+          <article class="contract-card">
+            <h3>O que esse contrato define?</h3>
+            <div class="contract-list">
+              <div><strong>Instruções disponíveis</strong><span>Quais operações podem ser representadas, como somar valores, comparar, desviar a execução, mover dados e acessar memória.<br><em>Exemplos:</em> em x86-64 podem aparecer <code>add</code>, <code>cmp</code> e <code>mov</code>; em ARM64, <code>add</code>, <code>cmp</code>, <code>ldr</code> e <code>str</code>.</span></div>
+              <div><strong>Registradores visíveis ao software</strong><span>Quais registradores podem ser usados pelas instruções e como eles são identificados. Foi isso que apareceu no Compiler Explorer com nomes diferentes em x86-64 e ARM64.<br><em>Exemplos:</em> <code>eax</code>, <code>rax</code> e <code>edi</code> em x86-64; <code>w0</code>, <code>x0</code> e <code>w1</code> em ARM64.</span></div>
+              <div><strong>Formato das instruções</strong><span>Como os bits de uma instrução identificam a operação e seus operandos. O Assembly é uma forma legível de representar essas instruções.<br><em>Exemplos:</em> <code>add eax, edi</code> em x86-64 e <code>add w0, w0, w1</code> em ARM64 mostram, de forma legível, uma operação e os registradores envolvidos.</span></div>
+              <div><strong>Dados e operandos</strong><span>Quais tamanhos e representações de dados podem ser manipulados e como as instruções recebem os valores com os quais irão trabalhar.<br><em>Exemplos:</em> em x86-64, <code>eax</code> representa a parte de 32 bits e <code>rax</code> a de 64 bits; em ARM64, <code>w0</code> trabalha com 32 bits e <code>x0</code> com 64 bits.</span></div>
+              <div><strong>Acesso à memória</strong><span>Como as instruções podem localizar e acessar dados armazenados na memória.<br><em>Exemplos:</em> em x86-64 pode aparecer <code>mov eax, [rbx]</code>; em ARM64, <code>ldr w0, [x1]</code>. Nos dois casos, a instrução está buscando um valor armazenado na memória.</span></div>
+            </div>
+          </article>
+          <aside class="not-now">
+            <p class="eyebrow">Uma distinção importante</p>
+            <h3>A ISA não é o processador inteiro</h3>
+            <p>Dois processadores podem implementar a mesma ISA e ainda serem bastante diferentes por dentro.</p>
+            <ul>
+              <li>Podem ter caches de tamanhos e organizações diferentes.</li>
+              <li>Podem usar pipelines e unidades de execução diferentes.</li>
+              <li>Podem ter frequências e quantidades de núcleos diferentes.</li>
+              <li>A implementação interna pode mudar sem alterar o contrato visto pelo software.</li>
+            </ul>
+          </aside>
+        </div>
+
+        <div class="precision-note"><strong>Arquitetura × organização:</strong> a ISA faz parte da arquitetura visível ao software. A organização descreve como o processador implementa esse contrato internamente. Em uma frase: <strong>a ISA diz o que a máquina oferece ao software; a organização diz como o processador realiza isso.</strong></div>
+
+        <div class="two-col" style="margin-top:24px">
+          <div class="code-card">
+            <div class="code-head"><span>C · mesmo código-fonte</span><span>retomando o experimento</span></div>
+            <pre><code>int dobro(int x) {
+    return x * 2;
+}</code></pre>
+            <div class="code-caption">O comportamento desejado continua sendo receber <code>x</code>, calcular seu dobro e devolver o resultado.</div>
+          </div>
+          <article class="card">
+            <h3>Por que o Assembly mudou?</h3>
+            <p>Ao trocar o <strong>target</strong>, o compilador passa a trabalhar com outro contrato arquitetural. Em x86-64 ele escolhe registradores e instruções definidos por essa ISA; em ARM64 ele precisa escolher recursos válidos para a ISA ARM64.</p>
+            <p>Por isso o código C pode permanecer igual enquanto a representação de máquina muda. O que muda é a forma de realizar o comportamento dentro das regras da arquitetura escolhida.</p>
+          </article>
+        </div>
+
+        <div class="pipeline" aria-label="Relação entre código-fonte, compilador, ISA e binário">
+          <article class="pipe-node"><small>1 · Fonte</small><strong>Código-fonte</strong><p>Expressa o comportamento desejado usando abstrações da linguagem.</p></article>
+          <article class="pipe-node"><small>2 · Tradução</small><strong>Compilador</strong><p>Recebe o target e escolhe como representar o programa.</p></article>
+          <article class="pipe-node"><small>3 · Contrato</small><strong>ISA do alvo</strong><p>Define quais instruções, registradores e formas de acesso podem ser usados.</p></article>
+          <article class="pipe-node"><small>4 · Artefato</small><strong>Binário</strong><p>Contém instruções produzidas para aquela arquitetura.</p></article>
+        </div>
+
+        <div class="compare-grid">
+          <article class="target-card"><span>Engenharia de Software</span><h3>Compilação</h3><p>O código-fonte pode ser o mesmo, mas o processo de <strong>build</strong> precisa considerar o ambiente para o qual o software será produzido. A equipe pode precisar definir arquitetura-alvo, sistema operacional, compilador, opções de compilação e dependências compatíveis.</p><p><strong>Decisão de engenharia:</strong> estabelecer quais plataformas o projeto suporta oficialmente e como cada artefato será construído.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Distribuição</h3><p>Depois do build, o artefato correto precisa chegar ao usuário correto. Isso afeta nomes de arquivos, instaladores, pacotes, páginas de download, documentação e o processo de release.</p><p>Uma pipeline de CI/CD pode transformar a mesma base de código em vários artefatos, como <code>app-windows-x64.exe</code> e <code>app-linux-arm64</code>.</p><p><strong>Decisão de engenharia:</strong> organizar releases para que cada usuário consiga identificar claramente a versão adequada ao seu ambiente.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Compatibilidade</h3><p>Gerar código para a arquitetura correta é necessário, mas não é suficiente. Um programa nativo também pode depender do sistema operacional, da ABI, de bibliotecas e de runtimes específicos.</p><p>Por isso, <strong>Windows x86-64 ≠ Linux x86-64</strong> e <strong>Windows x86-64 ≠ Windows ARM64</strong>: em cada caso alguma dimensão importante da plataforma mudou.</p><p><strong>Decisão de engenharia:</strong> declarar e testar as combinações de plataforma que realmente serão suportadas.</p></article>
+          <article class="target-card"><span>Engenharia de Software</span><h3>Teste e suporte</h3><p>Cada plataforma adicional aumenta o conjunto de situações que a equipe precisa construir, testar e manter. Isso pode exigir ambientes de CI diferentes, testes automatizados por plataforma, tratamento de bugs específicos, documentação e suporte ao usuário.</p><p>Suportar Windows e Linux em x86-64 e ARM64, por exemplo, não significa apenas produzir quatro arquivos: significa manter confiança sobre quatro combinações de execução.</p><p><strong>Decisão de engenharia:</strong> equilibrar alcance do produto com custo de manutenção, testes e suporte.</p></article>
+        </div>
+
+        <div class="big-idea"><strong>Visão de Engenharia de Software:</strong> a arquitetura-alvo não afeta apenas o compilador. Uma decisão tomada no build se propaga para automação, testes, distribuição, documentação, manutenção e suporte ao usuário.</div>
+
+        <div class="big-idea"><strong>A ISA é necessária, mas ainda não descreve toda a plataforma.</strong> Dois computadores podem compartilhar a mesma ISA e ainda usar sistemas operacionais e convenções binárias diferentes. É por isso que, na sequência, vamos ampliar a discussão de arquitetura para <strong>compatibilidade de software</strong>.</div>
+
+        <article class="activity" id="atividade-3">
+          <div class="activity-head">
+            <div><span class="activity-kicker">Atividade 3</span><h3>Pesquisa aplicada: preparando uma aplicação para diferentes usuários</h3></div>
+            <span class="activity-tag">pesquisa · Engenharia de Software</span>
+          </div>
+          <div class="activity-body">
+            <p class="activity-goal"><strong>Objetivo:</strong> investigar como arquitetura, sistema operacional, build e distribuição influenciam a entrega e a compatibilidade de uma aplicação.</p>
+            <div class="precision-note" style="margin-top:0"><strong>Cenário:</strong> sua equipe desenvolveu uma aplicação nativa e precisa publicá-la para diferentes usuários. O código-fonte é o mesmo, mas os usuários utilizam máquinas e sistemas diferentes. A equipe precisa decidir quais artefatos gerar, como organizá-los e como orientar quem fará o download.</div>
+
+            <ol class="activity-steps">
+              <li><strong>Quais informações sobre o ambiente do usuário precisam ser conhecidas antes de gerar um executável?</strong> Pesquise e explique por que a arquitetura do processador e o sistema operacional são relevantes.</li>
+              <li><strong>Considere quatro usuários: Windows x86-64, Windows ARM64, Linux x86-64 e Linux ARM64. Quantos artefatos sua equipe deveria prever inicialmente?</strong> Monte uma matriz de distribuição e justifique sua resposta.
+                <div class="activity-table-wrap">
+                  <table class="activity-table">
+                    <thead><tr><th>Sistema operacional</th><th>Arquitetura</th><th>Artefato previsto</th><th>Usuário atendido</th></tr></thead>
+                  </table>
+                </div>
+              </li>
+              <li><strong>Por que não basta simplesmente entregar o código-fonte para todos?</strong> Explique a diferença entre o código mantido no repositório da equipe e o artefato entregue ao usuário.</li>
+              <li><strong>Onde entra o compilador no processo de build?</strong> Explique como o mesmo código-fonte pode ser usado para produzir artefatos destinados a arquiteturas diferentes. Relacione sua resposta aos conceitos de <em>target</em> e ISA.</li>
+              <li><strong>O que pode acontecer se a equipe publicar apenas uma versão x86-64 e um usuário utilizar ARM64?</strong> Pesquise as possíveis consequências e explique por que isso se torna um problema de compatibilidade e suporte.</li>
+              <li><strong>Como um projeto real pode automatizar essas diferentes compilações?</strong> Pesquise o conceito de <strong>matriz de builds</strong> em integração contínua e explique como combinações de sistema operacional e arquitetura poderiam ser geradas ou testadas automaticamente.</li>
+              <li><strong>Que informações você colocaria na página de download ou na documentação para evitar que o usuário escolha o arquivo errado?</strong> Proponha uma forma de nomear os artefatos e de orientar o usuário sobre qual versão utilizar.</li>
+            </ol>
+
+            <div class="big-idea"><strong>Entrega:</strong> produza um documento com as respostas às sete questões, a matriz de distribuição e as fontes consultadas. Ao final, sintetize em um parágrafo por que uma equipe pode manter uma única base de código e, ainda assim, distribuir vários artefatos diferentes.</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="fechamento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Checklist de saída</p>
+          <h2>O que precisa estar claro antes de encerrar</h2>
+          <p>O objetivo não é sair sabendo Assembly. É conseguir explicar a relação entre código, compilação, arquitetura e compatibilidade.</p>
+        </div>
+        <div class="checklist">
+          <div class="check-item">Explicar por que o código-fonte não é executado diretamente pela CPU.</div>
+          <div class="check-item">Explicar por que um compilador precisa conhecer a arquitetura-alvo.</div>
+          <div class="check-item">Descrever a ISA como um contrato visível ao software de baixo nível.</div>
+          <div class="check-item">Interpretar a comparação entre x86-64 e ARM64 sem decorar Assembly.</div>
+          <div class="check-item">Reconhecer o significado prático de rótulos como x86, x64 e ARM64.</div>
+          <div class="check-item">Explicar por que mesma ISA não garante automaticamente o mesmo binário em sistemas operacionais diferentes.</div>
+          <div class="check-item">Usar o Compiler Explorer para formular uma hipótese, observar evidências e registrar uma conclusão.</div>
+          <div class="check-item">Relacionar essas diferenças a builds e distribuição multiplataforma em Engenharia de Software.</div>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="site-footer"><div class="container footer-grid"><div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Engenharia de Software · Aula 04</p></div><a href="#inicio">Voltar ao início ↑</a></div></footer>
-  <script>
-    const progress=document.getElementById('progress'),anchors=[...document.querySelectorAll('.main-nav a[href^="#"]')],sections=anchors.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean);
-    function updateProgress(){const max=document.documentElement.scrollHeight-window.innerHeight,pct=max>0?(window.scrollY/max)*100:0;if(progress)progress.style.width=`${Math.min(100,Math.max(0,pct))}%`}
-    function updateActiveLink(){const marker=window.scrollY+130;let active=sections[0]?.id;sections.forEach(s=>{if(s.offsetTop<=marker)active=s.id});anchors.forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${active}`))}
-    document.querySelectorAll('[data-save]').forEach(f=>{const k=`arquitetura:aula04:${f.dataset.save}`,v=localStorage.getItem(k);if(v!==null)f.value=v;['input','change'].forEach(e=>f.addEventListener(e,()=>localStorage.setItem(k,f.value)))})
-    updateProgress();updateActiveLink();window.addEventListener('scroll',()=>{updateProgress();updateActiveLink()},{passive:true});
-  </script>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 04 · código, arquitetura-alvo e compatibilidade</p></div>
+      <a href="#inicio">Voltar ao início ↑</a>
+    </div>
+  </footer>
 </body>
 </html>
