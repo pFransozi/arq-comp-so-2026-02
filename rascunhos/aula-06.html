@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rascunho da Aula 06 de Arquitetura de Computadores e Sistemas Operacionais: hierarquia de memória, localidade, armazenamento e impacto do acesso aos dados no desempenho do software.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#101a24">
+  <title>Rascunho · Aula 06 — O custo de acessar e movimentar dados</title>
+  <link rel="stylesheet" href="../styles.css">
+  <script defer src="../script.js"></script>
+
+  <style>
+    :root{--ink:#172033;--muted:#647087;--line:#dfe5ef;--soft:#f4f7fb;--paper:#fff;--navy:#0f172a;--blue:#176b87;--blue-soft:#e8f5f8;--violet:#8a5a35;--violet-soft:#f8efe8;--teal:#2c9277;--teal-soft:#e9f7f2;--amber:#b66a07;--amber-soft:#fff7e8;--radius:22px;--shadow:0 18px 48px rgba(35,50,78,.09);--content:1160px}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}button,input,textarea,select{font:inherit}a{color:inherit}h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}h1{font-size:clamp(2.7rem,6vw,5.8rem);max-width:12ch;margin-bottom:1.2rem}h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}p{color:var(--muted)}code,pre{font-family:"SFMono-Regular",Consolas,monospace}.container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}.section{padding:88px 0;scroll-margin-top:88px}.section-soft{background:var(--soft)}.section-dark{background:var(--navy);color:#fff}.section-dark p{color:#b9c3d7}.eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}
+    .hero{position:relative;overflow:hidden;padding:92px 0 76px;background:linear-gradient(180deg,#fbfcff 0%,#fff 100%)}.hero-grid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr);align-items:end;gap:52px}.hero-lead{font-size:clamp(1.1rem,2vw,1.35rem);max-width:760px}.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:2rem}.button{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.8rem 1.15rem;border-radius:13px;text-decoration:none;font-weight:800;border:1px solid transparent}.button-primary{background:var(--navy);color:#fff}.button-secondary{background:#fff;border-color:var(--line)}.guiding-card{background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow)}.guiding-card span{display:block;color:var(--blue);font-size:.75rem;text-transform:uppercase;letter-spacing:.12em;font-weight:850;margin-bottom:.8rem}.guiding-card blockquote{margin:0;font-size:1.2rem;line-height:1.45;font-weight:760}
+    .section-heading{max-width:840px;margin-bottom:2.4rem}.overview-grid{display:grid;grid-template-columns:1.25fr .75fr;gap:22px}.card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:1.5rem;box-shadow:0 12px 32px rgba(35,50,78,.055)}.topics-card{grid-row:span 2}.topic-list{display:grid;grid-template-columns:repeat(2,1fr);gap:.75rem;margin-top:1.2rem}.topic-list div{padding:.9rem 1rem;border-radius:14px;background:var(--soft);font-weight:750}.competency{border-left:4px solid var(--blue)}.competency.c6{border-left-color:var(--violet)}.skill{display:grid;grid-template-columns:58px 1fr;gap:.7rem;align-items:start;margin-top:.9rem}.skill strong{display:grid;place-items:center;min-height:38px;border-radius:11px;background:var(--blue-soft);color:var(--blue);font-size:.82rem}.c6 .skill strong{background:var(--violet-soft);color:var(--violet)}.skill span{color:var(--muted)}
+    .warmup{display:grid;grid-template-columns:.75fr 1.25fr;gap:28px;background:linear-gradient(135deg,var(--navy),#173047);border-radius:28px;padding:2rem;color:#fff}.warmup p{color:#cbd5e1}.question-cloud{display:grid;gap:.75rem}.question-cloud div{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);padding:1rem 1.1rem;border-radius:15px}.question-cloud strong,.question-cloud span{display:block}.question-cloud strong{margin-bottom:.2rem}
+    .function-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.function-card{padding:1.35rem;border-radius:19px;border:1px solid var(--line);background:#fff}.function-card span{display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:38px;padding:0 .7rem;border-radius:12px;background:var(--blue-soft);color:var(--blue);font-weight:900}.function-card h3{margin-top:1.1rem}.function-card p{margin-bottom:0}.concept-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:28px}.concept-card{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}.concept-card h3{margin-bottom:1rem}.concept-pair{display:grid;gap:12px}.concept-item{padding:14px 15px;border-radius:14px;background:var(--soft)}.concept-item strong{display:block;margin-bottom:.25rem}.concept-item p{margin:0}.bridge-question{margin:28px 0 0;padding:22px 24px;border-radius:18px;background:var(--teal-soft);border:1px solid rgba(44,146,119,.22);font-size:1.08rem;font-weight:750}.precision-note{margin-top:22px;padding:18px 20px;border-left:4px solid var(--amber);background:var(--amber-soft);border-radius:0 14px 14px 0}
+    .execution-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:26px}.execution-step{position:relative;padding:20px;border:1px solid var(--line);border-radius:18px;background:#fff}.execution-step b{display:inline-grid;place-items:center;width:32px;height:32px;border-radius:10px;background:var(--blue-soft);color:var(--blue);margin-bottom:12px}.execution-step h3{margin:0 0 8px}.execution-step p{margin-bottom:0}
+    .inquiry{margin:34px 0;border:1px solid #cbdde4;background:linear-gradient(135deg,#f3fafc,#fff);border-radius:24px;overflow:hidden;box-shadow:0 15px 36px rgba(23,107,135,.07)}.inquiry-head{padding:1.25rem 1.4rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;border-bottom:1px solid #d9e8ed}.inquiry-kicker{display:inline-flex;align-items:center;gap:.45rem;color:var(--blue);font-size:.72rem;text-transform:uppercase;letter-spacing:.11em;font-weight:850}.inquiry-kicker:before{content:"?";display:grid;place-items:center;width:26px;height:26px;border-radius:50%;color:#fff;background:var(--blue)}.inquiry-tag{white-space:nowrap;padding:.45rem .7rem;border-radius:999px;background:#fff;border:1px solid var(--line);color:var(--muted);font-size:.78rem;font-weight:800}.inquiry-body{padding:1.4rem;display:grid;grid-template-columns:.9fr 1.1fr;gap:28px}.prompt-list{margin:0;padding-left:1.25rem;color:var(--muted)}.prompt-list li+li{margin-top:.65rem}
+    .trace-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:20px;background:#fff}.trace-table{width:100%;min-width:760px;border-collapse:collapse}.trace-table th,.trace-table td{padding:12px;border:1px solid var(--line);text-align:left}.trace-table thead th{background:var(--soft);font-size:.8rem}
+    .code-frame{margin:18px 0 0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#111827}.code-frame pre{margin:0;padding:18px 20px;overflow:auto;color:#e5e7eb;font-size:.92rem;line-height:1.6}.code-caption{padding:9px 12px;background:var(--soft);color:var(--muted);font-size:.8rem;font-weight:700}
+    .checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.check-item{display:flex;gap:12px;padding:16px;border:1px solid var(--line);border-radius:15px;background:#fff}.check-item:before{content:"□";color:var(--teal);font-size:1.3rem;font-weight:900}
+    @media(max-width:960px){.hero-grid,.overview-grid,.concept-grid{grid-template-columns:1fr}.function-grid{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:640px){.section{padding:68px 0}.function-grid,.checklist,.execution-preview{grid-template-columns:1fr}.topic-list{grid-template-columns:1fr}.warmup,.inquiry-body{grid-template-columns:1fr}}
+  </style>
+
+  <link rel="stylesheet" href="../aula-03-clean.css">
+  <style>
+    body.aula03-clean main#conteudo p,
+    body.aula03-clean main#conteudo li,
+    body.aula03-clean main#conteudo .skill span,
+    body.aula03-clean main#conteudo .check-item,
+    body.aula03-clean main#conteudo .function-card p,
+    body.aula03-clean main#conteudo .concept-item p,
+    body.aula03-clean main#conteudo .execution-step p {font-size:1rem}
+    body.aula03-clean main#conteudo .trace-table th,
+    body.aula03-clean main#conteudo .trace-table td {font-size:.95rem}
+    body.aula03-clean .code-frame{border-radius:8px;box-shadow:none}
+    body.aula03-clean .code-caption{background:var(--clean-surface);border-bottom:1px solid var(--clean-line)}
+  </style>
+</head>
+<body class="lesson-page arch-page aula03-clean">
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="../index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
+        <span class="brand-mark" aria-hidden="true">SO</span>
+        <span><strong>Arquitetura &amp; SO</strong><small>Aula 06</small></span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+      <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
+        <a href="../index.html">Página principal</a>
+        <a href="../curso.html">Visão geral</a>
+        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <section class="hero" id="inicio">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Aula 06 · Memória, armazenamento e desempenho</p>
+          <h1>O custo de acessar e movimentar dados</h1>
+          <p class="hero-lead">Na aula anterior analisamos o custo de processamento. Agora vamos acompanhar os dados: <strong>onde eles ficam, como chegam ao processador e como o padrão de acesso aparece no desempenho do software.</strong></p>
+          <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#experimento">Ir ao experimento</a></div>
+        </div>
+        <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Como a forma de organizar, acessar e persistir dados pode alterar o tempo de execução de um programa?</blockquote></aside>
+      </div>
+    </section>
+
+    <section class="section" id="visao">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Visão da aula</p>
+          <h2>Dados também têm um custo de execução</h2>
+          <p>Vamos relacionar a hierarquia de memória e o armazenamento a decisões comuns de Engenharia de Software: percorrer dados, reutilizar informações, processar em partes e persistir resultados.</p>
+        </div>
+        <div class="overview-grid">
+          <article class="card topics-card">
+            <h3>Conteúdo programático</h3>
+            <div class="topic-list">
+              <div>Hierarquia de memória</div><div>Cache e RAM</div><div>Localidade temporal</div><div>Localidade espacial</div><div>Armazenamento persistente</div><div>Latência e vazão</div><div>Acesso sequencial e aleatório</div><div>Memory-bound e I/O-bound</div>
+            </div>
+          </article>
+          <article class="card competency">
+            <h3>C3 — Analisar e selecionar tecnologias</h3>
+            <div class="skill"><strong>H10</strong><span>Comparar alternativas considerando o custo de acesso, movimentação e persistência dos dados.</span></div>
+          </article>
+          <article class="card competency c6">
+            <h3>C6 — Integrar sistemas de software</h3>
+            <div class="skill"><strong>H20</strong><span>Relacionar características da memória e do armazenamento ao comportamento observado por uma aplicação.</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="retomada">
+      <div class="container">
+        <div class="warmup">
+          <div>
+            <p class="eyebrow">Retomada da Aula 05</p>
+            <h2>Do custo de processar ao custo de acessar dados</h2>
+            <p>Recupere os pontos centrais da aula anterior e use a última pergunta para abrir o problema desta aula.</p>
+          </div>
+          <div class="question-cloud">
+            <div><strong>1 · Frequência</strong><span>Por que a frequência em GHz, isoladamente, não determina o desempenho de uma aplicação?</span></div>
+            <div><strong>2 · Trabalho</strong><span>Como uma mudança no algoritmo pode reduzir o tempo de execução sem alterar o hardware?</span></div>
+            <div><strong>3 · CPU-bound</strong><span>Que comportamento esperamos de uma carga cujo tempo é dominado pelo processamento?</span></div>
+            <div><strong>4 · Dados</strong><span>Se o processador estiver pronto para executar, mas os dados demorarem para chegar, o que passa a limitar o programa?</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="hierarquia">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">1 · Hierarquia</p>
+          <h2>Nem todo acesso aos dados tem o mesmo custo</h2>
+          <p>O computador combina diferentes tecnologias de armazenamento. Quanto mais próximo do processador, menor tende a ser o tempo de acesso e menor tende a ser a capacidade disponível.</p>
+        </div>
+        <div class="function-grid">
+          <article class="function-card"><span>01</span><h3>Registradores</h3><p>Armazenamento interno ao processador para operandos e resultados usados imediatamente.</p></article>
+          <article class="function-card"><span>02</span><h3>Cache</h3><p>Memória pequena e rápida que mantém próximos dados e instruções com alta probabilidade de reutilização.</p></article>
+          <article class="function-card"><span>03</span><h3>RAM</h3><p>Memória principal onde ficam dados e instruções utilizados pela aplicação durante a execução.</p></article>
+          <article class="function-card"><span>04</span><h3>Armazenamento</h3><p>SSD, NVMe e HDD oferecem persistência e capacidade muito maiores, com custo de acesso mais alto.</p></article>
+        </div>
+        <div class="precision-note"><strong>Onde entra ROM/flash?</strong> Memórias não voláteis aparecem especialmente no armazenamento de firmware e dados persistentes. Para o comportamento cotidiano de uma aplicação em execução, cache, RAM e armazenamento secundário formam o caminho principal que vamos observar.</div>
+      </div>
+    </section>
+
+    <section class="section" id="localidade">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">2 · Cache e localidade</p>
+          <h2>Programas tendem a reutilizar dados próximos</h2>
+          <p>A cache funciona bem quando o padrão de acesso do programa apresenta previsibilidade. Duas formas de localidade ajudam a explicar esse comportamento.</p>
+        </div>
+        <div class="concept-grid">
+          <article class="concept-card">
+            <h3>Localidade temporal</h3>
+            <div class="concept-pair">
+              <div class="concept-item"><strong>Ideia</strong><p>Um dado usado recentemente tem chance de ser usado novamente em pouco tempo.</p></div>
+              <div class="concept-item"><strong>Exemplo de software</strong><p>Uma variável acumuladora ou uma estrutura consultada várias vezes dentro do mesmo trecho do algoritmo.</p></div>
+            </div>
+          </article>
+          <article class="concept-card">
+            <h3>Localidade espacial</h3>
+            <div class="concept-pair">
+              <div class="concept-item"><strong>Ideia</strong><p>Depois de acessar uma posição, o programa frequentemente acessa posições próximas.</p></div>
+              <div class="concept-item"><strong>Exemplo de software</strong><p>Percorrer uma lista ou um vetor na ordem em que seus elementos estão armazenados.</p></div>
+            </div>
+          </article>
+        </div>
+        <p class="bridge-question">Para o engenheiro de software, a pergunta prática é: <strong>o padrão de acesso do meu código ajuda ou dificulta o aproveitamento da hierarquia de memória?</strong></p>
+      </div>
+    </section>
+
+    <section class="section" id="armazenamento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">3 · Persistência e E/S</p>
+          <h2>Quando o dado precisa ser lido ou persistido</h2>
+          <p>Ao sair da memória principal e chegar ao armazenamento persistente, o custo de movimentação ganha ainda mais importância.</p>
+        </div>
+        <div class="trace-table-wrap">
+          <table class="trace-table">
+            <thead><tr><th>Conceito</th><th>O que representa</th><th>Pergunta de Engenharia de Software</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Latência</strong></td><td>Tempo necessário para uma operação começar e produzir sua resposta.</td><td>Quantas vezes meu programa inicia operações pequenas?</td></tr>
+              <tr><td><strong>Vazão</strong></td><td>Quantidade de dados movimentada em determinado intervalo de tempo.</td><td>Meu caso depende de muitas operações pequenas ou de grandes volumes contínuos?</td></tr>
+              <tr><td><strong>Acesso sequencial</strong></td><td>Leitura ou escrita de dados em posições consecutivas.</td><td>Posso organizar o fluxo para processar blocos contíguos?</td></tr>
+              <tr><td><strong>Acesso aleatório</strong></td><td>Leitura ou escrita em posições espalhadas.</td><td>Minha estrutura exige saltos frequentes entre posições?</td></tr>
+              <tr><td><strong>Buffer</strong></td><td>Área temporária usada para acumular dados antes de transferi-los.</td><td>Posso agrupar operações sem comprometer os requisitos da aplicação?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="concept-grid">
+          <article class="concept-card"><h3>HDD</h3><p>Armazenamento magnético com partes mecânicas. O padrão de acesso influencia fortemente o custo das operações.</p></article>
+          <article class="concept-card"><h3>SSD e NVMe</h3><p>Armazenamento em estado sólido. Reduz a latência de acesso e amplia a vazão, mantendo o armazenamento persistente mais distante da CPU que a RAM.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="decisoes">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">4 · Engenharia de Software</p>
+          <h2>Decisões de código também movimentam dados</h2>
+          <p>O mesmo requisito funcional pode ser implementado com padrões muito diferentes de acesso à memória e de entrada/saída.</p>
+        </div>
+        <div class="execution-preview">
+          <article class="execution-step"><b>1</b><h3>Percorrer</h3><p>Escolher a ordem de acesso a listas, vetores, matrizes e outras estruturas.</p></article>
+          <article class="execution-step"><b>2</b><h3>Processar</h3><p>Decidir entre carregar um grande conjunto inteiro ou trabalhar em partes menores.</p></article>
+          <article class="execution-step"><b>3</b><h3>Persistir</h3><p>Agrupar escritas, organizar arquivos e dimensionar o volume de logs produzidos pela aplicação.</p></article>
+        </div>
+        <p class="bridge-question"><strong>Princípio de projeto:</strong> desempenho envolve tanto o trabalho computacional quanto a quantidade e o padrão de movimentação dos dados.</p>
+      </div>
+    </section>
+
+    <section class="section" id="perfis">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">5 · Perfil da carga</p>
+          <h2>O recurso dominante muda o comportamento do programa</h2>
+          <p>Esses perfis ajudam a formular hipóteses sobre onde o tempo está sendo gasto.</p>
+        </div>
+        <div class="execution-preview">
+          <article class="execution-step"><b>A</b><h3>CPU-bound</h3><p>O tempo é dominado pelo trabalho computacional executado pelo processador.</p></article>
+          <article class="execution-step"><b>B</b><h3>Memory-bound</h3><p>O desempenho é fortemente influenciado pelo acesso e pela movimentação de dados na hierarquia de memória.</p></article>
+          <article class="execution-step"><b>C</b><h3>I/O-bound</h3><p>O tempo depende de operações de entrada/saída, como leitura e escrita em armazenamento.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="experimento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Experimento final</p>
+          <h2>Mesmos dados, estratégias diferentes</h2>
+          <p>O objetivo é construir duas pequenas comparações: primeiro em memória; depois na persistência. Em cada etapa, formule uma hipótese antes de medir.</p>
+        </div>
+
+        <div class="inquiry">
+          <div class="inquiry-head"><span class="inquiry-kicker">Parte A · Acesso em memória</span><span class="inquiry-tag">Python</span></div>
+          <div class="inquiry-body">
+            <div>
+              <h3>Seu desafio</h3>
+              <p>Os dados abaixo representam uma matriz armazenada linearmente. Escreva duas funções que somem todos os elementos:</p>
+              <ol class="prompt-list">
+                <li><strong>Estratégia 1:</strong> percorra por linhas.</li>
+                <li><strong>Estratégia 2:</strong> percorra por colunas.</li>
+                <li>Use a fórmula <code>posição = linha * COLUNAS + coluna</code>.</li>
+                <li>As duas funções devem produzir exatamente a mesma soma.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Antes de executar</h3>
+              <ol class="prompt-list">
+                <li>As duas estratégias acessam a mesma quantidade de dados?</li>
+                <li>Qual delas acessa posições consecutivas com maior frequência?</li>
+                <li>Qual você espera que apresente menor tempo? Justifique.</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <div class="code-frame">
+          <div class="code-caption">Infraestrutura fornecida — complete as duas funções</div>
+          <pre><code>from time import perf_counter
+
+LINHAS = 1500
+COLUNAS = 1500
+
+dados = bytearray([1]) * (LINHAS * COLUNAS)
+
+
+def percorrer_por_linhas():
+    # escreva sua solução
+    pass
+
+
+def percorrer_por_colunas():
+    # escreva sua solução
+    pass
+
+
+def medir(nome, funcao):
+    inicio = perf_counter()
+    resultado = funcao()
+    fim = perf_counter()
+    print(f"{nome}: resultado={resultado} | tempo={fim - inicio:.4f}s")
+
+
+medir("Por linhas", percorrer_por_linhas)
+medir("Por colunas", percorrer_por_colunas)</code></pre>
+        </div>
+
+        <div class="inquiry">
+          <div class="inquiry-head"><span class="inquiry-kicker">Parte B · Persistência</span><span class="inquiry-tag">Python</span></div>
+          <div class="inquiry-body">
+            <div>
+              <h3>Seu desafio</h3>
+              <p>Gere resultados de texto e compare duas formas de gravá-los em arquivo:</p>
+              <ol class="prompt-list">
+                <li>gravar uma linha por vez dentro de um laço;</li>
+                <li>agrupar as linhas e realizar a escrita em bloco.</li>
+              </ol>
+              <p>Use a mesma quantidade de resultados nas duas estratégias.</p>
+            </div>
+            <div>
+              <h3>Ponto de partida</h3>
+              <div class="code-frame">
+                <pre><code>resultados = [f"{i};{i*i}\n" for i in range(200_000)]
+
+with open("saida.txt", "w", encoding="utf-8") as arquivo:
+    # implemente uma estratégia de gravação
+    pass</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="trace-table-wrap">
+          <table class="trace-table">
+            <thead><tr><th>Teste</th><th>Resultado esperado</th><th>Tempo observado</th><th>O que você concluiu?</th></tr></thead>
+            <tbody>
+              <tr><td>Percurso por linhas</td><td></td><td></td><td></td></tr>
+              <tr><td>Percurso por colunas</td><td></td><td></td><td></td></tr>
+              <tr><td>Escrita linha a linha</td><td>Mesmo conteúdo</td><td></td><td></td></tr>
+              <tr><td>Escrita em bloco</td><td>Mesmo conteúdo</td><td></td><td></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="precision-note"><strong>Leitura da evidência:</strong> o experimento roda em Python, portanto o tempo medido inclui o custo do interpretador e das bibliotecas utilizadas. Use os resultados para comparar as estratégias dentro do mesmo ambiente e conecte a diferença observada aos conceitos de localidade, latência e agrupamento de operações.</div>
+      </div>
+    </section>
+
+    <section class="section" id="fechamento">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Síntese</p>
+          <h2>O que você deve levar desta aula</h2>
+        </div>
+        <div class="checklist">
+          <div class="check-item">Consigo explicar por que registradores, cache, RAM e armazenamento apresentam custos de acesso diferentes.</div>
+          <div class="check-item">Consigo diferenciar localidade temporal e espacial.</div>
+          <div class="check-item">Consigo relacionar latência, vazão e buffers a decisões de software.</div>
+          <div class="check-item">Consigo distinguir, em nível introdutório, cargas CPU-bound, memory-bound e I/O-bound.</div>
+          <div class="check-item">Consigo formular uma hipótese antes de medir uma alternativa de implementação.</div>
+          <div class="check-item">Consigo justificar uma decisão de código com base no padrão de acesso e movimentação dos dados.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="referencias">
+      <div class="container">
+        <div class="section-heading">
+          <p class="eyebrow">Referências</p>
+          <h2>Base conceitual da aula</h2>
+          <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Tópicos de hierarquia de memória, cache, memória interna, memória externa e entrada/saída.</p>
+          <p>Plano de Aula e Ensino da disciplina <strong>Arquitetura de Computadores e Sistemas Operacionais</strong> — conteúdos formativos de memória, armazenamento e análise de desempenho.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p></div>
+  </footer>
+
+  <script>
+    (() => {
+      const main=document.querySelector('main#conteudo');
+      if(!main || document.body.dataset.aula06LayoutReady==='true') return;
+      document.body.dataset.aula06LayoutReady='true';
+
+      const sections=[...main.querySelectorAll(':scope > section[id]')].filter(section=>section.id!=='inicio');
+      const tocLabels={
+        visao:'Visão da aula',
+        retomada:'Retomada',
+        hierarquia:'Hierarquia',
+        localidade:'Cache e localidade',
+        armazenamento:'Persistência e E/S',
+        decisoes:'Decisões de software',
+        perfis:'Perfis de carga',
+        experimento:'Experimento',
+        fechamento:'Síntese',
+        referencias:'Referências'
+      };
+      const getSectionLabel=(section)=>tocLabels[section.id]||section.querySelector('.section-heading h2, .warmup h2, h2')?.textContent.trim()||section.id.replaceAll('-',' ');
+
+      const shell=document.createElement('div');
+      shell.className='aula03-shell aula03-page-grid';
+      main.parentNode.insertBefore(shell,main);
+      shell.appendChild(main);
+
+      const toc=document.createElement('aside');
+      toc.className='aula03-toc';
+      toc.setAttribute('aria-label','Índice desta aula');
+      const tocHead=document.createElement('div');
+      tocHead.className='aula03-toc-head';
+      const tocLabel=document.createElement('span');
+      tocLabel.className='aula03-toc-label';
+      tocLabel.textContent='Nesta aula';
+      const tocToggle=document.createElement('button');
+      tocToggle.className='aula03-toc-toggle';
+      tocToggle.type='button';
+      tocToggle.setAttribute('aria-expanded','true');
+      tocToggle.setAttribute('aria-label','Recolher índice');
+      tocToggle.title='Recolher índice';
+      tocToggle.textContent='›';
+      tocHead.append(tocLabel,tocToggle);
+
+      const tocNav=document.createElement('nav');
+      const tocLinks=sections.map(section=>{
+        const link=document.createElement('a');
+        link.href=`#${section.id}`;
+        link.textContent=getSectionLabel(section);
+        tocNav.appendChild(link);
+        return link;
+      });
+      const currentDot=document.createElement('span');
+      currentDot.className='aula03-toc-current';
+      currentDot.setAttribute('aria-hidden','true');
+      toc.append(tocHead,tocNav,currentDot);
+      shell.appendChild(toc);
+
+      tocToggle.addEventListener('click',()=>{
+        const collapsed=document.body.classList.toggle('toc-collapsed');
+        tocToggle.setAttribute('aria-expanded',String(!collapsed));
+        tocToggle.setAttribute('aria-label',collapsed?'Expandir índice':'Recolher índice');
+        tocToggle.title=collapsed?'Expandir índice':'Recolher índice';
+      });
+
+      const heroContainer=main.querySelector('#inicio .container');
+      if(heroContainer&&sections.length){
+        const mobileToc=document.createElement('details');
+        mobileToc.className='aula03-mobile-toc';
+        const summary=document.createElement('summary');
+        summary.textContent='Nesta aula';
+        const mobileNav=document.createElement('nav');
+        sections.forEach(section=>{
+          const link=document.createElement('a');
+          link.href=`#${section.id}`;
+          link.textContent=getSectionLabel(section);
+          mobileNav.appendChild(link);
+        });
+        mobileToc.append(summary,mobileNav);
+        heroContainer.appendChild(mobileToc);
+      }
+
+      if('IntersectionObserver' in window){
+        const observer=new IntersectionObserver(entries=>{
+          const visible=entries.filter(entry=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top)[0];
+          if(!visible) return;
+          tocLinks.forEach(link=>link.classList.toggle('active',link.getAttribute('href')===`#${visible.target.id}`));
+        },{rootMargin:'-22% 0px -62% 0px',threshold:[0,.15,.5]});
+        sections.forEach(section=>observer.observe(section));
+      }
+    })();
+  </script>
+</body>
+</html>
