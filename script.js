@@ -113,7 +113,6 @@
               <ol class="prompt-list">
                 <li>Escolha entre <strong>CPU-bound</strong>, <strong>memory-bound</strong> e <strong>I/O-bound</strong>.</li>
                 <li>Indique qual <strong>pista do enunciado</strong> levou à sua classificação.</li>
-                <li>Em pelo menos três casos, diga <strong>o que você mediria</strong> para confirmar a hipótese.</li>
               </ol>
               <div class="cache-boundary" style="margin-top:18px"><strong>Regra de leitura:</strong> classifique o recurso que parece dominar o trecho descrito. A classificação inicial é uma hipótese; a confirmação depende de medição.</div>
             </div>
