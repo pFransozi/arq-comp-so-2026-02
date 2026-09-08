@@ -1,3 +1,4 @@
+(() => {
 document.querySelector('.semester-measurements')?.remove();
 document.querySelector('#ia-first .method-rules')?.remove();
 document.querySelector('#aula-atual .eyebrow')?.remove();
@@ -29,10 +30,6 @@ if (isAula03) {
   aula03Style.href = 'aula-03-clean.css';
   document.head.appendChild(aula03Style);
 }
-
-const baseScript = document.createElement('script');
-baseScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@e8a8a5618b8cac11bc3d40439a9d608480c81b8f/script.js';
-baseScript.defer = true;
 
 const improveAula02Register = () => {
   if (!isAula02) return;
@@ -149,9 +146,11 @@ const fixAula03Theme = () => {
   const oldToggle = document.querySelector('.theme-toggle');
   if (!oldToggle) return;
 
-  // Substitui o botão para remover listeners antigos e garantir um único controle de tema.
   const themeToggle = oldToggle.cloneNode(true);
   oldToggle.replaceWith(themeToggle);
+  themeToggle.style.pointerEvents = 'auto';
+  themeToggle.style.position = 'relative';
+  themeToggle.style.zIndex = '120';
 
   const applyTheme = (theme) => {
     const isDark = theme === 'dark';
@@ -173,9 +172,7 @@ const fixAula03Theme = () => {
   const savedTheme = localStorage.getItem('arquitetura-so-theme');
   applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
 
-  themeToggle.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  themeToggle.addEventListener('click', () => {
     const nextTheme = document.body.classList.contains('theme-dark') ? 'light' : 'dark';
     localStorage.setItem('arquitetura-so-theme', nextTheme);
     applyTheme(nextTheme);
@@ -209,16 +206,25 @@ const loadAula03Clean = () => {
   document.head.appendChild(aula03Script);
 };
 
+if (isAula03) {
+  fixAula03Theme();
+  loadAula03Clean();
+  return;
+}
+
+const baseScript = document.createElement('script');
+baseScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@e8a8a5618b8cac11bc3d40439a9d608480c81b8f/script.js';
+baseScript.defer = true;
+
 const preparePages = () => {
   improveAula02Register();
   improveAula02Closing();
   addAula02References();
-  fixAula03Theme();
   loadAula02Clean();
   loadAula02AprofundamentoClean();
-  loadAula03Clean();
 };
 
 baseScript.addEventListener('load', preparePages);
 baseScript.addEventListener('error', preparePages);
 document.head.appendChild(baseScript);
+})();
