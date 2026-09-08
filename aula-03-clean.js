@@ -34,6 +34,11 @@
     }
   }
 
+  const didacticMachineIntro = main.querySelector('#programa .example-heading > div:first-child > p:not(.eyebrow)');
+  if (didacticMachineIntro) {
+    didacticMachineIntro.textContent = 'Não estamos representando um processador real. As instruções LOAD, ADD e STORE formam apenas uma linguagem didática simplificada. Elas servem para mostrar que uma instrução indica uma operação e, quando necessário, onde buscar ou guardar um dado.';
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
