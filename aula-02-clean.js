@@ -57,6 +57,249 @@
     if (body) body.style.gridTemplateColumns = '1fr';
   }
 
+  const executionSection = main.querySelector('#execucao');
+  if (executionSection) {
+    const headingEyebrow = executionSection.querySelector('.section-heading .eyebrow');
+    const headingTitle = executionSection.querySelector('.section-heading h2');
+    const headingIntro = executionSection.querySelector('.section-heading > p:last-child');
+
+    if (headingEyebrow) headingEyebrow.textContent = 'Percurso de execução';
+    if (headingTitle) headingTitle.textContent = 'Do código ao resultado observável';
+    if (headingIntro) {
+      headingIntro.textContent = 'Vamos acompanhar um programa simples e separar o que pertence ao código, ao runtime, ao sistema operacional e ao hardware.';
+    }
+
+    const executionInquiry = executionSection.querySelector('.execution-inquiry');
+    if (executionInquiry) {
+      executionInquiry.innerHTML = `
+        <div class="inquiry-head">
+          <div>
+            <span class="inquiry-kicker">Leitura orientada</span>
+            <h3>Leia, preveja, execute e explique</h3>
+          </div>
+          <span class="inquiry-tag">Código → execução → efeitos</span>
+        </div>
+
+        <div class="code-investigation-grid execution-clean-code">
+          <div class="code-panel" aria-label="Exemplo de código Python para investigação">
+            <div class="code-panel-head">
+              <span>exemplo_fluxo.py</span>
+              <span>Python</span>
+            </div>
+            <pre><code>dados = [4, 7, 2, 9]
+
+total = 0
+
+for valor in dados:
+    total += valor * valor
+
+with open("resultado.txt", "w", encoding="utf-8") as arquivo:
+    arquivo.write(str(total))
+
+print("Resultado:", total)</code></pre>
+          </div>
+
+          <div class="research-brief execution-clean-preview">
+            <span class="research-label">Antes de executar</span>
+            <h4>Preveja o que será produzido</h4>
+            <p>Leia o programa sem executá-lo e tente antecipar seus efeitos.</p>
+            <ol class="prompt-list">
+              <li>Qual valor deve aparecer no terminal?</li>
+              <li>Qual arquivo deve ser criado e o que ele deve conter?</li>
+              <li>Quais recursos do computador precisarão participar para que isso aconteça?</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="research-questions" aria-labelledby="questoes-fluxo">
+          <div class="research-questions-head">
+            <span>Depois da execução</span>
+            <h4 id="questoes-fluxo">Explique o caminho percorrido</h4>
+          </div>
+          <ol>
+            <li><span>01</span><p><strong>Antes da execução:</strong> onde estavam o arquivo Python e os dados escritos no código?</p></li>
+            <li><span>02</span><p><strong>Runtime:</strong> ao executar <code>python exemplo_fluxo.py</code>, qual programa passa a interpretar e executar esse código?</p></li>
+            <li><span>03</span><p><strong>Sistema operacional:</strong> o que precisa ser disponibilizado para a execução acontecer? Considere processo, memória e tempo de CPU.</p></li>
+            <li><span>04</span><p><strong>Memória e CPU:</strong> durante o cálculo, onde ficam valores como <code>dados</code> e <code>total</code>, e qual componente realiza as operações de soma e multiplicação?</p></li>
+            <li><span>05</span><p><strong>Arquivos e terminal:</strong> quando o código executa <code>open(...)</code>, <code>write(...)</code> e <code>print(...)</code>, ele acessa diretamente os dispositivos ou utiliza serviços oferecidos pelo sistema operacional?</p></li>
+            <li><span>06</span><p><strong>Evidências:</strong> quais efeitos podem ser observados depois da execução e como eles se relacionam às ações realizadas pelo programa?</p></li>
+          </ol>
+        </div>
+      `;
+    }
+
+    const executionSynthesis = executionSection.querySelector('.execution-synthesis');
+    if (executionSynthesis) {
+      executionSynthesis.innerHTML = `
+        <div class="section-heading compact-heading">
+          <p class="eyebrow">Síntese</p>
+          <h3>Um modelo de alto nível</h3>
+          <p>O código-fonte não vai diretamente para a CPU. O interpretador executa dentro de um processo gerenciado pelo sistema operacional; durante essa execução, o processo usa memória, recebe tempo de CPU e solicita serviços para acessar arquivos e terminal.</p>
+        </div>
+
+        <div class="execution-clean-model" aria-label="Modelo de alto nível da execução de um programa Python">
+          <div class="execution-clean-source">
+            <small>Antes</small>
+            <strong>Arquivo Python</strong>
+            <span>Código-fonte armazenado.</span>
+          </div>
+          <div class="execution-clean-arrow" aria-hidden="true">→</div>
+          <div class="execution-clean-core">
+            <div class="execution-clean-process">
+              <small>Durante</small>
+              <strong>Interpretador Python em um processo</strong>
+              <span>O sistema operacional cria e gerencia o contexto de execução.</span>
+            </div>
+            <div class="execution-clean-resources">
+              <div><strong>Memória</strong><span>Objetos e variáveis.</span></div>
+              <div><strong>CPU</strong><span>Executa as operações.</span></div>
+              <div><strong>Serviços do SO</strong><span>Arquivos e terminal.</span></div>
+            </div>
+            <div class="execution-clean-results">
+              <span>resultado.txt</span>
+              <span>saída no terminal</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const cleanExecutionStyle = document.createElement('style');
+    cleanExecutionStyle.textContent = `
+      body.lesson-clean #execucao .execution-clean-code {
+        align-items:stretch;
+      }
+      body.lesson-clean #execucao .execution-clean-preview {
+        justify-content:flex-start;
+        padding:4px 0;
+      }
+      body.lesson-clean #execucao .execution-clean-preview .prompt-list {
+        margin:8px 0 0;
+        padding-left:1.2rem;
+      }
+      body.lesson-clean #execucao .execution-clean-preview .prompt-list li + li {
+        margin-top:.55rem;
+      }
+      body.lesson-clean #execucao .research-questions {
+        padding:26px 0 4px;
+      }
+      body.lesson-clean #execucao .research-questions ol {
+        grid-template-columns:1fr 1fr;
+        gap:0 24px;
+        border-top:1px solid var(--clean-line);
+      }
+      body.lesson-clean #execucao .research-questions li {
+        min-height:auto;
+        padding:15px 0;
+        border:0;
+        border-bottom:1px solid var(--clean-line);
+        border-radius:0;
+        background:transparent;
+      }
+      body.lesson-clean #execucao .research-questions li > span {
+        width:30px;
+        height:30px;
+        border-radius:50%;
+        background:var(--clean-accent);
+      }
+      body.lesson-clean #execucao .execution-synthesis {
+        margin-top:36px;
+      }
+      body.lesson-clean #execucao .execution-clean-model {
+        display:grid;
+        grid-template-columns:minmax(170px,.7fr) auto minmax(0,1.9fr);
+        gap:18px;
+        align-items:center;
+        margin-top:20px;
+      }
+      body.lesson-clean #execucao .execution-clean-source,
+      body.lesson-clean #execucao .execution-clean-process,
+      body.lesson-clean #execucao .execution-clean-resources > div {
+        border:1px solid var(--clean-line);
+        border-radius:8px;
+        background:transparent;
+      }
+      body.lesson-clean #execucao .execution-clean-source {
+        padding:18px;
+      }
+      body.lesson-clean #execucao .execution-clean-source small,
+      body.lesson-clean #execucao .execution-clean-process small {
+        display:block;
+        margin-bottom:5px;
+        color:var(--clean-accent);
+        font-size:.72rem;
+        font-weight:800;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+      }
+      body.lesson-clean #execucao .execution-clean-source strong,
+      body.lesson-clean #execucao .execution-clean-process strong,
+      body.lesson-clean #execucao .execution-clean-resources strong {
+        display:block;
+        color:var(--clean-text);
+      }
+      body.lesson-clean #execucao .execution-clean-source span,
+      body.lesson-clean #execucao .execution-clean-process span,
+      body.lesson-clean #execucao .execution-clean-resources span {
+        display:block;
+        margin-top:4px;
+        color:var(--clean-muted);
+        font-size:.88rem;
+      }
+      body.lesson-clean #execucao .execution-clean-arrow {
+        color:var(--clean-accent);
+        font-size:1.5rem;
+        font-weight:800;
+      }
+      body.lesson-clean #execucao .execution-clean-core {
+        padding-left:18px;
+        border-left:3px solid var(--clean-accent);
+      }
+      body.lesson-clean #execucao .execution-clean-process {
+        padding:18px;
+      }
+      body.lesson-clean #execucao .execution-clean-resources {
+        display:grid;
+        grid-template-columns:repeat(3,minmax(0,1fr));
+        gap:10px;
+        margin-top:10px;
+      }
+      body.lesson-clean #execucao .execution-clean-resources > div {
+        padding:14px;
+      }
+      body.lesson-clean #execucao .execution-clean-results {
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+        margin-top:12px;
+      }
+      body.lesson-clean #execucao .execution-clean-results span {
+        padding:.35rem .55rem;
+        border-radius:999px;
+        background:var(--clean-accent-soft);
+        color:var(--clean-accent);
+        font-size:.8rem;
+        font-weight:750;
+      }
+      @media (max-width:850px) {
+        body.lesson-clean #execucao .research-questions ol {
+          grid-template-columns:1fr;
+        }
+        body.lesson-clean #execucao .execution-clean-model {
+          grid-template-columns:1fr;
+        }
+        body.lesson-clean #execucao .execution-clean-arrow {
+          transform:rotate(90deg);
+          justify-self:center;
+        }
+        body.lesson-clean #execucao .execution-clean-resources {
+          grid-template-columns:1fr;
+        }
+      }
+    `;
+    document.head.appendChild(cleanExecutionStyle);
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
