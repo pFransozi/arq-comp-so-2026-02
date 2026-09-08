@@ -24,10 +24,14 @@ body.aula03-clean #perfis > .container > .bridge-question{
 }
 
 /* Aula 06 · os cenários usam apenas as letras A–I como referência. */
-body.aula03-clean #perfis .inquiry:first-of-type .inquiry-body:first-of-type > div:first-child > ol.prompt-list{
-  list-style:none;
-  padding-left:0;
+body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list{
+  list-style:none !important;
+  padding-left:0 !important;
+  margin-left:0 !important;
 }
-body.aula03-clean #perfis .inquiry:first-of-type .inquiry-body:first-of-type > div:first-child > ol.prompt-list > li{
-  margin-left:0;
+body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li{
+  margin-left:0 !important;
+}
+body.aula03-clean #perfis .inquiry:first-of-type > .inquiry-body:nth-child(2) > div:first-child > ol.prompt-list > li::marker{
+  content:"";
 }
