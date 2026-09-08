@@ -96,6 +96,35 @@ const improveAula02Closing = () => {
   }
 };
 
+const addAula02References = () => {
+  if (!isAula02 || document.querySelector('#referencias')) return;
+
+  const main = document.querySelector('main#conteudo');
+  const fechamento = document.querySelector('#fechamento');
+  if (!main) return;
+
+  const referencias = document.createElement('section');
+  referencias.className = 'section';
+  referencias.id = 'referencias';
+  referencias.innerHTML = `
+    <div class="container">
+      <div class="section-heading">
+        <p class="eyebrow">Referências</p>
+        <h2>Referências bibliográficas</h2>
+        <p>Principais obras utilizadas como base conceitual para os conteúdos desta aula e para o desenvolvimento da disciplina.</p>
+      </div>
+      <div style="display:grid;gap:16px;border-top:1px solid var(--line);padding-top:18px">
+        <p style="margin:0"><strong>STALLINGS, William.</strong> Arquitetura e organização de computadores: projetando com foco em desempenho. 11. ed. Porto Alegre: Bookman, 2024.</p>
+        <p style="margin:0"><strong>SILVA, Luiz Ricardo Mantovani da.</strong> Organização e arquitetura de computadores: uma jornada do fundamental ao inovador. Rio de Janeiro: Freitas Bastos, 2023.</p>
+        <p style="margin:0"><strong>TANENBAUM, Andrew Stuart; BOS, Herbert.</strong> Sistemas operacionais modernos. 5. ed. Porto Alegre: Bookman, 2024.</p>
+      </div>
+    </div>
+  `;
+
+  if (fechamento) fechamento.insertAdjacentElement('afterend', referencias);
+  else main.appendChild(referencias);
+};
+
 const loadAula02Clean = () => {
   if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
@@ -105,14 +134,13 @@ const loadAula02Clean = () => {
   document.head.appendChild(lessonScript);
 };
 
-baseScript.addEventListener('load', () => {
-  loadAula02Clean();
+const prepareAula02 = () => {
   improveAula02Register();
   improveAula02Closing();
-});
-baseScript.addEventListener('error', () => {
+  addAula02References();
   loadAula02Clean();
-  improveAula02Register();
-  improveAula02Closing();
-});
+};
+
+baseScript.addEventListener('load', prepareAula02);
+baseScript.addEventListener('error', prepareAula02);
 document.head.appendChild(baseScript);
