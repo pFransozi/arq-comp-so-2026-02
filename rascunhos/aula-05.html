@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="../styles.css">
   <script defer src="../script.js"></script>
 
-  <!-- Base visual copiada do mesmo sistema de layout da Aula 03. -->
   <style>
     :root{--ink:#172033;--muted:#647087;--line:#dfe5ef;--soft:#f4f7fb;--paper:#fff;--navy:#0f172a;--blue:#176b87;--blue-soft:#e8f5f8;--violet:#8a5a35;--violet-soft:#f8efe8;--teal:#2c9277;--teal-soft:#e9f7f2;--amber:#b66a07;--amber-soft:#fff7e8;--radius:22px;--shadow:0 18px 48px rgba(35,50,78,.09);--content:1160px}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.65}button,input,textarea,select{font:inherit}a{color:inherit}h1,h2,h3,h4,p{margin-top:0}h1,h2,h3,h4{line-height:1.15;letter-spacing:-.025em}h1{font-size:clamp(2.7rem,6vw,5.8rem);max-width:12ch;margin-bottom:1.2rem}h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}p{color:var(--muted)}code,pre{font-family:"SFMono-Regular",Consolas,monospace}.container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}.section{padding:88px 0;scroll-margin-top:88px}.section-soft{background:var(--soft)}.section-dark{background:var(--navy);color:#fff}.section-dark p{color:#b9c3d7}.eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.13em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}.section-dark .eyebrow{color:#9bd4e5}
@@ -29,7 +28,6 @@
     @media(max-width:640px){.section{padding:68px 0}.function-grid,.checklist,.execution-preview{grid-template-columns:1fr}.topic-list{grid-template-columns:1fr}.warmup,.inquiry-body{grid-template-columns:1fr}}
   </style>
 
-  <!-- O mesmo acabamento clean que compõe a Aula 03 publicada. -->
   <link rel="stylesheet" href="../aula-03-clean.css">
   <style>
     body.aula03-clean main#conteudo p,
@@ -97,9 +95,41 @@
     <section class="section" id="clock"><div class="container"><div class="section-heading"><p class="eyebrow">2 · Custo de execução</p><h2>De onde vem o tempo de CPU?</h2><p>Quando uma aplicação está usando o processador, o tempo de CPU pode ser entendido a partir de três fatores: <strong>quanto trabalho em instruções será executado, quantos ciclos esse trabalho consome em média e quantos ciclos o processador oferece por segundo</strong>.</p></div>
       <div class="bridge-question" style="margin-top:0;margin-bottom:24px"><strong>Conectando ao software:</strong> uma mudança de algoritmo ou implementação pode alterar a quantidade de instruções executadas; a forma como o processador realiza essas instruções aparece no CPI; e a frequência indica quantos ciclos estão disponíveis por segundo.</div>
       <div class="execution-preview"><article class="execution-step"><b>1</b><h3>Instruções executadas</h3><p>Representam a quantidade de trabalho de máquina necessária para realizar a operação. Implementações diferentes podem produzir quantidades diferentes de trabalho.</p></article><article class="execution-step"><b>2</b><h3>CPI</h3><p><em>Cycles Per Instruction</em>: indica quantos ciclos são consumidos, em média, pelas instruções executadas naquele contexto.</p></article><article class="execution-step"><b>3</b><h3>Frequência</h3><p>Indica quantos ciclos de clock o processador oferece por segundo. 1 GHz corresponde a aproximadamente 1 bilhão de ciclos por segundo.</p></article></div>
-      <div class="stored-definition" style="margin-top:28px"><p class="eyebrow">Relação conceitual</p><h3><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></h3><p>Leia a relação da esquerda para a direita: mais trabalho ou mais ciclos por instrução aumentam o tempo; mais ciclos disponíveis por segundo reduzem o tempo necessário para o mesmo trabalho.</p></div>
-      <div class="concept-grid"><article class="concept-card"><h3>Se o software faz mais trabalho</h3><div class="concept-pair"><div class="concept-item"><strong>Exemplo</strong><p>Um laço que repete cálculos desnecessários aumenta o número de operações executadas.</p></div><div class="concept-item"><strong>Efeito esperado</strong><p>Mantido o restante, mais trabalho tende a exigir mais tempo de CPU.</p></div></div></article><article class="concept-card"><h3>Se a capacidade da CPU muda</h3><div class="concept-pair"><div class="concept-item"><strong>Exemplo</strong><p>Uma frequência maior oferece mais ciclos por segundo para realizar o trabalho.</p></div><div class="concept-item"><strong>Leitura de engenharia</strong><p>O desempenho observado resulta da combinação entre o trabalho gerado pelo software e a capacidade oferecida pelo processador.</p></div></div></article></div>
-      <div class="precision-note"><strong>Ligação com a Aula 04:</strong> uma linha de Python ou C pode se transformar em várias instruções de máquina. Por isso, usamos a relação acima para raciocinar sobre o trabalho executado pela CPU, e não sobre o número de linhas do código-fonte.</div>
+
+      <div class="section-heading" style="margin-top:34px;margin-bottom:18px"><p class="eyebrow">Montando a relação</p><h2>Primeiro contamos ciclos; depois transformamos ciclos em tempo</h2><p>A fórmula fica mais simples quando construímos o raciocínio em duas etapas.</p></div>
+
+      <div class="concept-grid" style="margin-top:0">
+        <article class="concept-card">
+          <h3>Etapa 1 · Quanto trabalho em ciclos?</h3>
+          <div class="concept-pair">
+            <div class="concept-item"><strong>Quantidade de instruções</strong><p>Imagine que a execução exige <strong>100 milhões de instruções</strong>.</p></div>
+            <div class="concept-item"><strong>Custo médio</strong><p>Se cada instrução consome, em média, <strong>2 ciclos</strong>, então o trabalho total é de aproximadamente <strong>200 milhões de ciclos</strong>.</p></div>
+          </div>
+          <div class="bridge-question" style="margin-top:16px"><code>100 milhões de instruções × 2 ciclos/instrução = 200 milhões de ciclos</code></div>
+        </article>
+        <article class="concept-card">
+          <h3>Etapa 2 · Quanto tempo para executar esses ciclos?</h3>
+          <div class="concept-pair">
+            <div class="concept-item"><strong>Capacidade por segundo</strong><p>Uma CPU de <strong>2 GHz</strong> oferece aproximadamente <strong>2 bilhões de ciclos por segundo</strong>.</p></div>
+            <div class="concept-item"><strong>Conversão para tempo</strong><p>Se precisamos de 200 milhões de ciclos e temos 2 bilhões de ciclos por segundo, o tempo de CPU é de aproximadamente <strong>0,1 segundo</strong>.</p></div>
+          </div>
+          <div class="bridge-question" style="margin-top:16px"><code>200 milhões de ciclos ÷ 2 bilhões de ciclos/s = 0,1 s</code></div>
+        </article>
+      </div>
+
+      <div class="stored-definition" style="margin-top:28px">
+        <p class="eyebrow">Juntando as duas etapas</p>
+        <h3><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></h3>
+        <p>O produto <strong>instruções × CPI</strong> estima quantos ciclos serão necessários. Dividir esse total pela <strong>frequência</strong>, medida em ciclos por segundo, transforma a quantidade de ciclos em tempo.</p>
+      </div>
+
+      <div class="execution-preview" style="margin-top:22px">
+        <article class="execution-step"><b>↑</b><h3>Mais instruções</h3><p>Para o mesmo processador, mais trabalho de máquina tende a aumentar o tempo de CPU.</p></article>
+        <article class="execution-step"><b>↑</b><h3>CPI maior</h3><p>Se o trabalho consome mais ciclos por instrução, o total de ciclos necessário aumenta.</p></article>
+        <article class="execution-step"><b>↑</b><h3>Frequência maior</h3><p>Para a mesma quantidade de ciclos, mais ciclos disponíveis por segundo reduzem o tempo necessário.</p></article>
+      </div>
+
+      <div class="precision-note"><strong>Ligação com a Aula 04:</strong> uma linha de Python ou C pode se transformar em várias instruções de máquina. Para analisar desempenho, seguimos o trabalho que chega à CPU: <strong>instruções executadas → ciclos necessários → tempo de CPU</strong>.</div>
     </div></section>
 
     <section class="section" id="nucleos"><div class="container"><div class="section-heading"><p class="eyebrow">3 · Capacidade de execução</p><h2>Como processador, núcleos e processadores lógicos se relacionam</h2><p>As especificações de uma máquina mostram quanta capacidade de execução está disponível. Para interpretá-las, precisamos distinguir o componente físico, suas unidades de processamento e os contextos de execução apresentados ao sistema operacional.</p></div>
@@ -116,7 +146,7 @@
     </div></section>
 
     <section class="section" id="experimento"><div class="container"><div class="section-heading"><p class="eyebrow">Experimento final</p><h2>O hardware é o mesmo. O software pode fazer diferença?</h2><p>Você construirá uma solução básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem trocar de máquina.</p></div>
-      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div><span class="inquiry-tag">Construir → testar → medir</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p><ol class="prompt-list"><li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li><li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo não será fornecido.</li><li><strong>Teste a correção com valores pequenos.</strong> Só depois passe para medições maiores.</li><li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li></ol><div class="stored-callout" style="margin-top:22px"><p class="eyebrow">Infraestrutura fornecida</p><p>Use apenas este trecho para medir o código que você construiu:</p><pre style="margin:0;overflow:auto;white-space:pre"><code>import time
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div><span class="inquiry-tag">Construir → testar → medir</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p><ol class="prompt-list"><li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li><li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo será construído por você a partir dessas pistas.</li><li><strong>Teste a correção com valores pequenos.</strong> Depois, passe para medições maiores.</li><li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li></ol><div class="stored-callout" style="margin-top:22px"><p class="eyebrow">Infraestrutura fornecida</p><p>Use este trecho para medir o código que você construiu:</p><pre style="margin:0;overflow:auto;white-space:pre"><code>import time
 
 inicio = time.perf_counter()
 
@@ -125,7 +155,7 @@ inicio = time.perf_counter()
 fim = time.perf_counter()
 print(f"Tempo: {fim - inicio:.4f} s")</code></pre></div></div></div></article>
       <div class="trace-table-wrap" style="margin-top:28px"><table class="trace-table"><thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead><tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr><tr><td>40.000</td><td></td><td></td><td></td></tr></tbody></table></div>
-      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 2</span><h3>Reduza trabalho sem trocar o hardware</h3></div><span class="inquiry-tag">Hipótese → modificação → comparação</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p><ol class="prompt-list"><li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li><li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li><li>Compare os tempos. A CPU, a frequência e o número de núcleos permaneceram os mesmos. <strong>O que mudou no software?</strong></li><li><strong>Desafio opcional:</strong> investigue se é necessário testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</li></ol></div></div></article>
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 2</span><h3>Reduza o trabalho realizado</h3></div><span class="inquiry-tag">Hipótese → modificação → comparação</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p><ol class="prompt-list"><li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li><li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li><li>Compare os tempos e explique <strong>o que mudou na forma como o software realizou o trabalho</strong>.</li><li><strong>Desafio opcional:</strong> investigue até qual divisor é suficiente testar para decidir se um número é primo. Formule uma hipótese antes de pesquisar.</li></ol></div></div></article>
     </div></section>
 
     <section class="section" id="fechamento"><div class="container"><div class="section-heading"><p class="eyebrow">Síntese da aula</p><h2>O que você deve conseguir explicar</h2><p>O objetivo é conectar características da CPU a decisões concretas de implementação e medição de software.</p></div><div class="checklist"><div class="check-item"><strong>Desempenho:</strong>&nbsp; transformar uma expectativa de desempenho em algo que possa ser medido e comparado.</div><div class="check-item"><strong>Custo de CPU:</strong>&nbsp; relacionar instruções executadas, CPI e frequência ao tempo de CPU.</div><div class="check-item"><strong>Capacidade de execução:</strong>&nbsp; distinguir processador, núcleo e processador lógico e relacioná-los à execução do software.</div><div class="check-item"><strong>CPU-bound:</strong>&nbsp; usar evidências de tempo, carga e utilização da CPU para caracterizar o comportamento da aplicação.</div></div></div></section>
