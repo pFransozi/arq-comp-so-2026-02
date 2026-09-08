@@ -145,17 +145,55 @@
       <div class="precision-note"><strong>Próximo passo:</strong> no experimento, vamos produzir exatamente esse tipo de evidência e depois modificar o software para verificar se reduzir trabalho altera o tempo observado.</div>
     </div></section>
 
-    <section class="section" id="experimento"><div class="container"><div class="section-heading"><p class="eyebrow">Experimento final</p><h2>O hardware é o mesmo. O software pode fazer diferença?</h2><p>Você construirá uma solução básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem trocar de máquina.</p></div>
-      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div><span class="inquiry-tag">Construir → testar → medir</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p><ol class="prompt-list"><li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li><li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo será construído por você a partir dessas pistas.</li><li><strong>Teste a correção com valores pequenos.</strong> Depois, passe para medições maiores.</li><li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li></ol><div class="stored-callout" style="margin-top:22px"><p class="eyebrow">Infraestrutura fornecida</p><p>Use este trecho para medir o código que você construiu:</p><pre style="margin:0;overflow:auto;white-space:pre"><code>import time
+    <section class="section" id="experimento"><div class="container"><div class="section-heading"><p class="eyebrow">Experimento final</p><h2>Traduza um algoritmo para Python e meça o custo</h2><p>Vamos começar com uma estratégia simples que testa muitos divisores. A primeira versão foi escolhida para gerar bastante trabalho repetitivo e tornar o uso da CPU visível durante a execução.</p></div>
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 1</span><h3>Do algoritmo em português ao código Python</h3></div><span class="inquiry-tag">Entender → traduzir → testar</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div>
+        <p><strong>Problema:</strong> contar quantos números primos existem entre <code>2</code> e <code>N</code>. Um número primo possui exatamente dois divisores positivos: <code>1</code> e ele próprio.</p>
+        <div class="stored-callout" style="margin-top:20px"><p class="eyebrow">Algoritmo em português</p><pre style="margin:0;overflow:auto;white-space:pre-wrap"><code>ALGORITMO: contar quantos números primos existem até N
+
+1. Defina o valor de N.
+2. Crie um contador de números primos com valor 0.
+
+3. Para cada número de 2 até N:
+   a. Crie um contador de divisores com valor 0.
+
+   b. Para cada possível divisor de 1 até o próprio número:
+      - divida o número pelo possível divisor;
+      - se o resto da divisão for 0,
+        aumente o contador de divisores em 1.
+
+   c. Depois de testar todos os divisores:
+      - se o contador de divisores for igual a 2,
+        aumente o contador de números primos em 1.
+
+4. Mostre o total de números primos encontrados.</code></pre></div>
+        <div class="section-heading" style="margin-top:28px;margin-bottom:14px"><p class="eyebrow">Tradução</p><h2>Transforme cada passo em uma construção da linguagem</h2><p>Você não precisa escrever tudo de uma vez. Traduza o algoritmo por partes e teste com valores pequenos de <code>N</code>.</p></div>
+        <div class="concept-grid" style="margin-top:0"><article class="concept-card"><h3>Estruturas que você vai precisar</h3><div class="concept-pair"><div class="concept-item"><strong>Repetição</strong><p>Use <code>for</code> para representar cada “para cada” do algoritmo.</p></div><div class="concept-item"><strong>Decisão</strong><p>Use <code>if</code> para verificar quando uma divisão é exata.</p></div></div></article><article class="concept-card"><h3>Pistas de Python</h3><div class="concept-pair"><div class="concept-item"><strong>Resto da divisão</strong><p>O operador <code>%</code> permite verificar o resto de uma divisão.</p></div><div class="concept-item"><strong>Contadores</strong><p>Um contador pode ser atualizado sempre que uma condição for satisfeita.</p></div></div></article></div>
+        <div class="precision-note"><strong>Atenção ao limite do <code>range</code>:</strong> em Python, o valor final do <code>range</code> não é incluído. Pense nisso ao representar “até N” e “até o próprio número”.</div>
+      </div></div></article>
+
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 2</span><h3>Meça a primeira versão</h3></div><span class="inquiry-tag">Prever → executar → observar</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div>
+        <p>Depois que o programa estiver correto para valores pequenos, meça entradas maiores. Antes de executar, faça uma previsão: <strong>qual dos dois laços deverá concentrar a maior parte do trabalho?</strong></p>
+        <div class="stored-callout" style="margin-top:20px"><p class="eyebrow">Infraestrutura de medição</p><p>Coloque a execução do seu algoritmo entre as duas leituras de tempo:</p><pre style="margin:0;overflow:auto;white-space:pre"><code>import time
 
 inicio = time.perf_counter()
 
 # execute aqui a solução que você construiu
 
 fim = time.perf_counter()
-print(f"Tempo: {fim - inicio:.4f} s")</code></pre></div></div></div></article>
-      <div class="trace-table-wrap" style="margin-top:28px"><table class="trace-table"><thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead><tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr><tr><td>40.000</td><td></td><td></td><td></td></tr></tbody></table></div>
-      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 2</span><h3>Reduza o trabalho realizado</h3></div><span class="inquiry-tag">Hipótese → modificação → comparação</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p><ol class="prompt-list"><li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li><li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li><li>Compare os tempos e explique <strong>o que mudou na forma como o software realizou o trabalho</strong>.</li><li><strong>Desafio opcional:</strong> investigue até qual divisor é suficiente testar para decidir se um número é primo. Formule uma hipótese antes de pesquisar.</li></ol></div></div></article>
+print(f"Tempo: {fim - inicio:.4f} s")</code></pre></div>
+        <ol class="prompt-list" style="margin-top:20px"><li>Execute o mesmo programa para os quatro valores de <code>N</code> da tabela.</li><li>Registre o total de primos e o tempo de cada execução.</li><li>Durante a maior entrada, observe o gráfico de CPU no Gerenciador de Tarefas.</li><li>Explique como o crescimento de <code>N</code> altera a quantidade de trabalho realizada pelos laços.</li></ol>
+      </div></div></article>
+
+      <div class="trace-table-wrap" style="margin-top:28px"><table class="trace-table"><thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead><tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>15.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr></tbody></table></div>
+
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 3</span><h3>Reduza trabalho mantendo o mesmo resultado</h3></div><span class="inquiry-tag">Questionar → modificar → comparar</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div>
+        <p>A primeira versão conta <strong>todos</strong> os divisores de cada número. Agora use o resultado das medições para questionar esse trabalho.</p>
+        <div class="bridge-question" style="margin-top:18px;margin-bottom:20px"><strong>Pergunta central:</strong> para descobrir que um número <em>não</em> é primo, precisamos continuar testando divisores depois de encontrar o primeiro divisor diferente de 1 e do próprio número?</div>
+        <ol class="prompt-list"><li>Releia o algoritmo em português e identifique quais testes podem deixar de ser feitos.</li><li>Modifique o programa para testar possíveis divisores a partir de <code>2</code>.</li><li>Quando encontrar uma divisão exata, registre que o número não é primo e encerre a busca de novos divisores para aquele número.</li><li>Repita os mesmos quatro valores de <code>N</code> e preencha a última coluna da tabela.</li><li>Compare os resultados: o programa continua encontrando a mesma quantidade de primos? Quanto o tempo mudou?</li></ol>
+        <div class="precision-note"><strong>Desafio opcional:</strong> formule uma hipótese sobre até qual divisor realmente precisamos testar para decidir se um número é primo. Depois, investigue como essa nova ideia altera a quantidade de trabalho.</div>
+      </div></div></article>
+
+      <div class="bridge-question"><strong>Fechamento do experimento:</strong> escreva uma explicação curta relacionando a mudança do algoritmo à redução do trabalho executado pela CPU e ao tempo observado nas medições.</div>
     </div></section>
 
     <section class="section" id="fechamento"><div class="container"><div class="section-heading"><p class="eyebrow">Síntese da aula</p><h2>O que você deve conseguir explicar</h2><p>O objetivo é conectar características da CPU a decisões concretas de implementação e medição de software.</p></div><div class="checklist"><div class="check-item"><strong>Desempenho:</strong>&nbsp; transformar uma expectativa de desempenho em algo que possa ser medido e comparado.</div><div class="check-item"><strong>Custo de CPU:</strong>&nbsp; relacionar instruções executadas, CPI e frequência ao tempo de CPU.</div><div class="check-item"><strong>Capacidade de execução:</strong>&nbsp; distinguir processador, núcleo e processador lógico e relacioná-los à execução do software.</div><div class="check-item"><strong>CPU-bound:</strong>&nbsp; usar evidências de tempo, carga e utilização da CPU para caracterizar o comportamento da aplicação.</div></div></div></section>
