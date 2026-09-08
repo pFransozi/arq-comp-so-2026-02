@@ -76,6 +76,22 @@
       link.textContent = 'Revisão dos conceitos';
     });
 
+    const softwareSection = document.querySelector('#software');
+    if (softwareSection) {
+      const baselineCard = [...softwareSection.querySelectorAll('.study-card')]
+        .find((card) => card.textContent.includes('Aplicando ao baseline sequencial'));
+      baselineCard?.remove();
+
+      const softwareGrid = softwareSection.querySelector('.study-grid');
+      if (softwareGrid) softwareGrid.style.gridTemplateColumns = '1fr';
+
+      [...softwareSection.querySelectorAll('.study-prose p')].forEach((paragraph) => {
+        if (paragraph.textContent.includes('Quando o baseline lê tarefas ou grava resultados')) {
+          paragraph.textContent = 'Quando um programa lê dados ou grava resultados, bibliotecas recorrem a serviços do sistema operacional. O SO coordena abstrações de arquivo e dispositivos; o hardware de E/S realiza a comunicação física correspondente.';
+        }
+      });
+    }
+
     const referencesSection = document.querySelector('#referencias');
     const referencesContainer = referencesSection?.querySelector('.container');
 
