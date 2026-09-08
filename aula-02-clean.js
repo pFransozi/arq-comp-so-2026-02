@@ -33,6 +33,26 @@
   if (layerInquiry) {
     layerInquiry.querySelector('.teacher-note')?.remove();
     layerInquiry.querySelector('.worksheet')?.remove();
+
+    const intro = layerInquiry.querySelector('.inquiry-body > div > p');
+    if (intro) {
+      intro.textContent = 'Escolha uma aplicação que você conhece e uma ação específica, como abrir um arquivo, salvar um documento ou enviar uma mensagem. A partir dessa ação, descreva o caminho entre aplicação, runtime, sistema operacional e hardware.';
+    }
+
+    const questions = layerInquiry.querySelectorAll('.prompt-list li');
+    if (questions[0]) {
+      questions[0].innerHTML = '<strong>Aplicação:</strong> qual parte da ação é responsabilidade da aplicação? Que dados ela recebe, transforma ou produz?';
+    }
+    if (questions[1]) {
+      questions[1].innerHTML = '<strong>Sistema operacional:</strong> de que serviço do SO essa ação depende? Pense em arquivos, processos, memória, rede ou dispositivos e explique a função desse serviço.';
+    }
+    if (questions[2]) {
+      questions[2].innerHTML = '<strong>Hardware:</strong> que recurso físico é mobilizado? Relacione CPU, memória, armazenamento, rede ou periféricos à ação escolhida.';
+    }
+    if (questions[3]) {
+      questions[3].innerHTML = '<strong>Evidência:</strong> que rastro observável poderia sustentar sua explicação? Indique o que você observaria em um arquivo, log, processo, métrica ou ferramenta de monitoramento e o que isso confirmaria.';
+    }
+
     const body = layerInquiry.querySelector('.inquiry-body');
     if (body) body.style.gridTemplateColumns = '1fr';
   }
