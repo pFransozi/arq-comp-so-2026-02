@@ -160,6 +160,35 @@
   }
 
   if (isAula04Aprofundamento) {
+    document.querySelector('.study-source-note')?.remove();
+
+    const setHtml = (selector, html) => {
+      const element = document.querySelector(selector);
+      if (element) element.innerHTML = html;
+    };
+
+    setHtml('#mapa .study-prose p:first-of-type', '<strong>O compilador</strong> converte uma linguagem-fonte para uma representação adequada à máquina-alvo, podendo gerar linguagem de montagem como etapa intermediária. O <strong>código objeto</strong> é a representação de máquina produzida para um módulo. O <strong>ligador</strong> combina módulos objeto e resolve referências entre eles, enquanto o <strong>carregador</strong> coloca o programa em memória e prepara sua execução.');
+    setHtml('#compilacao .boundary p', 'Diferentemente do montador, um compilador não trabalha com uma correspondência fixa em que cada comando de entrada equivale necessariamente a uma única instrução de máquina ou a uma sequência predeterminada. Uma construção de alto nível pode exigir várias operações, e sua tradução depende das escolhas do compilador e da arquitetura-alvo.');
+    setHtml('#isa .study-heading > p:last-child', 'A arquitetura do conjunto de instruções funciona como a interface entre hardware e software. Para compreender por que dois targets geram saídas diferentes, precisamos observar os elementos que compõem esse contrato.');
+    setHtml('#arquiteturas .study-heading > p:last-child', 'As famílias x86 e ARM são exemplos importantes de arquiteturas com contratos distintos. A diferença não é apenas estética: cada família define seu próprio conjunto de instruções, registradores, formatos e formas de endereçamento.');
+    setHtml('#arquiteturas .architecture-side:first-child p:first-of-type', 'A arquitetura x86 evoluiu ao longo de sucessivas gerações de processadores e representa uma tradição associada a conjuntos de instruções mais complexos.');
+    setHtml('#interfaces .study-heading > p:last-child', 'Uma distinção importante é separar três interfaces: API, ABI e ISA. Elas ajudam a explicar por que “meu código compila” e “meu binário executa” são afirmações diferentes.');
+    setHtml('#interfaces .interface-layer:first-child p', '<strong>Application Programming Interface.</strong> É a interface usada por programas em linguagem de alto nível para acessar serviços por meio de bibliotecas. Uma API favorece a portabilidade do software por <strong>recompilação</strong> em outros sistemas que ofereçam a mesma interface.');
+    setHtml('#ligacao .study-heading > p:last-child', 'Duas etapas normalmente ficam escondidas quando usamos “Build” ou “Run”: a ligação de módulos e o carregamento do programa.');
+
+    const ligacaoParagraphs = [...document.querySelectorAll('#ligacao .study-prose p')];
+    ligacaoParagraphs.forEach((paragraph) => {
+      if (paragraph.textContent.trim().startsWith('Stallings mostra que')) {
+        paragraph.innerHTML = 'A resolução de referências externas pode ocorrer em momentos diferentes. Em uma estratégia de ligação antecipada, os módulos são combinados antes do carregamento. Na <strong>ligação dinâmica</strong>, parte dessa resolução é adiada e um módulo externo pode ser associado mais tarde, inclusive durante a execução.';
+      }
+      if (paragraph.textContent.trim().startsWith('Um programa pode ser preparado')) {
+        paragraph.innerHTML = 'Um programa pode ser preparado para ser carregado em diferentes regiões da memória. Por isso, distinguimos <strong>carregamento absoluto</strong>, <strong>carregamento relocável</strong> e <strong>carregamento dinâmico em tempo de execução</strong>.';
+      }
+    });
+
+    setHtml('#processo .study-heading > p:last-child', 'O sistema operacional precisa transformar o arquivo executável em uma imagem de processo que possa receber tempo de CPU e utilizar memória e demais recursos.');
+    setHtml('#processo .process-explanation p:first-of-type', 'Em sistemas UNIX, <code>exec</code> substitui a imagem de memória de um processo pelo arquivo executável indicado. Isso evidencia uma diferença importante: <strong>o arquivo é um artefato armazenado; o processo é o estado de uma execução</strong>.');
+
     const referenceIntro = document.querySelector('#referencias .study-heading > p:last-child');
     if (referenceIntro) {
       referenceIntro.textContent = 'O conteúdo desta página foi elaborado a partir dos materiais bibliográficos anexados ao projeto.';
