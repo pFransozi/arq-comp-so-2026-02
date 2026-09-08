@@ -7,6 +7,10 @@
   const main = document.querySelector('main#conteudo');
   if (!main) return;
 
+  const lessonPathSection = main.querySelector('#percurso');
+  lessonPathSection?.remove();
+  main.querySelector('#inicio .hero-actions a[href="#percurso"]')?.remove();
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
