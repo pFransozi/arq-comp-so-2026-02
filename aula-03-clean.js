@@ -11,6 +11,16 @@
   lessonPathSection?.remove();
   main.querySelector('#inicio .hero-actions a[href="#percurso"]')?.remove();
 
+  const cpuContextCard = main.querySelector('#cpu .cpu-zoom > article.card');
+  if (cpuContextCard) {
+    cpuContextCard.innerHTML = `
+      <h3>O que importa neste momento?</h3>
+      <p>Para acompanhar o ciclo de instrução, não precisamos abrir toda a microarquitetura da CPU. Basta compreender que ela busca instruções, identifica a operação, movimenta dados e executa o trabalho indicado.</p>
+      <p>Os registradores <strong>PC</strong> e <strong>IR</strong> aparecerão apenas para responder duas perguntas concretas: <strong>onde está a próxima instrução?</strong> e <strong>qual instrução está sendo tratada agora?</strong></p>
+      <p style="margin-bottom:0"><strong>Mais adiante:</strong> clock, registradores específicos, caminhos internos, micro-operações e pipeline serão estudados em um nível de detalhe maior.</p>
+    `;
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
