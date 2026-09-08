@@ -84,7 +84,7 @@
               <div>Tempo de execução</div>
               <div>Clock e frequência</div>
               <div>CPI e IPC</div>
-              <div>Processador e cores</div>
+              <div>Processador e núcleos</div>
               <div>Processador lógico</div>
               <div>Carga CPU-bound</div>
             </div>
@@ -112,7 +112,7 @@
           <div class="question-cloud">
             <div><strong>1 · Frequência</strong><span>Um processador com mais GHz é necessariamente mais rápido para qualquer programa?</span></div>
             <div><strong>2 · Software</strong><span>Duas implementações corretas do mesmo requisito precisam exigir a mesma quantidade de trabalho?</span></div>
-            <div><strong>3 · Cores</strong><span>Se a máquina possui vários cores, um programa sequencial passa automaticamente a usar todos eles?</span></div>
+            <div><strong>3 · Núcleos</strong><span>Se a máquina possui vários núcleos, um programa sequencial passa automaticamente a usar todos eles?</span></div>
           </div>
         </div>
       </div>
@@ -159,21 +159,21 @@
       </div>
     </section>
 
-    <section class="section" id="cores">
+    <section class="section" id="nucleos">
       <div class="container">
         <div class="section-heading">
           <p class="eyebrow">3 · Capacidade de processamento</p>
-          <h2>Mais cores não tornam automaticamente um programa sequencial mais rápido</h2>
+          <h2>Mais núcleos não tornam automaticamente um programa sequencial mais rápido</h2>
           <p>Antes de estudar processos, threads e paralelismo, precisamos apenas distinguir os termos que aparecem nas especificações de uma máquina.</p>
         </div>
 
         <div class="execution-preview">
-          <article class="execution-step"><b>1</b><h3>Processador</h3><p>Componente físico que contém um ou mais cores e interpreta e executa instruções.</p></article>
-          <article class="execution-step"><b>2</b><h3>Core</h3><p>Unidade de processamento individual dentro do processador, capaz de buscar e executar instruções.</p></article>
-          <article class="execution-step"><b>3</b><h3>Processador lógico</h3><p>Contexto de execução apresentado pelo hardware e pelo sistema operacional. Não é sinônimo automático de core físico.</p></article>
+          <article class="execution-step"><b>1</b><h3>Processador</h3><p>Componente físico que contém um ou mais núcleos e interpreta e executa instruções.</p></article>
+          <article class="execution-step"><b>2</b><h3>Núcleo de processamento</h3><p>Unidade de processamento individual dentro do processador, capaz de buscar e executar instruções.</p></article>
+          <article class="execution-step"><b>3</b><h3>Processador lógico</h3><p>Contexto de execução apresentado pelo hardware e pelo sistema operacional. Não é sinônimo automático de núcleo físico.</p></article>
         </div>
 
-        <div class="bridge-question"><strong>Por enquanto:</strong> vários cores oferecem capacidade para executar trabalho em paralelo, mas o software precisa ser organizado para explorá-la. Como fazer isso será assunto das aulas de processos e threads.</div>
+        <div class="bridge-question"><strong>Por enquanto:</strong> vários núcleos oferecem capacidade para executar trabalho em paralelo, mas o software precisa ser organizado para explorá-la. Como fazer isso será assunto das aulas de processos e threads.</div>
       </div>
     </section>
 
@@ -266,7 +266,7 @@ print(f"Tempo: {fim - inicio:.4f} s")</code></pre>
               <ol class="prompt-list">
                 <li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li>
                 <li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li>
-                <li>Compare os tempos. A CPU, a frequência e o número de cores permaneceram os mesmos. <strong>O que mudou no software?</strong></li>
+                <li>Compare os tempos. A CPU, a frequência e o número de núcleos permaneceram os mesmos. <strong>O que mudou no software?</strong></li>
                 <li><strong>Desafio opcional:</strong> investigue se é necessário testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</li>
               </ol>
             </div>
@@ -285,7 +285,7 @@ print(f"Tempo: {fim - inicio:.4f} s")</code></pre>
         <div class="checklist">
           <div class="check-item"><strong>Frequência:</strong>&nbsp; explicar por que GHz não representa sozinho o desempenho de uma aplicação.</div>
           <div class="check-item"><strong>Custo de execução:</strong>&nbsp; relacionar quantidade de trabalho, CPI e frequência ao tempo de CPU.</div>
-          <div class="check-item"><strong>Cores:</strong>&nbsp; explicar por que vários cores não aceleram automaticamente uma execução sequencial.</div>
+          <div class="check-item"><strong>Núcleos:</strong>&nbsp; explicar por que vários núcleos não aceleram automaticamente uma execução sequencial.</div>
           <div class="check-item"><strong>Engenharia de Software:</strong>&nbsp; medir e investigar antes de decidir como otimizar.</div>
         </div>
       </div>
