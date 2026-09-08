@@ -22,3 +22,9 @@ body.aula03-clean #perfis > .container > .trace-table-wrap,
 body.aula03-clean #perfis > .container > .bridge-question{
   display:none;
 }
+
+/* Aula 06 · os cenários usam apenas as letras A–I como referência. */
+body.aula03-clean #perfis .inquiry > .inquiry-body:first-of-type > div:first-child > ol.prompt-list{
+  list-style:none;
+  padding-left:0;
+}
