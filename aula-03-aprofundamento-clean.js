@@ -44,15 +44,62 @@
     'Em uma visão de alto nível, um computador tradicional pode ser compreendido por quatro grandes componentes estruturais: processador, memória principal, entrada/saída e sistema de interconexão.'
   );
 
+  const systemBlocks = [...main.querySelectorAll('#sistema .system-block')];
+  const findSystemBlock = (title) => systemBlocks.find((block) => block.querySelector('h3')?.textContent.trim() === title);
+
+  const cpuBlock = findSystemBlock('CPU');
+  if (cpuBlock) {
+    cpuBlock.innerHTML = `
+      <p class="study-kicker">Processamento</p>
+      <h3>CPU</h3>
+      <p>Busca, interpreta e executa instruções. Neste nível de descrição, podemos enxergá-la como a combinação de <strong>unidade de controle</strong>, <strong>ULA</strong> e <strong>registradores</strong>.</p>
+      <p>A unidade de controle coordena a sequência das operações e as transferências entre os componentes; a ULA realiza operações aritméticas e lógicas; e os registradores mantêm temporariamente instruções, endereços, operandos e resultados necessários durante a execução.</p>
+    `;
+  }
+
+  const memoryBlock = findSystemBlock('Memória principal');
+  if (memoryBlock) {
+    memoryBlock.innerHTML = `
+      <p class="study-kicker">Armazenamento</p>
+      <h3>Memória principal</h3>
+      <p>Organiza-se como um conjunto de posições endereçáveis. Cada posição mantém informação binária que, conforme o contexto da execução, pode representar uma <strong>instrução</strong> ou um <strong>dado</strong>.</p>
+      <p>É nela que ficam disponíveis as instruções e os operandos de que a CPU precisa naquele momento, além dos resultados que precisam ser mantidos ou escritos durante o processamento.</p>
+    `;
+  }
+
+  const ioBlock = findSystemBlock('Entrada / saída');
+  if (ioBlock) {
+    ioBlock.innerHTML = `
+      <p class="study-kicker">Comunicação externa</p>
+      <h3>Entrada / saída</h3>
+      <p>Os módulos de E/S fazem a mediação entre processador/memória e os dispositivos externos. Eles recebem comandos, movimentam dados e informam o estado dos dispositivos ao restante do sistema.</p>
+      <p>Essa mediação também ajuda a lidar com diferenças de velocidade e de formato entre o computador e os periféricos. Por isso, módulos de E/S podem realizar <strong>controle e temporização</strong>, <strong>buffering de dados</strong> e <strong>detecção de erros</strong>.</p>
+    `;
+  }
+
+  const externalBlock = findSystemBlock('Dispositivos externos');
+  if (externalBlock) {
+    externalBlock.innerHTML = `
+      <p class="study-kicker">Ambiente</p>
+      <h3>Dispositivos externos</h3>
+      <p>São os periféricos pelos quais o computador troca informação com o ambiente. Eles não se conectam diretamente à lógica interna da CPU: a comunicação ocorre por meio de módulos ou controladores de E/S.</p>
+      <p>Podemos encontrar dispositivos voltados à interação com pessoas, como tela e impressora; dispositivos voltados à comunicação com máquinas, como discos, sensores e atuadores; e dispositivos de comunicação, que permitem trocar dados com sistemas remotos.</p>
+    `;
+  }
+
   const interconnectBlock = main.querySelector('#sistema .system-block.interconnect');
+  if (interconnectBlock) {
+    interconnectBlock.innerHTML = `
+      <p class="study-kicker">Comunicação interna</p>
+      <h3>Sistema de interconexão</h3>
+      <p>É o conjunto de caminhos que permite a troca de informação entre CPU, memória principal e módulos de E/S. Essas trocas envolvem não apenas dados, mas também <strong>endereços</strong> e <strong>sinais de controle</strong>.</p>
+      <p>Um barramento compartilhado é um exemplo clássico de interconexão, mas máquinas atuais também usam ligações ponto a ponto e estruturas especializadas. A escolha depende do volume e do tipo de comunicação exigidos entre os módulos.</p>
+      <p><strong>Por que ele aparece como um componente próprio?</strong> Sem esses caminhos, CPU, memória e E/S seriam blocos isolados. A execução depende tanto das unidades que processam e armazenam quanto da infraestrutura que transporta informação entre elas.</p>
+    `;
+  }
+
   const interconnectCallout = [...main.querySelectorAll('#sistema .study-callout')]
     .find((callout) => callout.textContent.includes('Por que a interconexão merece aparecer como componente próprio?'));
-
-  if (interconnectBlock && !interconnectBlock.querySelector('[data-interconnect-why]')) {
-    interconnectBlock.insertAdjacentHTML('beforeend', `
-      <p data-interconnect-why><strong>Por que ele aparece como um componente próprio?</strong> Sem um mecanismo de comunicação, CPU, memória e E/S seriam blocos isolados. A execução depende tanto das unidades que processam e armazenam quanto dos caminhos que transportam informação entre elas.</p>
-    `);
-  }
   interconnectCallout?.remove();
 
   replaceText(
