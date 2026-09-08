@@ -3,6 +3,7 @@
   const isAula03 = /(?:^|\/)aula-03\.html$/.test(path);
   const isAula04 = /(?:^|\/)aula-04\.html$/.test(path);
   const isAula04Aprofundamento = /(?:^|\/)aula-04-aprofundamento\.html$/.test(path);
+  const isAula06 = /(?:^|\/)(?:rascunhos\/)?aula-06\.html$/.test(path);
 
   const loadScript = (src, datasetKey) => {
     if (datasetKey && document.querySelector(`script[data-${datasetKey}]`)) return;
@@ -75,6 +76,77 @@
 
     loadScript('aula-03-clean.js', 'aula03-clean');
     return;
+  }
+
+  if (isAula06) {
+    const perfis = document.querySelector('#perfis');
+    if (perfis) {
+      const inquiries = [...perfis.querySelectorAll('.inquiry')];
+      const inquiry = inquiries[0];
+
+      if (inquiry) {
+        inquiry.innerHTML = `
+          <div class="inquiry-head">
+            <div>
+              <span class="inquiry-kicker">Exercício de classificação</span>
+              <h3>Identifique o perfil predominante da carga</h3>
+            </div>
+            <span class="inquiry-tag">CPU-bound · memory-bound · I/O-bound</span>
+          </div>
+          <div class="inquiry-body" style="grid-template-columns:1.35fr .65fr">
+            <div>
+              <p>Considere <strong>o trecho de execução descrito</strong>. Em cada caso, escolha o perfil que parece dominar o comportamento da aplicação.</p>
+              <ol class="prompt-list">
+                <li><strong>A.</strong> Um programa calcula números primos durante vários segundos e quase não realiza leitura ou escrita de arquivos.</li>
+                <li><strong>B.</strong> Um programa percorre repetidamente uma matriz muito grande já carregada na RAM, realizando apenas uma soma simples em cada elemento.</li>
+                <li><strong>C.</strong> Um programa grava milhares de pequenos registros em arquivos separados ao longo da execução.</li>
+                <li><strong>D.</strong> Um programa comprime centenas de imagens que já estão carregadas na memória, executando transformações matemáticas intensivas sobre cada uma.</li>
+                <li><strong>E.</strong> Um programa percorre um vetor de centenas de milhões de valores na RAM e executa pouquíssimas operações aritméticas sobre cada elemento.</li>
+                <li><strong>F.</strong> Um utilitário copia um arquivo de 20 GB de uma unidade de armazenamento para outra, sem realizar transformações relevantes nos dados.</li>
+                <li><strong>G.</strong> Um programa calcula repetidamente hashes criptográficos sobre um bloco de dados que já está disponível na memória.</li>
+                <li><strong>H.</strong> Um algoritmo percorre uma estrutura muito grande de objetos ligados por referências espalhadas na memória, realizando pouco cálculo em cada objeto.</li>
+                <li><strong>I.</strong> Um analisador lê um arquivo de log de vários gigabytes linha por linha, faz um teste simples em cada linha e grava apenas um pequeno resumo no final.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Como responder</h3>
+              <ol class="prompt-list">
+                <li>Escolha entre <strong>CPU-bound</strong>, <strong>memory-bound</strong> e <strong>I/O-bound</strong>.</li>
+                <li>Indique qual <strong>pista do enunciado</strong> levou à sua classificação.</li>
+                <li>Em pelo menos três casos, diga <strong>o que você mediria</strong> para confirmar a hipótese.</li>
+              </ol>
+              <div class="cache-boundary" style="margin-top:18px"><strong>Regra de leitura:</strong> classifique o recurso que parece dominar o trecho descrito. A classificação inicial é uma hipótese; a confirmação depende de medição.</div>
+            </div>
+          </div>
+          <div class="inquiry-body" style="grid-template-columns:1.1fr .9fr;border-top:1px solid var(--line)">
+            <div>
+              <h3>Desafio · uma aplicação, vários momentos</h3>
+              <p>Uma aplicação executa quatro etapas:</p>
+              <ol class="prompt-list">
+                <li>lê 4 GB de dados de um SSD;</li>
+                <li>percorre várias vezes uma grande estrutura já carregada na RAM para reorganizar os registros;</li>
+                <li>executa um cálculo estatístico pesado sobre os dados reorganizados;</li>
+                <li>grava um resumo de 5 MB em disco.</li>
+              </ol>
+            </div>
+            <div>
+              <h3>Classifique cada etapa</h3>
+              <ol class="prompt-list">
+                <li>Qual perfil parece predominante em cada fase?</li>
+                <li>A aplicação inteira precisa receber um único rótulo?</li>
+                <li>Sem medir o tempo de cada fase, é possível afirmar qual delas domina o tempo total?</li>
+              </ol>
+            </div>
+          </div>
+        `;
+      }
+
+      inquiries.slice(1).forEach((item) => item.remove());
+      perfis.querySelectorAll('.trace-table-wrap').forEach((table) => table.remove());
+      perfis.querySelectorAll('.bridge-question').forEach((bridge) => {
+        if (/próxima aula|ponte/i.test(bridge.textContent)) bridge.remove();
+      });
+    }
   }
 
   if (isAula04) {
