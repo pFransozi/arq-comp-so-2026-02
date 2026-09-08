@@ -1,1 +1,13 @@
 @import url("lesson.css");
+
+/* Aula 06 · Cache e localidade: apresenta os conceitos antes das questões de aplicação. */
+body.aula03-clean #localidade .container{
+  display:flex;
+  flex-direction:column;
+}
+body.aula03-clean #localidade .section-heading{order:1}
+body.aula03-clean #localidade .cache-question{order:2}
+body.aula03-clean #localidade .cache-explanation{order:3}
+body.aula03-clean #localidade .concept-grid{order:4}
+body.aula03-clean #localidade .cache-mechanics{order:5}
+body.aula03-clean #localidade .bridge-question{order:6}
