@@ -29,6 +29,11 @@ if (isAula03) {
   aula03Style.rel = 'stylesheet';
   aula03Style.href = 'aula-03-clean.css';
   document.head.appendChild(aula03Style);
+
+  const aula03CycleStyle = document.createElement('link');
+  aula03CycleStyle.rel = 'stylesheet';
+  aula03CycleStyle.href = 'aula-03-cycle-layout.css';
+  document.head.appendChild(aula03CycleStyle);
 }
 
 const improveAula02Register = () => {
