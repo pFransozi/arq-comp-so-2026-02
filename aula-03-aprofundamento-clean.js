@@ -44,6 +44,17 @@
     'Em uma visão de alto nível, um computador tradicional pode ser compreendido por quatro grandes componentes estruturais: processador, memória principal, entrada/saída e sistema de interconexão.'
   );
 
+  const interconnectBlock = main.querySelector('#sistema .system-block.interconnect');
+  const interconnectCallout = [...main.querySelectorAll('#sistema .study-callout')]
+    .find((callout) => callout.textContent.includes('Por que a interconexão merece aparecer como componente próprio?'));
+
+  if (interconnectBlock && !interconnectBlock.querySelector('[data-interconnect-why]')) {
+    interconnectBlock.insertAdjacentHTML('beforeend', `
+      <p data-interconnect-why><strong>Por que ele aparece como um componente próprio?</strong> Sem um mecanismo de comunicação, CPU, memória e E/S seriam blocos isolados. A execução depende tanto das unidades que processam e armazenam quanto dos caminhos que transportam informação entre elas.</p>
+    `);
+  }
+  interconnectCallout?.remove();
+
   replaceText(
     '#programa .study-prose p:nth-of-type(1)',
     'Stallings',
