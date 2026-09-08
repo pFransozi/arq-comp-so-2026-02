@@ -167,7 +167,58 @@
 
 4. Mostre o total de números primos encontrados.</code></pre></div>
         <div class="section-heading" style="margin-top:28px;margin-bottom:14px"><p class="eyebrow">Tradução</p><h2>Transforme cada passo em uma construção da linguagem</h2><p>Você não precisa escrever tudo de uma vez. Traduza o algoritmo por partes e teste com valores pequenos de <code>N</code>.</p></div>
-        <div class="concept-grid" style="margin-top:0"><article class="concept-card"><h3>Estruturas que você vai precisar</h3><div class="concept-pair"><div class="concept-item"><strong>Repetição</strong><p>Use <code>for</code> para representar cada “para cada” do algoritmo.</p></div><div class="concept-item"><strong>Decisão</strong><p>Use <code>if</code> para verificar quando uma divisão é exata.</p></div></div></article><article class="concept-card"><h3>Pistas de Python</h3><div class="concept-pair"><div class="concept-item"><strong>Resto da divisão</strong><p>O operador <code>%</code> permite verificar o resto de uma divisão.</p></div><div class="concept-item"><strong>Contadores</strong><p>Um contador pode ser atualizado sempre que uma condição for satisfeita.</p></div></div></article></div>
+        <div class="concept-grid" style="margin-top:0">
+          <article class="concept-card">
+            <h3>Estruturas que você vai precisar</h3>
+            <div class="concept-pair">
+              <div class="concept-item">
+                <strong>Repetição</strong>
+                <p>Use <code>for</code> para representar cada “para cada” do algoritmo.</p>
+                <p style="margin-top:.75rem"><strong>Exemplo em outro contexto:</strong> percorrer uma lista de nomes.</p>
+                <pre style="margin:.7rem 0 0;padding:.75rem .85rem;overflow:auto;border:1px solid var(--clean-line);border-radius:6px;background:var(--clean-surface);font-size:.9rem;line-height:1.5"><code>nomes = ["Ana", "Bruno", "Caio"]
+
+for nome in nomes:
+    print(nome)</code></pre>
+              </div>
+              <div class="concept-item">
+                <strong>Decisão</strong>
+                <p>Use <code>if</code> para verificar quando uma condição é verdadeira.</p>
+                <p style="margin-top:.75rem"><strong>Exemplo em outro contexto:</strong> verificar uma temperatura.</p>
+                <pre style="margin:.7rem 0 0;padding:.75rem .85rem;overflow:auto;border:1px solid var(--clean-line);border-radius:6px;background:var(--clean-surface);font-size:.9rem;line-height:1.5"><code>temperatura = 32
+
+if temperatura &gt; 30:
+    print("Dia quente")</code></pre>
+              </div>
+            </div>
+          </article>
+          <article class="concept-card">
+            <h3>Pistas de Python</h3>
+            <div class="concept-pair">
+              <div class="concept-item">
+                <strong>Resto da divisão</strong>
+                <p>O operador <code>%</code> permite verificar o resto de uma divisão.</p>
+                <p style="margin-top:.75rem"><strong>Exemplo em outro contexto:</strong> descobrir se um número é par.</p>
+                <pre style="margin:.7rem 0 0;padding:.75rem .85rem;overflow:auto;border:1px solid var(--clean-line);border-radius:6px;background:var(--clean-surface);font-size:.9rem;line-height:1.5"><code>numero = 14
+
+if numero % 2 == 0:
+    print("Número par")</code></pre>
+              </div>
+              <div class="concept-item">
+                <strong>Contadores</strong>
+                <p>Um contador pode ser atualizado sempre que uma condição for satisfeita.</p>
+                <p style="margin-top:.75rem"><strong>Exemplo em outro contexto:</strong> contar notas aprovadas.</p>
+                <pre style="margin:.7rem 0 0;padding:.75rem .85rem;overflow:auto;border:1px solid var(--clean-line);border-radius:6px;background:var(--clean-surface);font-size:.9rem;line-height:1.5"><code>notas = [8, 5, 7, 9]
+aprovados = 0
+
+for nota in notas:
+    if nota &gt;= 7:
+        aprovados += 1
+
+print(aprovados)</code></pre>
+              </div>
+            </div>
+          </article>
+        </div>
         <div class="precision-note"><strong>Atenção ao limite do <code>range</code>:</strong> em Python, o valor final do <code>range</code> não é incluído. Pense nisso ao representar “até N” e “até o próprio número”.</div>
       </div></div></article>
 
