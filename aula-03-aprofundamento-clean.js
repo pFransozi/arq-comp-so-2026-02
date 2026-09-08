@@ -177,6 +177,154 @@
     }
   }
 
+  const cycleSection = main.querySelector('#ciclo');
+  if (cycleSection) {
+    const container = cycleSection.querySelector('.container');
+    if (container) {
+      container.innerHTML = `
+        <div class="study-heading">
+          <p class="study-kicker">6 · Da instrução armazenada à ação</p>
+          <h2>O ciclo de instrução: como a CPU transforma uma instrução em trabalho</h2>
+          <p>Um programa não é executado “de uma vez”. A CPU repete continuamente um ciclo: localiza a próxima instrução, entende o que ela pede e realiza a operação correspondente. Esse modelo permite acompanhar a execução sem entrar ainda em toda a complexidade de um processador moderno.</p>
+        </div>
+
+        <div class="cycle">
+          <article class="cycle-step">
+            <b>1</b>
+            <strong>Busca</strong>
+            <p>A CPU identifica onde está a próxima instrução e traz seus bits da memória para dentro do processador.</p>
+          </article>
+          <article class="cycle-step">
+            <b>2</b>
+            <strong>Decodificação</strong>
+            <p>A unidade de controle interpreta a operação, identifica operandos e determina quais recursos serão necessários.</p>
+          </article>
+          <article class="cycle-step">
+            <b>3</b>
+            <strong>Execução</strong>
+            <p>A ação é realizada e o estado da máquina é atualizado: registradores, memória, fluxo de execução ou E/S podem ser afetados.</p>
+          </article>
+        </div>
+
+        <div class="study-prose">
+          <h3>1. Busca: tornar a próxima instrução disponível</h3>
+          <p>No modelo sequencial, o <strong>PC</strong> mantém a referência da próxima instrução. Para acessar a memória, esse endereço pode ser colocado no <strong>MAR</strong>; o conteúdo lido chega ao <strong>MBR</strong>; e a instrução que será tratada fica disponível no <strong>IR</strong>. Ao mesmo tempo, o processador prepara a referência para a instrução seguinte.</p>
+          <div class="microflow" style="grid-template-columns:repeat(4,minmax(0,1fr))" aria-label="Etapas simplificadas da busca de instrução">
+            <span>PC → MAR<br>endereço da busca</span>
+            <span>Memória → MBR<br>conteúdo lido</span>
+            <span>MBR → IR<br>instrução corrente</span>
+            <span>PC avança<br>próxima busca</span>
+          </div>
+          <p>Esse detalhamento mostra algo importante: <strong>buscar não significa apenas “ler a memória”</strong>. É preciso fornecer um endereço, coordenar a leitura, receber o conteúdo e atualizar o estado interno da CPU.</p>
+
+          <h3>2. Decodificação: responder “o que esta instrução pede?”</h3>
+          <p>Com a instrução disponível, a unidade de controle interpreta seu <strong>código de operação</strong> e os campos que acompanham a instrução. Ela precisa determinar qual operação será feita, onde estão os operandos e qual caminho de dados deverá ser usado.</p>
+          <p>Uma instrução como <code>ADD 21</code>, por exemplo, não significa “some o número 21”. No nosso modelo didático, <code>ADD</code> identifica a operação e <code>21</code> indica o endereço onde está um operando. Decodificar é justamente distinguir esses papéis antes de executar.</p>
+
+          <h3>3. Execução: a sequência depende da instrução</h3>
+          <p>Depois da decodificação, não existe uma única sequência universal. O que acontece depende do tipo de instrução. Algumas usam a ULA, outras movimentam dados, outras alteram o fluxo do programa e outras podem envolver E/S.</p>
+        </div>
+
+        <div class="mini-grid four">
+          <article class="mini-card">
+            <span class="tag">Aritmética e lógica</span>
+            <h4>Calcular</h4>
+            <p>Operandos são enviados à ULA e o resultado atualiza um registrador, flags ou outro destino definido pela instrução.</p>
+          </article>
+          <article class="mini-card">
+            <span class="tag">Load / store</span>
+            <h4>Movimentar dados</h4>
+            <p>A CPU lê um valor da memória para um registrador ou grava um valor de um registrador na memória.</p>
+          </article>
+          <article class="mini-card">
+            <span class="tag">Controle de fluxo</span>
+            <h4>Mudar a sequência</h4>
+            <p>Saltos e desvios podem modificar o PC e fazer com que a próxima instrução venha de outro endereço.</p>
+          </article>
+          <article class="mini-card">
+            <span class="tag">Entrada / saída</span>
+            <h4>Interagir com o ambiente</h4>
+            <p>Dependendo da arquitetura, uma instrução pode iniciar ou participar da comunicação com módulos de E/S.</p>
+          </article>
+        </div>
+
+        <div class="study-prose">
+          <h3>Rastreando a instrução <code>ADD 21</code></h3>
+          <p>Podemos agora retomar a mesma máquina didática da aula principal. Antes da instrução <code>ADD 21</code>, o acumulador contém <code>7</code> e a posição de memória <code>21</code> contém <code>5</code>.</p>
+        </div>
+
+        <div class="study-table-wrap">
+          <table class="study-table">
+            <thead>
+              <tr>
+                <th>Momento</th>
+                <th>O que acontece</th>
+                <th>O que observar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Antes da busca</td>
+                <td>O PC referencia o endereço onde está <code>ADD 21</code>.</td>
+                <td>A CPU precisa saber <em>qual instrução vem a seguir</em>.</td>
+              </tr>
+              <tr>
+                <td>Busca</td>
+                <td>A instrução é lida da memória e fica disponível para tratamento no processador.</td>
+                <td>Endereço e conteúdo cumprem papéis diferentes durante a transferência.</td>
+              </tr>
+              <tr>
+                <td>Decodificação</td>
+                <td>A CPU identifica a operação <code>ADD</code> e interpreta <code>21</code> como referência ao operando.</td>
+                <td>A instrução precisa dizer <em>o que fazer</em> e <em>com qual informação</em>.</td>
+              </tr>
+              <tr>
+                <td>Busca do operando</td>
+                <td>O endereço <code>21</code> é acessado e o valor <code>5</code> é obtido.</td>
+                <td>Executar uma instrução pode exigir um novo acesso à memória depois da busca da própria instrução.</td>
+              </tr>
+              <tr>
+                <td>Execução</td>
+                <td>A ULA realiza <code>7 + 5</code> e o acumulador passa a conter <code>12</code>.</td>
+                <td>O resultado pode ficar primeiro em um registrador; a memória ainda não precisa ter sido alterada.</td>
+              </tr>
+              <tr>
+                <td>Continuidade</td>
+                <td>O PC já está preparado para a instrução seguinte, <code>STORE 22</code>.</td>
+                <td>Somente a próxima instrução escreverá o resultado no endereço <code>22</code>.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="study-grid">
+          <div class="study-prose">
+            <h3>O modelo de três etapas é útil, mas não descreve toda a microarquitetura</h3>
+            <p>Em uma descrição mais detalhada, o ciclo pode envolver etapas adicionais. Um operando pode exigir <strong>endereçamento indireto</strong>; ao final de uma instrução, a CPU pode precisar verificar e tratar uma <strong>interrupção</strong>; e cada fase pode ser decomposta em várias micro-operações internas.</p>
+            <p>Isso não invalida o modelo <strong>busca → decodificação → execução</strong>. Ele continua útil porque organiza as responsabilidades fundamentais da CPU antes de estudarmos como uma microarquitetura específica implementa essas responsabilidades.</p>
+          </div>
+
+          <div class="study-stack">
+            <article class="study-card">
+              <strong>Uma instrução pode exigir mais memória</strong>
+              <p>Buscar a instrução e buscar seus operandos são acessos distintos. Uma instrução de carga, soma ou armazenamento pode voltar à memória durante sua execução.</p>
+            </article>
+            <article class="study-card">
+              <strong>Nem toda instrução termina com um cálculo</strong>
+              <p>O efeito pode ser mover dados, alterar o PC, atualizar flags, escrever na memória ou iniciar uma interação com E/S.</p>
+            </article>
+          </div>
+        </div>
+
+        <div class="boundary">
+          <strong>E nos processadores atuais?</strong>
+          <p>CPUs modernas não precisam esperar uma instrução terminar completamente para começar a próxima. Com <strong>pipeline</strong>, diferentes unidades podem trabalhar ao mesmo tempo: enquanto uma instrução está sendo executada, outra pode estar sendo decodificada e uma terceira já pode estar sendo buscada.</p>
+          <p style="margin-bottom:0">Por isso, o ciclo de instrução deve ser entendido como um <strong>modelo das responsabilidades necessárias para executar instruções</strong>, e não como a afirmação de que todo processador atual realiza exatamente três passos físicos, um após o outro.</p>
+        </div>
+      `;
+    }
+  }
+
   replaceText(
     '#barramentos .study-prose p:nth-of-type(2)',
     'Stallings',
