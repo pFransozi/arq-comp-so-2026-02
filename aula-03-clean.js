@@ -221,6 +221,10 @@
   lessonPathSection?.remove();
   main.querySelector('#inicio .hero-actions a[href="#percurso"]')?.remove();
 
+  ['logisim', 'projeto', 'registro'].forEach((sectionId) => {
+    main.querySelector(`#${sectionId}`)?.remove();
+  });
+
   const cpuContextCard = main.querySelector('#cpu .cpu-zoom > article.card');
   if (cpuContextCard) {
     cpuContextCard.innerHTML = `
