@@ -91,12 +91,76 @@
       </div>
       <div class="precision-note"><strong>Um mesmo programa pode mudar de perfil ao longo da execução.</strong> Carregar um arquivo pode ser uma fase dominada por E/S; processar seus dados pode ser dominado por CPU ou memória; salvar o resultado volta a introduzir E/S. Esses termos ajudam a descrever <strong>qual recurso domina uma fase ou uma carga</strong>, e não a rotular permanentemente uma aplicação.</div>
       <div class="inquiry">
-        <div class="inquiry-head"><span class="inquiry-kicker">Leitura rápida</span><span class="inquiry-tag">hipótese antes da medição</span></div>
-        <div class="inquiry-body">
-          <div><h3>Classifique os cenários</h3><ol class="prompt-list"><li><strong>A.</strong> Um programa calcula números primos durante vários segundos.</li><li><strong>B.</strong> Um programa percorre repetidamente uma matriz muito grande.</li><li><strong>C.</strong> Um programa grava milhares de pequenos registros em arquivos.</li></ol></div>
-          <div><h3>Para cada cenário</h3><ol class="prompt-list"><li>Qual recurso parece mais provável de dominar a execução?</li><li>Que evidência você gostaria de observar antes de afirmar que esse é realmente o gargalo?</li></ol></div>
+        <div class="inquiry-head"><span class="inquiry-kicker">Classificação de cargas</span><span class="inquiry-tag">CPU-bound · memory-bound · I/O-bound</span></div>
+        <div class="inquiry-body" style="grid-template-columns:1.25fr .75fr">
+          <div>
+            <h3>Classifique o perfil predominante</h3>
+            <p>Considere <strong>o trecho de execução descrito</strong>. Para cada cenário, escolha o perfil que parece mais provável e identifique qual pista do enunciado sustenta sua hipótese.</p>
+            <ol class="prompt-list">
+              <li><strong>A.</strong> Um programa calcula números primos durante vários segundos e quase não realiza leitura ou escrita de arquivos.</li>
+              <li><strong>B.</strong> Um programa percorre repetidamente uma matriz muito grande já carregada na RAM, realizando apenas uma soma simples em cada elemento.</li>
+              <li><strong>C.</strong> Um programa grava milhares de pequenos registros em arquivos separados ao longo da execução.</li>
+              <li><strong>D.</strong> Um programa comprime centenas de imagens que já estão carregadas na memória, executando transformações matemáticas intensivas sobre cada uma.</li>
+              <li><strong>E.</strong> Um programa percorre um vetor de centenas de milhões de valores na RAM e executa pouquíssimas operações aritméticas sobre cada elemento.</li>
+              <li><strong>F.</strong> Um utilitário copia um arquivo de 20 GB de uma unidade de armazenamento para outra, sem realizar transformações relevantes nos dados.</li>
+              <li><strong>G.</strong> Um programa calcula repetidamente hashes criptográficos sobre um bloco de dados que já está disponível na memória.</li>
+              <li><strong>H.</strong> Um algoritmo percorre uma estrutura muito grande de objetos ligados por referências espalhadas na memória, realizando pouco cálculo em cada objeto.</li>
+              <li><strong>I.</strong> Um analisador lê um arquivo de log de vários gigabytes linha por linha, faz um teste simples em cada linha e grava apenas um pequeno resumo no final.</li>
+            </ol>
+          </div>
+          <div>
+            <h3>Como responder</h3>
+            <ol class="prompt-list">
+              <li>Escolha entre <strong>CPU-bound</strong>, <strong>memory-bound</strong> e <strong>I/O-bound</strong>.</li>
+              <li>Indique a <strong>pista principal</strong> do cenário que levou à classificação.</li>
+              <li>Para três cenários, indique também <strong>uma medição</strong> que ajudaria a confirmar sua hipótese.</li>
+            </ol>
+            <div class="cache-boundary" style="margin-top:18px"><strong>Importante:</strong> classifique o recurso que parece dominar o trecho descrito. A confirmação do gargalo exige medição.</div>
+          </div>
         </div>
       </div>
+
+      <div class="trace-table-wrap">
+        <table class="trace-table">
+          <thead><tr><th>Cenário</th><th>Perfil provável</th><th>Pista do enunciado</th><th>Evidência que poderia confirmar</th></tr></thead>
+          <tbody>
+            <tr><td>A</td><td></td><td></td><td></td></tr>
+            <tr><td>B</td><td></td><td></td><td></td></tr>
+            <tr><td>C</td><td></td><td></td><td></td></tr>
+            <tr><td>D</td><td></td><td></td><td></td></tr>
+            <tr><td>E</td><td></td><td></td><td></td></tr>
+            <tr><td>F</td><td></td><td></td><td></td></tr>
+            <tr><td>G</td><td></td><td></td><td></td></tr>
+            <tr><td>H</td><td></td><td></td><td></td></tr>
+            <tr><td>I</td><td></td><td></td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="inquiry">
+        <div class="inquiry-head"><span class="inquiry-kicker">Desafio final</span><span class="inquiry-tag">uma aplicação · vários perfis</span></div>
+        <div class="inquiry-body">
+          <div>
+            <h3>Cenário J</h3>
+            <p>Uma aplicação executa quatro etapas:</p>
+            <ol class="prompt-list">
+              <li>lê um conjunto de dados de 4 GB do SSD;</li>
+              <li>percorre várias vezes uma grande estrutura na RAM para reorganizar os registros;</li>
+              <li>executa um cálculo estatístico pesado sobre os dados reorganizados;</li>
+              <li>grava um resumo de 5 MB em disco.</li>
+            </ol>
+          </div>
+          <div>
+            <h3>Classifique por fase</h3>
+            <ol class="prompt-list">
+              <li>Qual perfil você associaria inicialmente a cada etapa?</li>
+              <li>A aplicação inteira precisa receber um único rótulo?</li>
+              <li>Sem medir os tempos de cada etapa, é possível afirmar qual delas domina o tempo total?</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
       <p class="bridge-question"><strong>Ponte para a próxima aula:</strong> reconhecer perfis cria hipóteses; medir CPU, memória e E/S permite testar essas hipóteses e localizar o gargalo com evidências.</p>
     </div></section>
 
