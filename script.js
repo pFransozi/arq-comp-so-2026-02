@@ -4,6 +4,7 @@ document.querySelector('#aula-atual .eyebrow')?.remove();
 
 const isAula02 = /(?:^|\/)aula-02\.html$/.test(window.location.pathname);
 const isAula02Aprofundamento = /(?:^|\/)aula-02-aprofundamento\.html$/.test(window.location.pathname);
+const isAula03 = /(?:^|\/)aula-03\.html$/.test(window.location.pathname);
 
 if (isAula02) {
   document.body.classList.add('lesson-clean');
@@ -19,6 +20,14 @@ if (isAula02Aprofundamento) {
   studyStyle.rel = 'stylesheet';
   studyStyle.href = 'aula-02-aprofundamento-clean.css';
   document.head.appendChild(studyStyle);
+}
+
+if (isAula03) {
+  document.body.classList.add('aula03-clean');
+  const aula03Style = document.createElement('link');
+  aula03Style.rel = 'stylesheet';
+  aula03Style.href = 'aula-03-clean.css';
+  document.head.appendChild(aula03Style);
 }
 
 const baseScript = document.createElement('script');
@@ -152,12 +161,22 @@ const loadAula02AprofundamentoClean = () => {
   document.head.appendChild(studyScript);
 };
 
+const loadAula03Clean = () => {
+  if (!isAula03 || document.querySelector('script[data-aula03-clean]')) return;
+  const aula03Script = document.createElement('script');
+  aula03Script.src = 'aula-03-clean.js';
+  aula03Script.defer = true;
+  aula03Script.dataset.aula03Clean = 'true';
+  document.head.appendChild(aula03Script);
+};
+
 const preparePages = () => {
   improveAula02Register();
   improveAula02Closing();
   addAula02References();
   loadAula02Clean();
   loadAula02AprofundamentoClean();
+  loadAula03Clean();
 };
 
 baseScript.addEventListener('load', preparePages);
