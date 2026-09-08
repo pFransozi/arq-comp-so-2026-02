@@ -29,6 +29,14 @@
     }
   }
 
+  const layerInquiry = main.querySelector('#camadas .inquiry');
+  if (layerInquiry) {
+    layerInquiry.querySelector('.teacher-note')?.remove();
+    layerInquiry.querySelector('.worksheet')?.remove();
+    const body = layerInquiry.querySelector('.inquiry-body');
+    if (body) body.style.gridTemplateColumns = '1fr';
+  }
+
   const sections = [...main.querySelectorAll(':scope > section[id]')]
     .filter((section) => section.id !== 'inicio' && section.isConnected);
 
