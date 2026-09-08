@@ -138,17 +138,21 @@
     <section class="section" id="desempenho">
       <div class="container">
         <div class="section-heading">
-          <p class="eyebrow">1 · Engenharia de Software</p>
-          <h2>Desempenho começa no comportamento observado pela aplicação</h2>
-          <p>Para quem desenvolve software, a especificação da CPU é apenas parte da história. Primeiro precisamos saber qual operação importa, quanto tempo ela leva e o que está produzindo esse custo.</p>
+          <p class="eyebrow">1 · Desempenho no software</p>
+          <h2>Do requisito à evidência</h2>
+          <p>Em Engenharia de Software, desempenho aparece como uma expectativa concreta sobre o comportamento do sistema. Um requisito como <strong>“processar esta operação em até 1 segundo”</strong> transforma a percepção de rapidez ou lentidão em algo que podemos observar, medir e comparar.</p>
         </div>
+
+        <div class="bridge-question" style="margin-top:0;margin-bottom:24px"><strong>Exemplo:</strong> duas implementações processam os mesmos 100.000 itens e produzem o mesmo resultado. Uma termina em 0,8 s e a outra em 2,4 s. Como o hardware é o mesmo, podemos investigar que trabalho cada implementação está solicitando à máquina.</div>
+
         <div class="function-grid">
-          <article class="function-card"><span>1</span><h3>Requisito</h3><p>Uma busca, um cálculo ou uma transformação precisa responder dentro de um tempo aceitável.</p></article>
-          <article class="function-card"><span>2</span><h3>Medição</h3><p>Antes de otimizar, observamos o tempo real de execução em condições controladas.</p></article>
-          <article class="function-card"><span>3</span><h3>Hipótese</h3><p>Formulamos uma explicação para o custo observado, em vez de assumir que o problema é simplesmente “a CPU”.</p></article>
-          <article class="function-card"><span>4</span><h3>Decisão</h3><p>Alteramos software ou ambiente somente depois de termos evidências para justificar a mudança.</p></article>
+          <article class="function-card"><span>1</span><h3>Escolha a operação</h3><p>Defina exatamente o que será observado: uma busca, um cálculo, uma transformação ou outro trecho relevante da aplicação.</p></article>
+          <article class="function-card"><span>2</span><h3>Defina a medida</h3><p>Associe uma medida ao requisito. Nesta aula, usaremos principalmente o <strong>tempo de execução</strong> da operação.</p></article>
+          <article class="function-card"><span>3</span><h3>Formule uma hipótese</h3><p>Relacione o tempo observado ao trabalho executado. Pergunte quais operações estão sendo repetidas e onde pode existir trabalho desnecessário.</p></article>
+          <article class="function-card"><span>4</span><h3>Compare</h3><p>Altere uma decisão de implementação, mantenha as demais condições e meça novamente para verificar o efeito da mudança.</p></article>
         </div>
-        <div class="bridge-question"><strong>Ideia-chave:</strong> hardware fornece capacidade; o software determina quanto trabalho será solicitado e como essa capacidade será utilizada.</div>
+
+        <div class="bridge-question"><strong>Visão de engenharia:</strong> uma decisão sobre desempenho combina <strong>requisito, medida, hipótese e comparação</strong>. É esse percurso que usaremos no experimento ao final da aula.</div>
       </div>
     </section>
 
