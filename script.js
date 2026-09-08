@@ -184,6 +184,36 @@ const fixAula03Theme = () => {
   });
 };
 
+const improveAula03Add21Inquiry = () => {
+  if (!isAula03) return;
+
+  const inquiry = document.querySelector('#ciclo .inquiry');
+  if (!inquiry) return;
+
+  inquiry.innerHTML = `
+    <div class="inquiry-head">
+      <div>
+        <span class="inquiry-kicker">Antes do Logisim</span>
+        <h3>Rastreie a instrução <code>ADD 21</code></h3>
+      </div>
+      <span class="inquiry-tag">instrução → operando → resultado</span>
+    </div>
+    <div class="inquiry-body" style="grid-template-columns:1fr">
+      <div>
+        <p>Use a máquina didática e a tabela de memória acima como referência. A ideia é acompanhar o que muda desde a busca da instrução até o resultado da soma.</p>
+        <ol class="prompt-list">
+          <li><strong>Localização da instrução:</strong> em qual endereço da memória está <code>ADD 21</code>? Antes da busca, qual registrador indica onde está a próxima instrução?</li>
+          <li><strong>Busca e decodificação:</strong> depois que <code>ADD 21</code> é buscada, em qual registrador a instrução corrente fica disponível para que a CPU identifique a operação a executar?</li>
+          <li><strong>Localização do operando:</strong> o número <code>21</code> da instrução representa o valor que será somado ou um endereço? Consulte a tabela e identifique qual valor está armazenado nessa posição.</li>
+          <li><strong>Execução:</strong> antes de executar <code>ADD 21</code>, o acumulador contém <code>7</code>. Qual componente da CPU realiza a soma <code>7 + 5</code> e qual passa a ser o valor do acumulador?</li>
+          <li><strong>O que muda e o que permanece:</strong> após <code>ADD 21</code>, quais valores da máquina foram alterados? O conteúdo do endereço <code>21</code> mudou? E o endereço <code>22</code> já recebeu o resultado?</li>
+          <li><strong>Continuidade da execução:</strong> concluída a soma, para qual endereço o PC deve apontar e qual será a próxima instrução da sequência?</li>
+        </ol>
+      </div>
+    </div>
+  `;
+};
+
 const loadAula02Clean = () => {
   if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
@@ -213,6 +243,7 @@ const loadAula03Clean = () => {
 
 if (isAula03) {
   fixAula03Theme();
+  improveAula03Add21Inquiry();
   loadAula03Clean();
   return;
 }
