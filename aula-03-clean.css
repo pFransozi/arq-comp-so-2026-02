@@ -16,3 +16,9 @@ body.aula03-clean #localidade .bridge-question{order:6}
 body.aula03-clean #hierarquia .hierarchy-cards + .precision-note{
   display:none;
 }
+
+/* Aula 06 · atividade de perfis: sem tabela de preenchimento e sem ponte para a próxima aula. */
+body.aula03-clean #perfis > .container > .trace-table-wrap,
+body.aula03-clean #perfis > .container > .bridge-question{
+  display:none;
+}
