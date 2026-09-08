@@ -32,20 +32,15 @@
   <!-- O mesmo acabamento clean que compõe a Aula 03 publicada. -->
   <link rel="stylesheet" href="../aula-03-clean.css">
   <style>
-    /* Mantém a leitura da Aula 05 na escala tipográfica usada no corpo das aulas 02 e 03. */
     body.aula03-clean main#conteudo p,
     body.aula03-clean main#conteudo li,
     body.aula03-clean main#conteudo .skill span,
     body.aula03-clean main#conteudo .check-item,
     body.aula03-clean main#conteudo .function-card p,
     body.aula03-clean main#conteudo .concept-item p,
-    body.aula03-clean main#conteudo .execution-step p {
-      font-size:1rem;
-    }
+    body.aula03-clean main#conteudo .execution-step p {font-size:1rem}
     body.aula03-clean main#conteudo .trace-table th,
-    body.aula03-clean main#conteudo .trace-table td {
-      font-size:.95rem;
-    }
+    body.aula03-clean main#conteudo .trace-table td {font-size:.95rem}
   </style>
 </head>
 <body class="lesson-page arch-page aula03-clean">
@@ -74,369 +69,85 @@
           <p class="eyebrow">Aula 05 · CPU e desempenho</p>
           <h1>Do código ao desempenho</h1>
           <p class="hero-lead">Na aula anterior vimos como o código-fonte é traduzido para instruções de uma arquitetura-alvo. Agora a pergunta muda: <strong>quanto trabalho o software exige da CPU e como isso aparece no tempo de execução?</strong></p>
-          <div class="hero-actions">
-            <a class="button button-primary" href="#retomada">Começar a aula</a>
-            <a class="button button-secondary" href="#experimento">Ir ao experimento</a>
-          </div>
+          <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#experimento">Ir ao experimento</a></div>
         </div>
-        <aside class="guiding-card">
-          <span>Pergunta orientadora</span>
-          <blockquote>Por que dois programas que resolvem o mesmo problema podem apresentar tempos de execução diferentes?</blockquote>
-        </aside>
+        <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Por que dois programas que resolvem o mesmo problema podem apresentar tempos de execução diferentes?</blockquote></aside>
       </div>
     </section>
 
-    <section class="section" id="visao">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Visão da aula</p>
-          <h2>Desempenho pelo olhar da Engenharia de Software</h2>
-          <p>Vamos conectar características da CPU a uma pergunta prática: como decisões de software alteram o custo de execução?</p>
-        </div>
-        <div class="overview-grid">
-          <article class="card topics-card">
-            <h3>Conteúdo programático</h3>
-            <div class="topic-list">
-              <div>Tempo de execução</div>
-              <div>Clock e frequência</div>
-              <div>CPI e IPC</div>
-              <div>Processador e núcleos</div>
-              <div>Processador lógico</div>
-              <div>Carga CPU-bound</div>
-            </div>
-          </article>
-          <article class="card competency">
-            <h3>C3 — Analisar e selecionar tecnologias</h3>
-            <div class="skill"><strong>H10</strong><span>Comparar alternativas considerando evidências de desempenho, e não apenas especificações isoladas.</span></div>
-          </article>
-          <article class="card competency c6">
-            <h3>C6 — Integrar sistemas de software</h3>
-            <div class="skill"><strong>H20</strong><span>Relacionar características do processador ao comportamento observado por uma aplicação.</span></div>
-          </article>
-        </div>
-      </div>
-    </section>
+    <section class="section" id="visao"><div class="container"><div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Desempenho pelo olhar da Engenharia de Software</h2><p>Vamos conectar características da CPU a uma pergunta prática: como decisões de software alteram o custo de execução?</p></div><div class="overview-grid">
+      <article class="card topics-card"><h3>Conteúdo programático</h3><div class="topic-list"><div>Tempo de execução</div><div>Clock e frequência</div><div>CPI e IPC</div><div>Processador e núcleos</div><div>Processador lógico</div><div>Carga CPU-bound</div></div></article>
+      <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H10</strong><span>Comparar alternativas considerando evidências de desempenho, e não apenas especificações isoladas.</span></div></article>
+      <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Relacionar características do processador ao comportamento observado por uma aplicação.</span></div></article>
+    </div></div></section>
 
-    <section class="section" id="retomada">
-      <div class="container">
-        <div class="warmup">
-          <div>
-            <p class="eyebrow">Retomada da Aula 04</p>
-            <h2>Já vimos o que a máquina executa. Agora vamos perguntar quanto isso custa.</h2>
-            <p>A partir da tradução do código em instruções, vamos investigar o trabalho necessário para executar um programa e como esse trabalho se reflete no tempo de execução.</p>
-          </div>
-          <div class="question-cloud">
-            <div><strong>1 · Tradução</strong><span>Por que o processador não executa diretamente o código-fonte que escrevemos?</span></div>
-            <div><strong>2 · ISA</strong><span>O que significa dizer que a ISA funciona como um contrato entre o software e o processador?</span></div>
-            <div><strong>3 · Compatibilidade</strong><span>Por que o mesmo código-fonte pode gerar executáveis diferentes para x86-64 e ARM64?</span></div>
-            <div><strong>4 · Desempenho</strong><span>Se duas implementações corretas resolvem o mesmo problema, elas necessariamente exigem o mesmo trabalho da CPU e o mesmo tempo de execução?</span></div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <section class="section" id="retomada"><div class="container"><div class="warmup"><div><p class="eyebrow">Retomada da Aula 04</p><h2>Já vimos o que a máquina executa. Agora vamos perguntar quanto isso custa.</h2><p>A partir da tradução do código em instruções, vamos investigar o trabalho necessário para executar um programa e como esse trabalho se reflete no tempo de execução.</p></div><div class="question-cloud">
+      <div><strong>1 · Tradução</strong><span>Por que o processador não executa diretamente o código-fonte que escrevemos?</span></div>
+      <div><strong>2 · ISA</strong><span>O que significa dizer que a ISA funciona como um contrato entre o software e o processador?</span></div>
+      <div><strong>3 · Compatibilidade</strong><span>Por que o mesmo código-fonte pode gerar executáveis diferentes para x86-64 e ARM64?</span></div>
+      <div><strong>4 · Desempenho</strong><span>Se duas implementações corretas resolvem o mesmo problema, elas necessariamente exigem o mesmo trabalho da CPU e o mesmo tempo de execução?</span></div>
+    </div></div></div></section>
 
-    <section class="section" id="desempenho">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">1 · Desempenho no software</p>
-          <h2>Do requisito à evidência</h2>
-          <p>Em Engenharia de Software, desempenho aparece como uma expectativa concreta sobre o comportamento do sistema. Um requisito como <strong>“processar esta operação em até 1 segundo”</strong> transforma a percepção de rapidez ou lentidão em algo que podemos observar, medir e comparar.</p>
-        </div>
+    <section class="section" id="desempenho"><div class="container"><div class="section-heading"><p class="eyebrow">1 · Desempenho no software</p><h2>Do requisito à evidência</h2><p>Em Engenharia de Software, desempenho aparece como uma expectativa concreta sobre o comportamento do sistema. Um requisito como <strong>“processar esta operação em até 1 segundo”</strong> transforma a percepção de rapidez ou lentidão em algo que podemos observar, medir e comparar.</p></div>
+      <div class="bridge-question" style="margin-top:0;margin-bottom:24px"><strong>Exemplo:</strong> duas implementações processam os mesmos 100.000 itens e produzem o mesmo resultado. Uma termina em 0,8 s e a outra em 2,4 s. Como o hardware é o mesmo, podemos investigar que trabalho cada implementação está solicitando à máquina.</div>
+      <div class="function-grid"><article class="function-card"><span>1</span><h3>Escolha a operação</h3><p>Defina exatamente o que será observado: uma busca, um cálculo, uma transformação ou outro trecho relevante da aplicação.</p></article><article class="function-card"><span>2</span><h3>Defina a medida</h3><p>Associe uma medida ao requisito. Nesta aula, usaremos principalmente o <strong>tempo de execução</strong> da operação.</p></article><article class="function-card"><span>3</span><h3>Formule uma hipótese</h3><p>Relacione o tempo observado ao trabalho executado. Pergunte quais operações estão sendo repetidas e onde pode existir trabalho desnecessário.</p></article><article class="function-card"><span>4</span><h3>Compare</h3><p>Altere uma decisão de implementação, mantenha as demais condições e meça novamente para verificar o efeito da mudança.</p></article></div>
+      <div class="bridge-question"><strong>Visão de engenharia:</strong> uma decisão sobre desempenho combina <strong>requisito, medida, hipótese e comparação</strong>. É esse percurso que usaremos no experimento ao final da aula.</div>
+    </div></section>
 
-        <div class="bridge-question" style="margin-top:0;margin-bottom:24px"><strong>Exemplo:</strong> duas implementações processam os mesmos 100.000 itens e produzem o mesmo resultado. Uma termina em 0,8 s e a outra em 2,4 s. Como o hardware é o mesmo, podemos investigar que trabalho cada implementação está solicitando à máquina.</div>
+    <section class="section" id="clock"><div class="container"><div class="section-heading"><p class="eyebrow">2 · Custo de execução</p><h2>De onde vem o tempo de CPU?</h2><p>Quando uma aplicação está usando o processador, o tempo de CPU pode ser entendido a partir de três fatores: <strong>quanto trabalho em instruções será executado, quantos ciclos esse trabalho consome em média e quantos ciclos o processador oferece por segundo</strong>.</p></div>
+      <div class="bridge-question" style="margin-top:0;margin-bottom:24px"><strong>Conectando ao software:</strong> uma mudança de algoritmo ou implementação pode alterar a quantidade de instruções executadas; a forma como o processador realiza essas instruções aparece no CPI; e a frequência indica quantos ciclos estão disponíveis por segundo.</div>
+      <div class="execution-preview"><article class="execution-step"><b>1</b><h3>Instruções executadas</h3><p>Representam a quantidade de trabalho de máquina necessária para realizar a operação. Implementações diferentes podem produzir quantidades diferentes de trabalho.</p></article><article class="execution-step"><b>2</b><h3>CPI</h3><p><em>Cycles Per Instruction</em>: indica quantos ciclos são consumidos, em média, pelas instruções executadas naquele contexto.</p></article><article class="execution-step"><b>3</b><h3>Frequência</h3><p>Indica quantos ciclos de clock o processador oferece por segundo. 1 GHz corresponde a aproximadamente 1 bilhão de ciclos por segundo.</p></article></div>
+      <div class="stored-definition" style="margin-top:28px"><p class="eyebrow">Relação conceitual</p><h3><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></h3><p>Leia a relação da esquerda para a direita: mais trabalho ou mais ciclos por instrução aumentam o tempo; mais ciclos disponíveis por segundo reduzem o tempo necessário para o mesmo trabalho.</p></div>
+      <div class="concept-grid"><article class="concept-card"><h3>Se o software faz mais trabalho</h3><div class="concept-pair"><div class="concept-item"><strong>Exemplo</strong><p>Um laço que repete cálculos desnecessários aumenta o número de operações executadas.</p></div><div class="concept-item"><strong>Efeito esperado</strong><p>Mantido o restante, mais trabalho tende a exigir mais tempo de CPU.</p></div></div></article><article class="concept-card"><h3>Se a capacidade da CPU muda</h3><div class="concept-pair"><div class="concept-item"><strong>Exemplo</strong><p>Uma frequência maior oferece mais ciclos por segundo para realizar o trabalho.</p></div><div class="concept-item"><strong>Leitura de engenharia</strong><p>O desempenho observado resulta da combinação entre o trabalho gerado pelo software e a capacidade oferecida pelo processador.</p></div></div></article></div>
+      <div class="precision-note"><strong>Ligação com a Aula 04:</strong> uma linha de Python ou C pode se transformar em várias instruções de máquina. Por isso, usamos a relação acima para raciocinar sobre o trabalho executado pela CPU, e não sobre o número de linhas do código-fonte.</div>
+    </div></section>
 
-        <div class="function-grid">
-          <article class="function-card"><span>1</span><h3>Escolha a operação</h3><p>Defina exatamente o que será observado: uma busca, um cálculo, uma transformação ou outro trecho relevante da aplicação.</p></article>
-          <article class="function-card"><span>2</span><h3>Defina a medida</h3><p>Associe uma medida ao requisito. Nesta aula, usaremos principalmente o <strong>tempo de execução</strong> da operação.</p></article>
-          <article class="function-card"><span>3</span><h3>Formule uma hipótese</h3><p>Relacione o tempo observado ao trabalho executado. Pergunte quais operações estão sendo repetidas e onde pode existir trabalho desnecessário.</p></article>
-          <article class="function-card"><span>4</span><h3>Compare</h3><p>Altere uma decisão de implementação, mantenha as demais condições e meça novamente para verificar o efeito da mudança.</p></article>
-        </div>
+    <section class="section" id="nucleos"><div class="container"><div class="section-heading"><p class="eyebrow">3 · Capacidade de execução</p><h2>Como processador, núcleos e processadores lógicos se relacionam</h2><p>As especificações de uma máquina mostram quanta capacidade de execução está disponível. Para interpretá-las, precisamos distinguir o componente físico, suas unidades de processamento e os contextos de execução apresentados ao sistema operacional.</p></div>
+      <div class="execution-preview"><article class="execution-step"><b>1</b><h3>Processador</h3><p>É o componente físico que reúne um ou mais núcleos e os demais recursos necessários para executar instruções.</p></article><article class="execution-step"><b>2</b><h3>Núcleo de processamento</h3><p>É uma unidade de processamento dentro do processador capaz de manter seu próprio fluxo de execução de instruções.</p></article><article class="execution-step"><b>3</b><h3>Processador lógico</h3><p>É um contexto de execução apresentado ao sistema operacional. Um núcleo pode disponibilizar mais de um contexto lógico.</p></article></div>
+      <div class="bridge-question"><strong>Leia uma especificação:</strong> uma máquina com <strong>1 processador, 6 núcleos e 12 processadores lógicos</strong> possui um chip de CPU com seis núcleos físicos e doze contextos de execução visíveis ao sistema operacional.</div>
+      <div class="concept-grid"><article class="concept-card"><h3>Capacidade do hardware</h3><div class="concept-pair"><div class="concept-item"><strong>Mais de um núcleo</strong><p>Permite que diferentes fluxos de trabalho avancem simultaneamente.</p></div><div class="concept-item"><strong>Processadores lógicos</strong><p>Ampliam os contextos que o sistema operacional pode escalonar para execução.</p></div></div></article><article class="concept-card"><h3>Organização do software</h3><div class="concept-pair"><div class="concept-item"><strong>Fluxo sequencial</strong><p>Uma sequência de instruções avança como um único fluxo de trabalho.</p></div><div class="concept-item"><strong>Trabalho simultâneo</strong><p>Para explorar capacidade paralela, o software precisa organizar trabalho que possa avançar de forma concorrente ou paralela.</p></div></div></article></div>
+      <div class="bridge-question"><strong>Ponte para Sistemas Operacionais:</strong> mais adiante, processos e threads mostrarão como o software cria unidades de execução que o sistema operacional pode distribuir entre os processadores lógicos disponíveis.</div>
+    </div></section>
 
-        <div class="bridge-question"><strong>Visão de engenharia:</strong> uma decisão sobre desempenho combina <strong>requisito, medida, hipótese e comparação</strong>. É esse percurso que usaremos no experimento ao final da aula.</div>
-      </div>
-    </section>
+    <section class="section" id="cpu-bound"><div class="container"><div class="section-heading"><p class="eyebrow">4 · Leitura do comportamento</p><h2>Como reconhecer uma carga CPU-bound</h2><p>Uma carga é caracterizada como <strong>CPU-bound</strong> quando o tempo de execução é dominado pelo trabalho de processamento. O diagnóstico surge da observação do comportamento da aplicação quando aumentamos a quantidade de trabalho.</p></div>
+      <div class="function-grid"><article class="function-card"><span>1</span><h3>Observe a tarefa</h3><p>Identifique operações que realizam cálculo repetidamente, como verificações, transformações, hashing ou busca intensiva.</p></article><article class="function-card"><span>2</span><h3>Aumente a carga</h3><p>Use entradas progressivamente maiores e observe como o tempo de execução responde ao aumento do trabalho.</p></article><article class="function-card"><span>3</span><h3>Observe a CPU</h3><p>Verifique se o processador permanece ocupado durante a execução e se esse comportamento acompanha o aumento do tempo.</p></article><article class="function-card"><span>4</span><h3>Construa o diagnóstico</h3><p>Combine tempo, tamanho da entrada e utilização da CPU para sustentar a hipótese de que o processamento está dominando o custo.</p></article></div>
+      <div class="bridge-question"><strong>Exemplo de leitura:</strong> ao aumentar a entrada de 10.000 para 40.000 elementos, o tempo cresce e a CPU permanece ocupada durante a maior parte da execução. Esse conjunto de evidências sustenta a hipótese de uma carga predominantemente CPU-bound.</div>
+      <div class="precision-note"><strong>Próximo passo:</strong> no experimento, vamos produzir exatamente esse tipo de evidência e depois modificar o software para verificar se reduzir trabalho altera o tempo observado.</div>
+    </div></section>
 
-    <section class="section" id="clock">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">2 · Clock e trabalho</p>
-          <h2>GHz não é sinônimo de desempenho da aplicação</h2>
-          <p>O clock cadencia o funcionamento do processador, mas a frequência isolada não informa quanto trabalho o programa precisa realizar nem quanto custa, em média, cada instrução executada.</p>
-        </div>
-
-        <div class="execution-preview">
-          <article class="execution-step"><b>1</b><h3>Frequência</h3><p>Indica quantos ciclos de clock ocorrem por segundo. 1 GHz corresponde a aproximadamente 1 bilhão de ciclos por segundo.</p></article>
-          <article class="execution-step"><b>2</b><h3>CPI</h3><p><em>Cycles Per Instruction</em>: quantos ciclos são necessários, em média, para as instruções executadas em determinado contexto.</p></article>
-          <article class="execution-step"><b>3</b><h3>IPC</h3><p><em>Instructions Per Cycle</em>: quantas instruções podem ser concluídas, em média, por ciclo em determinado contexto de execução.</p></article>
-        </div>
-
-        <div class="stored-definition" style="margin-top:28px">
-          <p class="eyebrow">Relação conceitual</p>
-          <h3><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></h3>
-          <p>A relação serve como uma lente: o tempo depende da quantidade de trabalho, do custo médio desse trabalho e da frequência do processador.</p>
-        </div>
-
-        <div class="precision-note"><strong>Cuidado:</strong> uma linha de Python, C ou outra linguagem não corresponde a uma instrução de máquina. A Aula 04 já mostrou que existe uma etapa de tradução entre código-fonte e instruções.</div>
-      </div>
-    </section>
-
-    <section class="section" id="nucleos">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">3 · Capacidade de processamento</p>
-          <h2>Mais núcleos não tornam automaticamente um programa sequencial mais rápido</h2>
-          <p>Antes de estudar processos, threads e paralelismo, precisamos apenas distinguir os termos que aparecem nas especificações de uma máquina.</p>
-        </div>
-
-        <div class="execution-preview">
-          <article class="execution-step"><b>1</b><h3>Processador</h3><p>Componente físico que contém um ou mais núcleos e interpreta e executa instruções.</p></article>
-          <article class="execution-step"><b>2</b><h3>Núcleo de processamento</h3><p>Unidade de processamento individual dentro do processador, capaz de buscar e executar instruções.</p></article>
-          <article class="execution-step"><b>3</b><h3>Processador lógico</h3><p>Contexto de execução apresentado pelo hardware e pelo sistema operacional. Não é sinônimo automático de núcleo físico.</p></article>
-        </div>
-
-        <div class="bridge-question"><strong>Por enquanto:</strong> vários núcleos oferecem capacidade para executar trabalho em paralelo, mas o software precisa ser organizado para explorá-la. Como fazer isso será assunto das aulas de processos e threads.</div>
-      </div>
-    </section>
-
-    <section class="section" id="cpu-bound">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">4 · Tipo de carga</p>
-          <h2>Quando o tempo está principalmente no processamento</h2>
-          <p>Chamamos de <strong>CPU-bound</strong> uma carga cujo tempo de execução é dominado pelo trabalho realizado pela CPU. Nesta aula basta reconhecer esse padrão.</p>
-        </div>
-
-        <div class="concept-grid">
-          <article class="concept-card">
-            <h3>Indícios de uma carga CPU-bound</h3>
-            <div class="concept-pair">
-              <div class="concept-item"><strong>Muito cálculo</strong><p>O programa executa repetidamente operações e decisões, com pouco tempo esperando entrada ou saída.</p></div>
-              <div class="concept-item"><strong>Mais trabalho, mais tempo</strong><p>Quando aumentamos a quantidade de trabalho computacional, o tempo de execução cresce de forma observável.</p></div>
-            </div>
-          </article>
-          <article class="concept-card">
-            <h3>O que um engenheiro de software faz</h3>
-            <div class="concept-pair">
-              <div class="concept-item"><strong>Formula uma hipótese</strong><p>Identifica qual parte da aplicação parece concentrar o custo antes de propor mudanças.</p></div>
-              <div class="concept-item"><strong>Mede antes de concluir</strong><p>Uma única execução ou uma especificação de hardware isolada não basta para explicar desempenho.</p></div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="experimento">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Experimento final</p>
-          <h2>O hardware é o mesmo. O software pode fazer diferença?</h2>
-          <p>Você construirá uma solução básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem trocar de máquina.</p>
-        </div>
-
-        <article class="inquiry">
-          <div class="inquiry-head">
-            <div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div>
-            <span class="inquiry-tag">Construir → testar → medir</span>
-          </div>
-          <div class="inquiry-body" style="grid-template-columns:1fr">
-            <div>
-              <p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p>
-              <ol class="prompt-list">
-                <li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li>
-                <li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo não será fornecido.</li>
-                <li><strong>Teste a correção com valores pequenos.</strong> Só depois passe para medições maiores.</li>
-                <li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li>
-              </ol>
-
-              <div class="stored-callout" style="margin-top:22px">
-                <p class="eyebrow">Infraestrutura fornecida</p>
-                <p>Use apenas este trecho para medir o código que você construiu:</p>
-                <pre style="margin:0;overflow:auto;white-space:pre"><code>import time
+    <section class="section" id="experimento"><div class="container"><div class="section-heading"><p class="eyebrow">Experimento final</p><h2>O hardware é o mesmo. O software pode fazer diferença?</h2><p>Você construirá uma solução básica, medirá seu comportamento e depois tentará reduzir trabalho desnecessário sem trocar de máquina.</p></div>
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 1</span><h3>Conte quantos números primos existem entre 2 e N</h3></div><span class="inquiry-tag">Construir → testar → medir</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p><strong>Um número primo possui exatamente dois divisores positivos: 1 e ele próprio.</strong> Escreva um programa que percorra os números de <code>2</code> até <code>N</code>, determine quais são primos e conte quantos foram encontrados.</p><ol class="prompt-list"><li><strong>Antes de programar:</strong> explique como você pode verificar se um número possui algum divisor além de 1 e dele próprio.</li><li><strong>Construa a primeira versão.</strong> Você pode usar variáveis, <code>for</code>, <code>if</code>, operador <code>%</code> e um contador. O algoritmo não será fornecido.</li><li><strong>Teste a correção com valores pequenos.</strong> Só depois passe para medições maiores.</li><li><strong>Faça uma previsão:</strong> o que você espera que aconteça com o tempo quando <code>N</code> aumentar?</li></ol><div class="stored-callout" style="margin-top:22px"><p class="eyebrow">Infraestrutura fornecida</p><p>Use apenas este trecho para medir o código que você construiu:</p><pre style="margin:0;overflow:auto;white-space:pre"><code>import time
 
 inicio = time.perf_counter()
 
 # execute aqui a solução que você construiu
 
 fim = time.perf_counter()
-print(f"Tempo: {fim - inicio:.4f} s")</code></pre>
-              </div>
-            </div>
-          </div>
-        </article>
+print(f"Tempo: {fim - inicio:.4f} s")</code></pre></div></div></div></article>
+      <div class="trace-table-wrap" style="margin-top:28px"><table class="trace-table"><thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead><tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr><tr><td>40.000</td><td></td><td></td><td></td></tr></tbody></table></div>
+      <article class="inquiry"><div class="inquiry-head"><div><span class="inquiry-kicker">Parte 2</span><h3>Reduza trabalho sem trocar o hardware</h3></div><span class="inquiry-tag">Hipótese → modificação → comparação</span></div><div class="inquiry-body" style="grid-template-columns:1fr"><div><p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p><ol class="prompt-list"><li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li><li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li><li>Compare os tempos. A CPU, a frequência e o número de núcleos permaneceram os mesmos. <strong>O que mudou no software?</strong></li><li><strong>Desafio opcional:</strong> investigue se é necessário testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</li></ol></div></div></article>
+    </div></section>
 
-        <div class="trace-table-wrap" style="margin-top:28px">
-          <table class="trace-table">
-            <thead><tr><th>N</th><th>Primos encontrados</th><th>Tempo da 1ª versão</th><th>Tempo da versão modificada</th></tr></thead>
-            <tbody>
-              <tr><td>5.000</td><td></td><td></td><td></td></tr>
-              <tr><td>10.000</td><td></td><td></td><td></td></tr>
-              <tr><td>20.000</td><td></td><td></td><td></td></tr>
-              <tr><td>40.000</td><td></td><td></td><td></td></tr>
-            </tbody>
-          </table>
-        </div>
+    <section class="section" id="fechamento"><div class="container"><div class="section-heading"><p class="eyebrow">Síntese da aula</p><h2>O que você deve conseguir explicar</h2><p>O objetivo é conectar características da CPU a decisões concretas de implementação e medição de software.</p></div><div class="checklist"><div class="check-item"><strong>Desempenho:</strong>&nbsp; transformar uma expectativa de desempenho em algo que possa ser medido e comparado.</div><div class="check-item"><strong>Custo de CPU:</strong>&nbsp; relacionar instruções executadas, CPI e frequência ao tempo de CPU.</div><div class="check-item"><strong>Capacidade de execução:</strong>&nbsp; distinguir processador, núcleo e processador lógico e relacioná-los à execução do software.</div><div class="check-item"><strong>CPU-bound:</strong>&nbsp; usar evidências de tempo, carga e utilização da CPU para caracterizar o comportamento da aplicação.</div></div></div></section>
 
-        <article class="inquiry">
-          <div class="inquiry-head">
-            <div><span class="inquiry-kicker">Parte 2</span><h3>Reduza trabalho sem trocar o hardware</h3></div>
-            <span class="inquiry-tag">Hipótese → modificação → comparação</span>
-          </div>
-          <div class="inquiry-body" style="grid-template-columns:1fr">
-            <div>
-              <p>Antes de alterar seu código, responda: <strong>quando você encontra um divisor que prova que um número não é primo, ainda precisa continuar testando os demais divisores?</strong></p>
-              <ol class="prompt-list">
-                <li>Modifique sua solução para evitar trabalho que você considera desnecessário.</li>
-                <li>Repita exatamente os mesmos valores de <code>N</code> e complete a última coluna da tabela.</li>
-                <li>Compare os tempos. A CPU, a frequência e o número de núcleos permaneceram os mesmos. <strong>O que mudou no software?</strong></li>
-                <li><strong>Desafio opcional:</strong> investigue se é necessário testar todos os possíveis divisores até o próprio número. Formule uma hipótese antes de pesquisar.</li>
-              </ol>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section" id="fechamento">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Síntese da aula</p>
-          <h2>O que você deve conseguir explicar</h2>
-          <p>O objetivo é conectar uma característica da CPU a decisões concretas de implementação e medição de software.</p>
-        </div>
-        <div class="checklist">
-          <div class="check-item"><strong>Frequência:</strong>&nbsp; explicar por que GHz não representa sozinho o desempenho de uma aplicação.</div>
-          <div class="check-item"><strong>Custo de execução:</strong>&nbsp; relacionar quantidade de trabalho, CPI e frequência ao tempo de CPU.</div>
-          <div class="check-item"><strong>Núcleos:</strong>&nbsp; explicar por que vários núcleos não aceleram automaticamente uma execução sequencial.</div>
-          <div class="check-item"><strong>Engenharia de Software:</strong>&nbsp; medir e investigar antes de decidir como otimizar.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="referencias">
-      <div class="container">
-        <div class="section-heading">
-          <p class="eyebrow">Referências</p>
-          <h2>Referências bibliográficas</h2>
-          <p>Obras utilizadas como base conceitual para o recorte desta aula.</p>
-        </div>
-        <div style="display:grid;gap:16px;border-top:1px solid var(--clean-line);padding-top:18px">
-          <p style="margin:0"><strong>STALLINGS, William.</strong> Arquitetura e organização de computadores: projetando com foco em desempenho. Capítulos 1 e 2.</p>
-          <p style="margin:0"><strong>TANENBAUM, Andrew Stuart; BOS, Herbert.</strong> Sistemas operacionais modernos. Revisão de hardware e relação entre processadores, recursos e execução.</p>
-          <p style="margin:0"><strong>Plano de Aula e Ensino — Arquitetura de Computadores e Sistemas Operacionais, 2026/2.</strong> Competências C3 e C6 e conteúdos de frequência, IPC, núcleos e caracterização de carga CPU-bound.</p>
-        </div>
-      </div>
-    </section>
+    <section class="section" id="referencias"><div class="container"><div class="section-heading"><p class="eyebrow">Referências</p><h2>Referências bibliográficas</h2><p>Obras utilizadas como base conceitual para o recorte desta aula.</p></div><div style="display:grid;gap:16px;border-top:1px solid var(--clean-line);padding-top:18px"><p style="margin:0"><strong>STALLINGS, William.</strong> Arquitetura e organização de computadores: projetando com foco em desempenho. Capítulos 1 e 2.</p><p style="margin:0"><strong>TANENBAUM, Andrew Stuart; BOS, Herbert.</strong> Sistemas operacionais modernos. Revisão de hardware e relação entre processadores, recursos e execução.</p><p style="margin:0"><strong>Plano de Aula e Ensino — Arquitetura de Computadores e Sistemas Operacionais, 2026/2.</strong> Competências C3 e C6 e conteúdos de frequência, IPC, núcleos e caracterização de carga CPU-bound.</p></div></div></section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container footer-grid">
-      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 05 · CPU e desempenho</p></div>
-      <a href="#inicio">Voltar ao início ↑</a>
-    </div>
-  </footer>
+  <footer class="site-footer"><div class="container footer-grid"><div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 05 · CPU e desempenho</p></div><a href="#inicio">Voltar ao início ↑</a></div></footer>
 
   <script>
     (() => {
-      const main = document.querySelector('main#conteudo');
-      if (!main || document.body.dataset.aula05LayoutReady === 'true') return;
-      document.body.dataset.aula05LayoutReady = 'true';
-
-      const sections = [...main.querySelectorAll(':scope > section[id]')]
-        .filter((section) => section.id !== 'inicio');
-
-      const tocLabels = {
-        visao: 'Visão da aula',
-        retomada: 'Retomada',
-        desempenho: 'Desempenho',
-        clock: 'Clock, CPI e IPC',
-        nucleos: 'Processador e núcleos',
-        'cpu-bound': 'Carga CPU-bound',
-        experimento: 'Experimento',
-        fechamento: 'Síntese',
-        referencias: 'Referências'
-      };
-
-      const getSectionLabel = (section) => {
-        if (tocLabels[section.id]) return tocLabels[section.id];
-        const heading = section.querySelector('.section-heading h2, .warmup h2, h2');
-        return heading?.textContent.trim() || section.id.replaceAll('-', ' ');
-      };
-
-      const shell = document.createElement('div');
-      shell.className = 'aula03-shell aula03-page-grid';
-      main.parentNode.insertBefore(shell, main);
-      shell.appendChild(main);
-
-      const toc = document.createElement('aside');
-      toc.className = 'aula03-toc';
-      toc.setAttribute('aria-label', 'Índice desta aula');
-
-      const tocHead = document.createElement('div');
-      tocHead.className = 'aula03-toc-head';
-      const tocLabel = document.createElement('span');
-      tocLabel.className = 'aula03-toc-label';
-      tocLabel.textContent = 'Nesta aula';
-      const tocToggle = document.createElement('button');
-      tocToggle.className = 'aula03-toc-toggle';
-      tocToggle.type = 'button';
-      tocToggle.setAttribute('aria-expanded', 'true');
-      tocToggle.setAttribute('aria-label', 'Recolher índice');
-      tocToggle.title = 'Recolher índice';
-      tocToggle.textContent = '›';
-      tocHead.append(tocLabel, tocToggle);
-
-      const tocNav = document.createElement('nav');
-      const tocLinks = sections.map((section) => {
-        const link = document.createElement('a');
-        link.href = `#${section.id}`;
-        link.textContent = getSectionLabel(section);
-        tocNav.appendChild(link);
-        return link;
-      });
-
-      const currentDot = document.createElement('span');
-      currentDot.className = 'aula03-toc-current';
-      currentDot.setAttribute('aria-hidden', 'true');
-      toc.append(tocHead, tocNav, currentDot);
-      shell.appendChild(toc);
-
-      tocToggle.addEventListener('click', () => {
-        const collapsed = document.body.classList.toggle('toc-collapsed');
-        tocToggle.setAttribute('aria-expanded', String(!collapsed));
-        tocToggle.setAttribute('aria-label', collapsed ? 'Expandir índice' : 'Recolher índice');
-        tocToggle.title = collapsed ? 'Expandir índice' : 'Recolher índice';
-      });
-
-      const heroContainer = main.querySelector('#inicio .container');
-      if (heroContainer && sections.length) {
-        const mobileToc = document.createElement('details');
-        mobileToc.className = 'aula03-mobile-toc';
-        const summary = document.createElement('summary');
-        summary.textContent = 'Nesta aula';
-        const mobileNav = document.createElement('nav');
-        sections.forEach((section) => {
-          const link = document.createElement('a');
-          link.href = `#${section.id}`;
-          link.textContent = getSectionLabel(section);
-          mobileNav.appendChild(link);
-        });
-        mobileToc.append(summary, mobileNav);
-        heroContainer.appendChild(mobileToc);
-      }
-
-      const setActive = (id) => {
-        tocLinks.forEach((link) => link.classList.toggle('active', link.getAttribute('href') === `#${id}`));
-      };
-
-      if ('IntersectionObserver' in window && sections.length) {
-        const observer = new IntersectionObserver((entries) => {
-          const visible = entries.filter((entry) => entry.isIntersecting).sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top);
-          if (visible[0]) setActive(visible[0].target.id);
-        }, {rootMargin:'-20% 0px -68% 0px', threshold:[0,.1,.5]});
-        sections.forEach((section) => observer.observe(section));
-      } else if (sections[0]) {
-        setActive(sections[0].id);
-      }
+      const main=document.querySelector('main#conteudo'); if(!main||document.body.dataset.aula05LayoutReady==='true')return; document.body.dataset.aula05LayoutReady='true';
+      const sections=[...main.querySelectorAll(':scope > section[id]')].filter((section)=>section.id!=='inicio');
+      const tocLabels={visao:'Visão da aula',retomada:'Retomada',desempenho:'Desempenho',clock:'Custo de CPU',nucleos:'Capacidade de execução','cpu-bound':'Carga CPU-bound',experimento:'Experimento',fechamento:'Síntese',referencias:'Referências'};
+      const getSectionLabel=(section)=>tocLabels[section.id]||section.querySelector('.section-heading h2, .warmup h2, h2')?.textContent.trim()||section.id.replaceAll('-',' ');
+      const shell=document.createElement('div'); shell.className='aula03-shell aula03-page-grid'; main.parentNode.insertBefore(shell,main); shell.appendChild(main);
+      const toc=document.createElement('aside'); toc.className='aula03-toc'; toc.setAttribute('aria-label','Índice desta aula');
+      const tocHead=document.createElement('div'); tocHead.className='aula03-toc-head'; const tocLabel=document.createElement('span'); tocLabel.className='aula03-toc-label'; tocLabel.textContent='Nesta aula'; const tocToggle=document.createElement('button'); tocToggle.className='aula03-toc-toggle'; tocToggle.type='button'; tocToggle.setAttribute('aria-expanded','true'); tocToggle.setAttribute('aria-label','Recolher índice'); tocToggle.title='Recolher índice'; tocToggle.textContent='›'; tocHead.append(tocLabel,tocToggle);
+      const tocNav=document.createElement('nav'); const tocLinks=sections.map((section)=>{const link=document.createElement('a'); link.href=`#${section.id}`; link.textContent=getSectionLabel(section); tocNav.appendChild(link); return link}); const currentDot=document.createElement('span'); currentDot.className='aula03-toc-current'; currentDot.setAttribute('aria-hidden','true'); toc.append(tocHead,tocNav,currentDot); shell.appendChild(toc);
+      tocToggle.addEventListener('click',()=>{const collapsed=document.body.classList.toggle('toc-collapsed'); tocToggle.setAttribute('aria-expanded',String(!collapsed)); tocToggle.setAttribute('aria-label',collapsed?'Expandir índice':'Recolher índice'); tocToggle.title=collapsed?'Expandir índice':'Recolher índice'});
+      const heroContainer=main.querySelector('#inicio .container'); if(heroContainer&&sections.length){const mobileToc=document.createElement('details'); mobileToc.className='aula03-mobile-toc'; const summary=document.createElement('summary'); summary.textContent='Nesta aula'; const mobileNav=document.createElement('nav'); sections.forEach((section)=>{const link=document.createElement('a'); link.href=`#${section.id}`; link.textContent=getSectionLabel(section); mobileNav.appendChild(link)}); mobileToc.append(summary,mobileNav); heroContainer.appendChild(mobileToc)}
+      const setActive=(id)=>tocLinks.forEach((link)=>link.classList.toggle('active',link.getAttribute('href')===`#${id}`)); if('IntersectionObserver'in window&&sections.length){const observer=new IntersectionObserver((entries)=>{const visible=entries.filter((entry)=>entry.isIntersecting).sort((a,b)=>a.boundingClientRect.top-b.boundingClientRect.top); if(visible[0])setActive(visible[0].target.id)},{rootMargin:'-20% 0px -68% 0px',threshold:[0,.1,.5]}); sections.forEach((section)=>observer.observe(section))}else if(sections[0])setActive(sections[0].id);
     })();
   </script>
 </body>
