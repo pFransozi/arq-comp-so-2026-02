@@ -1,135 +1,163 @@
 (() => {
   const isAula04Aprofundamento = /(?:^|\/)aula-04-aprofundamento\.html$/.test(window.location.pathname);
 
-  const improveAula04Architectures = () => {
+  const improveAula04LinkLoad = () => {
     if (!isAula04Aprofundamento) return;
-    const container = document.querySelector('#arquiteturas .container');
+    const container = document.querySelector('#ligacao .container');
     if (!container) return;
 
     container.innerHTML = `
       <div class="study-heading">
-        <p class="study-kicker">4 · Dois alvos reais</p>
-        <h2>O mesmo código-fonte pode precisar falar duas linguagens de máquina diferentes</h2>
-        <p>Até aqui vimos que o compilador precisa gerar instruções válidas para uma ISA específica. Agora vamos tornar isso concreto comparando dois alvos reais: <strong>x86-64</strong> e <strong>ARM64</strong>. O objetivo não é decorar instruções de nenhuma das duas arquiteturas, mas perceber o que muda quando o mesmo programa precisa ser executado por máquinas com contratos diferentes.</p>
+        <p class="study-kicker">6 · Ligação e carregamento</p>
+        <h2>Compilar os arquivos ainda não basta para colocar o programa em execução</h2>
+        <p>Em um projeto real, diferentes partes do programa podem ser compiladas separadamente. Isso produz <strong>módulos objeto</strong>, mas eles ainda precisam ser reunidos em um artefato coerente e, depois, colocados na memória. É nesse ponto que entram duas etapas diferentes: <strong>ligação</strong> e <strong>carregamento</strong>.</p>
       </div>
 
       <div class="study-grid">
         <div class="study-prose">
-          <h3>Por que comparar justamente essas duas famílias?</h3>
-          <p>As famílias x86 e ARM são exemplos importantes de projetos de processador desenvolvidos a partir de tradições arquiteturais diferentes. A família x86 evoluiu durante muitas gerações mantendo compatibilidade com um conjunto amplo de instruções. A família ARM foi desenvolvida dentro da tradição de conjuntos reduzidos de instruções e com forte uso de registradores.</p>
-          <p>Para quem desenvolve software, a consequência prática é simples: <strong>a mesma intenção escrita em C pode resultar em sequências de instruções diferentes quando o alvo muda</strong>.</p>
+          <h3>Primeiro separe os dois problemas</h3>
+          <p><strong>Ligação</strong> resolve o problema de integrar partes do programa. Um módulo pode usar uma função ou um dado definido em outro módulo; enquanto esses arquivos estão separados, essa referência pode existir apenas de forma simbólica.</p>
+          <p><strong>Carregamento</strong> resolve outro problema: colocar o módulo carregável na memória e fazer com que suas referências de endereço façam sentido na posição em que ele foi colocado.</p>
         </div>
         <div class="study-stack">
-          <div class="study-callout"><strong>O que permanece</strong><p>O algoritmo, as regras de negócio e o comportamento esperado do programa podem continuar exatamente os mesmos.</p></div>
-          <div class="study-callout"><strong>O que muda</strong><p>As instruções disponíveis, os registradores, os formatos das instruções e as formas de acessar operandos dependem da arquitetura escolhida.</p></div>
+          <div class="study-callout"><strong>Ligador</strong><p>Recebe módulos objeto, integra essas partes e resolve referências entre elas para produzir um módulo carregável.</p></div>
+          <div class="study-callout"><strong>Carregador</strong><p>Coloca o módulo na memória principal e prepara seus endereços para que a execução possa começar.</p></div>
         </div>
+      </div>
+
+      <div class="boundary">
+        <strong>Uma forma simples de lembrar</strong>
+        <p><strong>Ligação:</strong> “como estas partes se conectam?”. <strong>Carregamento:</strong> “onde este programa ficará na memória e como suas referências funcionarão ali?”.</p>
+      </div>
+
+      <div class="study-prose">
+        <h3>Exemplo · dois arquivos que dependem um do outro</h3>
+        <p>Imagine um programa dividido em dois arquivos. O primeiro contém a função principal; o segundo contém uma função de cálculo usada pelo primeiro.</p>
       </div>
 
       <div class="architecture-compare">
         <article class="architecture-side">
-          <small>Família x86</small>
-          <h3>x86-64</h3>
-          <p>É uma evolução da família x86. Seu conjunto de instruções foi ampliado ao longo de várias gerações, preservando compatibilidade e incorporando novas capacidades.</p>
-          <p>Ao compilar para x86-64, o compilador precisa escolher instruções, registradores e formas de endereçamento pertencentes a esse contrato.</p>
+          <small>Módulo A</small>
+          <h3><code>main.c</code></h3>
+          <p>Contém uma chamada para <code>calcular_total()</code>.</p>
+          <p>Depois da compilação, <code>main.o</code> sabe que precisa dessa função, mas ainda pode ter apenas uma <strong>referência simbólica</strong> para ela.</p>
         </article>
         <article class="architecture-side">
-          <small>Família ARM</small>
-          <h3>ARM64</h3>
-          <p>A família ARM está associada historicamente à tradição RISC, com forte uso de registradores e formatos de instrução mais regulares.</p>
-          <p>Ao compilar para ARM64, o compilador trabalha com outro repertório de instruções, outros registradores e outras regras de codificação e acesso a dados.</p>
+          <small>Módulo B</small>
+          <h3><code>calculos.c</code></h3>
+          <p>Contém a implementação de <code>calcular_total()</code>.</p>
+          <p>Depois da compilação, <code>calculos.o</code> contém o código correspondente a essa função.</p>
         </article>
       </div>
 
-      <div class="boundary">
-        <strong>RISC × CISC é uma forma de contextualizar, não de escolher um vencedor</strong>
-        <p>Esses termos ajudam a entender tradições de projeto. Eles não devem ser usados como um ranking simples de desempenho. Para esta aula, o que importa é perceber que arquiteturas diferentes oferecem recursos e regras diferentes ao software.</p>
+      <div class="link-load-flow" aria-label="Exemplo didático de ligação e carregamento">
+        <div class="link-load-node"><strong><code>main.o</code></strong><span>Possui uma referência ainda não resolvida para <code>calcular_total()</code>.</span></div>
+        <div class="link-load-node"><strong><code>calculos.o</code></strong><span>Contém o código da função que será utilizada pelo primeiro módulo.</span></div>
+        <div class="link-load-node"><strong>Ligador</strong><span>Reúne os módulos e transforma a referência simbólica em uma referência válida dentro do módulo integrado.</span></div>
+        <div class="link-load-node"><strong>Módulo carregável</strong><span>Passa a conter as partes do programa em uma representação integrada.</span></div>
+        <div class="link-load-node"><strong>Carregador</strong><span>Coloca esse módulo na memória e prepara os endereços usados durante a execução.</span></div>
+      </div>
+
+      <div class="study-callout">
+        <strong>O que o ligador realmente resolveu?</strong>
+        <p>Antes da ligação, o módulo A conhecia o <em>nome</em> da função de que precisava. Depois da ligação, essa dependência passa a apontar para uma posição concreta dentro do módulo carregável.</p>
       </div>
 
       <div class="study-prose">
-        <h3>Exemplo · a mesma função, dois targets</h3>
-        <p>Considere uma função simples. Em linguagem de alto nível, a intenção é apenas somar dois valores e devolver o resultado.</p>
+        <h3>Agora aparece um segundo problema: em que endereço da memória o programa será colocado?</h3>
+        <p>Nem sempre é desejável decidir, durante a compilação, a posição exata que um programa ocupará na memória. Se vários programas compartilham a memória, uma posição que estava livre em um momento pode não estar livre em outro.</p>
+        <p>Por isso, é comum trabalhar com <strong>endereços relativos</strong>. Em vez de dizer “este dado estará obrigatoriamente no endereço 4120”, o módulo pode representar algo como “este dado está 120 posições depois do início do programa”.</p>
       </div>
 
       <div class="code-reading">
         <div class="study-code">
-          <div class="study-code-head"><span>C</span><span>mesmo código-fonte</span></div>
-          <pre><code>int soma(int a, int b) {
-    return a + b;
-}</code></pre>
+          <div class="study-code-head"><span>Exemplo conceitual</span><span>relocação</span></div>
+          <pre><code>referência relativa = 120
+base escolhida pelo carregador = 4000
+endereço resultante = 4000 + 120 = 4120</code></pre>
         </div>
         <div class="reading-list">
-          <div class="reading-item"><strong>Target x86-64</strong><p>O compilador seleciona registradores e instruções definidos pela ISA x86-64.</p></div>
-          <div class="reading-item"><strong>Target ARM64</strong><p>O compilador precisa expressar a mesma soma usando registradores e instruções definidos pela ISA ARM64.</p></div>
-          <div class="reading-item"><strong>Resultado lógico</strong><p>Nos dois casos, a função continua devendo produzir o mesmo resultado para as mesmas entradas.</p></div>
+          <div class="reading-item"><strong>Antes do carregamento</strong><p>O módulo pode conter referências relativas ao seu próprio início.</p></div>
+          <div class="reading-item"><strong>Durante o carregamento</strong><p>O carregador escolhe a posição inicial e ajusta as referências que precisam ser convertidas.</p></div>
+          <div class="reading-item"><strong>Depois do ajuste</strong><p>As referências passam a fazer sentido na região de memória realmente ocupada pelo programa.</p></div>
         </div>
-      </div>
-
-      <div class="study-callout">
-        <strong>O ponto importante não é o nome da instrução</strong>
-        <p>Se em um target aparece uma instrução com determinado nome e no outro aparece outra, isso não significa que um programa “mudou de ideia”. Significa que o compilador expressou a mesma intenção usando o vocabulário disponível em cada ISA.</p>
       </div>
 
       <div class="study-prose">
-        <h3>O que comparar quando o Assembly for diferente?</h3>
-        <p>Em vez de tentar alinhar linha por linha, compare o papel das operações. Procure identificar onde cada versão realiza cálculo, movimenta dados, acessa memória e controla o fluxo.</p>
+        <h3>Três momentos possíveis para resolver os endereços</h3>
+        <p>A diferença entre as estratégias está principalmente em <strong>quando</strong> a posição efetiva do programa e de suas referências é determinada.</p>
       </div>
 
       <div class="design-list">
-        <div class="design-row"><strong>Registradores</strong><span>Os nomes e a organização dos registradores mudam entre as arquiteturas.</span></div>
-        <div class="design-row"><strong>Operações</strong><span>Uma mesma intenção pode ser implementada por instruções com nomes e capacidades diferentes.</span></div>
-        <div class="design-row"><strong>Endereçamento</strong><span>As formas disponíveis para localizar operandos e acessar memória podem ser diferentes.</span></div>
-        <div class="design-row"><strong>Formato das instruções</strong><span>A maneira como os bits representam operação e operandos também depende da arquitetura.</span></div>
-        <div class="design-row"><strong>Quantidade de instruções</strong><span>Uma sequência pode usar mais ou menos instruções sem que isso, isoladamente, indique melhor desempenho.</span></div>
+        <div class="design-row"><strong>Carregamento absoluto</strong><span>O módulo é preparado para uma posição específica da memória. Isso simplifica o carregamento, mas reduz a flexibilidade.</span></div>
+        <div class="design-row"><strong>Carregamento relocável</strong><span>O módulo usa referências relativas. Ao carregá-lo, o carregador ajusta essas referências de acordo com a posição escolhida.</span></div>
+        <div class="design-row"><strong>Endereçamento em tempo de execução</strong><span>As referências permanecem relativas e a tradução para endereços efetivos é realizada dinamicamente durante a execução, com suporte do hardware.</span></div>
+      </div>
+
+      <div class="boundary">
+        <strong>Relocação não significa mover “qualquer número” do programa</strong>
+        <p>O carregador precisa saber quais campos representam endereços que devem ser ajustados. Uma constante numérica usada pelo programa não pode ser tratada automaticamente como se fosse um endereço.</p>
       </div>
 
       <div class="study-prose">
-        <h3>Experimento mental · o que acontece quando mudamos apenas o target?</h3>
-        <p>Suponha que o código-fonte, o compilador e o nível de otimização permaneçam os mesmos. A única mudança é trocar o alvo de x86-64 para ARM64.</p>
+        <h3>E onde entram bibliotecas?</h3>
+        <p>Uma aplicação também pode depender de módulos externos, como bibliotecas. Essas dependências podem ser resolvidas em momentos diferentes.</p>
       </div>
 
-      <div class="compatibility-grid">
-        <div class="compatibility-card"><small>Permanece</small><strong>Algoritmo</strong><p>A lógica escrita no código-fonte continua a mesma.</p></div>
-        <div class="compatibility-card"><small>Muda</small><strong>Representação de máquina</strong><p>O compilador passa a gerar instruções pertencentes a outra ISA.</p></div>
-        <div class="compatibility-card"><small>Consequência</small><strong>Outro artefato</strong><p>O binário produzido para uma arquitetura não deve ser tratado como se fosse automaticamente executável pela outra.</p></div>
+      <div class="architecture-compare">
+        <article class="architecture-side">
+          <small>Antes do carregamento</small>
+          <h3>Ligação antecipada</h3>
+          <p>Os módulos necessários são integrados antes de o programa ser carregado. O artefato resultante já traz as referências externas resolvidas para aquela composição.</p>
+        </article>
+        <article class="architecture-side">
+          <small>Mais tarde</small>
+          <h3>Ligação dinâmica</h3>
+          <p>Algumas referências externas permanecem não resolvidas no módulo carregável e podem ser resolvidas no carregamento ou somente quando forem necessárias durante a execução.</p>
+        </article>
       </div>
 
       <div class="study-grid">
         <div class="study-prose">
-          <h3>Como observar isso no Compiler Explorer?</h3>
-          <p>Use exatamente o mesmo trecho de C e gere primeiro para x86-64 e depois para ARM64. Não tente traduzir cada linha de Assembly. Observe padrões.</p>
-          <p>Compare os registradores utilizados, os nomes das operações, os acessos à memória e as instruções de controle. Depois tente explicar <strong>o que permaneceu semanticamente igual</strong> apesar das diferenças de representação.</p>
+          <h3>Por que adiar a ligação pode ser útil?</h3>
+          <p>Quando um módulo externo é mantido separadamente, uma versão atualizada dele pode ser incorporada sem exigir necessariamente que toda a aplicação seja recomposta do zero. Além disso, um mesmo código externo pode ser compartilhado por mais de uma aplicação.</p>
+          <p>O ponto importante é perceber que <strong>ligação dinâmica</strong> fala sobre quando uma dependência entre módulos é resolvida, enquanto <strong>carregamento relocável</strong> fala sobre onde um módulo será colocado na memória. São problemas diferentes.</p>
         </div>
         <div class="study-stack">
-          <div class="study-callout"><strong>Pergunta 1</strong><p>Quais diferenças são apenas de vocabulário da ISA?</p></div>
-          <div class="study-callout"><strong>Pergunta 2</strong><p>Em ambos os targets você consegue localizar onde ocorre o cálculo principal?</p></div>
-          <div class="study-callout"><strong>Pergunta 3</strong><p>O fato de uma saída ter mais linhas permite concluir que ela é pior? Por quê?</p></div>
+          <div class="study-callout"><strong>Não confunda</strong><p><strong>Ligação</strong> conecta módulos. <strong>Relocação</strong> ajusta referências de endereço. <strong>Carregamento</strong> coloca o programa na memória.</p></div>
+          <div class="study-callout"><strong>Ordem conceitual</strong><p>Compilar → produzir módulos objeto → ligar módulos → obter módulo carregável → carregar na memória → executar.</p></div>
         </div>
+      </div>
+
+      <div class="study-prose">
+        <h3>Do ponto de vista de Engenharia de Software</h3>
+        <p>Essas etapas aparecem escondidas em comandos simples como <strong>Build</strong> ou <strong>Run</strong>, mas continuam existindo. Elas ajudam a explicar erros de símbolo não encontrado, dependências de bibliotecas, incompatibilidades entre artefatos e situações em que um executável existe no disco, mas ainda não está pronto para ser executado na memória.</p>
       </div>
 
       <div class="boundary">
         <strong>O ponto central desta seção</strong>
-        <p><strong>Target</strong> não é apenas uma opção do compilador: ele define qual contrato de máquina a tradução precisa respeitar. x86-64 e ARM64 podem executar programas com o mesmo comportamento, mas o código de máquina produzido para cada uma é construído segundo regras diferentes.</p>
+        <p><strong>Compilar</strong> traduz cada parte do código. <strong>Ligar</strong> integra essas partes e resolve dependências entre módulos. <strong>Carregar</strong> coloca o módulo resultante na memória e ajusta as referências necessárias para aquela execução. São etapas diferentes de uma mesma cadeia.</p>
       </div>
     `;
   };
 
   const previousScript = document.createElement('script');
-  previousScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@a0e1a400ed83ce30bcf50c66aa649269de2e8c70/script.js';
+  previousScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@10a2afda48e7556f21f60bd1c8f800388f06a094/script.js';
   previousScript.defer = true;
-  previousScript.addEventListener('load', improveAula04Architectures);
-  previousScript.addEventListener('error', improveAula04Architectures);
+  previousScript.addEventListener('load', improveAula04LinkLoad);
+  previousScript.addEventListener('error', improveAula04LinkLoad);
   document.head.appendChild(previousScript);
 
   let attempts = 0;
   const timer = window.setInterval(() => {
-    improveAula04Architectures();
+    improveAula04LinkLoad();
     attempts += 1;
     if (attempts >= 30) window.clearInterval(timer);
   }, 150);
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', improveAula04Architectures, { once: true });
+    document.addEventListener('DOMContentLoaded', improveAula04LinkLoad, { once: true });
   } else {
-    improveAula04Architectures();
+    improveAula04LinkLoad();
   }
 })();
