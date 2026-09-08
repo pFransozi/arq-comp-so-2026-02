@@ -102,17 +102,30 @@
     .find((callout) => callout.textContent.includes('Por que a interconexão merece aparecer como componente próprio?'));
   interconnectCallout?.remove();
 
-  replaceText(
-    '#programa .study-prose p:nth-of-type(1)',
-    'Stallings',
-    'Na máquina IAS, a memória principal mantém dados e instruções. A unidade de controle busca uma instrução, identifica a operação que ela representa e coordena as transferências necessárias para executá-la.'
-  );
+  const programSection = main.querySelector('#programa');
+  if (programSection) {
+    const headingIntro = programSection.querySelector('.study-heading > p:last-child');
+    if (headingIntro) {
+      headingIntro.textContent = 'O princípio do programa armazenado é o ponto de partida: a memória pode manter não apenas os dados, mas também as instruções que orientam o processamento. A partir dessa ideia, podemos acompanhar como a CPU encontra e executa uma sequência de operações.';
+    }
 
-  replaceText(
-    '#programa .study-prose p:nth-of-type(4)',
-    'Stallings',
-    'O conceito de programa armazenado é geralmente associado a John von Neumann, embora ideias semelhantes tenham sido desenvolvidas no mesmo período por outros pesquisadores, incluindo Alan Turing.'
-  );
+    const prose = programSection.querySelector('.study-prose');
+    if (prose) {
+      prose.innerHTML = `
+        <h3>O princípio central</h3>
+        <p>Em um computador com programa armazenado, <strong>instruções e dados ficam disponíveis na memória em posições endereçáveis</strong>. A CPU busca uma instrução, identifica a operação indicada, obtém os operandos necessários e executa o trabalho.</p>
+        <p>Na aula principal usamos uma máquina didática com instruções como <code>LOAD</code>, <code>ADD</code> e <code>STORE</code>. Ela não representa um processador real; serve para tornar visível a sequência <strong>buscar → interpretar → executar</strong> e a relação entre endereço, instrução, dado e resultado.</p>
+
+        <h3>Onde entra a máquina IAS?</h3>
+        <p><strong>IAS</strong> é a sigla de <em>Institute for Advanced Study</em>. A máquina IAS foi um computador histórico de programa armazenado, desenvolvido no início da computação eletrônica. Ela aparece com frequência na literatura porque sua organização deixa explícitas relações que continuamos estudando: memória, unidade de controle, registradores, instruções e dados.</p>
+        <p>Aqui, a IAS funciona como uma <strong>ponte entre a máquina didática da aula e uma organização histórica real</strong>. Não precisamos memorizar todos os seus registradores ou formatos; interessa observar como o princípio do programa armazenado aparece em uma máquina concreta.</p>
+
+        <h3>O que observar nesse modelo?</h3>
+        <p>Na IAS, a memória principal mantém dados e instruções. A unidade de controle busca a próxima instrução, identifica a operação que ela representa e coordena as transferências necessárias para executá-la. Operandos podem ser lidos da memória, resultados podem permanecer temporariamente em registradores ou ser escritos novamente na memória.</p>
+        <p>Instruções e dados são ambos codificados como bits. O que muda é <strong>como aquele conteúdo é interpretado e utilizado durante a execução</strong>. Essa é a mesma ideia que a máquina didática da aula tornou visível de forma simplificada.</p>
+      `;
+    }
+  }
 
   replaceText(
     '#barramentos .study-prose p:nth-of-type(2)',
