@@ -11,3 +11,8 @@ body.aula03-clean #localidade .cache-explanation{order:3}
 body.aula03-clean #localidade .concept-grid{order:4}
 body.aula03-clean #localidade .cache-mechanics{order:5}
 body.aula03-clean #localidade .bridge-question{order:6}
+
+/* Aula 06 · remove a observação lateral sobre ROM/flash da seção de hierarquia. */
+body.aula03-clean #hierarquia .hierarchy-cards + .precision-note{
+  display:none;
+}
