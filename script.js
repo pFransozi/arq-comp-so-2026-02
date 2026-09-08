@@ -1,6 +1,7 @@
 (() => {
   const path = window.location.pathname;
   const isAula04Aprofundamento = /(?:^|\/)aula-04-aprofundamento\.html$/.test(path);
+  const isAula06 = /(?:^|\/)(?:rascunhos\/)?aula-06\.html$/.test(path);
 
   const improveAula04Map = () => {
     if (!isAula04Aprofundamento) return;
@@ -56,16 +57,38 @@
     `;
   };
 
+  const improveAula06Profiles = () => {
+    if (!isAula06) return;
+    const list = document.querySelector('#perfis .inquiry:first-of-type .inquiry-body:first-of-type > div:first-child > ol.prompt-list');
+    if (!list) return;
+    list.style.setProperty('list-style', 'none', 'important');
+    list.style.setProperty('padding-left', '0', 'important');
+    list.querySelectorAll(':scope > li').forEach((item) => {
+      item.style.setProperty('margin-left', '0', 'important');
+    });
+  };
+
   const previousScript = document.createElement('script');
   previousScript.src = 'https://cdn.jsdelivr.net/gh/pFransozi/arq-comp-so-2026-02@242699afd1bea25e23f8908a8e4491dcfa63be1f/script.js';
   previousScript.defer = true;
-  previousScript.addEventListener('load', improveAula04Map);
-  previousScript.addEventListener('error', improveAula04Map);
+  previousScript.addEventListener('load', () => {
+    improveAula04Map();
+    improveAula06Profiles();
+  });
+  previousScript.addEventListener('error', () => {
+    improveAula04Map();
+    improveAula06Profiles();
+  });
   document.head.appendChild(previousScript);
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', improveAula04Map, { once: true });
-  } else {
+  const improveCurrentPage = () => {
     improveAula04Map();
+    improveAula06Profiles();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', improveCurrentPage, { once: true });
+  } else {
+    improveCurrentPage();
   }
 })();
