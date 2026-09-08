@@ -223,6 +223,86 @@ const improveAula03Add21Inquiry = () => {
   `;
 };
 
+const improveAula03AprofundamentoInterconexao = () => {
+  if (!isAula03Aprofundamento) return;
+
+  const section = document.querySelector('#interconexao');
+  const container = section?.querySelector('.container');
+  if (!container) return;
+
+  container.innerHTML = `
+    <div class="study-heading">
+      <p class="study-kicker">4 · Comunicação interna</p>
+      <h2>Como CPU, memória e E/S trocam informação</h2>
+      <p>A interconexão é a infraestrutura que permite aos componentes do computador conversar entre si. O barramento compartilhado é um modelo clássico e didático para entender essa comunicação, mas não é a única forma de organizar esses caminhos.</p>
+    </div>
+
+    <div class="study-grid">
+      <div class="study-prose">
+        <h3>Uma transferência precisa responder a três perguntas</h3>
+        <p>Quando a CPU acessa a memória ou um módulo de E/S, não basta transportar um valor. O sistema também precisa indicar <strong>onde</strong> a transferência deve ocorrer e <strong>qual operação</strong> está sendo solicitada.</p>
+
+        <div class="bus-stack">
+          <div class="bus">
+            <strong>Dados</strong>
+            <span><strong>O que está sendo transferido?</strong> Instruções, operandos e resultados circulam por essas linhas ou caminhos.</span>
+          </div>
+          <div class="bus">
+            <strong>Endereços</strong>
+            <span><strong>Onde a operação deve ocorrer?</strong> O endereço identifica uma posição de memória ou um dispositivo/porta associado à transferência.</span>
+          </div>
+          <div class="bus">
+            <strong>Controle</strong>
+            <span><strong>O que deve ser feito e quando?</strong> Sinais de leitura, escrita, confirmação e temporização coordenam o uso dos caminhos compartilhados.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="study-stack">
+        <article class="study-card">
+          <strong>Exemplo · ler o conteúdo do endereço 20</strong>
+          <p>Retome os registradores da seção anterior:</p>
+          <ol style="margin:.7rem 0 0;padding-left:1.15rem;color:var(--muted)">
+            <li>o <strong>MAR</strong> mantém o endereço <code>20</code>;</li>
+            <li>o endereço é apresentado à memória;</li>
+            <li>o controle indica uma operação de <strong>leitura</strong>;</li>
+            <li>a memória coloca o conteúdo solicitado no caminho de <strong>dados</strong>;</li>
+            <li>o valor recebido pode ser mantido temporariamente no <strong>MBR</strong>.</li>
+          </ol>
+          <p style="margin-top:.8rem;margin-bottom:0">Assim, endereço, controle e dado não são três assuntos separados: eles participam da <strong>mesma transferência</strong>.</p>
+        </article>
+      </div>
+    </div>
+
+    <div class="study-prose" style="margin-top:2rem">
+      <h3>O que muda em um barramento compartilhado?</h3>
+      <p>Em um barramento compartilhado, vários componentes utilizam um conjunto comum de caminhos. Isso torna a organização flexível, mas cria uma consequência: <strong>é preciso coordenar quem pode usar o barramento em cada momento</strong>. Quando a demanda cresce, a capacidade dessa comunicação também pode limitar o desempenho do sistema.</p>
+
+      <div class="mini-grid">
+        <article class="mini-card">
+          <span class="tag">Dados</span>
+          <h4>Largura da transferência</h4>
+          <p>Quanto mais bits podem ser transportados em uma transferência, maior pode ser a quantidade de informação movimentada por acesso, desde que os demais componentes consigam acompanhar.</p>
+        </article>
+        <article class="mini-card">
+          <span class="tag">Endereços</span>
+          <h4>Quantidade de posições identificáveis</h4>
+          <p>A quantidade de bits usada para representar endereços determina quantas posições distintas podem ser identificadas pelo sistema.</p>
+        </article>
+      </div>
+
+      <h3>Interconexão não significa necessariamente “um único barramento”</h3>
+      <p>Máquinas atuais combinam diferentes soluções: barramentos dedicados, ligações ponto a ponto, controladores integrados e interconexões especializadas. Essas alternativas reduzem a necessidade de todos os componentes disputarem exatamente o mesmo caminho.</p>
+      <p>Mesmo quando a implementação física deixa de parecer um barramento clássico, a separação entre <strong>conteúdo transferido, destino/origem e controle da operação</strong> continua sendo uma boa forma de raciocinar sobre a comunicação interna.</p>
+    </div>
+
+    <div class="boundary">
+      <strong>Ideia central</strong>
+      <p>O desempenho de um computador não depende apenas da velocidade com que a CPU calcula. A execução também depende de quão rapidamente instruções, dados e comandos conseguem circular entre processador, memória e E/S.</p>
+    </div>
+  `;
+};
+
 const loadAula02Clean = () => {
   if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
@@ -274,6 +354,7 @@ const preparePages = () => {
   improveAula02Register();
   improveAula02Closing();
   addAula02References();
+  improveAula03AprofundamentoInterconexao();
   loadAula02Clean();
   loadAula02AprofundamentoClean();
   loadAula03AprofundamentoClean();
