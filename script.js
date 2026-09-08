@@ -143,6 +143,45 @@ const addAula02References = () => {
   else main.appendChild(referencias);
 };
 
+const fixAula03Theme = () => {
+  if (!isAula03) return;
+
+  const oldToggle = document.querySelector('.theme-toggle');
+  if (!oldToggle) return;
+
+  // Substitui o botão para remover listeners antigos e garantir um único controle de tema.
+  const themeToggle = oldToggle.cloneNode(true);
+  oldToggle.replaceWith(themeToggle);
+
+  const applyTheme = (theme) => {
+    const isDark = theme === 'dark';
+    document.body.classList.toggle('theme-dark', isDark);
+
+    document.querySelectorAll('img[data-light-src][data-dark-src]').forEach((image) => {
+      image.src = isDark ? image.dataset.darkSrc : image.dataset.lightSrc;
+    });
+
+    themeToggle.setAttribute('aria-pressed', String(isDark));
+    themeToggle.setAttribute('aria-label', isDark ? 'Ativar modo claro' : 'Ativar modo noturno');
+
+    const icon = themeToggle.querySelector('.theme-icon');
+    const text = themeToggle.querySelector('.theme-text');
+    if (icon) icon.textContent = isDark ? '☀' : '☾';
+    if (text) text.textContent = isDark ? 'Modo claro' : 'Modo noturno';
+  };
+
+  const savedTheme = localStorage.getItem('arquitetura-so-theme');
+  applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+  themeToggle.addEventListener('click', (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const nextTheme = document.body.classList.contains('theme-dark') ? 'light' : 'dark';
+    localStorage.setItem('arquitetura-so-theme', nextTheme);
+    applyTheme(nextTheme);
+  });
+};
+
 const loadAula02Clean = () => {
   if (!isAula02 || document.querySelector('script[data-aula02-clean]')) return;
   const lessonScript = document.createElement('script');
@@ -174,6 +213,7 @@ const preparePages = () => {
   improveAula02Register();
   improveAula02Closing();
   addAula02References();
+  fixAula03Theme();
   loadAula02Clean();
   loadAula02AprofundamentoClean();
   loadAula03Clean();
