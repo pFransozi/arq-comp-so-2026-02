@@ -3,34 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Rascunho de aprofundamento da Aula 05 de Arquitetura de Computadores e Sistemas Operacionais: avaliação de desempenho, CPI efetivo, speedup, Lei de Amdahl, multicore e benchmarks.">
+  <meta name="description" content="Aprofundamento da Aula 05 de Arquitetura de Computadores e Sistemas Operacionais: métricas de desempenho, CPI efetivo, speedup, Lei de Amdahl, multicore e benchmarks.">
   <meta name="theme-color" content="#101a24">
-  <title>Aula 05 — Aprofundamento | Medir, comparar e interpretar desempenho</title>
+  <title>Aula 05 — Aprofundamento | Arquitetura de Computadores e Sistemas Operacionais</title>
   <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="aula-03-clean.css">
+  <link rel="stylesheet" href="aula-05-aprofundamento.css">
   <script defer src="script.js"></script>
-  <style>
-    :root{--ink:#172033;--muted:#647087;--line:#dfe5ef;--soft:#f4f7fb;--paper:#fff;--navy:#0f172a;--blue:#176b87;--blue-soft:#e8f5f8;--teal:#2c9277;--teal-soft:#e9f7f2;--amber:#a86105;--amber-soft:#fff7e8;--content:1160px}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.68}a{color:inherit}h1,h2,h3,p{margin-top:0}h1,h2,h3{line-height:1.14;letter-spacing:-.025em}p{color:var(--muted)}code,pre{font-family:"SFMono-Regular",Consolas,monospace}.container{width:min(var(--content),calc(100% - 40px));margin-inline:auto}.section{padding:84px 0;scroll-margin-top:84px}.section-heading{max-width:860px;margin-bottom:2rem}.eyebrow{display:inline-flex;align-items:center;gap:.5rem;margin-bottom:1rem;color:var(--blue);font-size:.78rem;font-weight:850;letter-spacing:.12em;text-transform:uppercase}.eyebrow:before{content:"";width:28px;height:2px;background:currentColor;border-radius:999px}
-    .hero{padding:88px 0 72px}.hero-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:48px;align-items:end}.hero h1{font-size:clamp(2.6rem,6vw,5.4rem);max-width:14ch}.hero-lead{max-width:780px;font-size:1.2rem}.hero-actions{display:flex;flex-wrap:wrap;gap:.8rem;margin-top:1.8rem}.button{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:.75rem 1rem;border-radius:12px;text-decoration:none;font-weight:800;border:1px solid var(--line)}.button-primary{background:var(--navy);color:#fff;border-color:var(--navy)}.button-secondary{background:#fff}.guiding-card{padding:1.5rem;border:1px solid var(--line);border-radius:18px;background:#fff}.guiding-card span{display:block;margin-bottom:.7rem;color:var(--blue);font-size:.74rem;font-weight:850;letter-spacing:.1em;text-transform:uppercase}.guiding-card blockquote{margin:0;font-size:1.15rem;font-weight:760;line-height:1.45}
-    .map-grid,.concept-grid,.compare-grid,.exercise-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.card{padding:22px;border:1px solid var(--line);border-radius:16px;background:#fff}.card h3{margin-bottom:.65rem}.card p:last-child{margin-bottom:0}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:24px}.flow div{padding:16px 14px;border-top:3px solid var(--teal);background:var(--soft)}.flow small{display:block;color:var(--teal);font-weight:850;margin-bottom:.35rem}.flow strong{display:block}.callout{margin-top:22px;padding:18px 20px;border-left:4px solid var(--teal);background:var(--teal-soft)}.warning{border-left-color:var(--amber);background:var(--amber-soft)}
-    .metric-table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px}.metric-table{width:100%;min-width:740px;border-collapse:collapse}.metric-table th,.metric-table td{padding:12px 14px;border:1px solid var(--line);text-align:left}.metric-table th{background:var(--soft);font-size:.82rem}.formula{margin:22px 0;padding:22px;border:1px solid var(--line);border-radius:14px;background:var(--navy);color:#fff;text-align:center}.formula code{font-size:clamp(1.05rem,2vw,1.35rem)}.formula p{margin:.7rem 0 0;color:#cbd5e1}.step-list{display:grid;gap:12px}.step{display:grid;grid-template-columns:38px 1fr;gap:12px;align-items:start;padding:14px 0;border-bottom:1px solid var(--line)}.step b{display:grid;place-items:center;width:32px;height:32px;border-radius:50%;background:var(--blue-soft);color:var(--blue)}.step p{margin:0}.mini-bars{display:grid;gap:10px;margin-top:18px}.bar-row{display:grid;grid-template-columns:110px 1fr;gap:12px;align-items:center}.bar{height:28px;border-radius:7px;background:linear-gradient(90deg,var(--teal) 0 70%,#dfe5ef 70% 100%)}.bar.four{background:linear-gradient(90deg,var(--teal) 0 25%,#dfe5ef 25% 100%)}.source-note{font-size:.9rem;color:var(--muted)}.draft-note{margin:0;padding:12px 16px;border:1px dashed var(--line);border-radius:12px;background:var(--soft);font-size:.9rem}.checklist{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.check{padding:14px 16px;border-bottom:1px solid var(--line)}.check:before{content:"□";margin-right:.6rem;color:var(--teal);font-weight:900}
-    @media(max-width:920px){.hero-grid,.map-grid,.concept-grid,.compare-grid,.exercise-grid{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}.checklist{grid-template-columns:1fr}}
-    @media(max-width:600px){.section{padding:64px 0}.flow{grid-template-columns:1fr}}
-  </style>
 </head>
-<body class="lesson-page arch-page aula03-clean">
+<body class="study-page study-clean arch-page">
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-  <div class="progress" id="progress" aria-hidden="true"></div>
 
-  <header class="site-header">
+  <header class="site-header" id="inicio">
     <div class="container nav-wrap">
-      <a class="brand" href="index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
+      <a class="brand" href="index.html" aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal">
         <span class="brand-mark" aria-hidden="true">SO</span>
         <span><strong>Arquitetura &amp; SO</strong><small>Aula 05 · aprofundamento</small></span>
       </a>
-      <nav class="main-nav" aria-label="Navegação principal">
+      <nav class="main-nav study-nav" aria-label="Navegação principal">
         <a href="aula-05.html">Aula 05</a>
+        <a class="nav-highlight" href="aula-05-aprofundamento.html">Aprofundamento</a>
         <a href="index.html">Portal</a>
         <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
       </nav>
@@ -38,116 +29,434 @@
   </header>
 
   <main id="conteudo">
-    <section class="hero" id="inicio"><div class="container hero-grid">
-      <div>
-        <p class="eyebrow">Aula 05 · aprofundamento teórico</p>
-        <h1>Medir, comparar e interpretar desempenho</h1>
-        <p class="hero-lead">Na aula principal construímos a relação entre <strong>instruções executadas, CPI, frequência e tempo de CPU</strong>. Agora o foco muda: como usar essas medidas para comparar implementações e sistemas sem transformar uma métrica isolada em uma conclusão sobre desempenho?</p>
-        <div class="hero-actions"><a class="button button-primary" href="#mapa">Começar</a><a class="button button-secondary" href="aula-05.html">Voltar à Aula 05</a></div>
+    <div class="study-clean-layout">
+      <div class="study-clean-content">
+        <section class="study-hero">
+          <div class="container study-hero-grid">
+            <div>
+              <p class="eyebrow">Aula 05 · aprofundamento teórico</p>
+              <h1>Medir, comparar e interpretar desempenho</h1>
+              <p class="study-lead">Na aula principal relacionamos instruções executadas, CPI e frequência ao tempo de CPU. Agora vamos usar essa base para responder uma pergunta mais exigente: <strong>como avaliar se uma implementação ou uma máquina realmente oferece melhor desempenho para determinado software?</strong></p>
+              <div class="study-meta">
+                <span>Métricas</span><span>CPI efetivo</span><span>Speedup</span><span>Lei de Amdahl</span><span>Multicore</span><span>Benchmarks</span>
+              </div>
+              <div class="study-actions">
+                <a class="button button-primary" href="#mapa">Começar</a>
+                <a class="button button-secondary" href="aula-05.html">Voltar à Aula 05</a>
+              </div>
+              <p class="study-source-note"><strong>Base conceitual:</strong> Stallings, especialmente o capítulo sobre questões de desempenho, medidas básicas, Lei de Amdahl e benchmarks; Tanenbaum e Bos, na discussão sobre sistemas multiprocessadores e a necessidade de software capaz de explorar múltiplas unidades de execução.</p>
+            </div>
+            <aside class="study-card">
+              <strong>Pergunta central</strong>
+              <p>Se frequência, número de núcleos e uma única métrica não bastam para caracterizar desempenho, <strong>quais evidências precisamos observar para comparar duas alternativas?</strong></p>
+              <p>O foco deste material é interpretar resultados, e não apenas calcular números.</p>
+            </aside>
+          </div>
+        </section>
+
+        <details class="study-mobile-toc">
+          <summary>Neste material</summary>
+          <nav>
+            <a href="#mapa">Mapa da análise</a>
+            <a href="#metricas">Métricas e contexto</a>
+            <a href="#cpi">CPI efetivo</a>
+            <a href="#mips">Frequência e MIPS</a>
+            <a href="#speedup">Speedup</a>
+            <a href="#amdahl">Lei de Amdahl</a>
+            <a href="#multicore">Multicore</a>
+            <a href="#taxa">Tempo e throughput</a>
+            <a href="#benchmark">Benchmarks</a>
+            <a href="#atividade">Atividade</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </details>
+
+        <section class="study-section" id="mapa">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">1 · Mapa da análise</p>
+              <h2>Da equação de tempo à avaliação de desempenho</h2>
+              <p>A Aula 05 apresentou um modelo para explicar o tempo de CPU. O aprofundamento começa nesse ponto e amplia a análise para comparação, limites de otimização e escolha de evidências.</p>
+            </div>
+
+            <div class="performance-flow" aria-label="Fluxo conceitual de avaliação de desempenho">
+              <div class="performance-step"><small>1 · Trabalho</small><strong>Programa</strong><span>Quanto trabalho a implementação exige?</span></div>
+              <div class="performance-step"><small>2 · Execução</small><strong>Instruções e CPI</strong><span>Como esse trabalho aparece na máquina?</span></div>
+              <div class="performance-step"><small>3 · Medição</small><strong>Tempo</strong><span>Quanto a tarefa realmente leva?</span></div>
+              <div class="performance-step"><small>4 · Comparação</small><strong>Speedup</strong><span>Quanto uma alternativa melhora a outra?</span></div>
+              <div class="performance-step"><small>5 · Interpretação</small><strong>Limites</strong><span>Que parte ainda domina a execução?</span></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Uma métrica isolada não representa o sistema inteiro</h3>
+                <p>Stallings trata desempenho como uma propriedade que emerge da interação entre programa, compilador, arquitetura e implementação da máquina. Por isso, comparar apenas frequência ou apenas um indicador de taxa pode produzir conclusões frágeis.</p>
+                <p>Para Engenharia de Software, a consequência é direta: <strong>a escolha da evidência deve acompanhar o trabalho que realmente importa para a aplicação.</strong></p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Retomada</strong><p><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code></p></div>
+                <div class="study-callout"><strong>Novo foco</strong><p>A equação explica componentes do custo. Ela não substitui a necessidade de medir a tarefa real e interpretar o contexto.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="metricas">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">2 · Métricas e contexto</p>
+              <h2>Desempenho depende do que estamos tentando melhorar</h2>
+              <p>A mesma máquina pode ser adequada para uma carga e inadequada para outra. Antes de comparar números, precisamos definir qual comportamento queremos avaliar.</p>
+            </div>
+
+            <div class="metric-list">
+              <div class="metric-row"><strong>Programa</strong><span>O algoritmo e a implementação determinam quanto trabalho precisa ser realizado para resolver o problema.</span></div>
+              <div class="metric-row"><strong>Compilador</strong><span>Transforma a implementação em instruções e pode gerar sequências diferentes para o mesmo comportamento de alto nível.</span></div>
+              <div class="metric-row"><strong>Arquitetura</strong><span>Define o repertório de instruções e os mecanismos disponíveis para expressar o trabalho.</span></div>
+              <div class="metric-row"><strong>Microarquitetura</strong><span>Determina como as instruções previstas pela arquitetura são executadas no processador concreto.</span></div>
+              <div class="metric-row"><strong>Carga real</strong><span>O resultado observado depende do conjunto de entradas e do tipo de tarefa usado na medição.</span></div>
+            </div>
+
+            <div class="boundary">
+              <strong>Regra de leitura</strong>
+              <p>Uma especificação de hardware informa capacidade potencial. Uma medição informa o comportamento observado em uma carga concreta. São tipos diferentes de evidência.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="cpi">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">3 · CPI efetivo</p>
+              <h2>Nem todas as instruções têm o mesmo custo</h2>
+              <p>Na Aula 05 utilizamos um CPI médio. Aqui precisamos entender por que ele é uma média e por que pode mudar de acordo com a combinação de instruções executadas pelo programa.</p>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="mix-table">
+                <thead><tr><th>Categoria didática</th><th>Participação na execução</th><th>CPI assumido</th><th>Contribuição para o CPI médio</th></tr></thead>
+                <tbody>
+                  <tr><td>Aritmética</td><td>50%</td><td>1</td><td>0,50</td></tr>
+                  <tr><td>Transferência de dados</td><td>30%</td><td>2</td><td>0,60</td></tr>
+                  <tr><td>Controle de fluxo</td><td>20%</td><td>4</td><td>0,80</td></tr>
+                  <tr><td><strong>Total</strong></td><td>100%</td><td>—</td><td><strong>CPI médio = 1,90</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="equation-box">
+              <code>CPI efetivo = Σ (fração de instruções do tipo i × CPI do tipo i)</code>
+              <p>O exemplo é didático: o objetivo é perceber que o CPI observado depende da composição do trabalho executado.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Uma otimização pode alterar mais de uma parte da equação</h3>
+                <p>Uma modificação de código pode reduzir a quantidade total de instruções e também alterar a distribuição entre categorias de instrução. Por isso, o efeito final não precisa aparecer apenas em um único termo da equação de desempenho.</p>
+                <h3>CPI não deve ser tratado como um número universal da CPU</h3>
+                <p>O CPI médio depende do conjunto de instruções realmente executado e do comportamento do processador durante aquela carga. Ele precisa ser interpretado no contexto da execução.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Pergunta</strong><p>Se um programa passar a executar proporcionalmente mais instruções de maior custo, o CPI médio permanece igual?</p></div>
+                <div class="study-callout"><strong>Conexão com software</strong><p>Algoritmo, compilação e arquitetura se encontram justamente na sequência de instruções que chega ao processador.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="mips">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">4 · Frequência e MIPS</p>
+              <h2>Executar mais ciclos ou mais instruções por segundo não garante terminar a tarefa antes</h2>
+              <p>Taxas de execução podem ser úteis, mas se tornam perigosas quando são usadas sem considerar quantas instruções o programa precisa executar para concluir a tarefa.</p>
+            </div>
+
+            <div class="comparison-grid">
+              <div class="comparison-side">
+                <small>Máquina A</small>
+                <h3>Frequência maior</h3>
+                <p>Executa mais ciclos por segundo.</p>
+                <p>Entretanto, o programa pode exigir mais instruções ou apresentar CPI médio maior.</p>
+              </div>
+              <div class="comparison-side">
+                <small>Máquina B</small>
+                <h3>Frequência menor</h3>
+                <p>Executa menos ciclos por segundo.</p>
+                <p>Mas pode concluir a tarefa antes se o trabalho exigir menos ciclos totais.</p>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>MIPS mede uma taxa de instruções</h3>
+              <p>MIPS expressa milhões de instruções executadas por segundo. A métrica pode ajudar dentro de um contexto controlado, mas não elimina o problema de que arquiteturas, compiladores e programas podem precisar de quantidades diferentes de instruções para resolver a mesma tarefa.</p>
+            </div>
+
+            <div class="boundary">
+              <strong>Pergunta mais útil</strong>
+              <p>Para uma aplicação concreta, é mais importante saber “quantas instruções por segundo a máquina executa?” ou “quanto tempo ela leva para terminar o trabalho que precisamos realizar?”</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="speedup">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">5 · Speedup</p>
+              <h2>Transforme “ficou mais rápido” em uma comparação mensurável</h2>
+              <p>O experimento da Aula 05 produziu duas versões do mesmo programa. O aprofundamento pode usar esses tempos para quantificar a melhoria observada.</p>
+            </div>
+
+            <div class="equation-box">
+              <code>speedup = tempo da versão de referência ÷ tempo da versão melhorada</code>
+              <p>Se uma execução passa de 10 s para 5 s, o speedup observado é 2×.</p>
+            </div>
+
+            <div class="speedup-grid">
+              <div class="speedup-card"><small>Mesmo resultado</small><strong>Compare funcionalidade equivalente</strong><p>O ganho só faz sentido se as alternativas resolverem o mesmo problema com o mesmo critério de correção.</p></div>
+              <div class="speedup-card"><small>Mesmo ambiente</small><strong>Controle as condições</strong><p>Para comparar implementações, mantenha o ambiente de execução tão semelhante quanto possível.</p></div>
+              <div class="speedup-card"><small>Mais de uma entrada</small><strong>Observe o comportamento</strong><p>O ganho pode mudar conforme o tamanho e as características da entrada.</p></div>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="mix-table">
+                <thead><tr><th>Entrada</th><th>Versão inicial</th><th>Versão modificada</th><th>Speedup</th></tr></thead>
+                <tbody>
+                  <tr><td>5.000</td><td></td><td></td><td></td></tr>
+                  <tr><td>10.000</td><td></td><td></td><td></td></tr>
+                  <tr><td>15.000</td><td></td><td></td><td></td></tr>
+                  <tr><td>20.000</td><td></td><td></td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="boundary">
+              <strong>Questão de análise</strong>
+              <p>O speedup permanece constante conforme a entrada cresce? Se não, o que isso sugere sobre a quantidade de trabalho evitada pela nova implementação?</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="amdahl">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">6 · Lei de Amdahl</p>
+              <h2>Melhorar muito uma parte pequena pode mudar pouco o tempo total</h2>
+              <p>Stallings utiliza a Lei de Amdahl para mostrar que o ganho global depende da fração da execução que realmente recebe a melhoria.</p>
+            </div>
+
+            <div class="amdahl-view">
+              <div class="amdahl-bars" aria-label="Representação conceitual da Lei de Amdahl">
+                <div class="amdahl-bar"><span>Antes</span><div class="amdahl-track"><div class="amdahl-seq">30% não alterado</div><div class="amdahl-par">70% melhorável</div></div></div>
+                <div class="amdahl-bar"><span>Depois</span><div class="amdahl-track after"><div class="amdahl-seq">parte não alterada</div><div class="amdahl-par">parte acelerada</div></div></div>
+              </div>
+              <div class="amdahl-explanation">
+                <h3>A parte não melhorada se torna proporcionalmente mais importante</h3>
+                <p>Se 70% do tempo puder ser acelerado, os 30% restantes continuam existindo. À medida que a parte melhorável fica mais rápida, a fração não alterada passa a representar uma parcela maior do tempo total.</p>
+                <p>Isso explica por que ganhos locais muito grandes podem produzir ganhos globais modestos.</p>
+              </div>
+            </div>
+
+            <div class="equation-box">
+              <code>S = 1 ÷ ((1 − p) + p ÷ s)</code>
+              <p><strong>p</strong> é a fração que pode ser melhorada; <strong>s</strong> é o speedup aplicado a essa fração; <strong>S</strong> é o speedup global.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Exemplo</h3>
+                <p>Se 70% do tempo puder ser acelerado em 10×, o programa inteiro não se torna 10× mais rápido. A parte de 30% que não foi alterada continua limitando o ganho global.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Consequência prática</strong><p>Antes de otimizar, vale descobrir qual parte realmente domina o tempo total.</p></div>
+                <div class="study-callout"><strong>Preparação para profiling</strong><p>Amdahl transforma “otimizar o código” em uma pergunta mais precisa: <strong>otimizar qual parte?</strong></p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="multicore">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">7 · Multicore</p>
+              <h2>Mais núcleos só ajudam quando existe trabalho que pode avançar em paralelo</h2>
+              <p>A Aula 05 apresentou processador, núcleo e processador lógico. Agora podemos discutir o limite mais importante: o hardware oferece capacidade paralela, mas o software precisa fornecer trabalho que possa explorá-la.</p>
+            </div>
+
+            <div class="comparison-grid">
+              <div class="comparison-side">
+                <small>Parte sequencial</small>
+                <h3>Precisa avançar em uma ordem</h3>
+                <p>Trechos dependentes de resultados anteriores não podem simplesmente ser distribuídos entre vários núcleos.</p>
+              </div>
+              <div class="comparison-side">
+                <small>Parte paralelizável</small>
+                <h3>Pode ser dividida em trabalho independente</h3>
+                <p>Quando existem partes independentes, múltiplas unidades de execução podem fazê-las avançar simultaneamente.</p>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Por que o ganho não cresce indefinidamente?</h3>
+              <p>A parte sequencial permanece, e a coordenação entre múltiplos fluxos também tem custo. Tanenbaum e Bos mostram que sistemas multiprocessadores exigem mecanismos de sincronização e escalonamento, reforçando que paralelismo é uma propriedade conjunta de hardware e software.</p>
+            </div>
+
+            <div class="boundary">
+              <strong>Ponte para Sistemas Operacionais</strong>
+              <p>Mais adiante, processos, threads, escalonamento e sincronização mostrarão como o sistema operacional administra esses fluxos de execução.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="taxa">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">8 · O que significa “mais rápido”?</p>
+              <h2>Tempo de resposta e throughput respondem perguntas diferentes</h2>
+              <p>Stallings diferencia métricas voltadas ao tempo de uma tarefa e métricas voltadas à quantidade de trabalho concluída em determinado intervalo.</p>
+            </div>
+
+            <div class="response-throughput">
+              <div class="response-card"><small>Tempo de resposta</small><strong>Quanto uma tarefa leva?</strong><p>Importa quando o objetivo é reduzir o tempo percebido para concluir uma operação específica, como gerar um relatório ou compilar um projeto.</p></div>
+              <div class="response-card"><small>Throughput</small><strong>Quantas tarefas são concluídas?</strong><p>Importa quando o sistema precisa processar muitas requisições ou trabalhos ao longo do tempo, como em servidores e pipelines.</p></div>
+            </div>
+
+            <div class="boundary">
+              <strong>Engenharia de Software</strong>
+              <p>Antes de escolher uma métrica de desempenho, precisamos saber qual requisito estamos tentando atender: terminar uma tarefa individual mais cedo ou aumentar a capacidade total do sistema?</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="benchmark">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">9 · Benchmarks</p>
+              <h2>Uma comparação só é útil quando a carga representa o uso que queremos avaliar</h2>
+              <p>Stallings usa a SPEC para discutir princípios de benchmark e comparação entre sistemas. Para esta disciplina, o ponto central é compreender o papel de uma carga representativa.</p>
+            </div>
+
+            <div class="benchmark-list">
+              <div class="benchmark-row"><strong>Representatividade</strong><p>O benchmark precisa exercer comportamentos próximos daqueles que realmente importam para a aplicação ou para o tipo de sistema avaliado.</p></div>
+              <div class="benchmark-row"><strong>Repetibilidade</strong><p>As condições precisam permitir que a comparação seja refeita e analisada com critérios semelhantes.</p></div>
+              <div class="benchmark-row"><strong>Comparabilidade</strong><p>As alternativas devem executar uma carga equivalente, com regras de medição que não favoreçam uma delas arbitrariamente.</p></div>
+              <div class="benchmark-row"><strong>Interpretação</strong><p>Um resultado de benchmark descreve desempenho naquela carga; não demonstra automaticamente superioridade em qualquer aplicação.</p></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Exemplo de decisão</h3>
+                <p>Se a máquina será usada principalmente para compressão, um benchmark que inclui cargas de compressão oferece evidência mais pertinente do que um teste sintético que mede apenas uma operação isolada.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Pergunta de projeto</strong><p>O benchmark escolhido representa o tipo de trabalho que o software realmente executará?</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="atividade">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">10 · Atividade de análise</p>
+              <h2>Interprete uma melhoria sem escrever outro programa</h2>
+              <p>Use os conceitos deste aprofundamento para construir uma explicação técnica a partir de evidências simples.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Cenário</h3>
+                <p>Uma implementação A leva <strong>12 s</strong> para concluir uma tarefa. Depois de uma alteração no algoritmo, a implementação B leva <strong>7 s</strong> no mesmo computador e produz a mesma saída.</p>
+                <p>Durante as duas execuções, a CPU permanece fortemente ocupada.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Objetivo</strong><p>Não basta dizer que B é “melhor”. Construa uma justificativa usando tempo, speedup e limites da interpretação.</p></div>
+              </div>
+            </div>
+
+            <div class="question-set">
+              <div class="question"><span>01</span><p>Qual é o speedup observado da implementação B em relação à A?</p></div>
+              <div class="question"><span>02</span><p>Podemos concluir que o processador ficou mais rápido? Explique.</p></div>
+              <div class="question"><span>03</span><p>Que mudança na quantidade ou no tipo de trabalho executado poderia explicar a redução do tempo?</p></div>
+              <div class="question"><span>04</span><p>Se apenas uma pequena parte do programa continuar dominando o tempo total, qual conceito deste material ajuda a explicar o limite das próximas otimizações?</p></div>
+              <div class="question"><span>05</span><p>Se a máquina possui oito núcleos, podemos concluir que oito fluxos de execução reduzirão o tempo para aproximadamente 1/8? Por quê?</p></div>
+              <div class="question"><span>06</span><p>Que tipo de benchmark seria mais defensável para comparar duas máquinas destinadas a executar essa aplicação?</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="sintese">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">11 · Síntese</p>
+              <h2>Você consegue separar métrica, evidência e conclusão?</h2>
+              <p>O aprofundamento deve permitir uma leitura mais cuidadosa de resultados de desempenho.</p>
+            </div>
+
+            <div class="question-set">
+              <div class="question"><span>01</span><p>Por que frequência isolada não determina o tempo de uma aplicação?</p></div>
+              <div class="question"><span>02</span><p>Por que o CPI médio pode mudar entre programas executados na mesma CPU?</p></div>
+              <div class="question"><span>03</span><p>Qual é a diferença entre taxa de instruções e tempo para concluir uma tarefa?</p></div>
+              <div class="question"><span>04</span><p>O que o speedup permite expressar que a frase “ficou mais rápido” não expressa?</p></div>
+              <div class="question"><span>05</span><p>Qual limite fundamental a Lei de Amdahl impõe às otimizações?</p></div>
+              <div class="question"><span>06</span><p>Por que múltiplos núcleos não produzem automaticamente ganho proporcional?</p></div>
+              <div class="question"><span>07</span><p>Quando tempo de resposta é uma métrica mais adequada que throughput?</p></div>
+              <div class="question"><span>08</span><p>O que torna um benchmark relevante para uma decisão de Engenharia de Software?</p></div>
+            </div>
+
+            <div class="boundary">
+              <strong>Ideia final</strong>
+              <p>Desempenho não é uma característica que possa ser lida em um único número da ficha técnica. É uma relação entre o trabalho do software, a forma como esse trabalho chega à máquina, os recursos disponíveis e a métrica escolhida para observar o resultado.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="referencias">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">Referências</p>
+              <h2>Base bibliográfica deste aprofundamento</h2>
+              <p>O conteúdo desta página foi elaborado a partir dos PDFs que integram o projeto da disciplina e do ementário institucional.</p>
+            </div>
+            <div class="reference-list">
+              <p><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. 10. ed. Capítulo 2 — questões de desempenho, medidas básicas, Lei de Amdahl e benchmarks; capítulos sobre organização multicore como apoio à discussão de paralelismo.</p>
+              <p><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas Operacionais Modernos</em>. 4. ed. Capítulo 8 — sistemas com múltiplos processadores; conceitos de sincronização e escalonamento usados apenas como ponte para o bloco posterior de Sistemas Operacionais.</p>
+              <p><strong>EMENTÁRIO GERAL — Engenharia de Software.</strong> Componente curricular Arquitetura de Computadores e Sistemas Operacionais: competências C3 e C6 e habilidades relacionadas à análise de tecnologias e arquiteturas de hardware para construção de software compatível.</p>
+            </div>
+          </div>
+        </section>
       </div>
-      <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Como saber se uma otimização ou uma escolha de hardware realmente trouxe benefício para o software que queremos executar?</blockquote></aside>
-    </div></section>
 
-    <section class="section" id="mapa"><div class="container">
-      <div class="section-heading"><p class="eyebrow">1 · Mapa do aprofundamento</p><h2>Da fórmula de tempo à avaliação de desempenho</h2><p>A equação da Aula 05 ajuda a explicar de onde vem o tempo de CPU. Neste aprofundamento, ela será usada como ponto de partida para discutir comparação, speedup, limites da otimização, multicore e benchmarks.</p></div>
-      <div class="flow" aria-label="Percurso conceitual do aprofundamento"><div><small>1</small><strong>Métrica</strong><span>O que estamos medindo?</span></div><div><small>2</small><strong>Comparação</strong><span>Qual execução é mais rápida?</span></div><div><small>3</small><strong>Speedup</strong><span>Quanto melhorou?</span></div><div><small>4</small><strong>Limite</strong><span>Quanto do sistema foi realmente melhorado?</span></div><div><small>5</small><strong>Benchmark</strong><span>A carga representa o uso real?</span></div></div>
-      <div class="callout"><strong>Ideia central.</strong> Stallings organiza a avaliação de desempenho em torno de medidas básicas, speedup, Lei de Amdahl e benchmarks. O objetivo aqui é aproximar esses conceitos de decisões de Engenharia de Software.</div>
-    </div></section>
-
-    <section class="section" id="metricas"><div class="container">
-      <div class="section-heading"><p class="eyebrow">2 · Métricas</p><h2>Uma métrica descreve uma parte do comportamento, não o sistema inteiro</h2><p>Frequência, CPI e taxa de instruções são úteis, mas nenhuma delas, isoladamente, responde à pergunta mais importante: <strong>quanto tempo a tarefa real levou para terminar?</strong></p></div>
-      <div class="metric-table-wrap"><table class="metric-table"><thead><tr><th>Métrica</th><th>O que descreve</th><th>O que não permite concluir sozinha</th></tr></thead><tbody>
-        <tr><td><strong>Frequência</strong></td><td>Quantidade de ciclos de clock disponíveis por segundo.</td><td>Que uma aplicação terminará antes em uma CPU com GHz maior.</td></tr>
-        <tr><td><strong>CPI</strong></td><td>Quantidade média de ciclos consumidos por instrução em uma execução ou classe de instruções.</td><td>Que o mesmo valor aparecerá para qualquer programa.</td></tr>
-        <tr><td><strong>MIPS</strong></td><td>Taxa de execução de milhões de instruções por segundo.</td><td>Que mais instruções por segundo significam necessariamente menor tempo para a mesma tarefa.</td></tr>
-        <tr><td><strong>Tempo de execução</strong></td><td>Tempo observado para completar determinada carga de trabalho.</td><td>Que o resultado vale para qualquer outro programa, entrada ou ambiente.</td></tr>
-      </tbody></table></div>
-      <div class="formula"><code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code><p>Na Aula 05 usamos essa relação para decompor o tempo. Aqui ela serve para lembrar que mudar apenas um termo não determina, sozinho, o resultado final.</p></div>
-    </div></section>
-
-    <section class="section" id="cpi"><div class="container">
-      <div class="section-heading"><p class="eyebrow">3 · CPI efetivo</p><h2>O CPI observado depende também da mistura de instruções</h2><p>Stallings trata o CPI como uma média ponderada quando diferentes classes de instruções apresentam custos distintos. Isso ajuda a abandonar a ideia de que CPI é um único número fixo da CPU.</p></div>
-      <div class="metric-table-wrap"><table class="metric-table"><thead><tr><th>Classe de instrução</th><th>Participação na execução</th><th>CPI ilustrativo</th></tr></thead><tbody><tr><td>Aritmética</td><td>50%</td><td>1</td></tr><tr><td>Transferência de dados</td><td>30%</td><td>2</td></tr><tr><td>Controle de fluxo</td><td>20%</td><td>4</td></tr></tbody></table></div>
-      <div class="concept-grid" style="margin-top:20px">
-        <article class="card"><h3>Pergunta 1</h3><p>Se o programa passar a executar proporcionalmente mais instruções de controle, o CPI médio precisa permanecer igual?</p></article>
-        <article class="card"><h3>Pergunta 2</h3><p>Se uma alteração de código reduz a quantidade de instruções executadas, o tempo pode cair mesmo sem trocar o processador?</p></article>
-      </div>
-      <div class="callout warning"><strong>Limite deste recorte:</strong> não vamos detalhar pipeline, execução fora de ordem ou previsão de desvios. O objetivo é apenas perceber que o custo médio de execução depende do trabalho produzido pelo software e de como a máquina realiza esse trabalho.</div>
-    </div></section>
-
-    <section class="section" id="speedup"><div class="container">
-      <div class="section-heading"><p class="eyebrow">4 · Comparação</p><h2>Speedup transforma “ficou mais rápido” em uma medida</h2><p>Quando duas versões produzem o mesmo resultado sob condições comparáveis, podemos expressar a melhora pela razão entre os tempos de execução.</p></div>
-      <div class="formula"><code>speedup = tempo antes ÷ tempo depois</code><p>Se uma execução cai de 12 s para 6 s, o speedup é 2×. A nova versão termina a tarefa em metade do tempo da anterior.</p></div>
-      <div class="metric-table-wrap"><table class="metric-table"><thead><tr><th>Entrada</th><th>Versão inicial</th><th>Versão modificada</th><th>Speedup</th></tr></thead><tbody><tr><td>5.000</td><td></td><td></td><td></td></tr><tr><td>10.000</td><td></td><td></td><td></td></tr><tr><td>15.000</td><td></td><td></td><td></td></tr><tr><td>20.000</td><td></td><td></td><td></td></tr></tbody></table></div>
-      <p class="draft-note" style="margin-top:16px"><strong>Rascunho:</strong> esta tabela reaproveita diretamente o experimento da Aula 05. O aluno não precisa escrever outro programa; apenas usa os tempos já medidos para calcular e interpretar a aceleração.</p>
-    </div></section>
-
-    <section class="section" id="amdahl"><div class="container">
-      <div class="section-heading"><p class="eyebrow">5 · Lei de Amdahl</p><h2>O ganho global depende de quanto do sistema foi realmente melhorado</h2><p>Stallings apresenta a Lei de Amdahl para mostrar que acelerar uma parte do trabalho não acelera, na mesma proporção, o programa completo. A fração que não foi melhorada continua impondo um limite.</p></div>
-      <div class="compare-grid">
-        <article class="card"><h3>Antes da fórmula</h3><div class="step-list"><div class="step"><b>1</b><p>Separe o tempo total em uma parte que pode ser melhorada e outra que permanece como está.</p></div><div class="step"><b>2</b><p>Aplique a aceleração apenas à fração melhorável.</p></div><div class="step"><b>3</b><p>Some novamente as duas partes e compare o novo tempo com o original.</p></div></div></article>
-        <article class="card"><h3>Exemplo conceitual</h3><p>Se 70% do tempo está em uma etapa que pode ser acelerada e 30% permanece sequencial, mesmo uma melhoria muito grande naquela etapa não elimina os 30% restantes.</p><div class="mini-bars"><div class="bar-row"><strong>Antes</strong><div class="bar"></div></div><div class="bar-row"><strong>Depois</strong><div class="bar four"></div></div></div></article>
-      </div>
-      <div class="formula"><code>S = 1 / ((1 − p) + p / s)</code><p><strong>p</strong> é a fração que recebe melhoria; <strong>s</strong> é a aceleração obtida nessa fração; <strong>S</strong> é o speedup global.</p></div>
-      <div class="callout"><strong>Leitura para Engenharia de Software:</strong> antes de otimizar uma parte do código, precisamos saber se ela representa parcela relevante do tempo total. Uma melhoria enorme no lugar errado pode produzir pouco ganho global.</div>
-    </div></section>
-
-    <section class="section" id="multicore"><div class="container">
-      <div class="section-heading"><p class="eyebrow">6 · Multicore</p><h2>Mais núcleos oferecem capacidade; o software precisa expor trabalho paralelizável</h2><p>A Lei de Amdahl também aparece em Stallings na análise de sistemas multicore. Se apenas uma fração do programa puder ser executada em paralelo, aumentar o número de núcleos produz retornos decrescentes.</p></div>
-      <div class="concept-grid">
-        <article class="card"><h3>Hardware</h3><p>Mais cores podem executar múltiplos fluxos de trabalho simultaneamente. Isso amplia a capacidade disponível para partes do programa que possam avançar em paralelo.</p></article>
-        <article class="card"><h3>Software</h3><p>Tanenbaum e Bos ressaltam que o desafio está em dividir a aplicação em trabalho paralelo e lidar com sincronização e comunicação sem introduzir custos que anulem o benefício.</p></article>
-      </div>
-      <div class="formula"><code>Speedup(N) = 1 / ((1 − f) + f / N)</code><p><strong>f</strong> representa a fração paralelizável; <strong>N</strong> o número de unidades de processamento consideradas no modelo idealizado.</p></div>
-      <div class="callout warning"><strong>Não é ainda uma aula sobre threads.</strong> Aqui o objetivo é apenas compreender o limite conceitual: disponibilizar mais núcleos não torna automaticamente um fluxo sequencial N vezes mais rápido.</div>
-    </div></section>
-
-    <section class="section" id="throughput"><div class="container">
-      <div class="section-heading"><p class="eyebrow">7 · O que significa “melhor desempenho”?</p><h2>Tempo de resposta e taxa de processamento respondem a perguntas diferentes</h2><p>Na discussão de benchmarks SPEC, Stallings distingue métricas orientadas ao tempo de uma tarefa e métricas orientadas à quantidade de trabalho concluída em determinado período.</p></div>
-      <div class="compare-grid">
-        <article class="card"><h3>Tempo de resposta</h3><p><strong>Pergunta:</strong> quanto tempo uma tarefa leva para terminar?</p><p><strong>Exemplo:</strong> quanto tempo o sistema leva para gerar um relatório ou compilar um projeto?</p></article>
-        <article class="card"><h3>Throughput / taxa</h3><p><strong>Pergunta:</strong> quantas tarefas podem ser processadas em determinado intervalo?</p><p><strong>Exemplo:</strong> quantas requisições independentes um servidor consegue atender por segundo?</p></article>
-      </div>
-      <div class="callout"><strong>Consequência de projeto:</strong> a melhor máquina ou implementação depende do requisito. Otimizar o tempo de uma única tarefa e maximizar a quantidade total de tarefas concluídas não são necessariamente o mesmo objetivo.</div>
-    </div></section>
-
-    <section class="section" id="benchmark"><div class="container">
-      <div class="section-heading"><p class="eyebrow">8 · Benchmark</p><h2>Uma comparação só é útil quando a carga representa o uso que queremos avaliar</h2><p>Stallings apresenta princípios de benchmark e usa a SPEC como exemplo de conjunto de programas e métricas voltados à comparação de sistemas. O ponto didático aqui não é decorar a SPEC, mas entender o critério de representatividade.</p></div>
-      <div class="metric-table-wrap"><table class="metric-table"><thead><tr><th>Situação</th><th>Benchmark escolhido</th><th>Leitura</th></tr></thead><tbody>
-        <tr><td>Servidor dedicado a compressão</td><td>Carga com compressão e entradas representativas</td><td>Boa aproximação se o ambiente e os dados se parecerem com o uso real.</td></tr>
-        <tr><td>Estação para simulação numérica</td><td>Carga de cálculo científico semelhante</td><td>Permite comparar sistemas para o tipo de trabalho relevante.</td></tr>
-        <tr><td>Aplicação web completa</td><td>Microteste de uma única operação aritmética</td><td>Fraco como representação do sistema inteiro.</td></tr>
-      </tbody></table></div>
-      <div class="callout"><strong>Regra de leitura:</strong> o benchmark não “mede o computador” em abstrato; ele mede o comportamento do sistema diante de uma carga definida.</div>
-    </div></section>
-
-    <section class="section" id="atividade"><div class="container">
-      <div class="section-heading"><p class="eyebrow">Atividade de análise</p><h2>Interprete a evidência antes de propor uma otimização</h2><p>Use o cenário para articular as ideias de tempo, speedup, Amdahl, multicore e benchmark sem escrever código novo.</p></div>
-      <div class="exercise-grid">
-        <article class="card"><h3>Cenário</h3><p><strong>Versão A:</strong> 12 s de execução, com a CPU ocupada durante praticamente toda a tarefa.</p><p><strong>Versão B:</strong> 7 s de execução, mesma saída e mesmo computador.</p><p>A máquina possui 8 núcleos físicos.</p></article>
-        <article class="card"><h3>Questões</h3><ol>
-          <li>Qual é o speedup observado?</li>
-          <li>Podemos concluir que “a CPU ficou mais rápida”?</li>
-          <li>Que mudanças no software poderiam explicar a redução do tempo?</li>
-          <li>Se apenas 20% do tempo restante estiver em um trecho que pode ser melhorado, qual limite a Lei de Amdahl sugere investigar?</li>
-          <li>Ter 8 núcleos implica executar o programa em aproximadamente 1/8 do tempo?</li>
-          <li>Que tipo de benchmark seria adequado para comparar duas máquinas destinadas a executar essa aplicação?</li>
-        </ol></article>
-      </div>
-      <p class="draft-note" style="margin-top:16px"><strong>Rascunho:</strong> esta atividade pode ser convertida em discussão guiada, formulário curto ou exercício individual. A intenção é privilegiar interpretação, porque a Aula 05 principal já contém programação e medição.</p>
-    </div></section>
-
-    <section class="section" id="sintese"><div class="container">
-      <div class="section-heading"><p class="eyebrow">Síntese</p><h2>O que este aprofundamento acrescenta à Aula 05</h2></div>
-      <div class="checklist"><div class="check">Consigo explicar por que frequência, CPI ou MIPS isoladamente não determinam o desempenho de uma aplicação.</div><div class="check">Consigo interpretar CPI como uma média dependente do trabalho executado.</div><div class="check">Consigo calcular e interpretar speedup a partir de tempos observados.</div><div class="check">Consigo explicar intuitivamente o limite imposto pela Lei de Amdahl.</div><div class="check">Consigo explicar por que mais núcleos não produzem aceleração proporcional em qualquer programa.</div><div class="check">Consigo diferenciar tempo de resposta e throughput.</div><div class="check">Consigo justificar por que um benchmark precisa representar a carga de trabalho relevante.</div></div>
-    </div></section>
-
-    <section class="section" id="referencias"><div class="container">
-      <div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual utilizada neste rascunho</h2></div>
-      <div class="card"><p><strong>STALLINGS, William.</strong> <em>Arquitetura e organização de computadores</em>, 10ª ed. Capítulo 2 — questões de desempenho: elaboração visando desempenho, Lei de Amdahl, medidas básicas, taxa de execução de instruções, princípios de benchmark e SPEC. O recorte multicore também se apoia nos capítulos 17 e 18.</p><p><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas operacionais modernos</em>, 4ª ed. Seções sobre processadores, threads e sistemas multiprocessadores/multinúcleo. O livro destaca que disponibilizar múltiplos núcleos não resolve, por si só, o problema de estruturar aplicações paralelas.</p><p class="source-note">Este material é um rascunho pedagógico: simplifica os modelos para manter a continuidade com a Aula 05 principal e evita antecipar o estudo formal de processos, threads, sincronização e escalonamento.</p></div>
-    </div></section>
+      <aside class="study-clean-aside" aria-label="Índice deste aprofundamento">
+        <div class="study-clean-toc-head">
+          <span class="study-clean-toc-label">Neste material</span>
+        </div>
+        <div class="study-toc-shell">
+          <nav class="study-toc">
+            <a href="#mapa">Mapa da análise</a>
+            <a href="#metricas">Métricas e contexto</a>
+            <a href="#cpi">CPI efetivo</a>
+            <a href="#mips">Frequência e MIPS</a>
+            <a href="#speedup">Speedup</a>
+            <a href="#amdahl">Lei de Amdahl</a>
+            <a href="#multicore">Multicore</a>
+            <a href="#taxa">Tempo e throughput</a>
+            <a href="#benchmark">Benchmarks</a>
+            <a href="#atividade">Atividade</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </div>
+      </aside>
+    </div>
   </main>
 
-  <footer class="site-footer"><div class="container footer-grid"><div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 05 · aprofundamento · rascunho para análise</p></div><a href="#inicio">Voltar ao início ↑</a></div></footer>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 05 · aprofundamento teórico</p></div>
+      <a href="#inicio">Voltar ao início ↑</a>
+    </div>
+  </footer>
 </body>
 </html>
