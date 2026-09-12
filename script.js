@@ -24,11 +24,13 @@
     if (text) text.textContent = dark ? 'Modo claro' : 'Modo noturno';
   };
 
-  applyTheme(document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light');
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
+  applyTheme(savedTheme === 'dark' || (savedTheme !== 'light' && prefersDark) ? 'dark' : 'light');
 
   themeToggle?.addEventListener('click', () => {
     const next = body.classList.contains('theme-dark') ? 'light' : 'dark';
-    localStorage.setItem('arquitetura-so-theme', next);
+    localStorage.setItem('theme', next);
     applyTheme(next);
   });
 

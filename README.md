@@ -6,20 +6,26 @@ Estrutura:
 - `curso.html`: visão geral da disciplina, percurso, calendário, conteúdos, avaliação e projeto PBL.
 - `aula-02.html`: primeiro encontro efetivo — camadas, execução, baseline e evidências.
 - `atividade-mapa-camadas-evidencias.md`: atividade complementar da Aula 02.
-- `styles.css`: estilos compartilhados, responsivos e com modo noturno.
+- `styles.css`: componentes específicos dos materiais de Arquitetura e Sistemas Operacionais.
 - `aula-XX.css`: estilos exclusivos de cada aula; os aprofundamentos seguem a mesma convenção.
-- `theme-init.js`: aplica o tema salvo antes da primeira pintura da página.
-- `script.js`: comportamento compartilhado das aulas: navegação móvel, tema, progresso, índice lateral, persistência dos campos, modais e simulador.
+- `script.js`: interações específicas das aulas, como persistência dos campos e simuladores.
 - `assets/percurso-arquitetura.svg`: infográfico do percurso da disciplina.
+
+## Sistema visual
+
+Identidade, estrutura editorial, navegação, tema e responsividade são fornecidos pelo sistema compartilhado do portal:
+
+- `https://pfransozi.github.io/assets/css/ensino.css`
+- `https://pfransozi.github.io/assets/js/ensino.js`
 
 ## Padrão das aulas
 
 Para evitar diferenças visuais e mudanças de layout durante o carregamento:
 
-- cada aula deve carregar apenas `styles.css`, sua própria folha `aula-XX.css`, `theme-init.js` e `script.js`;
+- cada página deve carregar `ensino.css` e `ensino.js`; quando necessário, também pode carregar `styles.css`, sua própria folha `aula-XX.css` e `script.js`;
 - o HTML deve conter o conteúdo e a estrutura finais da página, inclusive o índice lateral;
-- não carregue versões históricas de arquivos pela CDN nem injete CSS ou conteúdo com JavaScript;
-- não use blocos `<style>` dentro das aulas; regras compartilhadas pertencem a `styles.css` e exceções pertencem à folha da aula;
+- não carregue versões históricas de arquivos nem injete CSS estrutural com JavaScript;
+- não use blocos `<style>` dentro das aulas; regras gerais pertencem ao sistema compartilhado e exceções pertencem à folha da aula;
 - novas interações reutilizáveis devem ser incluídas em `script.js` e ativadas pela presença dos elementos correspondentes.
 
 ## Publicação no GitHub Pages
