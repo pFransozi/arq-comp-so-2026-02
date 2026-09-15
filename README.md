@@ -10,6 +10,7 @@ Estrutura:
 - `aula-XX.css`: estilos exclusivos de cada aula; os aprofundamentos seguem a mesma convenção.
 - `script.js`: interações específicas das aulas, como persistência dos campos e simuladores.
 - `assets/percurso-arquitetura.svg`: infográfico do percurso da disciplina.
+- `rascunhos/`: área de validação para novas aulas, aprofundamentos e materiais antes da integração à navegação oficial.
 
 ## Sistema visual
 
@@ -27,6 +28,21 @@ Para evitar diferenças visuais e mudanças de layout durante o carregamento:
 - não carregue versões históricas de arquivos nem injete CSS estrutural com JavaScript;
 - não use blocos `<style>` dentro das aulas; regras gerais pertencem ao sistema compartilhado e exceções pertencem à folha da aula;
 - novas interações reutilizáveis devem ser incluídas em `script.js` e ativadas pela presença dos elementos correspondentes.
+
+## Fluxo de rascunhos para novos materiais
+
+Novos materiais devem ser desenvolvidos primeiro em `rascunhos/`.
+
+1. Criar a página na área de rascunhos, preservando o sistema visual da disciplina.
+2. Marcar a página como **Rascunho para validação** e usar `noindex,nofollow` enquanto estiver em revisão.
+3. Não criar links para o rascunho no portal, na visão geral ou nas aulas oficiais.
+4. Revisar conteúdo, referências, responsividade, modo escuro e navegação.
+5. Após validação docente, mover/copiar o material para a área principal e criar os links oficiais.
+6. Remover a cópia provisória para evitar conteúdo duplicado.
+
+Para aprofundamentos, o padrão é retomar os temas da aula principal e descer um nível de abstração ou precisão sem simplesmente repetir o material. O formato é expositivo, com diagramas, comparações, exemplos explicados e sínteses; exercícios e entregas só são incluídos quando houver decisão explícita nesse sentido.
+
+O painel interno dos materiais em validação fica em `rascunhos/index.html`. As regras detalhadas estão em `rascunhos/README.md`.
 
 ## Publicação no GitHub Pages
 
@@ -52,7 +68,6 @@ Também é possível escolher outra porta:
 ```powershell
 py servidor-local.py --porta 8080
 ```
-
 
 ## Baseline do PBL
 
