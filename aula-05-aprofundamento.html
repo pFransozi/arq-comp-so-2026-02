@@ -311,33 +311,156 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">4 · Frequência e MIPS</p>
-              <h2>Executar mais ciclos ou mais instruções por segundo não garante terminar a tarefa antes</h2>
-              <p>Taxas de execução podem ser úteis, mas se tornam perigosas quando são usadas sem considerar quantas instruções o programa precisa executar para concluir a tarefa.</p>
+              <h2>Do ritmo do clock à taxa de instruções</h2>
+              <p>Na seção anterior vimos que a frequência informa quantos ciclos de clock ocorrem por segundo e que o CPI informa quantos ciclos, em média, são necessários por instrução. Agora vamos combinar essas duas ideias para estimar quantas instruções podem ser executadas por segundo.</p>
             </div>
 
-            <div class="comparison-grid">
-              <div class="comparison-side">
-                <small>Máquina A</small>
-                <h3>Frequência maior</h3>
-                <p>Executa mais ciclos por segundo.</p>
-                <p>Entretanto, o programa pode exigir mais instruções ou apresentar CPI médio maior.</p>
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Frequência não é a mesma coisa que instruções por segundo</h3>
+                <p>A frequência do processador mede o ritmo do clock. Um processador de <strong>3 GHz</strong>, por exemplo, opera com aproximadamente 3 bilhões de ciclos de clock por segundo.</p>
+                <p>Isso <strong>não</strong> significa que ele execute 3 bilhões de instruções por segundo. Se cada instrução exigir, em média, mais de um ciclo, a quantidade de instruções concluídas por segundo será menor.</p>
               </div>
-              <div class="comparison-side">
-                <small>Máquina B</small>
-                <h3>Frequência menor</h3>
-                <p>Executa menos ciclos por segundo.</p>
-                <p>Mas pode concluir a tarefa antes se o trabalho exigir menos ciclos totais.</p>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Frequência</strong><p>Quantos <strong>ciclos de clock por segundo</strong> o processador realiza.</p></div>
+                <div class="study-callout"><strong>CPI</strong><p>Quantos <strong>ciclos por instrução</strong> são necessários, em média, para a carga executada.</p></div>
+                <div class="study-callout"><strong>Taxa de instruções</strong><p>Quantas <strong>instruções por segundo</strong> são executadas considerando essa relação.</p></div>
               </div>
             </div>
 
             <div class="study-prose">
-              <h3>MIPS mede uma taxa de instruções</h3>
-              <p>MIPS expressa milhões de instruções executadas por segundo. A métrica pode ajudar dentro de um contexto controlado, mas não elimina o problema de que arquiteturas, compiladores e programas podem precisar de quantidades diferentes de instruções para resolver a mesma tarefa.</p>
+              <h3>Da frequência e do CPI para a taxa de instruções</h3>
+              <p>Se conhecemos quantos ciclos estão disponíveis por segundo e quantos ciclos, em média, cada instrução exige, podemos estimar a taxa de execução de instruções.</p>
+            </div>
+
+            <div class="equation-box">
+              <code>instruções por segundo ≈ frequência ÷ CPI</code>
+              <p>Quanto maior a frequência, mais ciclos existem por segundo. Quanto maior o CPI, mais ciclos são consumidos, em média, por instrução.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>O que significa MIPS?</h3>
+              <p><strong>MIPS</strong> significa <em>Millions of Instructions Per Second</em>, ou <strong>milhões de instruções por segundo</strong>. É uma forma de expressar a taxa de instruções em uma unidade mais conveniente.</p>
+            </div>
+
+            <div class="equation-box">
+              <code>MIPS ≈ frequência ÷ (CPI × 10⁶)</code>
+              <p>Quando a frequência já está expressa em MHz, a leitura fica mais simples: <code>MIPS ≈ frequência em MHz ÷ CPI</code>.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Exemplo passo a passo</h3>
+                <p>Retome o exemplo anterior. Suponha um processador operando a <strong>3.200 MHz</strong> e uma carga com <strong>CPI efetivo = 1,90</strong>.</p>
+                <div class="equation-box">
+                  <code>MIPS ≈ 3200 ÷ 1,90 ≈ 1684</code>
+                </div>
+                <p>Nesse modelo, durante essa carga, a taxa estimada é de aproximadamente <strong>1.684 milhões de instruções por segundo</strong>.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Interprete corretamente</strong><p>Esse valor descreve a relação entre <strong>frequência e CPI para aquela execução</strong>. Ele não deve ser tratado como uma capacidade fixa e universal da CPU.</p></div>
+                <div class="study-callout"><strong>Se o CPI mudar...</strong><p>Outro programa pode executar uma combinação diferente de instruções, apresentar outro CPI médio e, consequentemente, outra taxa MIPS na mesma máquina.</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Uma frequência maior sempre produz mais MIPS?</h3>
+              <p>Não. A frequência é apenas uma parte da relação. Uma máquina de frequência menor pode executar mais instruções por segundo se seu CPI médio for suficientemente menor para aquela carga.</p>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="mix-table">
+                <thead><tr><th></th><th>Máquina A</th><th>Máquina B</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Frequência</strong></td><td>4,0 GHz</td><td>3,2 GHz</td></tr>
+                  <tr><td><strong>CPI médio</strong></td><td>2,5</td><td>1,6</td></tr>
+                  <tr><td><strong>MIPS aproximado</strong></td><td>1600</td><td>2000</td></tr>
+                </tbody>
+              </table>
             </div>
 
             <div class="boundary">
-              <strong>Pergunta mais útil</strong>
-              <p>Para uma aplicação concreta, é mais importante saber “quantas instruções por segundo a máquina executa?” ou “quanto tempo ela leva para terminar o trabalho que precisamos realizar?”</p>
+              <strong>Observe o que aconteceu</strong>
+              <p>A Máquina B opera com frequência menor, mas apresenta uma taxa maior de instruções por segundo nesse exemplo porque utiliza, em média, menos ciclos por instrução.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>MIPS maior significa programa mais rápido?</h3>
+              <p><strong>Também não necessariamente.</strong> MIPS informa quantas instruções são executadas por segundo, mas não informa quantas instruções são necessárias para concluir a tarefa.</p>
+              <p>Essa diferença é importante porque implementações, compiladores e arquiteturas podem produzir quantidades distintas de instruções para realizar o mesmo trabalho.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Um exemplo que parece contraditório</h3>
+                <p>Considere as mesmas máquinas. Agora suponha que, para concluir a tarefa, a versão executada na Máquina A precise de <strong>1 bilhão de instruções</strong>, enquanto a versão executada na Máquina B precise de <strong>2 bilhões de instruções</strong>.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Máquina A</strong><p><strong>1600 MIPS</strong>, mas executa 1 bilhão de instruções.</p></div>
+                <div class="study-callout"><strong>Máquina B</strong><p><strong>2000 MIPS</strong>, mas executa 2 bilhões de instruções.</p></div>
+              </div>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="mix-table">
+                <thead><tr><th></th><th>Máquina A</th><th>Máquina B</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>Instruções executadas</strong></td><td>1 bilhão</td><td>2 bilhões</td></tr>
+                  <tr><td><strong>CPI médio</strong></td><td>2,5</td><td>1,6</td></tr>
+                  <tr><td><strong>Frequência</strong></td><td>4,0 GHz</td><td>3,2 GHz</td></tr>
+                  <tr><td><strong>Tempo aproximado</strong></td><td>0,625 s</td><td>1,0 s</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="equation-box">
+              <code>Máquina A: (1 bilhão × 2,5) ÷ 4 bilhões = 0,625 s</code>
+              <p><code>Máquina B: (2 bilhões × 1,6) ÷ 3,2 bilhões = 1,0 s</code></p>
+            </div>
+
+            <div class="boundary">
+              <strong>MIPS maior não garante menor tempo</strong>
+              <p>A Máquina B apresenta a maior taxa MIPS, mas leva mais tempo para terminar a tarefa porque precisa executar uma quantidade muito maior de instruções. A taxa de instruções e o tempo para resolver o problema são medidas diferentes.</p>
+            </div>
+
+            <div class="comparison-grid">
+              <div class="comparison-side">
+                <small>MIPS responde</small>
+                <h3>Qual é a taxa?</h3>
+                <p>Quantos milhões de instruções estão sendo executados por segundo?</p>
+              </div>
+              <div class="comparison-side">
+                <small>Tempo de execução responde</small>
+                <h3>Quanto a tarefa demora?</h3>
+                <p>Quanto tempo foi necessário para concluir o trabalho que realmente queríamos realizar?</p>
+              </div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Então MIPS é uma métrica inútil?</h3>
+                <p>Não. MIPS pode ajudar a entender a relação entre frequência, CPI e taxa de instruções, principalmente quando analisamos uma carga bem definida e condições comparáveis.</p>
+                <p>O problema aparece quando usamos esse número isoladamente para afirmar que uma máquina, uma arquitetura ou uma implementação será sempre mais rápida que outra.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Comparação mais segura</strong><p>Quanto mais diferentes forem as arquiteturas, os compiladores e as sequências de instruções, mais cuidado precisamos ter ao comparar apenas valores de MIPS.</p></div>
+                <div class="study-callout"><strong>Engenharia de Software</strong><p>Se a pergunta é qual solução entrega o resultado primeiro, o <strong>tempo para concluir a tarefa</strong> continua sendo uma evidência mais direta.</p></div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>O que guardar desta seção</strong>
+              <p><strong>Frequência</strong> informa quantos ciclos ocorrem por segundo. <strong>CPI</strong> informa quantos ciclos, em média, são necessários por instrução. <strong>MIPS</strong> expressa a taxa de instruções em milhões por segundo. Nenhuma dessas grandezas, isoladamente, substitui a medição do tempo necessário para concluir a tarefa.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Daqui para a próxima seção</h3>
+                <p>Até aqui analisamos valores absolutos: tempo, CPI, frequência e taxa de instruções. A próxima pergunta é comparativa: <strong>quanto uma alternativa melhorou em relação à outra?</strong></p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Próximo passo</strong><p>Na próxima seção vamos usar o <strong>speedup</strong> para transformar a frase “ficou mais rápido” em uma comparação quantitativa.</p></div>
+              </div>
             </div>
           </div>
         </section>
