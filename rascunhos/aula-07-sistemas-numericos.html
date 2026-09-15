@@ -277,11 +277,76 @@
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Prática curta</span><span class="inquiry-tag">faça antes de conferir</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Banco de prática</span><span class="inquiry-tag">escolha antes de conferir</span></div>
             <div class="inquiry-body">
-              <div><h3>Dois caminhos</h3><ol class="prompt-list"><li>Converta <strong>13₁₀</strong> para binário. Dica: 13 = 8 + 4 + 1.</li><li>Converta <strong>11001₂</strong> para decimal. Comece pelo bit da direita.</li><li>Explique em uma frase por que converter a base não muda o valor representado.</li></ol></div>
-              <div><h3>Depois confira com Python</h3><div class="code-frame"><pre><code>print(bin(13))          # 0b1101
-print(int("11001", 2)) # 25</code></pre></div><div class="code-caption">Use Python para verificar o resultado depois de realizar a conversão manualmente.</div></div>
+              <div>
+                <h3>A · Decimal → binário</h3>
+                <p>Escolha pelo menos <strong>5</strong> itens e resolva usando os pesos das potências de 2.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>5₁₀</strong> para binário.</li>
+                  <li>Converta <strong>9₁₀</strong> para binário.</li>
+                  <li>Converta <strong>13₁₀</strong> para binário.</li>
+                  <li>Converta <strong>18₁₀</strong> para binário.</li>
+                  <li>Converta <strong>23₁₀</strong> para binário.</li>
+                  <li>Converta <strong>31₁₀</strong> para binário.</li>
+                  <li>Converta <strong>42₁₀</strong> para binário.</li>
+                  <li>Converta <strong>57₁₀</strong> para binário.</li>
+                  <li>Converta <strong>85₁₀</strong> para binário.</li>
+                  <li>Converta <strong>127₁₀</strong> para binário.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>B · Binário → decimal</h3>
+                <p>Escolha pelo menos <strong>5</strong> itens. Comece sempre pelo bit mais à direita.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>101₂</strong> para decimal.</li>
+                  <li>Converta <strong>111₂</strong> para decimal.</li>
+                  <li>Converta <strong>1011₂</strong> para decimal.</li>
+                  <li>Converta <strong>10010₂</strong> para decimal.</li>
+                  <li>Converta <strong>11001₂</strong> para decimal.</li>
+                  <li>Converta <strong>101101₂</strong> para decimal.</li>
+                  <li>Converta <strong>1000000₂</strong> para decimal.</li>
+                  <li>Converta <strong>1001011₂</strong> para decimal.</li>
+                  <li>Converta <strong>1100100₂</strong> para decimal.</li>
+                  <li>Converta <strong>1111111₂</strong> para decimal.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Entendimento</span><span class="inquiry-tag">escolha pelo menos 5</span></div>
+            <div class="inquiry-body">
+              <div>
+                <h3>C · Explique com suas palavras</h3>
+                <ol class="prompt-list">
+                  <li>Por que converter um número para outra base não muda a quantidade representada?</li>
+                  <li>No número <strong>101101₂</strong>, quais posições têm bit 1 e quais pesos elas representam?</li>
+                  <li>Quantos padrões diferentes podem ser formados com <strong>6 bits</strong>?</li>
+                  <li>Qual é o maior valor sem sinal representável com <strong>6 bits</strong>?</li>
+                  <li>Qual é a faixa de valores sem sinal representável com <strong>8 bits</strong>?</li>
+                  <li>Por que uma posição com bit <strong>0</strong> não acrescenta valor à soma?</li>
+                  <li>Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique pelos pesos das posições.</li>
+                  <li>Qual é a menor quantidade de bits necessária para representar <strong>42₁₀</strong> sem sinal?</li>
+                  <li>Complete a igualdade: <strong>32₁₀ = ____₂</strong>.</li>
+                  <li>Explique por que <strong>256 padrões</strong> em 8 bits correspondem aos valores de <strong>0 a 255</strong>, e não de 0 a 256.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>Depois confira com Python</h3>
+                <p>Use o código apenas depois de resolver manualmente os itens escolhidos.</p>
+                <div class="code-frame"><pre><code>decimais = [5, 9, 13, 18, 23, 31, 42, 57, 85, 127]
+for valor in decimais:
+    print(valor, "→", bin(valor))
+
+binarios = [
+    "101", "111", "1011", "10010", "11001",
+    "101101", "1000000", "1001011", "1100100", "1111111"
+]
+for valor in binarios:
+    print(valor, "→", int(valor, 2))</code></pre></div>
+                <div class="code-caption">O objetivo do Python aqui é conferir o raciocínio, não substituir a conversão manual.</div>
+              </div>
             </div>
           </div>
 
