@@ -208,37 +208,100 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">3 · CPI efetivo</p>
-              <h2>Nem todas as instruções têm o mesmo custo</h2>
-              <p>Na Aula 05 utilizamos um CPI médio. Aqui precisamos entender por que ele é uma média e por que pode mudar de acordo com a combinação de instruções executadas pelo programa.</p>
+              <h2>Quantos ciclos, em média, cada instrução exige?</h2>
+              <p>Na Aula 05 usamos o CPI na equação do tempo de CPU. Agora vamos entender de onde esse valor vem, por que ele é uma média e como a combinação de instruções executadas pelo programa altera o resultado.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Primeiro: o que significa CPI?</h3>
+                <p><strong>CPI</strong> significa <em>Cycles Per Instruction</em>, ou <strong>ciclos por instrução</strong>. Ele relaciona duas grandezas que já apareceram nesta aula: o número de ciclos de clock utilizados e o número de instruções executadas.</p>
+                <p>Em um modelo simples, se uma instrução precisa de 2 ciclos para ser concluída, dizemos que seu CPI é 2. Mas um programa real executa muitos tipos de instrução, e esses tipos podem ter custos diferentes.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Não confunda</strong><p><strong>Clock</strong> indica o ritmo dos ciclos. <strong>CPI</strong> indica quantos ciclos são necessários, em média, para as instruções executadas.</p></div>
+                <div class="study-callout"><strong>Pergunta-chave</strong><p>Se um programa mistura instruções simples e instruções mais custosas, qual CPI devemos usar na equação do tempo de CPU?</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Nem todas as instruções contribuem da mesma forma</h3>
+              <p>Considere um programa em que metade das instruções executadas é aritmética, 30% envolve transferência de dados e 20% corresponde a controle de fluxo. Para fins didáticos, vamos assumir custos diferentes para cada categoria.</p>
             </div>
 
             <div class="study-table-wrap">
               <table class="mix-table">
                 <thead><tr><th>Categoria didática</th><th>Participação na execução</th><th>CPI assumido</th><th>Contribuição para o CPI médio</th></tr></thead>
                 <tbody>
-                  <tr><td>Aritmética</td><td>50%</td><td>1</td><td>0,50</td></tr>
-                  <tr><td>Transferência de dados</td><td>30%</td><td>2</td><td>0,60</td></tr>
-                  <tr><td>Controle de fluxo</td><td>20%</td><td>4</td><td>0,80</td></tr>
-                  <tr><td><strong>Total</strong></td><td>100%</td><td>—</td><td><strong>CPI médio = 1,90</strong></td></tr>
+                  <tr><td>Aritmética</td><td>50%</td><td>1</td><td>0,50 × 1 = 0,50</td></tr>
+                  <tr><td>Transferência de dados</td><td>30%</td><td>2</td><td>0,30 × 2 = 0,60</td></tr>
+                  <tr><td>Controle de fluxo</td><td>20%</td><td>4</td><td>0,20 × 4 = 0,80</td></tr>
+                  <tr><td><strong>Total</strong></td><td>100%</td><td>—</td><td><strong>CPI efetivo = 1,90</strong></td></tr>
                 </tbody>
               </table>
             </div>
 
             <div class="equation-box">
               <code>CPI efetivo = Σ (fração de instruções do tipo i × CPI do tipo i)</code>
-              <p>O exemplo é didático: o objetivo é perceber que o CPI observado depende da composição do trabalho executado.</p>
+              <p>Somamos a contribuição de cada categoria porque o programa não executa todas as instruções na mesma proporção.</p>
             </div>
 
             <div class="study-grid">
               <div class="study-prose">
-                <h3>Uma otimização pode alterar mais de uma parte da equação</h3>
-                <p>Uma modificação de código pode reduzir a quantidade total de instruções e também alterar a distribuição entre categorias de instrução. Por isso, o efeito final não precisa aparecer apenas em um único termo da equação de desempenho.</p>
-                <h3>CPI não deve ser tratado como um número universal da CPU</h3>
-                <p>O CPI médio depende do conjunto de instruções realmente executado e do comportamento do processador durante aquela carga. Ele precisa ser interpretado no contexto da execução.</p>
+                <h3>O que significa CPI efetivo = 1,90?</h3>
+                <p>Significa que, <strong>considerando a mistura de instruções executada por esse programa</strong>, são necessários em média 1,90 ciclo de clock por instrução.</p>
+                <p>Isso <strong>não</strong> significa que cada instrução individual leva exatamente 1,90 ciclo. Algumas usam menos ciclos e outras usam mais. O valor 1,90 resume o comportamento médio dessa execução.</p>
               </div>
               <div class="study-stack">
-                <div class="study-callout"><strong>Pergunta</strong><p>Se um programa passar a executar proporcionalmente mais instruções de maior custo, o CPI médio permanece igual?</p></div>
-                <div class="study-callout"><strong>Conexão com software</strong><p>Algoritmo, compilação e arquitetura se encontram justamente na sequência de instruções que chega ao processador.</p></div>
+                <div class="study-callout"><strong>Leitura numérica</strong><p>Se esse mesmo padrão fosse mantido durante <strong>1.000 instruções</strong>, o modelo estimaria aproximadamente <strong>1.900 ciclos</strong> para executá-las.</p></div>
+                <div class="study-callout"><strong>Ideia importante</strong><p>O CPI efetivo pertence à combinação <strong>programa + instruções executadas + máquina</strong>. Não deve ser tratado como um número fixo e universal do processador.</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Por que dois programas podem ter CPI diferente na mesma CPU?</h3>
+              <p>Porque eles podem executar combinações diferentes de instruções. Um programa com predominância de operações simples pode apresentar um CPI médio diferente de outro que execute proporcionalmente mais desvios, acessos à memória ou outras operações de maior custo.</p>
+              <p>Além disso, em processadores modernos, o comportamento observado também pode ser influenciado por pipeline, cache, dependências entre instruções e esperas por dados. Por isso, os números desta seção devem ser lidos como um <strong>modelo didático</strong> para compreender a relação entre mistura de instruções e desempenho.</p>
+            </div>
+
+            <div class="boundary">
+              <strong>Mesmo processador, CPI diferente</strong>
+              <p>Executar na mesma CPU não obriga dois programas a apresentarem o mesmo CPI médio. O valor depende das instruções realmente executadas e das condições em que elas são processadas.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Como o CPI entra no tempo de CPU?</h3>
+                <p>Retomando a equação usada na Aula 05, o tempo de CPU depende da quantidade de instruções executadas, do CPI médio e da frequência do processador.</p>
+                <div class="equation-box">
+                  <code>Tempo de CPU ≈ (instruções executadas × CPI) ÷ frequência</code>
+                </div>
+                <p>Se mantivermos a quantidade de instruções e a frequência constantes, reduzir o CPI tende a reduzir o tempo de CPU. Mas uma otimização real pode alterar <strong>mais de um termo ao mesmo tempo</strong>.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Cuidado com conclusões rápidas</strong><p>Um CPI menor, sozinho, não garante um programa mais rápido se a nova versão executar muito mais instruções.</p></div>
+                <div class="study-callout"><strong>Olhe a equação inteira</strong><p>Desempenho resulta da combinação entre <strong>quantidade de instruções</strong>, <strong>CPI</strong> e <strong>frequência</strong>.</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Uma otimização pode mudar o CPI e a quantidade de instruções</h3>
+              <p>Imagine que uma alteração no código reduza a participação de instruções de controle de fluxo e aumente a proporção de operações mais simples. O CPI médio pode diminuir. Ao mesmo tempo, essa alteração pode aumentar ou reduzir o número total de instruções executadas.</p>
+              <p>Por isso, ao avaliar uma otimização, não devemos perguntar apenas “o CPI ficou menor?”, mas sim <strong>“o tempo total para concluir a tarefa realmente diminuiu?”</strong></p>
+            </div>
+
+            <div class="boundary">
+              <strong>O que guardar desta seção</strong>
+              <p><strong>CPI efetivo é uma média ponderada.</strong> Ele resume quantos ciclos, em média, são necessários por instrução para uma determinada execução. Seu valor depende da mistura de instruções e ajuda a explicar o tempo de CPU, mas precisa ser interpretado junto com a quantidade de instruções e a frequência.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Daqui para a próxima seção</h3>
+                <p>Agora que conseguimos relacionar frequência e CPI, podemos analisar uma métrica construída justamente a partir dessa relação: <strong>quantas milhões de instruções o processador executa por segundo?</strong></p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Próximo passo</strong><p>A próxima seção apresenta o <strong>MIPS</strong> e, principalmente, mostra por que uma taxa maior de instruções por segundo não significa necessariamente menor tempo para concluir uma aplicação.</p></div>
               </div>
             </div>
           </div>
