@@ -469,36 +469,66 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">5 · Speedup</p>
-              <h2>Transforme “ficou mais rápido” em uma comparação mensurável</h2>
-              <p>O experimento da Aula 05 produziu duas versões do mesmo programa. O aprofundamento pode usar esses tempos para quantificar a melhoria observada.</p>
+              <h2>Quanto uma versão melhorou em relação à outra?</h2>
+              <p>O speedup transforma uma diferença de tempo em uma comparação relativa. Em vez de apenas afirmar que uma versão “ficou mais rápida”, podemos expressar quantitativamente quanto ela melhorou em relação a uma versão de referência.</p>
             </div>
 
             <div class="equation-box">
               <code>speedup = tempo da versão de referência ÷ tempo da versão melhorada</code>
-              <p>Se uma execução passa de 10 s para 5 s, o speedup observado é 2×.</p>
+              <p>Um speedup maior que 1 indica que a versão comparada concluiu a mesma tarefa em menos tempo.</p>
             </div>
 
             <div class="speedup-grid">
               <div class="speedup-card"><small>Mesmo resultado</small><strong>Compare funcionalidade equivalente</strong><p>O ganho só faz sentido se as alternativas resolverem o mesmo problema com o mesmo critério de correção.</p></div>
               <div class="speedup-card"><small>Mesmo ambiente</small><strong>Controle as condições</strong><p>Para comparar implementações, mantenha o ambiente de execução tão semelhante quanto possível.</p></div>
-              <div class="speedup-card"><small>Mais de uma entrada</small><strong>Observe o comportamento</strong><p>O ganho pode mudar conforme o tamanho e as características da entrada.</p></div>
+              <div class="speedup-card"><small>Entrada representativa</small><strong>Compare a mesma carga</strong><p>A entrada utilizada precisa ser equivalente e representar o tipo de trabalho que realmente interessa à aplicação.</p></div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Exemplo resolvido</h3>
+              <p>Considere duas versões funcionalmente equivalentes de uma aplicação, executadas no mesmo computador e sob as mesmas condições.</p>
             </div>
 
             <div class="study-table-wrap">
               <table class="mix-table">
-                <thead><tr><th>Entrada</th><th>Versão inicial</th><th>Versão modificada</th><th>Speedup</th></tr></thead>
+                <thead><tr><th>Versão</th><th>Tempo de execução</th></tr></thead>
                 <tbody>
-                  <tr><td>5.000</td><td></td><td></td><td></td></tr>
-                  <tr><td>10.000</td><td></td><td></td><td></td></tr>
-                  <tr><td>15.000</td><td></td><td></td><td></td></tr>
-                  <tr><td>20.000</td><td></td><td></td><td></td></tr>
+                  <tr><td>Versão inicial</td><td>10 s</td></tr>
+                  <tr><td>Versão modificada</td><td>6 s</td></tr>
                 </tbody>
               </table>
             </div>
 
+            <div class="equation-box">
+              <code>speedup = 10 ÷ 6 ≈ 1,67×</code>
+              <p>A versão modificada apresenta um speedup de aproximadamente <strong>1,67×</strong> em relação à versão inicial.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Como interpretar 1,67×?</h3>
+                <p>Esse valor significa que, <strong>nessa carga e nessas condições de execução</strong>, a versão modificada concluiu a tarefa em menos tempo que a versão de referência.</p>
+                <p>O speedup é uma forma compacta de expressar a melhoria relativa. Ele permite comparar o ganho sem depender apenas da diferença absoluta em segundos.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Não confunda com porcentagem</strong><p>Um speedup de 1,67× não significa simplesmente “67% menos tempo”. O speedup é uma razão entre tempos; redução percentual do tempo é outra medida.</p></div>
+                <div class="study-callout"><strong>Contexto importa</strong><p>O valor só é defensável se as duas versões resolverem a mesma tarefa e forem medidas em condições comparáveis.</p></div>
+              </div>
+            </div>
+
             <div class="boundary">
-              <strong>Questão de análise</strong>
-              <p>O speedup permanece constante conforme a entrada cresce? Se não, o que isso sugere sobre a quantidade de trabalho evitada pela nova implementação?</p>
+              <strong>O que esse número permite concluir?</strong>
+              <p>O speedup expressa <strong>quanto os tempos observados diferem de forma relativa</strong>. Ele não explica, sozinho, <strong>por que</strong> a versão ficou mais rápida. Para isso, precisamos investigar fatores como algoritmo, quantidade de instruções executadas, CPI, acessos à memória e outros aspectos da execução.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Da comparação para o limite da otimização</h3>
+                <p>O speedup mostra o ganho obtido entre duas alternativas. A próxima questão é entender por que uma otimização pode apresentar ganhos cada vez menores, mesmo quando uma parte específica do programa é bastante acelerada.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Próximo passo</strong><p>A Lei de Amdahl ajuda a explicar como a parte que <strong>não foi melhorada</strong> passa a limitar o ganho total.</p></div>
+              </div>
             </div>
           </div>
         </section>
