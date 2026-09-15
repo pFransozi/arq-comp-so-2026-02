@@ -203,23 +203,27 @@
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">sem calculadora</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">use o exemplo</span></div>
             <div class="inquiry-body">
               <div>
-                <h3>Com 5 bits...</h3>
-                <p>Antes de calcular, faça uma previsão: com 5 bits teremos <strong>mais ou menos que 16 padrões</strong>?</p>
-                <p>Use o que acabamos de observar: cada novo bit <strong>dobra</strong> a quantidade de padrões.</p>
+                <h3>Exemplo · 3 bits</h3>
+                <p>Com 3 bits existem <strong>2³ = 8 padrões</strong>:</p>
+                <p><code>000</code>, <code>001</code>, <code>010</code>, <code>011</code>, <code>100</code>, <code>101</code>, <code>110</code> e <code>111</code>.</p>
+                <p>Se usamos esses padrões para contar começando em 0, o primeiro vale <strong>0</strong> e o último é <code>111₂</code>.</p>
+                <div class="base-equation">111<sub>2</sub> = 4 + 2 + 1 = 7</div>
+                <p>Assim, temos <strong>8 padrões</strong>, mas a contagem vai de <strong>0 até 7</strong>.</p>
               </div>
               <div>
+                <h3>Agora tente · 5 bits</h3>
                 <ol class="prompt-list">
-                  <li>Complete: <strong>5 bits = 2⁵ = ______ padrões</strong>.</li>
-                  <li>Se esses padrões forem usados como inteiros <strong>sem sinal</strong>, qual é o menor valor possível?</li>
-                  <li>Qual é o maior valor possível?</li>
-                  <li>Explique por que o maior valor é <strong>31</strong>, e não 32.</li>
-                  <li><strong>Desafio:</strong> sem refazer tudo do zero, com 6 bits quantos padrões existem e qual é a faixa de valores sem sinal?</li>
+                  <li>Quantos padrões diferentes podem ser formados com <strong>5 bits</strong>?</li>
+                  <li>Qual é o primeiro padrão, usando cinco posições?</li>
+                  <li>Qual é o último padrão, usando cinco posições?</li>
+                  <li>Converta esse último padrão para decimal usando os pesos <strong>16, 8, 4, 2 e 1</strong>.</li>
+                  <li>Explique por que a quantidade de padrões é uma unidade maior que o último valor quando a contagem começa em 0.</li>
+                  <li><strong>Desafio:</strong> repita o raciocínio para <strong>6 bits</strong>: quantos padrões existem e qual é o valor do último padrão?</li>
                 </ol>
-                <p><strong>Dica:</strong> para inteiros sem sinal, a faixa começa em 0 e termina em <strong>2ⁿ − 1</strong>.</p>
-                <p><strong>Resposta esperada para 5 bits:</strong> 32 padrões, de 0 a 31.</p>
+                <p><strong>Dica:</strong> não procure uma fórmula nova. Use as duas ideias já estudadas: <strong>2ⁿ padrões</strong> e os <strong>pesos das posições binárias</strong>.</p>
               </div>
             </div>
           </div>
