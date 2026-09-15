@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="description" content="Rascunho da Aula 07 de Arquitetura de Computadores e Sistemas Operacionais: sistemas numéricos, binário, hexadecimal, representação de inteiros, complemento de dois, overflow e ponto flutuante.">
+  <meta name="description" content="Rascunho da Aula 07 de Arquitetura de Computadores e Sistemas Operacionais: sistemas posicionais, bits, capacidade, conversões entre decimal e binário e notação hexadecimal.">
   <meta name="theme-color" content="#101a24">
-  <title>Rascunho · Aula 07 — Como o computador representa dados</title>
+  <title>Rascunho · Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../aula-06.css">
   <link rel="stylesheet" href="aula-07-sistemas-numericos.css">
@@ -34,12 +34,12 @@
           <div>
             <p class="eyebrow">Aula 07 · representação de dados</p>
             <h1>Como o computador representa números</h1>
-            <p class="hero-lead">Na aula anterior acompanhamos <strong>onde os dados ficam e quanto custa acessá-los</strong>. Agora vamos olhar para dentro desses dados: como sequências de bits podem representar números, por que usamos binário e hexadecimal e quais limites aparecem quando a quantidade de bits é finita.</p>
-            <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#experimento">Ir ao experimento</a></div>
+            <p class="hero-lead">Na aula anterior acompanhamos <strong>onde os dados ficam e quanto custa acessá-los</strong>. Agora vamos olhar para dentro desses dados: como sequências de bits representam números e por que usamos diferentes bases para escrever a mesma informação.</p>
+            <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a></div>
           </div>
           <aside class="guiding-card">
             <span>Pergunta orientadora</span>
-            <blockquote>Se a memória armazena bits, como valores como 42, −1 e 0,1 são representados — e por que essa representação pode impor limites ao software?</blockquote>
+            <blockquote>Se a memória armazena bits, como valores numéricos são escritos e interpretados pelo computador?</blockquote>
           </aside>
         </div>
       </section>
@@ -53,10 +53,6 @@
           <a href="#bits">Bits e capacidade</a>
           <a href="#conversoes">Binário e decimal</a>
           <a href="#hexadecimal">Hexadecimal</a>
-          <a href="#inteiros">Inteiros com sinal</a>
-          <a href="#overflow">Overflow</a>
-          <a href="#flutuante">Ponto flutuante</a>
-          <a href="#experimento">Experimento</a>
           <a href="#fechamento">Síntese</a>
           <a href="#referencias">Referências</a>
         </nav>
@@ -64,35 +60,35 @@
 
       <section class="section" id="visao">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Os bits são o suporte; a representação dá significado</h2><p>Vamos entender como números são representados em bits e quais limites essa representação impõe ao software.</p></div>
+          <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Os bits são o suporte; a representação dá significado</h2><p>Vamos entender como números são representados em bits e como decimal, binário e hexadecimal descrevem valores.</p></div>
           <div class="overview-grid">
             <article class="card topics-card">
               <h3>Conteúdo programático</h3>
-              <div class="topic-list"><div>Bit, byte e palavra</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Inteiros sem sinal e com sinal</div><div>Complemento de dois</div><div>Overflow</div><div>Introdução a ponto flutuante</div><div>Limites de representação</div></div>
+              <div class="topic-list"><div>Bit, byte e palavra</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Conversão entre bases</div></div>
             </article>
-            <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H10</strong><span>Avaliar diversas tecnologias disponíveis, sendo capaz de analisar os prós e contras de diferentes opções tecnológicas.<br><small>Nesta aula: comparar formas de representação considerando faixa de valores, precisão e adequação aos dados manipulados pelo software.</small></span></div></article>
-            <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar largura em bits e representação de dados aos limites observáveis pelo software em diferentes arquiteturas.</small></span></div></article>
+            <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H10</strong><span>Avaliar diversas tecnologias disponíveis, sendo capaz de analisar os prós e contras de diferentes opções tecnológicas.<br><small>Nesta aula: comparar formas de representação numérica e reconhecer quando cada notação facilita a leitura e a análise dos dados.</small></span></div></article>
+            <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
           </div>
-          <div class="lesson-scope"><strong>Recorte desta aula</strong>Vamos trabalhar principalmente com inteiros, binário, hexadecimal, complemento de dois e limites de representação. Conversão de frações em diferentes bases, detalhes completos do IEEE 754, BCD e aritmética binária extensa ficam fora deste encontro.</div>
+          <div class="lesson-scope"><strong>Recorte desta aula</strong>Vamos trabalhar com sistemas posicionais, capacidade em bits, conversões entre decimal e binário e a relação direta entre binário e hexadecimal.</div>
         </div>
       </section>
 
       <section class="section" id="retomada">
         <div class="container">
           <div class="warmup">
-            <div><p class="eyebrow">Retomada da Aula 06</p><h2>Sabemos onde o dado está. Mas o que está armazenado?</h2><p>Registradores, cache, RAM e armazenamento mantêm sequências de bits. O hardware não encontra uma etiqueta dizendo “isto é um número negativo” ou “isto é uma letra”. O significado depende da forma como os bits são interpretados.</p></div>
-            <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, o que essa sequência significa?</span></div><div><strong>3 · Arquitetura</strong><span>Por que dizer que um processador é de 8, 32 ou 64 bits pode ter consequências sobre os valores manipulados?</span></div><div><strong>4 · Software</strong><span>O que pode acontecer quando um valor ultrapassa a faixa disponível em uma representação?</span></div></div>
+            <div><p class="eyebrow">Retomada da Aula 06</p><h2>Sabemos onde o dado está. Mas como ele é escrito?</h2><p>Registradores, cache, RAM e armazenamento mantêm sequências de bits. Agora vamos observar como essas sequências podem representar valores numéricos.</p></div>
+            <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, como podemos descobrir o valor representado?</span></div><div><strong>3 · Capacidade</strong><span>O que muda quando aumentamos a quantidade de bits disponível?</span></div><div><strong>4 · Notação</strong><span>Por que pode ser útil escrever uma sequência binária de uma forma mais compacta?</span></div></div>
           </div>
 
           <div class="same-bits">
             <div class="bit-word">00101010</div>
             <div class="interpretations">
-              <div><strong>Como inteiro sem sinal</strong>42 em decimal.</div>
-              <div><strong>Como hexadecimal</strong><code>0x2A</code>, outra forma de escrever o mesmo padrão.</div>
-              <div><strong>Como código de caractere</strong>No ASCII, o valor decimal 42 corresponde ao caractere <code>*</code>.</div>
+              <div><strong>Em binário</strong><code>00101010₂</code>.</div>
+              <div><strong>Em decimal</strong>42.</div>
+              <div><strong>Em hexadecimal</strong><code>2A₁₆</code>.</div>
             </div>
           </div>
-          <p class="bridge-question"><strong>Ideia central:</strong> os bits não mudaram. O que mudou foi a interpretação. Sistemas numéricos e tipos de dados são formas de organizar essa interpretação.</p>
+          <p class="bridge-question"><strong>Ideia central:</strong> podemos escrever a mesma quantidade usando bases diferentes. O valor não muda; muda a forma de representação.</p>
         </div>
       </section>
 
@@ -181,7 +177,7 @@
             <article><strong>11111111</strong><span>último padrão</span><code>255</code></article>
           </div>
 
-          <div class="precision-note"><strong>256 padrões não significa que o maior valor seja 256.</strong> Se interpretarmos os 8 bits como um inteiro <em>sem sinal</em>, o primeiro padrão representa 0. Por isso, os 256 valores possíveis vão de <strong>0 a 255</strong>.</div>
+          <div class="precision-note"><strong>256 padrões não significa que o último valor seja 256.</strong> Como a contagem começa em 0, os 256 padrões correspondem aos valores de <strong>0 a 255</strong>.</div>
 
           <div class="number-story">
             <article><small>1 posição binária</small><strong>Bit</strong><p>É a menor unidade usada aqui para representar informação. Pode assumir 0 ou 1.</p></article>
@@ -192,7 +188,7 @@
           <h3 style="margin-top:2rem">Mais bits, mais possibilidades</h3>
           <div class="trace-table-wrap">
             <table class="twos-table">
-              <thead><tr><th>Largura</th><th>Padrões possíveis</th><th>Se forem inteiros sem sinal</th></tr></thead>
+              <thead><tr><th>Largura</th><th>Padrões possíveis</th><th>Contagem a partir de 0</th></tr></thead>
               <tbody>
                 <tr><td><strong>4 bits</strong></td><td>2⁴ = 16</td><td>0 a 15</td></tr>
                 <tr><td><strong>8 bits</strong></td><td>2⁸ = 256</td><td>0 a 255</td></tr>
@@ -227,7 +223,7 @@
             </div>
           </div>
 
-          <p class="bridge-question"><strong>Ideia central:</strong> a quantidade de bits determina quantos padrões podem existir. O significado de cada padrão — número positivo, negativo, caractere ou outra informação — depende da forma como ele será interpretado.</p>
+          <p class="bridge-question"><strong>Ideia central:</strong> a quantidade de bits determina quantos padrões podem existir.</p>
         </div>
       </section>
 
@@ -294,7 +290,7 @@
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Banco de prática</span><span class="inquiry-tag">escolha antes de conferir</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Banco de prática</span><span class="inquiry-tag">escolha alguns</span></div>
             <div class="inquiry-body">
               <div>
                 <h3>A · Decimal → binário</h3>
@@ -340,13 +336,13 @@
                   <li>Por que converter um número para outra base não muda a quantidade representada?</li>
                   <li>No número <strong>101101₂</strong>, quais posições têm bit 1 e quais pesos elas representam?</li>
                   <li>Quantos padrões diferentes podem ser formados com <strong>6 bits</strong>?</li>
-                  <li>Qual é o maior valor sem sinal representável com <strong>6 bits</strong>?</li>
-                  <li>Qual é a faixa de valores sem sinal representável com <strong>8 bits</strong>?</li>
+                  <li>Qual é o valor decimal de <strong>111111₂</strong>?</li>
                   <li>Por que uma posição com bit <strong>0</strong> não acrescenta valor à soma?</li>
                   <li>Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique pelos pesos das posições.</li>
-                  <li>Qual é a menor quantidade de bits necessária para representar <strong>42₁₀</strong> sem sinal?</li>
+                  <li>Qual é a menor quantidade de bits necessária para representar <strong>42₁₀</strong>?</li>
                   <li>Complete a igualdade: <strong>32₁₀ = ____₂</strong>.</li>
-                  <li>Explique por que <strong>256 padrões</strong> em 8 bits correspondem aos valores de <strong>0 a 255</strong>, e não de 0 a 256.</li>
+                  <li>Explique por que 8 bits produzem 256 padrões.</li>
+                  <li>Explique por que, em uma contagem iniciada em 0, 256 padrões terminam no valor 255.</li>
                 </ol>
               </div>
             </div>
@@ -438,143 +434,17 @@
         </div>
       </section>
 
-      <section class="section" id="inteiros">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">5 · Inteiros com sinal</p><h2>Como representar números negativos sem adicionar um símbolo “−”?</h2><p>Em memória não existe um caractere de menos colocado ao lado do número. Precisamos reservar padrões binários que representem valores negativos.</p></div>
-
-          <div class="range-grid">
-            <article class="range-card"><h3>Sem sinal · n bits</h3><code>0 até 2ⁿ − 1</code><p>Todos os padrões representam valores não negativos.</p><p>Com 8 bits: <strong>0 a 255</strong>.</p></article>
-            <article class="range-card"><h3>Complemento de dois · n bits</h3><code>−2ⁿ⁻¹ até 2ⁿ⁻¹ − 1</code><p>Metade dos padrões representa valores negativos.</p><p>Com 8 bits: <strong>−128 a 127</strong>.</p></article>
-          </div>
-
-          <h3 style="margin-top:2rem">Um exemplo com apenas 4 bits</h3>
-          <div class="trace-table-wrap"><table class="twos-table"><thead><tr><th>Bits</th><th>Sem sinal</th><th>Complemento de dois</th></tr></thead><tbody><tr><td>0000</td><td>0</td><td>0</td></tr><tr><td>0001</td><td>1</td><td>1</td></tr><tr><td>0111</td><td>7</td><td>7</td></tr><tr><td>1000</td><td>8</td><td>−8</td></tr><tr><td>1110</td><td>14</td><td>−2</td></tr><tr><td>1111</td><td>15</td><td>−1</td></tr></tbody></table></div>
-
-          <div class="concept-grid">
-            <article class="concept-card"><h3>Negação em complemento de dois</h3><p>Em uma largura fixa, uma forma operacional de obter o negativo é inverter os bits e somar 1.</p><div class="concept-item"><strong>Exemplo com 4 bits</strong><p><code>+5 = 0101</code><br><code>inverte → 1010</code><br><code>+ 1 → 1011 = −5</code></p></div></article>
-            <article class="concept-card"><h3>O bit mais à esquerda</h3><p>Em complemento de dois, valores negativos têm o bit mais significativo igual a 1 e os não negativos têm 0. Mas esse bit não funciona isoladamente como uma simples etiqueta de sinal: ele participa do valor da representação.</p></article>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="overflow">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">6 · Overflow</p><h2>O resultado matemático pode existir e mesmo assim não caber</h2><p>Quando trabalhamos com largura fixa, a faixa de valores também é fixa. Se o resultado ultrapassa essa faixa, a representação não consegue expressá-lo normalmente.</p></div>
-
-          <div class="overflow-path">
-            <div><strong>4 bits com sinal</strong><span>Faixa: −8 a +7.</span></div>
-            <div><strong>Valor máximo</strong><code>0111 = +7</code></div>
-            <div><strong>Somamos 1</strong><code>0111 + 0001</code></div>
-            <div><strong>Padrão obtido</strong><code>1000</code>, que em complemento de dois de 4 bits representa −8.</div>
-          </div>
-
-          <div class="precision-note"><strong>Atenção:</strong> o comportamento observado em uma linguagem depende de seus tipos e regras. O hardware trabalha com larguras finitas, mas linguagens podem promover valores, detectar erros ou usar inteiros de precisão arbitrária. O Python, por exemplo, não limita seus inteiros comuns a 8, 16, 32 ou 64 bits.</div>
-
-          <div class="code-frame"><pre><code>def u8(valor):
-    return valor & 0xFF
-
-print(u8(255))      # 255
-print(u8(255 + 1))  # 0
-
-
-def s8(valor):
-    valor &= 0xFF
-    return valor - 256 if valor >= 128 else valor
-
-print(s8(127))      # 127
-print(s8(127 + 1))  # -128</code></pre></div>
-          <div class="code-caption">O código simula uma largura fixa de 8 bits para tornar visível um limite que o inteiro padrão do Python normalmente esconde.</div>
-        </div>
-      </section>
-
-      <section class="section" id="flutuante">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">7 · Ponto flutuante</p><h2>Nem todo número real pode ser representado exatamente</h2><p>Inteiros de largura fixa têm um intervalo finito. Para representar números com parte fracionária e ordens de grandeza muito diferentes, computadores usam formatos de ponto flutuante.</p></div>
-
-          <div class="float-box">
-            <div class="float-fields"><div><strong>Sinal</strong><span>positivo ou negativo</span></div><div><strong>Expoente</strong><span>escala do número</span></div><div><strong>Fração / significando</strong><span>dígitos significativos armazenados</span></div></div>
-            <div class="concept-card"><h3>A ideia</h3><p>O formato é semelhante ao princípio da notação científica: uma quantidade limitada de bits representa sinal, escala e precisão. Como o conjunto de padrões possíveis é finito, apenas certos valores reais podem ser representados exatamente.</p></div>
-          </div>
-
-          <div class="same-bits">
-            <div class="bit-word">0.1 + 0.2</div>
-            <div class="interpretations"><div><strong>Em decimal</strong>Esperamos 0,3.</div><div><strong>Em ponto flutuante binário</strong>0,1 e 0,2 não possuem uma representação binária finita exata nesse formato usual, então são armazenados como aproximações.</div><div><strong>Consequência</strong>A operação também trabalha sobre essas aproximações.</div></div>
-          </div>
-
-          <div class="code-frame"><pre><code>print(0.1 + 0.2)
-print(format(0.1, ".20f"))
-print(format(0.2, ".20f"))
-print(format(0.3, ".20f"))</code></pre></div>
-
-          <div class="concept-grid">
-            <article class="concept-card"><h3>Precisão limitada</h3><p>Ponto flutuante não representa “todos os reais”. Ele representa um conjunto finito de padrões distribuídos ao longo de uma grande faixa de magnitudes.</p></article>
-            <article class="concept-card"><h3>Implicação para software</h3><p>Comparações exatas entre resultados de cálculos de ponto flutuante podem ser inadequadas em alguns casos. O desenvolvedor precisa conhecer as propriedades da representação usada.</p></article>
-          </div>
-          <p class="bridge-question"><strong>Não aprofundaremos hoje:</strong> organização bit a bit dos formatos IEEE 754, números subnormais, NaN, infinitos, arredondamento e underflow. O objetivo é reconhecer por que a aproximação existe.</p>
-        </div>
-      </section>
-
-      <section class="section" id="experimento">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">Experimento guiado</p><h2>O mesmo valor visto por representações diferentes</h2><p>Antes de executar cada bloco, formule uma previsão. O objetivo é observar como Python expõe representações binárias e hexadecimais e como podemos simular larguras fixas.</p></div>
-
-          <div class="practice-grid">
-            <div class="practice-questions">
-              <div><strong>Parte A · Bases</strong><p>Escolha um inteiro entre 0 e 255. Preveja sua forma binária e hexadecimal antes de executar.</p></div>
-              <div><strong>Parte B · Mesmo byte</strong><p>Explique por que <code>0xFF</code> pode ser 255 ou −1 sem que os bits mudem.</p></div>
-              <div><strong>Parte C · Limite</strong><p>O que você espera de uma simulação de 8 bits ao somar 1 a 255? E ao somar 1 a 127 com sinal?</p></div>
-              <div><strong>Parte D · Frações</strong><p>Compare sua expectativa para <code>0.1 + 0.2</code> com o resultado efetivamente impresso.</p></div>
-            </div>
-            <div>
-              <div class="code-frame"><pre><code># Parte A — o mesmo valor em bases diferentes
-valor = 42
-print("decimal :", valor)
-print("binário :", format(valor, "08b"))
-print("hex     :", format(valor, "02X"))
-
-# Parte B — os mesmos 8 bits, duas interpretações
-dado = bytes([0xFF])
-print("unsigned:", int.from_bytes(dado, "big", signed=False))
-print("signed  :", int.from_bytes(dado, "big", signed=True))
-
-# Parte C — simulando 8 bits
-def u8(n):
-    return n & 0xFF
-
-def s8(n):
-    n &= 0xFF
-    return n - 256 if n >= 128 else n
-
-print("255 + 1 em u8:", u8(255 + 1))
-print("127 + 1 em s8:", s8(127 + 1))
-
-# Parte D — ponto flutuante
-print("0.1 + 0.2 =", 0.1 + 0.2)</code></pre></div>
-              <div class="code-caption">Código inicial para observação; depois os valores devem ser modificados pelos estudantes.</div>
-            </div>
-          </div>
-
-          <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Desafio de investigação</span><span class="inquiry-tag">modifique o código</span></div>
-            <div class="inquiry-body"><div><h3>Escolha três valores</h3><p>Use um valor pequeno, um próximo do limite de 8 bits sem sinal e um valor negativo.</p></div><div><ol class="prompt-list"><li>Registre decimal, binário e hexadecimal.</li><li>Explique quantos bits seriam necessários para representar o valor sem sinal.</li><li>Para um byte, determine se o padrão representa o mesmo valor quando interpretado com sinal.</li><li>Encontre um exemplo em que a interpretação com e sem sinal seja diferente.</li><li>Explique em uma frase por que o problema não está nos bits, mas na interpretação.</li></ol></div></div>
-          </div>
-        </div>
-      </section>
-
       <section class="section" id="fechamento">
         <div class="container">
           <div class="section-heading"><p class="eyebrow">Síntese</p><h2>O que você deve levar desta aula</h2></div>
           <div class="checklist">
             <div class="check-item">Consigo explicar o que significa um sistema numérico posicional.</div>
-            <div class="check-item">Consigo relacionar decimal, binário e hexadecimal como representações do mesmo valor.</div>
             <div class="check-item">Consigo explicar por que n bits produzem 2ⁿ padrões possíveis.</div>
             <div class="check-item">Consigo converter inteiros simples entre decimal e binário.</div>
-            <div class="check-item">Consigo converter diretamente grupos de 4 bits para hexadecimal.</div>
-            <div class="check-item">Consigo diferenciar inteiro sem sinal de inteiro em complemento de dois.</div>
-            <div class="check-item">Consigo explicar por que overflow é um problema de faixa de representação.</div>
-            <div class="check-item">Consigo explicar por que alguns valores de ponto flutuante são aproximações.</div>
+            <div class="check-item">Consigo relacionar decimal, binário e hexadecimal como representações do mesmo valor.</div>
+            <div class="check-item">Consigo converter diretamente grupos de 4 bits entre binário e hexadecimal.</div>
           </div>
-          <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos onde os dados ficam, quanto custa acessá-los e como valores podem ser codificados em bits. O próximo bloco pode voltar a subir de nível e perguntar como o sistema operacional organiza o uso desses recursos por vários programas.</p>
+          <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos onde os dados ficam, quanto custa acessá-los e como números podem ser escritos em diferentes bases.</p>
         </div>
       </section>
 
@@ -582,8 +452,7 @@ print("0.1 + 0.2 =", 0.1 + 0.2)</code></pre></div>
         <div class="container">
           <div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual da aula</h2>
             <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 9 — Sistemas numéricos: sistema decimal, sistemas posicionais, binário, conversão binário–decimal e notação hexadecimal.</p>
-            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — Aritmética do computador: representação de inteiros, complemento de dois, overflow e representação em ponto flutuante.</p>
-            <p>Plano oficial do componente curricular <strong>Arquitetura de Computadores e Sistemas Operacionais</strong>.</p>
+            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — Aritmética do computador.</p>
           </div>
         </div>
       </section>
@@ -591,7 +460,7 @@ print("0.1 + 0.2 =", 0.1 + 0.2)</code></pre></div>
 
     <aside class="aula03-toc" aria-label="Índice desta aula">
       <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
-      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#inteiros">Inteiros com sinal</a><a href="#overflow">Overflow</a><a href="#flutuante">Ponto flutuante</a><a href="#experimento">Experimento</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
     </aside>
   </div>
 
