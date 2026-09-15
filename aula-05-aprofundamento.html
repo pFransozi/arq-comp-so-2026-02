@@ -575,31 +575,170 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">7 · Multicore</p>
-              <h2>Mais núcleos só ajudam quando existe trabalho que pode avançar em paralelo</h2>
-              <p>A Aula 05 apresentou processador, núcleo e processador lógico. Agora podemos discutir o limite mais importante: o hardware oferece capacidade paralela, mas o software precisa fornecer trabalho que possa explorá-la.</p>
+              <h2>Mais núcleos aumentam a capacidade de paralelismo — mas o software precisa aproveitá-la</h2>
+              <p>Um processador multicore oferece várias unidades capazes de executar trabalho ao mesmo tempo. O ganho real depende de uma pergunta essencial: <strong>quanto do programa pode ser dividido em tarefas que avancem de forma independente?</strong></p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>O que significa ter vários núcleos?</h3>
+                <p>Um processador <strong>multicore</strong> reúne mais de um núcleo de processamento no mesmo chip. Cada núcleo possui recursos de execução próprios e pode avançar em um fluxo de trabalho diferente quando o sistema possui tarefas disponíveis.</p>
+                <p>Isso cria <strong>capacidade potencial de execução paralela</strong>. Entretanto, possuir quatro, oito ou mais núcleos não faz com que um programa seja automaticamente dividido entre eles.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>1 núcleo</strong><p>Existe uma única unidade física principal para avançar no trabalho daquele núcleo a cada instante, embora a própria microarquitetura possa explorar paralelismo interno.</p></div>
+                <div class="study-callout"><strong>Vários núcleos</strong><p>Diferentes fluxos de execução podem avançar simultaneamente, desde que exista trabalho que possa ser distribuído entre eles.</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Paralelismo depende da estrutura do problema</h3>
+              <p>Considere uma aplicação que precisa processar <strong>oito imagens independentes</strong>. Se o processamento de uma imagem não depende do resultado das demais, diferentes imagens podem ser distribuídas entre diferentes núcleos.</p>
+            </div>
+
+            <div class="performance-flow" aria-label="Exemplo conceitual de trabalho paralelo em quatro núcleos">
+              <div class="performance-step"><small>Tarefa 1</small><strong>Imagem A</strong><span>Pode avançar no Núcleo 1.</span></div>
+              <div class="performance-step"><small>Tarefa 2</small><strong>Imagem B</strong><span>Pode avançar no Núcleo 2.</span></div>
+              <div class="performance-step"><small>Tarefa 3</small><strong>Imagem C</strong><span>Pode avançar no Núcleo 3.</span></div>
+              <div class="performance-step"><small>Tarefa 4</small><strong>Imagem D</strong><span>Pode avançar no Núcleo 4.</span></div>
+            </div>
+
+            <div class="study-prose">
+              <p>Agora compare esse cenário com um cálculo em que cada etapa depende da anterior:</p>
+            </div>
+
+            <div class="equation-box">
+              <code>A → B → C → D</code>
+              <p>Se B precisa do resultado de A, C precisa do resultado de B e D depende de C, essas etapas não podem simplesmente ser executadas todas ao mesmo tempo.</p>
             </div>
 
             <div class="comparison-grid">
               <div class="comparison-side">
                 <small>Parte sequencial</small>
                 <h3>Precisa avançar em uma ordem</h3>
-                <p>Trechos dependentes de resultados anteriores não podem simplesmente ser distribuídos entre vários núcleos.</p>
+                <p>Uma etapa depende do resultado produzido por outra. Adicionar núcleos não elimina essa dependência.</p>
               </div>
               <div class="comparison-side">
                 <small>Parte paralelizável</small>
-                <h3>Pode ser dividida em trabalho independente</h3>
-                <p>Quando existem partes independentes, múltiplas unidades de execução podem fazê-las avançar simultaneamente.</p>
+                <h3>Pode ser dividida</h3>
+                <p>Existem tarefas independentes ou parcialmente independentes que podem ser distribuídas entre diferentes núcleos.</p>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>A pergunta importante</strong>
+              <p>Não basta perguntar <strong>“quantos núcleos existem?”</strong>. Para estimar o ganho, precisamos saber <strong>quanto do trabalho pode realmente ser executado em paralelo</strong>.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Ligando multicore à Lei de Amdahl</h3>
+              <p>A seção anterior mostrou que uma parte não acelerada limita o ganho global. Em multicore, podemos aplicar a mesma ideia: a parte sequencial continua existindo mesmo quando a parte paralelizável é distribuída entre vários núcleos.</p>
+              <p>Considere um programa em que <strong>20% do tempo é sequencial</strong> e <strong>80% pode ser paralelizado</strong>. Em um modelo idealizado, o ganho cresce com o número de núcleos, mas não de forma proporcional.</p>
+            </div>
+
+            <div class="study-table-wrap">
+              <table class="mix-table">
+                <thead><tr><th>Núcleos</th><th>Speedup teórico aproximado</th><th>Leitura</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>1,00×</td><td>Referência.</td></tr>
+                  <tr><td>2</td><td>1,67×</td><td>O ganho é menor que 2×.</td></tr>
+                  <tr><td>4</td><td>2,50×</td><td>Dobrar os núcleos não dobra o ganho.</td></tr>
+                  <tr><td>8</td><td>3,33×</td><td>A parte sequencial passa a limitar cada vez mais.</td></tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="equation-box">
+              <code>S(N) = 1 ÷ (0,20 + 0,80 ÷ N)</code>
+              <p>Mesmo em um cenário ideal com muitos núcleos, os 20% sequenciais permanecem. Por isso, o ganho máximo se aproxima de <strong>5×</strong>, e não cresce indefinidamente.</p>
+            </div>
+
+            <div class="boundary">
+              <strong>Mais núcleos ≠ ganho proporcional</strong>
+              <p>Passar de 4 para 8 núcleos não transforma automaticamente um speedup de 2,5× em 5×. O trecho sequencial continua consumindo tempo e impede que todo o programa se beneficie da capacidade paralela.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Na prática, existem outros custos</h3>
+              <p>A Lei de Amdahl já mostra um limite fundamental, mas a execução real costuma incluir custos adicionais. Para utilizar vários núcleos, o software precisa dividir, distribuir e coordenar o trabalho.</p>
+            </div>
+
+            <div class="metric-list">
+              <div class="metric-row"><strong>Divisão do trabalho</strong><span>O problema precisa ser separado em tarefas que possam ser executadas por diferentes fluxos.</span></div>
+              <div class="metric-row"><strong>Coordenação</strong><span>Algumas tarefas precisam aguardar resultados de outras antes de continuar.</span></div>
+              <div class="metric-row"><strong>Sincronização</strong><span>Quando vários fluxos acessam dados compartilhados, pode ser necessário controlar a ordem e o momento desses acessos.</span></div>
+              <div class="metric-row"><strong>Memória e cache</strong><span>Vários núcleos podem disputar acesso aos mesmos dados, e o sistema precisa manter uma visão coerente das informações armazenadas em diferentes níveis de cache.</span></div>
+              <div class="metric-row"><strong>Criação e gerenciamento de fluxos</strong><span>Organizar o trabalho paralelo também consome tempo e recursos; tarefas muito pequenas podem não compensar esse custo.</span></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Um exemplo de decisão de software</h3>
+                <p>Imagine que uma tarefa leve <strong>100 ms</strong> em execução sequencial. Dividi-la entre vários fluxos só será vantajoso se o tempo economizado for maior que o custo de criar, coordenar e sincronizar esses fluxos.</p>
+                <p>Isso ajuda a explicar por que paralelizar qualquer trecho de código não é, por si só, uma otimização.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Capacidade disponível</strong><p>O número de núcleos informa quanta capacidade paralela o hardware pode oferecer.</p></div>
+                <div class="study-callout"><strong>Capacidade utilizada</strong><p>O desempenho obtido depende de quanto dessa capacidade o software consegue realmente explorar.</p></div>
               </div>
             </div>
 
             <div class="study-prose">
-              <h3>Por que o ganho não cresce indefinidamente?</h3>
-              <p>A parte sequencial permanece, e a coordenação entre múltiplos fluxos também tem custo. Sistemas multiprocessadores exigem mecanismos de sincronização e escalonamento, reforçando que paralelismo é uma propriedade conjunta de hardware e software.</p>
+              <h3>Núcleo físico e processador lógico não são a mesma coisa</h3>
+              <p>Um <strong>núcleo físico</strong> possui unidades de execução e outros recursos próprios. Alguns processadores permitem que um mesmo núcleo mantenha mais de um contexto de execução de hardware, que aparece para o sistema operacional como mais de um <strong>processador lógico</strong>.</p>
+              <p>Por isso, uma máquina indicada como “6 núcleos e 12 processadores lógicos” não possui 12 núcleos físicos completos. Os processadores lógicos adicionais compartilham parte dos recursos internos do núcleo.</p>
+            </div>
+
+            <div class="comparison-grid">
+              <div class="comparison-side">
+                <small>Núcleo físico</small>
+                <h3>Recursos físicos de execução</h3>
+                <p>É uma unidade de processamento implementada no chip, com recursos próprios e acesso à hierarquia de memória.</p>
+              </div>
+              <div class="comparison-side">
+                <small>Processador lógico</small>
+                <h3>Contexto visível ao sistema operacional</h3>
+                <p>Representa uma capacidade de manter outro fluxo de execução de hardware, mas não equivale necessariamente a outro núcleo físico completo.</p>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Onde entra o sistema operacional?</h3>
+              <p>O hardware oferece os núcleos e processadores lógicos. O sistema operacional precisa decidir <strong>quais fluxos de execução utilizarão esses recursos em cada momento</strong>.</p>
+              <p>Mais adiante, os conceitos de <strong>processos, threads, escalonamento e sincronização</strong> mostrarão como essa utilização é organizada e quais problemas aparecem quando vários fluxos executam concorrentemente.</p>
             </div>
 
             <div class="boundary">
               <strong>Ponte para Sistemas Operacionais</strong>
-              <p>Mais adiante, processos, threads, escalonamento e sincronização mostrarão como o sistema operacional administra esses fluxos de execução.</p>
+              <p>Multicore é o ponto em que arquitetura de hardware e sistemas operacionais começam a se encontrar de forma explícita: o hardware disponibiliza unidades de execução, enquanto o sistema operacional administra os fluxos que disputarão e compartilharão esses recursos.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Onde isso aparece em Engenharia de Software?</h3>
+              <p>A necessidade de explorar vários núcleos aparece em diferentes tipos de aplicação e também nas próprias ferramentas utilizadas no desenvolvimento de software.</p>
+            </div>
+
+            <div class="metric-list">
+              <div class="metric-row"><strong>Servidor web</strong><span>Requisições independentes podem ser atendidas simultaneamente por diferentes fluxos.</span></div>
+              <div class="metric-row"><strong>Processamento de imagens</strong><span>Arquivos independentes podem ser processados em paralelo.</span></div>
+              <div class="metric-row"><strong>Build de um projeto</strong><span>Módulos independentes podem ser compilados simultaneamente quando a cadeia de dependências permite.</span></div>
+              <div class="metric-row"><strong>Execução de testes</strong><span>Testes independentes podem ser distribuídos entre diferentes trabalhadores.</span></div>
+              <div class="metric-row"><strong>Algoritmo fortemente dependente</strong><span>Quando cada etapa depende da anterior, vários núcleos podem permanecer subutilizados.</span></div>
+            </div>
+
+            <div class="boundary">
+              <strong>O que guardar desta seção</strong>
+              <p><strong>Multicore aumenta a capacidade potencial de execução paralela.</strong> O ganho obtido depende de quanto do programa pode ser dividido em trabalho independente. Partes sequenciais, dependências, sincronização, compartilhamento de dados e acesso à memória limitam o ganho. Por isso, mais núcleos não significam automaticamente uma redução proporcional no tempo de execução.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Daqui para a próxima seção</h3>
+                <p>Usar vários núcleos pode melhorar coisas diferentes: podemos tentar reduzir o tempo de uma única tarefa ou aumentar a quantidade total de tarefas concluídas em determinado intervalo.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Próximo passo</strong><p>Essa diferença nos leva a duas métricas importantes: <strong>tempo de resposta</strong> e <strong>throughput</strong>.</p></div>
+              </div>
             </div>
           </div>
         </section>
