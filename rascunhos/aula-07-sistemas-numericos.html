@@ -249,7 +249,7 @@
           <div class="precision-note"><strong>Atalho mental:</strong> posições com bit <strong>0</strong> não acrescentam valor. Nesse exemplo, basta somar os pesos das posições que têm bit 1: <strong>32 + 8 + 4 + 1 = 45</strong>.</div>
 
           <h3 style="margin-top:2.5rem">Decimal → binário: quais potências de 2 formam o número?</h3>
-          <p>Antes de usar divisões, podemos pensar nos pesos binários. Para escrever <strong>42₁₀</strong> em binário, procuramos quais potências de 2 somadas formam 42.</p>
+          <p>Para escrever <strong>42₁₀</strong> em binário, procuramos quais potências de 2 somadas formam 42.</p>
 
           <div class="base-equation">42 = 32 + 8 + 2</div>
 
@@ -269,32 +269,11 @@
 
           <div class="base-equation">32 · 16 · 8 · 4 · 2 · 1<br>1&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0 → 101010<sub>2</sub></div>
 
-          <p class="bridge-question"><strong>Leitura:</strong> usamos os pesos 32, 8 e 2. Por isso, as posições correspondentes recebem 1; as demais recebem 0. Assim, <strong>42₁₀ = 101010₂</strong>.</p>
-
-          <h3 style="margin-top:2.5rem">Um método que funciona para qualquer inteiro: divisões por 2</h3>
-          <p>Também podemos dividir repetidamente o número por 2 e guardar os restos. Cada resto é 0 ou 1, exatamente os dígitos permitidos no sistema binário.</p>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Divisão</th><th>Quociente</th><th>Resto</th></tr></thead>
-              <tbody>
-                <tr><td>42 ÷ 2</td><td>21</td><td><strong>0</strong></td></tr>
-                <tr><td>21 ÷ 2</td><td>10</td><td><strong>1</strong></td></tr>
-                <tr><td>10 ÷ 2</td><td>5</td><td><strong>0</strong></td></tr>
-                <tr><td>5 ÷ 2</td><td>2</td><td><strong>1</strong></td></tr>
-                <tr><td>2 ÷ 2</td><td>1</td><td><strong>0</strong></td></tr>
-                <tr><td>1 ÷ 2</td><td>0</td><td><strong>1</strong></td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="precision-note"><strong>Por que os restos são lidos de baixo para cima?</strong> O primeiro resto encontrado corresponde à posição mais à direita, 2⁰. Os restos seguintes correspondem a 2¹, 2², 2³... Portanto, para escrever o número na ordem usual, começamos pelo último resto.</div>
-
-          <div class="base-equation">restos de baixo para cima → 1 0 1 0 1 0 → 101010<sub>2</sub></div>
+          <p class="bridge-question"><strong>Regra:</strong> identifique quais potências de 2 formam o valor. Onde o peso é usado, escreva <strong>1</strong>; onde não é usado, escreva <strong>0</strong>. Assim, <strong>42₁₀ = 101010₂</strong>.</p>
 
           <div class="concept-grid">
             <article class="concept-card"><h3>Binário → decimal</h3><p>Identifique os pesos das posições e <strong>some as contribuições</strong> dos bits.</p></article>
-            <article class="concept-card"><h3>Decimal → binário</h3><p>Descubra quais potências de 2 formam o valor ou use <strong>divisões sucessivas por 2</strong>.</p></article>
+            <article class="concept-card"><h3>Decimal → binário</h3><p>Identifique as <strong>potências de 2</strong> que formam o valor e marque cada posição com 1 ou 0.</p></article>
           </div>
 
           <div class="inquiry">
