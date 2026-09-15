@@ -216,22 +216,97 @@
 
       <section class="section" id="conversoes">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">3 · Decimal e binário</p><h2>Converter é reinterpretar o valor em outra base</h2><p>Vamos trabalhar apenas com inteiros neste bloco. O objetivo é compreender o mecanismo, não memorizar tabelas extensas.</p></div>
+          <div class="section-heading"><p class="eyebrow">3 · Decimal e binário</p><h2>Escrever a mesma quantidade em outra base</h2><p>Converter não muda o número. Muda apenas a forma de escrevê-lo. Vamos fazer os dois caminhos separadamente: primeiro <strong>binário → decimal</strong> e depois <strong>decimal → binário</strong>.</p></div>
 
-          <div class="conversion-grid">
-            <article class="conversion-card"><h3>Binário → decimal</h3><p>Somamos as potências de 2 correspondentes às posições que contêm 1.</p><div class="conversion-steps"><div>101101₂</div><div>1×2⁵ + 0×2⁴ + 1×2³ + 1×2² + 0×2¹ + 1×2⁰</div><div>32 + 8 + 4 + 1 = 45₁₀</div></div></article>
-            <article class="conversion-card"><h3>Decimal → binário</h3><p>Uma técnica é dividir sucessivamente por 2 e registrar os restos. Lemos os restos de baixo para cima.</p><div class="conversion-steps"><div>42 ÷ 2 = 21 · resto 0</div><div>21 ÷ 2 = 10 · resto 1</div><div>10 ÷ 2 = 5 · resto 0</div><div>5 ÷ 2 = 2 · resto 1</div><div>2 ÷ 2 = 1 · resto 0</div><div>1 ÷ 2 = 0 · resto 1</div><div>42₁₀ = 101010₂</div></div></article>
+          <h3>Binário → decimal: descubra quanto cada bit vale</h3>
+          <p>Use a mesma regra dos sistemas posicionais: comece pelo bit mais à direita. Ele tem peso 2⁰ = 1. A cada posição para a esquerda, o peso dobra.</p>
+
+          <div class="same-bits">
+            <div class="bit-word">101101₂</div>
+            <div class="interpretations">
+              <div><strong>Passo 1</strong>Comece pela direita e associe os pesos: 1, 2, 4, 8, 16, 32.</div>
+              <div><strong>Passo 2</strong>Multiplique cada bit pelo peso da posição.</div>
+              <div><strong>Passo 3</strong>Some as contribuições.</div>
+            </div>
+          </div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
+                <tr><td><strong>0</strong></td><td>2¹</td><td>2</td><td>0 × 2 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2²</td><td>4</td><td>1 × 4 = 4</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
+                <tr><td><strong>0</strong></td><td>2⁴</td><td>16</td><td>0 × 16 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2⁵</td><td>32</td><td>1 × 32 = 32</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">101101<sub>2</sub> = 1 + 0 + 4 + 8 + 0 + 32 = 45<sub>10</sub></div>
+
+          <div class="precision-note"><strong>Atalho mental:</strong> posições com bit <strong>0</strong> não acrescentam valor. Nesse exemplo, basta somar os pesos das posições que têm bit 1: <strong>32 + 8 + 4 + 1 = 45</strong>.</div>
+
+          <h3 style="margin-top:2.5rem">Decimal → binário: quais potências de 2 formam o número?</h3>
+          <p>Antes de usar divisões, podemos pensar nos pesos binários. Para escrever <strong>42₁₀</strong> em binário, procuramos quais potências de 2 somadas formam 42.</p>
+
+          <div class="base-equation">42 = 32 + 8 + 2</div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Peso</th><th>Usamos esse peso?</th><th>Bit</th><th>Valor restante</th></tr></thead>
+              <tbody>
+                <tr><td><strong>32</strong></td><td>Sim. 32 cabe em 42.</td><td>1</td><td>42 − 32 = 10</td></tr>
+                <tr><td><strong>16</strong></td><td>Não. 16 não cabe em 10.</td><td>0</td><td>10</td></tr>
+                <tr><td><strong>8</strong></td><td>Sim. 8 cabe em 10.</td><td>1</td><td>10 − 8 = 2</td></tr>
+                <tr><td><strong>4</strong></td><td>Não. 4 não cabe em 2.</td><td>0</td><td>2</td></tr>
+                <tr><td><strong>2</strong></td><td>Sim. 2 cabe em 2.</td><td>1</td><td>2 − 2 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>Não precisamos desse peso.</td><td>0</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">32 · 16 · 8 · 4 · 2 · 1<br>1&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0 → 101010<sub>2</sub></div>
+
+          <p class="bridge-question"><strong>Leitura:</strong> usamos os pesos 32, 8 e 2. Por isso, as posições correspondentes recebem 1; as demais recebem 0. Assim, <strong>42₁₀ = 101010₂</strong>.</p>
+
+          <h3 style="margin-top:2.5rem">Um método que funciona para qualquer inteiro: divisões por 2</h3>
+          <p>Também podemos dividir repetidamente o número por 2 e guardar os restos. Cada resto é 0 ou 1, exatamente os dígitos permitidos no sistema binário.</p>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Divisão</th><th>Quociente</th><th>Resto</th></tr></thead>
+              <tbody>
+                <tr><td>42 ÷ 2</td><td>21</td><td><strong>0</strong></td></tr>
+                <tr><td>21 ÷ 2</td><td>10</td><td><strong>1</strong></td></tr>
+                <tr><td>10 ÷ 2</td><td>5</td><td><strong>0</strong></td></tr>
+                <tr><td>5 ÷ 2</td><td>2</td><td><strong>1</strong></td></tr>
+                <tr><td>2 ÷ 2</td><td>1</td><td><strong>0</strong></td></tr>
+                <tr><td>1 ÷ 2</td><td>0</td><td><strong>1</strong></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="precision-note"><strong>Por que os restos são lidos de baixo para cima?</strong> O primeiro resto encontrado corresponde à posição mais à direita, 2⁰. Os restos seguintes correspondem a 2¹, 2², 2³... Portanto, para escrever o número na ordem usual, começamos pelo último resto.</div>
+
+          <div class="base-equation">restos de baixo para cima → 1 0 1 0 1 0 → 101010<sub>2</sub></div>
+
+          <div class="concept-grid">
+            <article class="concept-card"><h3>Binário → decimal</h3><p>Identifique os pesos das posições e <strong>some as contribuições</strong> dos bits.</p></article>
+            <article class="concept-card"><h3>Decimal → binário</h3><p>Descubra quais potências de 2 formam o valor ou use <strong>divisões sucessivas por 2</strong>.</p></article>
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Prática curta</span><span class="inquiry-tag">antes de usar Python</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Prática curta</span><span class="inquiry-tag">faça antes de conferir</span></div>
             <div class="inquiry-body">
-              <div><h3>Faça manualmente</h3><ol class="prompt-list"><li>Converta 13₁₀ para binário.</li><li>Converta 11001₂ para decimal.</li><li>Qual é o maior valor sem sinal possível com 6 bits?</li></ol></div>
-              <div><h3>Depois confira</h3><div class="code-frame"><pre><code>print(bin(13))
-print(int("11001", 2))
-print(2**6 - 1)</code></pre></div><div class="code-caption">As funções ajudam a verificar; elas não substituem a compreensão do processo.</div></div>
+              <div><h3>Dois caminhos</h3><ol class="prompt-list"><li>Converta <strong>13₁₀</strong> para binário. Dica: 13 = 8 + 4 + 1.</li><li>Converta <strong>11001₂</strong> para decimal. Comece pelo bit da direita.</li><li>Explique em uma frase por que converter a base não muda o valor representado.</li></ol></div>
+              <div><h3>Depois confira com Python</h3><div class="code-frame"><pre><code>print(bin(13))          # 0b1101
+print(int("11001", 2)) # 25</code></pre></div><div class="code-caption">Use Python para verificar o resultado depois de realizar a conversão manualmente.</div></div>
             </div>
           </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> decimal e binário são duas formas de escrever a mesma quantidade. O que muda é a base e, com ela, o peso de cada posição.</p>
         </div>
       </section>
 
