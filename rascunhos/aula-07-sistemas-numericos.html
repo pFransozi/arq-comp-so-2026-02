@@ -53,7 +53,6 @@
           <a href="#bits">Bits e capacidade</a>
           <a href="#conversoes">Binário e decimal</a>
           <a href="#hexadecimal">Hexadecimal</a>
-          <a href="#interpretacao">Os mesmos bits</a>
           <a href="#inteiros">Inteiros com sinal</a>
           <a href="#overflow">Overflow</a>
           <a href="#flutuante">Ponto flutuante</a>
@@ -439,31 +438,9 @@
         </div>
       </section>
 
-      <section class="section" id="interpretacao">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">5 · Os mesmos bits</p><h2>Um padrão de bits não carrega sozinho o seu tipo</h2><p>A mesma sequência pode representar valores diferentes quando usamos convenções diferentes. Essa ideia é central para compreender tipos, memória e instruções.</p></div>
-
-          <div class="same-bits">
-            <div class="bit-word">11111111</div>
-            <div class="interpretations"><div><strong>Inteiro sem sinal de 8 bits</strong>255.</div><div><strong>Inteiro com sinal de 8 bits em complemento de dois</strong>−1.</div><div><strong>Hexadecimal</strong><code>FF</code>. O hexadecimal descreve o padrão; não define sozinho se ele é positivo ou negativo.</div></div>
-          </div>
-
-          <div class="concept-grid">
-            <article class="concept-card"><h3>O tipo orienta a interpretação</h3><p>Quando um programa declara ou manipula um dado, a linguagem, o compilador e a arquitetura aplicam regras que determinam como aquele padrão deve ser tratado.</p></article>
-            <article class="concept-card"><h3>Memória guarda padrões</h3><p>Uma região de memória não precisa “saber” semanticamente se contém um número, um caractere ou parte de uma instrução. Esse significado surge do contexto de uso.</p></article>
-          </div>
-
-          <div class="code-frame"><pre><code>dado = bytes([0xFF])
-
-print(int.from_bytes(dado, "big", signed=False))  # 255
-print(int.from_bytes(dado, "big", signed=True))   # -1</code></pre></div>
-          <div class="code-caption">O byte é o mesmo; mudamos apenas a forma de interpretá-lo.</div>
-        </div>
-      </section>
-
       <section class="section" id="inteiros">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">6 · Inteiros com sinal</p><h2>Como representar números negativos sem adicionar um símbolo “−”?</h2><p>Em memória não existe um caractere de menos colocado ao lado do número. Precisamos reservar padrões binários que representem valores negativos.</p></div>
+          <div class="section-heading"><p class="eyebrow">5 · Inteiros com sinal</p><h2>Como representar números negativos sem adicionar um símbolo “−”?</h2><p>Em memória não existe um caractere de menos colocado ao lado do número. Precisamos reservar padrões binários que representem valores negativos.</p></div>
 
           <div class="range-grid">
             <article class="range-card"><h3>Sem sinal · n bits</h3><code>0 até 2ⁿ − 1</code><p>Todos os padrões representam valores não negativos.</p><p>Com 8 bits: <strong>0 a 255</strong>.</p></article>
@@ -482,7 +459,7 @@ print(int.from_bytes(dado, "big", signed=True))   # -1</code></pre></div>
 
       <section class="section" id="overflow">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">7 · Overflow</p><h2>O resultado matemático pode existir e mesmo assim não caber</h2><p>Quando trabalhamos com largura fixa, a faixa de valores também é fixa. Se o resultado ultrapassa essa faixa, a representação não consegue expressá-lo normalmente.</p></div>
+          <div class="section-heading"><p class="eyebrow">6 · Overflow</p><h2>O resultado matemático pode existir e mesmo assim não caber</h2><p>Quando trabalhamos com largura fixa, a faixa de valores também é fixa. Se o resultado ultrapassa essa faixa, a representação não consegue expressá-lo normalmente.</p></div>
 
           <div class="overflow-path">
             <div><strong>4 bits com sinal</strong><span>Faixa: −8 a +7.</span></div>
@@ -512,7 +489,7 @@ print(s8(127 + 1))  # -128</code></pre></div>
 
       <section class="section" id="flutuante">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">8 · Ponto flutuante</p><h2>Nem todo número real pode ser representado exatamente</h2><p>Inteiros de largura fixa têm um intervalo finito. Para representar números com parte fracionária e ordens de grandeza muito diferentes, computadores usam formatos de ponto flutuante.</p></div>
+          <div class="section-heading"><p class="eyebrow">7 · Ponto flutuante</p><h2>Nem todo número real pode ser representado exatamente</h2><p>Inteiros de largura fixa têm um intervalo finito. Para representar números com parte fracionária e ordens de grandeza muito diferentes, computadores usam formatos de ponto flutuante.</p></div>
 
           <div class="float-box">
             <div class="float-fields"><div><strong>Sinal</strong><span>positivo ou negativo</span></div><div><strong>Expoente</strong><span>escala do número</span></div><div><strong>Fração / significando</strong><span>dígitos significativos armazenados</span></div></div>
@@ -614,7 +591,7 @@ print("0.1 + 0.2 =", 0.1 + 0.2)</code></pre></div>
 
     <aside class="aula03-toc" aria-label="Índice desta aula">
       <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
-      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#interpretacao">Os mesmos bits</a><a href="#inteiros">Inteiros com sinal</a><a href="#overflow">Overflow</a><a href="#flutuante">Ponto flutuante</a><a href="#experimento">Experimento</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#inteiros">Inteiros com sinal</a><a href="#overflow">Overflow</a><a href="#flutuante">Ponto flutuante</a><a href="#experimento">Experimento</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
     </aside>
   </div>
 
