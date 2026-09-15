@@ -105,21 +105,100 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">2 · Métricas e contexto</p>
-              <h2>Desempenho depende do que estamos tentando melhorar</h2>
-              <p>A mesma máquina pode ser adequada para uma carga e inadequada para outra. Antes de comparar números, precisamos definir qual comportamento queremos avaliar.</p>
+              <h2>Antes de medir, precisamos saber o que estamos comparando</h2>
+              <p>Desempenho não é uma característica isolada do processador. Ele aparece quando um programa concreto é executado em uma máquina concreta. Por isso, antes de olhar para números, precisamos definir a tarefa, a entrada utilizada e o que queremos observar.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Comece com uma pergunta simples</h3>
+                <p>Imagine dois computadores executando o mesmo programa. A Máquina A trabalha a <strong>4,0 GHz</strong> e a Máquina B a <strong>3,2 GHz</strong>. Podemos concluir apenas por esses valores que a Máquina A terminará primeiro?</p>
+                <p><strong>Não necessariamente.</strong> A frequência informa quantos ciclos de clock podem ocorrer por segundo, mas o tempo para concluir o programa também depende de quanto trabalho precisa ser realizado e de como esse trabalho é executado pela máquina.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Primeira ideia</strong><p>Uma especificação de hardware descreve uma característica da máquina. Ela não informa, sozinha, quanto tempo uma aplicação levará para terminar.</p></div>
+                <div class="study-callout"><strong>Pergunta de leitura</strong><p>Quando alguém diz que um computador é “mais rápido”, <strong>mais rápido em qual tarefa?</strong></p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>O que é uma métrica?</h3>
+              <p>Uma <strong>métrica</strong> é uma medida usada para observar algum aspecto do comportamento do sistema. Em desempenho, podemos medir coisas diferentes dependendo da pergunta que queremos responder.</p>
             </div>
 
             <div class="metric-list">
-              <div class="metric-row"><strong>Programa</strong><span>O algoritmo e a implementação determinam quanto trabalho precisa ser realizado para resolver o problema.</span></div>
-              <div class="metric-row"><strong>Compilador</strong><span>Transforma a implementação em instruções e pode gerar sequências diferentes para o mesmo comportamento de alto nível.</span></div>
-              <div class="metric-row"><strong>Arquitetura</strong><span>Define o repertório de instruções e os mecanismos disponíveis para expressar o trabalho.</span></div>
-              <div class="metric-row"><strong>Microarquitetura</strong><span>Determina como as instruções previstas pela arquitetura são executadas no processador concreto.</span></div>
-              <div class="metric-row"><strong>Carga real</strong><span>O resultado observado depende do conjunto de entradas e do tipo de tarefa usado na medição.</span></div>
+              <div class="metric-row"><strong>Tempo de execução</strong><span>Quanto tempo uma tarefa leva para ser concluída.</span></div>
+              <div class="metric-row"><strong>Quantidade de trabalho concluído</strong><span>Quantas tarefas ou requisições o sistema consegue finalizar em determinado intervalo.</span></div>
+              <div class="metric-row"><strong>Taxa de instruções</strong><span>Quantas instruções são executadas por unidade de tempo.</span></div>
+              <div class="metric-row"><strong>Ciclos utilizados</strong><span>Quantos ciclos de processador são necessários durante a execução.</span></div>
             </div>
 
             <div class="boundary">
-              <strong>Regra de leitura</strong>
-              <p>Uma especificação de hardware informa capacidade potencial. Uma medição informa o comportamento observado em uma carga concreta. São tipos diferentes de evidência.</p>
+              <strong>Uma métrica responde a uma pergunta específica</strong>
+              <p>Tempo de execução, taxa de instruções e quantidade de tarefas concluídas observam aspectos diferentes. Nenhuma dessas medidas, isoladamente, descreve todo o desempenho de um sistema.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>O que é uma carga de trabalho?</h3>
+                <p>A <strong>carga de trabalho</strong> é o conjunto de tarefas e dados usados durante uma avaliação. Compilar um projeto, compactar arquivos, processar uma imagem e atender requisições de um servidor são exemplos de cargas diferentes.</p>
+                <p>Essas tarefas não utilizam o computador da mesma forma. Algumas exigem mais processamento, outras realizam muitos acessos à memória e outras passam parte do tempo esperando dados ou dispositivos.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Exemplo</strong><p>Um computador pode apresentar ótimo desempenho em compressão de arquivos e não mostrar o mesmo ganho em uma aplicação que depende fortemente de acesso à memória.</p></div>
+                <div class="study-callout"><strong>Consequência</strong><p>Para comparar duas alternativas, a carga usada no teste precisa representar o tipo de trabalho que realmente interessa.</p></div>
+              </div>
+            </div>
+
+            <div class="study-prose">
+              <h3>De onde vem o desempenho observado?</h3>
+              <p>O tempo final não depende de um único componente. Ele é resultado de uma cadeia de decisões que começa no software e chega até a execução no hardware.</p>
+            </div>
+
+            <div class="metric-list">
+              <div class="metric-row"><strong>Programa e algoritmo</strong><span>Determinam quanto trabalho precisa ser realizado para resolver o problema.</span></div>
+              <div class="metric-row"><strong>Compilador</strong><span>Transforma o código de alto nível em instruções de máquina e pode produzir sequências diferentes para a mesma lógica.</span></div>
+              <div class="metric-row"><strong>ISA</strong><span>Define o conjunto de instruções disponível para representar o trabalho. Esse conceito foi aprofundado na Aula 04.</span></div>
+              <div class="metric-row"><strong>Processador</strong><span>Determina como as instruções são executadas internamente, incluindo organização das unidades de execução e uso de paralelismo.</span></div>
+              <div class="metric-row"><strong>Memória e cache</strong><span>Influenciam o tempo necessário para obter instruções e dados usados pelo programa.</span></div>
+              <div class="metric-row"><strong>Entrada utilizada</strong><span>Pode mudar a quantidade de trabalho executado e os caminhos percorridos pelo programa.</span></div>
+            </div>
+
+            <div class="study-prose">
+              <h3>Métrica não é a mesma coisa que causa</h3>
+              <p>Uma medida nos mostra <strong>o que aconteceu</strong>. Para explicar <strong>por que aconteceu</strong>, precisamos analisar os fatores que influenciaram a execução.</p>
+            </div>
+
+            <div class="comparison-grid">
+              <div class="comparison-side">
+                <small>O que observamos</small>
+                <h3>Resultado da execução</h3>
+                <p>Tempo para terminar a tarefa.</p>
+                <p>Quantidade de trabalho concluído.</p>
+                <p>Taxa de instruções executadas.</p>
+              </div>
+              <div class="comparison-side">
+                <small>O que ajuda a explicar</small>
+                <h3>Fatores da execução</h3>
+                <p>Quantidade e tipo de instruções.</p>
+                <p>CPI e frequência.</p>
+                <p>Comportamento de memória e cache.</p>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Comparar exige contexto</strong>
+              <p>Uma comparação defensável procura manter a tarefa e as condições de execução comparáveis e escolhe uma métrica coerente com o objetivo da aplicação. A pergunta não é apenas “qual máquina tem o maior número?”, mas <strong>qual alternativa executa melhor o trabalho que realmente precisamos realizar?</strong></p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Daqui para a próxima seção</h3>
+                <p>Agora que sabemos que o desempenho depende do trabalho executado e da forma como esse trabalho chega ao processador, podemos analisar um dos fatores da equação com mais cuidado: <strong>quantos ciclos, em média, as instruções executadas pelo programa exigem da CPU.</strong></p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Ideia para guardar</strong><p>Por isso, em Engenharia de Software, o desempenho deve ser avaliado com métricas que representem o uso real da aplicação.</p></div>
+              </div>
             </div>
           </div>
         </section>
