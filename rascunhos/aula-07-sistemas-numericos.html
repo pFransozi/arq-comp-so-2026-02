@@ -355,28 +355,83 @@
 
       <section class="section" id="hexadecimal">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">4 · Hexadecimal</p><h2>Uma forma compacta de enxergar bits</h2><p>O hexadecimal usa base 16. Como 16 = 2⁴, cada dígito hexadecimal corresponde exatamente a um grupo de 4 bits.</p></div>
+          <div class="section-heading"><p class="eyebrow">4 · Hexadecimal</p><h2>Quatro bits de cada vez</h2><p>O binário é adequado ao hardware, mas sequências longas de 0 e 1 são difíceis de ler. O hexadecimal é uma forma mais compacta de escrever os mesmos padrões. Como <strong>16 = 2⁴</strong>, cada dígito hexadecimal representa exatamente <strong>4 bits</strong>.</p></div>
+
+          <div class="precision-note"><strong>Ideia principal:</strong> hexadecimal não cria novos dados e não altera os bits. Ele apenas oferece uma escrita mais curta para padrões binários.</div>
+
+          <h3 style="margin-top:2rem">Por que aparecem as letras A, B, C, D, E e F?</h3>
+          <p>Na base 10 temos dez símbolos, de 0 a 9. Na base 16 precisamos de <strong>dezesseis símbolos</strong>. Depois do 9, usamos as letras A até F para representar os valores de 10 a 15.</p>
 
           <div class="hex-map">
             <div><strong>0</strong><span>0000</span></div><div><strong>1</strong><span>0001</span></div><div><strong>2</strong><span>0010</span></div><div><strong>3</strong><span>0011</span></div><div><strong>4</strong><span>0100</span></div><div><strong>5</strong><span>0101</span></div><div><strong>6</strong><span>0110</span></div><div><strong>7</strong><span>0111</span></div><div><strong>8</strong><span>1000</span></div><div><strong>9</strong><span>1001</span></div><div><strong>A</strong><span>1010</span></div><div><strong>B</strong><span>1011</span></div><div><strong>C</strong><span>1100</span></div><div><strong>D</strong><span>1101</span></div><div><strong>E</strong><span>1110</span></div><div><strong>F</strong><span>1111</span></div>
           </div>
 
+          <div class="base-equation">A = 10 · B = 11 · C = 12 · D = 13 · E = 14 · F = 15</div>
+          <div class="base-equation">1 dígito hexadecimal ↔ 4 bits</div>
+
+          <p class="bridge-question"><strong>Observe:</strong> <code>1111₂</code> é o maior padrão possível com 4 bits. Em decimal ele vale 15 e, em hexadecimal, é escrito como <strong>F₁₆</strong>.</p>
+
+          <h3 style="margin-top:2.5rem">Binário → hexadecimal: agrupe de 4 em 4</h3>
+          <p>Para converter binário em hexadecimal, não precisamos passar primeiro pelo decimal. Basta separar os bits em grupos de 4, começando pela <strong>direita</strong>.</p>
+
           <div class="same-bits">
-            <div class="bit-word">0010 1010</div>
-            <div class="interpretations"><div><strong>Agrupe em 4 bits</strong><code>0010 = 2</code> e <code>1010 = A</code>.</div><div><strong>Resultado</strong><code>00101010₂ = 2A₁₆ = 42₁₀</code>.</div></div>
+            <div class="bit-word">101010₂</div>
+            <div class="interpretations">
+              <div><strong>Passo 1 · Agrupe</strong>Da direita para a esquerda: <code>10 1010</code>.</div>
+              <div><strong>Passo 2 · Complete</strong>O grupo da esquerda tem só 2 bits. Complete com zeros: <code>0010 1010</code>.</div>
+              <div><strong>Passo 3 · Converta cada grupo</strong><code>0010 = 2</code> e <code>1010 = A</code>.</div>
+            </div>
           </div>
+
+          <div class="base-equation">101010<sub>2</sub> → 0010 1010 → 2 A → 2A<sub>16</sub></div>
+
+          <div class="precision-note"><strong>Regra:</strong> complete com zeros apenas à <strong>esquerda</strong> do primeiro grupo, quando necessário. Adicionar zeros à esquerda não altera o valor representado.</div>
+
+          <h3 style="margin-top:2.5rem">Hexadecimal → binário: faça o caminho inverso</h3>
+          <p>Agora cada dígito hexadecimal é substituído diretamente pelo seu grupo de 4 bits.</p>
+
+          <div class="same-bits">
+            <div class="bit-word">3F₁₆</div>
+            <div class="interpretations">
+              <div><strong>Primeiro dígito</strong><code>3 = 0011</code>.</div>
+              <div><strong>Segundo dígito</strong><code>F = 1111</code>.</div>
+              <div><strong>Junte os grupos</strong><code>3F₁₆ = 00111111₂</code>.</div>
+            </div>
+          </div>
+
+          <div class="base-equation">3F<sub>16</sub> → 0011 1111 → 00111111<sub>2</sub></div>
 
           <div class="number-story">
-            <article><small>Mais compacto</small><strong>Menos dígitos</strong><p>Oito bits podem ser escritos com apenas dois dígitos hexadecimais.</p></article>
-            <article><small>Conversão direta</small><strong>4 bits ↔ 1 dígito</strong><p>Não é necessário converter primeiro para decimal.</p></article>
-            <article><small>Uso prático</small><strong>Endereços, bytes e opcodes</strong><p>Hexadecimal aparece com frequência em depuração, dumps de memória e documentação de baixo nível.</p></article>
+            <article><small>4 bits</small><strong>1 dígito hexadecimal</strong><p>Um grupo de 4 bits pode assumir 16 padrões, de <code>0000</code> a <code>1111</code>: exatamente os símbolos 0 a F.</p></article>
+            <article><small>8 bits</small><strong>2 dígitos hexadecimais</strong><p>Um byte pode ser escrito com dois dígitos hexadecimais: de <code>00</code> até <code>FF</code>.</p></article>
+            <article><small>Uso prático</small><strong>Mais fácil de inspecionar</strong><p>Hexadecimal aparece em bytes, endereços de memória, dumps, opcodes e documentação de baixo nível porque reduz sequências longas de bits.</p></article>
           </div>
 
-          <div class="code-frame"><pre><code>valor = 42
-print(bin(valor))       # 0b101010
-print(hex(valor))       # 0x2a
-print(format(valor, "08b"))
-print(format(valor, "02X"))</code></pre></div>
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">faça manualmente</span></div>
+            <div class="inquiry-body">
+              <div>
+                <h3>Binário → hexadecimal</h3>
+                <ol class="prompt-list">
+                  <li>Converta <strong>1111₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>101010₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>11001100₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>11111111₂</strong> para hexadecimal.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>Hexadecimal → binário</h3>
+                <ol class="prompt-list">
+                  <li>Converta <strong>A₁₆</strong> para binário.</li>
+                  <li>Converta <strong>2F₁₆</strong> para binário.</li>
+                  <li>Converta <strong>7C₁₆</strong> para binário.</li>
+                  <li>Converta <strong>FF₁₆</strong> para binário.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> hexadecimal funciona como uma abreviação do binário. Cada dígito hexadecimal corresponde a 4 bits; por isso, a conversão entre as duas bases pode ser feita diretamente por agrupamento.</p>
         </div>
       </section>
 
