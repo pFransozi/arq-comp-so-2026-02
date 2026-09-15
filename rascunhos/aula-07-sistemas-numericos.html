@@ -154,20 +154,63 @@
 
       <section class="section" id="bits">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>Com n bits existem 2ⁿ padrões possíveis</h2><p>Cada bit possui dois estados possíveis. Ao combinar vários bits, a quantidade de padrões cresce exponencialmente.</p></div>
+          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>Um bit pode assumir apenas dois estados: <strong>0</strong> ou <strong>1</strong>. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Quantidade de bits</th><th>Padrões possíveis</th><th>Exemplos</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1 bit</strong></td><td>2¹ = 2</td><td><code>0</code>, <code>1</code></td></tr>
+                <tr><td><strong>2 bits</strong></td><td>2² = 4</td><td><code>00</code>, <code>01</code>, <code>10</code>, <code>11</code></td></tr>
+                <tr><td><strong>3 bits</strong></td><td>2³ = 8</td><td><code>000</code> até <code>111</code></td></tr>
+                <tr><td><strong>4 bits</strong></td><td>2⁴ = 16</td><td><code>0000</code> até <code>1111</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">n bits → 2<sup>n</sup> padrões possíveis</div>
+
+          <p class="bridge-question"><strong>Observe o crescimento:</strong> 1 bit gera 2 padrões; 2 bits geram 4; 3 bits geram 8; 4 bits geram 16. Cada novo bit <strong>dobra</strong> a quantidade de padrões disponíveis.</p>
+
+          <h3 style="margin-top:2rem">O que acontece com 8 bits?</h3>
+          <p>Com 8 bits temos <strong>2⁸ = 256 padrões diferentes</strong>. Esses padrões vão de <code>00000000</code> até <code>11111111</code>.</p>
 
           <div class="bit-capacity">
-            <article><strong>1 bit</strong><span>2 padrões</span><code>0 · 1</code></article>
-            <article><strong>4 bits</strong><span>16 padrões</span><code>0000 … 1111</code></article>
-            <article><strong>8 bits</strong><span>256 padrões</span><code>0 … 255</code></article>
-            <article><strong>16 bits</strong><span>65.536 padrões</span><code>0 … 65.535</code></article>
+            <article><strong>00000000</strong><span>primeiro padrão</span><code>0</code></article>
+            <article><strong>00000001</strong><span>próximo padrão</span><code>1</code></article>
+            <article><strong>11111110</strong><span>penúltimo padrão</span><code>254</code></article>
+            <article><strong>11111111</strong><span>último padrão</span><code>255</code></article>
           </div>
 
-          <div class="concept-grid">
-            <article class="concept-card"><h3>Byte</h3><p>Um byte contém 8 bits. Isso produz 2⁸ = 256 padrões distintos. Se todos forem usados para inteiros sem sinal, a faixa vai de 0 a 255.</p></article>
-            <article class="concept-card"><h3>Palavra</h3><p>Em arquitetura, uma palavra é uma unidade de dados associada à organização da máquina. Seu tamanho depende da arquitetura e não deve ser confundido automaticamente com “um byte”.</p></article>
+          <div class="precision-note"><strong>256 padrões não significa que o maior valor seja 256.</strong> Se interpretarmos os 8 bits como um inteiro <em>sem sinal</em>, o primeiro padrão representa 0. Por isso, os 256 valores possíveis vão de <strong>0 a 255</strong>.</div>
+
+          <div class="number-story">
+            <article><small>1 posição binária</small><strong>Bit</strong><p>É a menor unidade usada aqui para representar informação. Pode assumir 0 ou 1.</p></article>
+            <article><small>8 bits</small><strong>Byte</strong><p>Um byte reúne 8 bits. Portanto, possui 2⁸ = 256 padrões possíveis.</p></article>
+            <article><small>Depende da arquitetura</small><strong>Palavra</strong><p>É uma unidade de dados associada à organização da máquina. Seu tamanho não precisa ser igual a um byte.</p></article>
           </div>
-          <p class="bridge-question"><strong>Consequência:</strong> definir a quantidade de bits define quantos padrões estão disponíveis. Depois precisamos decidir <em>como esses padrões serão interpretados</em>.</p>
+
+          <h3 style="margin-top:2rem">Mais bits, mais possibilidades</h3>
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Largura</th><th>Padrões possíveis</th><th>Se forem inteiros sem sinal</th></tr></thead>
+              <tbody>
+                <tr><td><strong>4 bits</strong></td><td>2⁴ = 16</td><td>0 a 15</td></tr>
+                <tr><td><strong>8 bits</strong></td><td>2⁸ = 256</td><td>0 a 255</td></tr>
+                <tr><td><strong>16 bits</strong></td><td>2¹⁶ = 65.536</td><td>0 a 65.535</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">sem calculadora</span></div>
+            <div class="inquiry-body">
+              <div><h3>Com 5 bits...</h3><p>Parta de 4 bits = 16 padrões e lembre que adicionar um bit dobra a quantidade.</p></div>
+              <div><ol class="prompt-list"><li>Quantos padrões diferentes podem ser formados?</li><li>Se todos forem usados como inteiros sem sinal, qual é o menor valor?</li><li>Qual é o maior valor?</li></ol><p><strong>Resposta esperada:</strong> 32 padrões, de 0 a 31.</p></div>
+            </div>
+          </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> a quantidade de bits determina quantos padrões podem existir. O significado de cada padrão — número positivo, negativo, caractere ou outra informação — depende da forma como ele será interpretado.</p>
         </div>
       </section>
 
