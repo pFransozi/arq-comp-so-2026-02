@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aula 07 de Arquitetura de Computadores e Sistemas Operacionais: sistemas posicionais, bits, capacidade, conversões entre decimal e binário e notação hexadecimal.">
+  <meta name="theme-color" content="#101a24">
+  <title>Aula 07 — Como o computador representa números</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="aula-06.css">
+  <link rel="stylesheet" href="aula-07.css">
+  <script src="https://pfransozi.github.io/assets/js/ensino.js?v=6"></script>
+  <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=6">
+</head>
+<body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean">
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+  <div class="progress" id="progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal"><span class="brand-mark" aria-hidden="true">SO</span><span><strong>Arquitetura &amp; SO</strong><small>Aula 07</small></span></a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+      <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula"><a href="index.html">Página principal</a><a href="curso.html">Visão geral</a><button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button></nav>
+    </div>
+  </header>
+
+  <div class="aula03-shell aula03-page-grid">
+    <main id="conteudo">
+      <section class="hero" id="inicio">
+        <div class="container hero-grid">
+          <div>
+            <p class="eyebrow">Aula 07 · representação de dados</p>
+            <h1>Como o computador representa números</h1>
+            <p class="hero-lead">Na aula anterior acompanhamos <strong>onde os dados ficam e quanto custa acessá-los</strong>. Agora vamos olhar para dentro desses dados: como sequências de bits representam números e por que usamos diferentes bases para escrever a mesma informação.</p>
+            <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a></div>
+          </div>
+          <aside class="guiding-card">
+            <span>Pergunta orientadora</span>
+            <blockquote>Se a memória armazena bits, como valores numéricos são escritos e interpretados pelo computador?</blockquote>
+          </aside>
+        </div>
+      </section>
+
+      <details class="aula03-mobile-toc">
+        <summary>Nesta aula</summary>
+        <nav>
+          <a href="#visao">Visão da aula</a>
+          <a href="#retomada">Retomada</a>
+          <a href="#posicional">Sistemas posicionais</a>
+          <a href="#bits">Bits e capacidade</a>
+          <a href="#conversoes">Binário e decimal</a>
+          <a href="#hexadecimal">Hexadecimal</a>
+          <a href="#fechamento">Síntese</a>
+          <a href="#referencias">Referências</a>
+        </nav>
+      </details>
+
+      <section class="section" id="visao">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Os bits são o suporte; a representação dá significado</h2><p>Vamos entender como números são representados em bits e como decimal, binário e hexadecimal descrevem valores.</p></div>
+          <div class="overview-grid">
+            <article class="card topics-card">
+              <h3>Conteúdo programático</h3>
+              <div class="topic-list"><div>Bit, byte e palavra</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Conversão entre bases</div></div>
+            </article>
+            <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H10</strong><span>Avaliar diversas tecnologias disponíveis, sendo capaz de analisar os prós e contras de diferentes opções tecnológicas.<br><small>Nesta aula: comparar formas de representação numérica e reconhecer quando cada notação facilita a leitura e a análise dos dados.</small></span></div></article>
+            <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
+          </div>
+          <div class="lesson-scope"><strong>Recorte desta aula</strong>Vamos trabalhar com sistemas posicionais, capacidade em bits, conversões entre decimal e binário e a relação direta entre binário e hexadecimal.</div>
+        </div>
+      </section>
+
+      <section class="section" id="retomada">
+        <div class="container">
+          <div class="warmup">
+            <div><p class="eyebrow">Retomada da Aula 06</p><h2>Sabemos onde o dado está. Mas como ele é escrito?</h2><p>Registradores, cache, RAM e armazenamento mantêm sequências de bits. Agora vamos observar como essas sequências podem representar valores numéricos.</p></div>
+            <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, como podemos descobrir o valor representado?</span></div><div><strong>3 · Capacidade</strong><span>O que muda quando aumentamos a quantidade de bits disponível?</span></div><div><strong>4 · Notação</strong><span>Por que pode ser útil escrever uma sequência binária de uma forma mais compacta?</span></div></div>
+          </div>
+
+          <div class="same-bits">
+            <div class="bit-word">00101010</div>
+            <div class="interpretations">
+              <div><strong>Em binário</strong><code>00101010₂</code>.</div>
+              <div><strong>Em decimal</strong>42.</div>
+              <div><strong>Em hexadecimal</strong><code>2A₁₆</code>.</div>
+            </div>
+          </div>
+          <p class="bridge-question"><strong>Ideia central:</strong> podemos escrever a mesma quantidade usando bases diferentes. O valor não muda; muda a forma de representação.</p>
+        </div>
+      </section>
+
+      <section class="section" id="posicional">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">1 · Sistemas posicionais</p><h2>Antes do binário: por que a posição importa?</h2><p>Comece pelo sistema que já usamos todos os dias. Em <strong>538</strong>, os algarismos 5, 3 e 8 não valem apenas cinco, três e oito: cada um é multiplicado pelo peso da posição em que aparece.</p></div>
+
+          <div class="base-equation">538<sub>10</sub> = 8 × 1 + 3 × 10 + 5 × 100 = 538</div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Dígito</th><th>Posição</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>8</strong></td><td>unidades</td><td>10⁰ = 1</td><td>8 × 1 = 8</td></tr>
+                <tr><td><strong>3</strong></td><td>dezenas</td><td>10¹ = 10</td><td>3 × 10 = 30</td></tr>
+                <tr><td><strong>5</strong></td><td>centenas</td><td>10² = 100</td><td>5 × 100 = 500</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="bridge-question"><strong>É por isso que o sistema é chamado de posicional:</strong> o valor de um dígito depende do próprio dígito <em>e</em> da posição que ele ocupa.</p>
+
+          <div class="section-heading" style="margin-top:2.25rem"><h3>O que significa a base?</h3><p>A base informa quantos símbolos diferentes podem ser usados em cada posição. Ela também define os pesos das posições, contados da direita para a esquerda: base⁰, base¹, base², base³...</p></div>
+
+          <div class="number-story">
+            <article><small>Base 10</small><strong>Decimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>1000 = 10³ ← 100 = 10² ← 10 = 10¹ ← 1 = 10⁰</p></article>
+            <article><small>Base 2</small><strong>Binário</strong><p><strong>Leia da direita para a esquerda:</strong><br>16 = 2⁴ ← 8 = 2³ ← 4 = 2² ← 2 = 2¹ ← 1 = 2⁰</p></article>
+            <article><small>Base 16</small><strong>Hexadecimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>4096 = 16³ ← 256 = 16² ← 16 = 16¹ ← 1 = 16⁰</p></article>
+          </div>
+
+          <div class="precision-note"><strong>Regra para ler qualquer sistema posicional:</strong> comece pela posição mais à direita, cujo peso é base⁰ = 1, e avance para a esquerda: base¹, base², base³...</div>
+
+          <h3 style="margin-top:2rem">A mesma regra no binário</h3>
+          <p>No número <strong>1011₂</strong>, começamos pelo bit mais à direita. Como a base é 2, os pesos crescem assim: 1, 2, 4 e 8.</p>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
+                <tr><td><strong>1</strong></td><td>2¹</td><td>2</td><td>1 × 2 = 2</td></tr>
+                <tr><td><strong>0</strong></td><td>2²</td><td>4</td><td>0 × 4 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">1011<sub>2</sub> = 1 + 2 + 0 + 8 = 11<sub>10</sub></div>
+
+          <div class="concept-grid">
+            <article class="concept-card"><h3>A base muda a escrita, não o valor</h3><div class="concept-item"><strong>Exemplo</strong><p><span class="formula-line">42<sub>10</sub> = 101010<sub>2</sub> = 2A<sub>16</sub></span></p></div><p>As três notações representam a mesma quantidade.</p></article>
+            <article class="concept-card"><h3>Como saber qual base está sendo usada?</h3><div class="concept-item"><strong>Nesta aula</strong><p>Usaremos um índice para indicar a base: <code>1011₂</code>, <code>42₁₀</code> e <code>2A₁₆</code>. Em programação, também são comuns prefixos como <code>0b</code> para binário e <code>0x</code> para hexadecimal.</p></div></article>
+          </div>
+
+          <p class="bridge-question"><strong>Próximo passo:</strong> no computador, a base 2 é especialmente importante porque cada posição pode assumir apenas dois estados. Agora vamos ver o que acontece quando combinamos vários bits.</p>
+        </div>
+      </section>
+
+      <section class="section" id="bits">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>Um bit pode assumir apenas dois estados: <strong>0</strong> ou <strong>1</strong>. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Quantidade de bits</th><th>Padrões possíveis</th><th>Exemplos</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1 bit</strong></td><td>2¹ = 2</td><td><code>0</code>, <code>1</code></td></tr>
+                <tr><td><strong>2 bits</strong></td><td>2² = 4</td><td><code>00</code>, <code>01</code>, <code>10</code>, <code>11</code></td></tr>
+                <tr><td><strong>3 bits</strong></td><td>2³ = 8</td><td><code>000</code> até <code>111</code></td></tr>
+                <tr><td><strong>4 bits</strong></td><td>2⁴ = 16</td><td><code>0000</code> até <code>1111</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">n bits → 2<sup>n</sup> padrões possíveis</div>
+
+          <p class="bridge-question"><strong>Observe o crescimento:</strong> 1 bit gera 2 padrões; 2 bits geram 4; 3 bits geram 8; 4 bits geram 16. Cada novo bit <strong>dobra</strong> a quantidade de padrões disponíveis.</p>
+
+          <h3 style="margin-top:2rem">O que acontece com 8 bits?</h3>
+          <p>Com 8 bits temos <strong>2⁸ = 256 padrões diferentes</strong>. Esses padrões vão de <code>00000000</code> até <code>11111111</code>.</p>
+
+          <div class="bit-capacity">
+            <article><strong>00000000</strong><span>primeiro padrão</span><code>0</code></article>
+            <article><strong>00000001</strong><span>próximo padrão</span><code>1</code></article>
+            <article><strong>11111110</strong><span>penúltimo padrão</span><code>254</code></article>
+            <article><strong>11111111</strong><span>último padrão</span><code>255</code></article>
+          </div>
+
+          <div class="precision-note"><strong>256 padrões não significa que o último valor seja 256.</strong> Como a contagem começa em 0, os 256 padrões correspondem aos valores de <strong>0 a 255</strong>.</div>
+
+          <div class="number-story">
+            <article><small>1 posição binária</small><strong>Bit</strong><p>É a menor unidade usada aqui para representar informação. Pode assumir 0 ou 1.</p></article>
+            <article><small>8 bits</small><strong>Byte</strong><p>Um byte reúne 8 bits. Portanto, possui 2⁸ = 256 padrões possíveis.</p></article>
+            <article><small>Depende da arquitetura</small><strong>Palavra</strong><p>É uma unidade de dados associada à organização da máquina. Seu tamanho não precisa ser igual a um byte.</p></article>
+          </div>
+
+          <h3 style="margin-top:2rem">Mais bits, mais possibilidades</h3>
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Largura</th><th>Padrões possíveis</th><th>Contagem a partir de 0</th></tr></thead>
+              <tbody>
+                <tr><td><strong>4 bits</strong></td><td>2⁴ = 16</td><td>0 a 15</td></tr>
+                <tr><td><strong>8 bits</strong></td><td>2⁸ = 256</td><td>0 a 255</td></tr>
+                <tr><td><strong>16 bits</strong></td><td>2¹⁶ = 65.536</td><td>0 a 65.535</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">use o exemplo</span></div>
+            <div class="inquiry-body">
+              <div>
+                <h3>Exemplo · 3 bits</h3>
+                <p>Com 3 bits existem <strong>2³ = 8 padrões</strong>:</p>
+                <p><code>000</code>, <code>001</code>, <code>010</code>, <code>011</code>, <code>100</code>, <code>101</code>, <code>110</code> e <code>111</code>.</p>
+                <p>Se usamos esses padrões para contar começando em 0, o primeiro vale <strong>0</strong> e o último é <code>111₂</code>.</p>
+                <div class="base-equation">111<sub>2</sub> = 4 + 2 + 1 = 7</div>
+                <p>Assim, temos <strong>8 padrões</strong>, mas a contagem vai de <strong>0 até 7</strong>.</p>
+              </div>
+              <div>
+                <h3>Agora tente · 5 bits</h3>
+                <ol class="prompt-list">
+                  <li>Quantos padrões diferentes podem ser formados com <strong>5 bits</strong>?</li>
+                  <li>Qual é o primeiro padrão, usando cinco posições?</li>
+                  <li>Qual é o último padrão, usando cinco posições?</li>
+                  <li>Converta esse último padrão para decimal usando os pesos <strong>16, 8, 4, 2 e 1</strong>.</li>
+                  <li>Explique por que a quantidade de padrões é uma unidade maior que o último valor quando a contagem começa em 0.</li>
+                  <li><strong>Desafio:</strong> repita o raciocínio para <strong>6 bits</strong>: quantos padrões existem e qual é o valor do último padrão?</li>
+                </ol>
+                <p><strong>Dica:</strong> não procure uma fórmula nova. Use as duas ideias já estudadas: <strong>2ⁿ padrões</strong> e os <strong>pesos das posições binárias</strong>.</p>
+              </div>
+            </div>
+          </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> a quantidade de bits determina quantos padrões podem existir.</p>
+        </div>
+      </section>
+
+      <section class="section" id="conversoes">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">3 · Decimal e binário</p><h2>Escrever a mesma quantidade em outra base</h2><p>Converter não muda o número. Muda apenas a forma de escrevê-lo. Vamos fazer os dois caminhos separadamente: primeiro <strong>binário → decimal</strong> e depois <strong>decimal → binário</strong>.</p></div>
+
+          <h3>Binário → decimal: descubra quanto cada bit vale</h3>
+          <p>Use a mesma regra dos sistemas posicionais: comece pelo bit mais à direita. Ele tem peso 2⁰ = 1. A cada posição para a esquerda, o peso dobra.</p>
+
+          <div class="same-bits">
+            <div class="bit-word">101101₂</div>
+            <div class="interpretations">
+              <div><strong>Passo 1</strong>Comece pela direita e associe os pesos: 1, 2, 4, 8, 16, 32.</div>
+              <div><strong>Passo 2</strong>Multiplique cada bit pelo peso da posição.</div>
+              <div><strong>Passo 3</strong>Some as contribuições.</div>
+            </div>
+          </div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
+                <tr><td><strong>0</strong></td><td>2¹</td><td>2</td><td>0 × 2 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2²</td><td>4</td><td>1 × 4 = 4</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
+                <tr><td><strong>0</strong></td><td>2⁴</td><td>16</td><td>0 × 16 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2⁵</td><td>32</td><td>1 × 32 = 32</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">101101<sub>2</sub> = 1 + 0 + 4 + 8 + 0 + 32 = 45<sub>10</sub></div>
+
+          <div class="precision-note"><strong>Atalho mental:</strong> posições com bit <strong>0</strong> não acrescentam valor. Nesse exemplo, basta somar os pesos das posições que têm bit 1: <strong>32 + 8 + 4 + 1 = 45</strong>.</div>
+
+          <h3 style="margin-top:2.5rem">Decimal → binário: quais potências de 2 formam o número?</h3>
+          <p>Para escrever <strong>42₁₀</strong> em binário, procuramos quais potências de 2 somadas formam 42.</p>
+
+          <div class="base-equation">42 = 32 + 8 + 2</div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Peso</th><th>Usamos esse peso?</th><th>Bit</th><th>Valor restante</th></tr></thead>
+              <tbody>
+                <tr><td><strong>32</strong></td><td>Sim. 32 cabe em 42.</td><td>1</td><td>42 − 32 = 10</td></tr>
+                <tr><td><strong>16</strong></td><td>Não. 16 não cabe em 10.</td><td>0</td><td>10</td></tr>
+                <tr><td><strong>8</strong></td><td>Sim. 8 cabe em 10.</td><td>1</td><td>10 − 8 = 2</td></tr>
+                <tr><td><strong>4</strong></td><td>Não. 4 não cabe em 2.</td><td>0</td><td>2</td></tr>
+                <tr><td><strong>2</strong></td><td>Sim. 2 cabe em 2.</td><td>1</td><td>2 − 2 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>Não precisamos desse peso.</td><td>0</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">32 · 16 · 8 · 4 · 2 · 1<br>1&nbsp;&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0&nbsp;&nbsp;&nbsp;1&nbsp;&nbsp;&nbsp;0 → 101010<sub>2</sub></div>
+
+          <p class="bridge-question"><strong>Regra:</strong> identifique quais potências de 2 formam o valor. Onde o peso é usado, escreva <strong>1</strong>; onde não é usado, escreva <strong>0</strong>. Assim, <strong>42₁₀ = 101010₂</strong>.</p>
+
+          <div class="concept-grid">
+            <article class="concept-card"><h3>Binário → decimal</h3><p>Identifique os pesos das posições e <strong>some as contribuições</strong> dos bits.</p></article>
+            <article class="concept-card"><h3>Decimal → binário</h3><p>Identifique as <strong>potências de 2</strong> que formam o valor e marque cada posição com 1 ou 0.</p></article>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Banco de prática</span><span class="inquiry-tag">escolha alguns</span></div>
+            <div class="inquiry-body">
+              <div>
+                <h3>A · Decimal → binário</h3>
+                <p>Escolha pelo menos <strong>5</strong> itens e resolva usando os pesos das potências de 2.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>5₁₀</strong> para binário.</li>
+                  <li>Converta <strong>9₁₀</strong> para binário.</li>
+                  <li>Converta <strong>13₁₀</strong> para binário.</li>
+                  <li>Converta <strong>18₁₀</strong> para binário.</li>
+                  <li>Converta <strong>23₁₀</strong> para binário.</li>
+                  <li>Converta <strong>31₁₀</strong> para binário.</li>
+                  <li>Converta <strong>42₁₀</strong> para binário.</li>
+                  <li>Converta <strong>57₁₀</strong> para binário.</li>
+                  <li>Converta <strong>85₁₀</strong> para binário.</li>
+                  <li>Converta <strong>127₁₀</strong> para binário.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>B · Binário → decimal</h3>
+                <p>Escolha pelo menos <strong>5</strong> itens. Comece sempre pelo bit mais à direita.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>101₂</strong> para decimal.</li>
+                  <li>Converta <strong>111₂</strong> para decimal.</li>
+                  <li>Converta <strong>1011₂</strong> para decimal.</li>
+                  <li>Converta <strong>10010₂</strong> para decimal.</li>
+                  <li>Converta <strong>11001₂</strong> para decimal.</li>
+                  <li>Converta <strong>101101₂</strong> para decimal.</li>
+                  <li>Converta <strong>1000000₂</strong> para decimal.</li>
+                  <li>Converta <strong>1001011₂</strong> para decimal.</li>
+                  <li>Converta <strong>1100100₂</strong> para decimal.</li>
+                  <li>Converta <strong>1111111₂</strong> para decimal.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Entendimento</span><span class="inquiry-tag">escolha pelo menos 5</span></div>
+            <div class="inquiry-body">
+              <div style="grid-column:1 / -1">
+                <h3>C · Explique com suas palavras</h3>
+                <ol class="prompt-list">
+                  <li>Por que converter um número para outra base não muda a quantidade representada?</li>
+                  <li>No número <strong>101101₂</strong>, quais posições têm bit 1 e quais pesos elas representam?</li>
+                  <li>Quantos padrões diferentes podem ser formados com <strong>6 bits</strong>?</li>
+                  <li>Qual é o valor decimal de <strong>111111₂</strong>?</li>
+                  <li>Por que uma posição com bit <strong>0</strong> não acrescenta valor à soma?</li>
+                  <li>Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique pelos pesos das posições.</li>
+                  <li>Qual é a menor quantidade de bits necessária para representar <strong>42₁₀</strong>?</li>
+                  <li>Complete a igualdade: <strong>32₁₀ = ____₂</strong>.</li>
+                  <li>Explique por que 8 bits produzem 256 padrões.</li>
+                  <li>Explique por que, em uma contagem iniciada em 0, 256 padrões terminam no valor 255.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> decimal e binário são duas formas de escrever a mesma quantidade. O que muda é a base e, com ela, o peso de cada posição.</p>
+        </div>
+      </section>
+
+      <section class="section" id="hexadecimal">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">4 · Hexadecimal</p><h2>Quatro bits de cada vez</h2><p>O binário é adequado ao hardware, mas sequências longas de 0 e 1 são difíceis de ler. O hexadecimal é uma forma mais compacta de escrever os mesmos padrões. Como <strong>16 = 2⁴</strong>, cada dígito hexadecimal representa exatamente <strong>4 bits</strong>.</p></div>
+
+          <div class="precision-note"><strong>Ideia principal:</strong> hexadecimal não cria novos dados e não altera os bits. Ele apenas oferece uma escrita mais curta para padrões binários.</div>
+
+          <h3 style="margin-top:2rem">Por que aparecem as letras A, B, C, D, E e F?</h3>
+          <p>Na base 10 temos dez símbolos, de 0 a 9. Na base 16 precisamos de <strong>dezesseis símbolos</strong>. Depois do 9, usamos as letras A até F para representar os valores de 10 a 15.</p>
+
+          <div class="hex-map">
+            <div><strong>0</strong><span>0000</span></div><div><strong>1</strong><span>0001</span></div><div><strong>2</strong><span>0010</span></div><div><strong>3</strong><span>0011</span></div><div><strong>4</strong><span>0100</span></div><div><strong>5</strong><span>0101</span></div><div><strong>6</strong><span>0110</span></div><div><strong>7</strong><span>0111</span></div><div><strong>8</strong><span>1000</span></div><div><strong>9</strong><span>1001</span></div><div><strong>A</strong><span>1010</span></div><div><strong>B</strong><span>1011</span></div><div><strong>C</strong><span>1100</span></div><div><strong>D</strong><span>1101</span></div><div><strong>E</strong><span>1110</span></div><div><strong>F</strong><span>1111</span></div>
+          </div>
+
+          <div class="base-equation">A = 10 · B = 11 · C = 12 · D = 13 · E = 14 · F = 15</div>
+          <div class="base-equation">1 dígito hexadecimal ↔ 4 bits</div>
+
+          <p class="bridge-question"><strong>Observe:</strong> <code>1111₂</code> é o maior padrão possível com 4 bits. Em decimal ele vale 15 e, em hexadecimal, é escrito como <strong>F₁₆</strong>.</p>
+
+          <h3 style="margin-top:2.5rem">Binário → hexadecimal: agrupe de 4 em 4</h3>
+          <p>Para converter binário em hexadecimal, não precisamos passar primeiro pelo decimal. Basta separar os bits em grupos de 4, começando pela <strong>direita</strong>.</p>
+
+          <div class="same-bits">
+            <div class="bit-word">101010₂</div>
+            <div class="interpretations">
+              <div><strong>Passo 1 · Agrupe</strong>Da direita para a esquerda: <code>10 1010</code>.</div>
+              <div><strong>Passo 2 · Complete</strong>O grupo da esquerda tem só 2 bits. Complete com zeros: <code>0010 1010</code>.</div>
+              <div><strong>Passo 3 · Converta cada grupo</strong><code>0010 = 2</code> e <code>1010 = A</code>.</div>
+            </div>
+          </div>
+
+          <div class="base-equation">101010<sub>2</sub> → 0010 1010 → 2 A → 2A<sub>16</sub></div>
+
+          <div class="precision-note"><strong>Regra:</strong> complete com zeros apenas à <strong>esquerda</strong> do primeiro grupo, quando necessário. Adicionar zeros à esquerda não altera o valor representado.</div>
+
+          <h3 style="margin-top:2.5rem">Hexadecimal → binário: faça o caminho inverso</h3>
+          <p>Agora cada dígito hexadecimal é substituído diretamente pelo seu grupo de 4 bits.</p>
+
+          <div class="same-bits">
+            <div class="bit-word">3F₁₆</div>
+            <div class="interpretations">
+              <div><strong>Primeiro dígito</strong><code>3 = 0011</code>.</div>
+              <div><strong>Segundo dígito</strong><code>F = 1111</code>.</div>
+              <div><strong>Junte os grupos</strong><code>3F₁₆ = 00111111₂</code>.</div>
+            </div>
+          </div>
+
+          <div class="base-equation">3F<sub>16</sub> → 0011 1111 → 00111111<sub>2</sub></div>
+
+          <div class="number-story">
+            <article><small>4 bits</small><strong>1 dígito hexadecimal</strong><p>Um grupo de 4 bits pode assumir 16 padrões, de <code>0000</code> a <code>1111</code>: exatamente os símbolos 0 a F.</p></article>
+            <article><small>8 bits</small><strong>2 dígitos hexadecimais</strong><p>Um byte pode ser escrito com dois dígitos hexadecimais: de <code>00</code> até <code>FF</code>.</p></article>
+            <article><small>Uso prático</small><strong>Mais fácil de inspecionar</strong><p>Hexadecimal aparece em bytes, endereços de memória, dumps, opcodes e documentação de baixo nível porque reduz sequências longas de bits.</p></article>
+          </div>
+
+          <div class="inquiry">
+            <div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">faça manualmente</span></div>
+            <div class="inquiry-body">
+              <div>
+                <h3>Binário → hexadecimal</h3>
+                <ol class="prompt-list">
+                  <li>Converta <strong>1111₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>101010₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>11001100₂</strong> para hexadecimal.</li>
+                  <li>Converta <strong>11111111₂</strong> para hexadecimal.</li>
+                </ol>
+              </div>
+              <div>
+                <h3>Hexadecimal → binário</h3>
+                <ol class="prompt-list">
+                  <li>Converta <strong>A₁₆</strong> para binário.</li>
+                  <li>Converta <strong>2F₁₆</strong> para binário.</li>
+                  <li>Converta <strong>7C₁₆</strong> para binário.</li>
+                  <li>Converta <strong>FF₁₆</strong> para binário.</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> hexadecimal funciona como uma abreviação do binário. Cada dígito hexadecimal corresponde a 4 bits; por isso, a conversão entre as duas bases pode ser feita diretamente por agrupamento.</p>
+        </div>
+      </section>
+
+      <section class="section" id="fechamento">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">Síntese</p><h2>O que você deve levar desta aula</h2></div>
+          <div class="checklist">
+            <div class="check-item">Consigo explicar o que significa um sistema numérico posicional.</div>
+            <div class="check-item">Consigo explicar por que n bits produzem 2ⁿ padrões possíveis.</div>
+            <div class="check-item">Consigo converter inteiros simples entre decimal e binário.</div>
+            <div class="check-item">Consigo relacionar decimal, binário e hexadecimal como representações do mesmo valor.</div>
+            <div class="check-item">Consigo converter diretamente grupos de 4 bits entre binário e hexadecimal.</div>
+          </div>
+          <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos onde os dados ficam, quanto custa acessá-los e como números podem ser escritos em diferentes bases.</p>
+        </div>
+      </section>
+
+      <section class="section" id="referencias">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual da aula</h2>
+            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 9 — Sistemas numéricos: sistema decimal, sistemas posicionais, binário, conversão binário–decimal e notação hexadecimal.</p>
+            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — Aritmética do computador.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="aula03-toc" aria-label="Índice desta aula">
+      <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+    </aside>
+  </div>
+
+  <footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p></div></footer>
+  <script defer src="script.js"></script>
+</body>
+</html>
