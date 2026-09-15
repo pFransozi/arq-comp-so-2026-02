@@ -101,15 +101,15 @@
         <div class="container">
           <div class="section-heading"><p class="eyebrow">1 · Sistemas posicionais</p><h2>Antes do binário: por que a posição importa?</h2><p>Comece pelo sistema que já usamos todos os dias. Em <strong>538</strong>, os algarismos 5, 3 e 8 não valem apenas cinco, três e oito: cada um é multiplicado pelo peso da posição em que aparece.</p></div>
 
-          <div class="base-equation">538<sub>10</sub> = 5 × 100 + 3 × 10 + 8 × 1 = 538</div>
+          <div class="base-equation">538<sub>10</sub> = 8 × 1 + 3 × 10 + 5 × 100 = 538</div>
 
           <div class="trace-table-wrap">
             <table class="twos-table">
               <thead><tr><th>Dígito</th><th>Posição</th><th>Peso</th><th>Contribuição</th></tr></thead>
               <tbody>
-                <tr><td><strong>5</strong></td><td>centenas</td><td>10² = 100</td><td>5 × 100 = 500</td></tr>
-                <tr><td><strong>3</strong></td><td>dezenas</td><td>10¹ = 10</td><td>3 × 10 = 30</td></tr>
                 <tr><td><strong>8</strong></td><td>unidades</td><td>10⁰ = 1</td><td>8 × 1 = 8</td></tr>
+                <tr><td><strong>3</strong></td><td>dezenas</td><td>10¹ = 10</td><td>3 × 10 = 30</td></tr>
+                <tr><td><strong>5</strong></td><td>centenas</td><td>10² = 100</td><td>5 × 100 = 500</td></tr>
               </tbody>
             </table>
           </div>
@@ -119,29 +119,29 @@
           <div class="section-heading" style="margin-top:2.25rem"><h3>O que significa a base?</h3><p>A base informa quantos símbolos diferentes podem ser usados em cada posição. Ela também define os pesos das posições, contados da direita para a esquerda: base⁰, base¹, base², base³...</p></div>
 
           <div class="number-story">
-            <article><small>Base 10</small><strong>Decimal</strong><p>Usa 10 símbolos: 0 a 9. Os pesos são 1, 10, 100, 1000...</p></article>
-            <article><small>Base 2</small><strong>Binário</strong><p>Usa apenas 0 e 1. Os pesos são 1, 2, 4, 8, 16...</p></article>
-            <article><small>Base 16</small><strong>Hexadecimal</strong><p>Usa 0–9 e A–F, em que A vale 10 e F vale 15. Os pesos são 1, 16, 256...</p></article>
+            <article><small>Base 10</small><strong>Decimal</strong><p>Da direita para a esquerda: 10⁰ = 1 → 10¹ = 10 → 10² = 100 → 10³ = 1000.</p></article>
+            <article><small>Base 2</small><strong>Binário</strong><p>Da direita para a esquerda: 2⁰ = 1 → 2¹ = 2 → 2² = 4 → 2³ = 8 → 2⁴ = 16.</p></article>
+            <article><small>Base 16</small><strong>Hexadecimal</strong><p>Da direita para a esquerda: 16⁰ = 1 → 16¹ = 16 → 16² = 256 → 16³ = 4096.</p></article>
           </div>
 
           <div class="precision-note"><strong>Regra para ler qualquer sistema posicional:</strong> comece pela direita. A primeira posição tem peso base⁰ = 1; a seguinte, base¹; depois base², e assim por diante.</div>
 
           <h3 style="margin-top:2rem">A mesma regra no binário</h3>
-          <p>No número <strong>1011₂</strong>, a base é 2. Portanto, as posições têm pesos 1, 2, 4 e 8.</p>
+          <p>No número <strong>1011₂</strong>, começamos pelo bit mais à direita. Como a base é 2, os pesos crescem assim: 1, 2, 4 e 8.</p>
 
           <div class="trace-table-wrap">
             <table class="twos-table">
               <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
               <tbody>
-                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
-                <tr><td><strong>0</strong></td><td>2²</td><td>4</td><td>0 × 4 = 0</td></tr>
-                <tr><td><strong>1</strong></td><td>2¹</td><td>2</td><td>1 × 2 = 2</td></tr>
                 <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
+                <tr><td><strong>1</strong></td><td>2¹</td><td>2</td><td>1 × 2 = 2</td></tr>
+                <tr><td><strong>0</strong></td><td>2²</td><td>4</td><td>0 × 4 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
               </tbody>
             </table>
           </div>
 
-          <div class="base-equation">1011<sub>2</sub> = 8 + 0 + 2 + 1 = 11<sub>10</sub></div>
+          <div class="base-equation">1011<sub>2</sub> = 1 + 2 + 0 + 8 = 11<sub>10</sub></div>
 
           <div class="concept-grid">
             <article class="concept-card"><h3>A base muda a escrita, não o valor</h3><div class="concept-item"><strong>Exemplo</strong><p><span class="formula-line">42<sub>10</sub> = 101010<sub>2</sub> = 2A<sub>16</sub></span></p></div><p>As três notações representam a mesma quantidade.</p></article>
