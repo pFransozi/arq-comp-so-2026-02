@@ -141,6 +141,13 @@
   }
 
   if (pageId === 'aula-05-aprofundamento') {
+    const referenceItems = document.querySelectorAll('#referencias .reference-list p');
+    referenceItems.forEach((item) => {
+      if (item.textContent.includes('EMENTÁRIO GERAL')) item.remove();
+    });
+    const referenceIntro = document.querySelector('#referencias .study-heading p:not(.study-kicker)');
+    if (referenceIntro) referenceIntro.textContent = 'O conteúdo desta página foi elaborado a partir dos PDFs que integram o projeto da disciplina.';
+
     const taxaSection = document.getElementById('taxa');
     if (taxaSection) {
       taxaSection.innerHTML = `
