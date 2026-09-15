@@ -44,7 +44,6 @@
                 <a class="button button-primary" href="#mapa">Começar</a>
                 <a class="button button-secondary" href="aula-05.html">Voltar à Aula 05</a>
               </div>
-              <p class="study-source-note"><strong>Base conceitual:</strong> Stallings, especialmente o capítulo sobre questões de desempenho, medidas básicas, Lei de Amdahl e benchmarks; Tanenbaum e Bos, na discussão sobre sistemas multiprocessadores e a necessidade de software capaz de explorar múltiplas unidades de execução.</p>
             </div>
             <aside class="study-card">
               <strong>Pergunta central</strong>
@@ -91,7 +90,7 @@
             <div class="study-grid">
               <div class="study-prose">
                 <h3>Uma métrica isolada não representa o sistema inteiro</h3>
-                <p>Stallings trata desempenho como uma propriedade que emerge da interação entre programa, compilador, arquitetura e implementação da máquina. Por isso, comparar apenas frequência ou apenas um indicador de taxa pode produzir conclusões frágeis.</p>
+                <p>O desempenho deve ser entendido como uma propriedade que emerge da interação entre programa, compilador, arquitetura e implementação da máquina. Por isso, comparar apenas frequência ou apenas um indicador de taxa pode produzir conclusões frágeis.</p>
                 <p>Para Engenharia de Software, a consequência é direta: <strong>a escolha da evidência deve acompanhar o trabalho que realmente importa para a aplicação.</strong></p>
               </div>
               <div class="study-stack">
@@ -243,7 +242,7 @@
             <div class="study-heading">
               <p class="study-kicker">6 · Lei de Amdahl</p>
               <h2>Melhorar muito uma parte pequena pode mudar pouco o tempo total</h2>
-              <p>Stallings utiliza a Lei de Amdahl para mostrar que o ganho global depende da fração da execução que realmente recebe a melhoria.</p>
+              <p>A Lei de Amdahl mostra que o ganho global depende da fração da execução que realmente recebe a melhoria.</p>
             </div>
 
             <div class="amdahl-view">
@@ -299,7 +298,7 @@
 
             <div class="study-prose">
               <h3>Por que o ganho não cresce indefinidamente?</h3>
-              <p>A parte sequencial permanece, e a coordenação entre múltiplos fluxos também tem custo. Tanenbaum e Bos mostram que sistemas multiprocessadores exigem mecanismos de sincronização e escalonamento, reforçando que paralelismo é uma propriedade conjunta de hardware e software.</p>
+              <p>A parte sequencial permanece, e a coordenação entre múltiplos fluxos também tem custo. Sistemas multiprocessadores exigem mecanismos de sincronização e escalonamento, reforçando que paralelismo é uma propriedade conjunta de hardware e software.</p>
             </div>
 
             <div class="boundary">
@@ -314,7 +313,7 @@
             <div class="study-heading">
               <p class="study-kicker">8 · O que significa “mais rápido”?</p>
               <h2>Tempo de resposta e throughput respondem perguntas diferentes</h2>
-              <p>Stallings diferencia métricas voltadas ao tempo de uma tarefa e métricas voltadas à quantidade de trabalho concluída em determinado intervalo.</p>
+              <p>É importante distinguir métricas voltadas ao tempo de uma tarefa de métricas voltadas à quantidade de trabalho concluída em determinado intervalo.</p>
             </div>
 
             <div class="response-throughput">
@@ -334,7 +333,7 @@
             <div class="study-heading">
               <p class="study-kicker">9 · Benchmarks</p>
               <h2>Uma comparação só é útil quando a carga representa o uso que queremos avaliar</h2>
-              <p>Stallings usa a SPEC para discutir princípios de benchmark e comparação entre sistemas. Para esta disciplina, o ponto central é compreender o papel de uma carga representativa.</p>
+              <p>Benchmarks padronizados ajudam a discutir princípios de comparação entre sistemas. Para esta disciplina, o ponto central é compreender o papel de uma carga representativa.</p>
             </div>
 
             <div class="benchmark-list">
