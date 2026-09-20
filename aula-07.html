@@ -46,6 +46,7 @@
         <nav>
           <a href="#visao">Visão da aula</a>
           <a href="#retomada">Retomada</a>
+          <a href="#interpretacao">Bits e interpretação</a>
           <a href="#posicional">Sistemas posicionais</a>
           <a href="#bits">Bits e capacidade</a>
           <a href="#conversoes">Binário e decimal</a>
@@ -75,16 +76,30 @@
             <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, o que precisamos saber para interpretar esse padrão?</span></div><div><strong>3 · Capacidade</strong><span>O que muda quando aumentamos a quantidade de bits disponível?</span></div><div><strong>4 · Notação</strong><span>Por que pode ser útil escrever uma sequência binária de uma forma mais compacta?</span></div></div>
           </div>
 
+          <p class="bridge-question"><strong>Ponte para a Aula 07:</strong> na aula anterior observamos onde os dados ficam. Agora a pergunta muda: <strong>o que uma sequência de bits significa?</strong></p>
+        </div>
+      </section>
+
+      <section class="section" id="interpretacao">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">Ponto de partida da Aula 07</p>
+            <h2>Bits armazenados não carregam significado sozinhos</h2>
+            <p>A memória mantém padrões de bits. O significado aparece quando algum contexto — como uma aplicação, um formato de dados ou a própria arquitetura — define <strong>como esses bits devem ser interpretados</strong>.</p>
+          </div>
+
           <div class="same-bits">
             <div class="bit-word">00101010</div>
             <div class="interpretations">
-              <div><strong>Se interpretarmos como inteiro sem sinal</strong><code>00101010₂</code>.</div>
-              <div><strong>Em decimal</strong>42.</div>
-              <div><strong>Em hexadecimal</strong><code>2A₁₆</code>.</div>
+              <div><strong>O que existe na memória</strong><code>00101010</code>.</div>
+              <div><strong>Uma interpretação possível</strong>inteiro sem sinal.</div>
+              <div><strong>Escrito em outras bases</strong><code>42₁₀</code> ou <code>2A₁₆</code>.</div>
             </div>
           </div>
-          <div class="precision-note"><strong>O padrão de bits, sozinho, não informa todo o significado.</strong> A mesma sequência pode representar um número, um caractere, parte de uma instrução, uma cor ou outro tipo de dado. Nesta aula, quando fizermos conversões numéricas, assumiremos <strong>inteiros não negativos</strong>.</div>
-          <p class="bridge-question"><strong>Ideia central:</strong> quando a interpretação é numérica, podemos escrever a mesma quantidade usando bases diferentes. O valor não muda; muda a notação.</p>
+
+          <div class="precision-note"><strong>O mesmo padrão pode receber significados diferentes.</strong> Dependendo do contexto, uma sequência de bits pode representar um número, um caractere, parte de uma instrução, uma cor ou outro tipo de dado. Nesta aula vamos observar principalmente a <strong>interpretação numérica</strong>.</div>
+
+          <p class="bridge-question"><strong>Ideia central:</strong> primeiro existem os padrões de bits; depois vem a interpretação. Quando a interpretação é numérica, podemos escrever a mesma quantidade em bases diferentes sem alterar o valor representado.</p>
         </div>
       </section>
 
@@ -456,7 +471,7 @@
 
     <aside class="aula03-toc" aria-label="Índice desta aula">
       <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
-      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#interpretacao">Bits e interpretação</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
     </aside>
   </div>
 
