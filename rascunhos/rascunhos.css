@@ -108,3 +108,121 @@ body.theme-dark .cache-overview-figure {
     font-size: .86rem;
   }
 }
+
+
+/* Seção 3: decisões internas da cache */
+.decision-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.75rem 0 2rem;
+}
+
+.decision-step {
+  display: flex;
+  gap: .9rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.decision-step > span {
+  display: grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--primary);
+  color: #07101f;
+  font-weight: 800;
+}
+
+.decision-step strong {
+  display: block;
+  margin-bottom: .3rem;
+}
+
+.decision-step p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.mapping-example {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 1.2rem;
+  align-items: center;
+  margin: 1.5rem 0 2rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--surface);
+}
+
+.mapping-memory,
+.mapping-cache {
+  min-width: 0;
+}
+
+.mapping-memory small,
+.mapping-cache small {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--muted);
+}
+
+.mapping-memory strong,
+.mapping-cache strong {
+  display: block;
+  margin-bottom: .75rem;
+}
+
+.mapping-cells {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(2.5rem, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+}
+
+.mapping-cells span {
+  display: grid;
+  place-items: center;
+  min-height: 3.2rem;
+  border-right: 1px solid var(--primary);
+  font-weight: 750;
+}
+
+.mapping-cells span:last-child {
+  border-right: 0;
+}
+
+.mapping-arrow {
+  color: var(--primary);
+  font-size: 2rem;
+  font-weight: 800;
+}
+
+.cache-takeaway {
+  margin: 1.25rem 0 2rem;
+}
+
+@media (max-width: 820px) {
+  .decision-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .mapping-example {
+    grid-template-columns: 1fr;
+  }
+
+  .mapping-arrow {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+}
