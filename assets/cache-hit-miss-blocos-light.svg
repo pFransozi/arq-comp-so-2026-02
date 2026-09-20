@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" role="img" aria-labelledby="title desc">
+<title id="title">Cache: hit, miss e blocos</title>
+<desc id="desc">Diagrama mostrando CPU consultando cache. Em um hit o dado retorna diretamente. Em um miss o bloco é buscado na RAM, carregado na cache e entregue à CPU. A parte inferior mostra um bloco 40 a 43 sendo copiado da RAM para uma linha de cache.</desc>
+<defs>
+  <style>
+    .t{font-family:Inter,Segoe UI,Arial,sans-serif;fill:#102a43}.h{font-weight:750}.s{font-size:21px}.m{font-size:25px}.l{font-size:31px}.xl{font-size:36px}.muted{fill:#52667a}
+    .box{fill:#f7fbff;stroke:#8fb9d8;stroke-width:2}.cache{fill:#effcff;stroke:#3ba9b9;stroke-width:2.4}
+    .line{stroke-linecap:round;stroke-linejoin:round;fill:none;stroke-width:3}.blue{stroke:#1787d4}.green{stroke:#20a65a}.red{stroke:#eb4d36}
+  </style>
+  <marker id="ab" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#1787d4"/></marker>
+  <marker id="ag" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#20a65a"/></marker>
+  <marker id="ar" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#eb4d36"/></marker>
+</defs>
+<rect width="1200" height="900" fill="#ffffff"/>
+<text x="34" y="64" class="t xl h"><tspan fill="#1787d4">2 ·</tspan><tspan dx="10">Cache: hit, miss e blocos</tspan></text>
+
+<rect x="34" y="155" width="190" height="165" rx="20" class="box"/>
+<text x="129" y="247" text-anchor="middle" class="t l h">CPU</text>
+<rect x="500" y="155" width="190" height="165" rx="20" class="cache"/>
+<text x="595" y="247" text-anchor="middle" class="t l h">Cache</text>
+<rect x="980" y="155" width="186" height="165" rx="20" class="box"/>
+<text x="1073" y="212" text-anchor="middle" class="t m h">Memória</text>
+<text x="1073" y="245" text-anchor="middle" class="t m h">principal</text>
+<text x="1073" y="278" text-anchor="middle" class="t m h">(RAM)</text>
+
+<path d="M224 184 H494" class="line blue" marker-end="url(#ab)"/>
+<text x="360" y="167" text-anchor="middle" class="t s h">consulta</text>
+
+<path d="M500 263 H230" class="line green" marker-end="url(#ag)"/>
+<text x="363" y="244" text-anchor="middle" class="t s h" fill="#138244">hit: dado já está na cache</text>
+<rect x="323" y="278" width="84" height="34" rx="17" fill="#ddf6e6"/>
+<text x="365" y="301" text-anchor="middle" class="t s" fill="#138244">rápido</text>
+
+<path d="M690 184 H973" class="line red" marker-end="url(#ar)"/>
+<text x="832" y="165" text-anchor="middle" class="t s h" fill="#d93e2a">miss: dado não está na cache</text>
+<path d="M980 263 H697" class="line red" marker-end="url(#ar)"/>
+<text x="838" y="295" text-anchor="middle" class="t s h" fill="#d93e2a">bloco é carregado</text>
+<path d="M595 320 V382 Q595 420 557 420 H129 Q90 420 90 382 V327" class="line red" marker-end="url(#ar)"/>
+<text x="342" y="447" text-anchor="middle" class="t s h" fill="#d93e2a">dado é entregue</text>
+<rect x="297" y="461" width="91" height="34" rx="17" fill="#fde5df"/>
+<text x="342" y="484" text-anchor="middle" class="t s" fill="#b93324">mais lento</text>
+
+<line x1="34" y1="545" x2="1166" y2="545" stroke="#cfe0ef" stroke-width="2" stroke-dasharray="5 6"/>
+
+<rect x="150" y="600" width="360" height="143" rx="18" class="box"/>
+<text x="330" y="638" text-anchor="middle" class="t m h">Bloco na RAM</text>
+<g>
+  <rect x="167" y="658" width="326" height="64" rx="8" fill="#fff" stroke="#1787d4" stroke-width="1.8"/>
+  <line x1="248.5" y1="658" x2="248.5" y2="722" stroke="#1787d4"/>
+  <line x1="330" y1="658" x2="330" y2="722" stroke="#1787d4"/>
+  <line x1="411.5" y1="658" x2="411.5" y2="722" stroke="#1787d4"/>
+  <text x="208" y="699" text-anchor="middle" class="t s">40</text><text x="289" y="699" text-anchor="middle" class="t s">41</text><text x="370" y="699" text-anchor="middle" class="t s">42</text><text x="452" y="699" text-anchor="middle" class="t s">43</text>
+</g>
+<path d="M535 672 H658" class="line blue" marker-end="url(#ab)"/>
+<rect x="690" y="600" width="360" height="143" rx="18" class="box"/>
+<text x="870" y="638" text-anchor="middle" class="t m h">Linha de cache</text>
+<g>
+  <rect x="707" y="658" width="326" height="64" rx="8" fill="#fff" stroke="#1787d4" stroke-width="1.8"/>
+  <line x1="788.5" y1="658" x2="788.5" y2="722" stroke="#1787d4"/>
+  <line x1="870" y1="658" x2="870" y2="722" stroke="#1787d4"/>
+  <line x1="951.5" y1="658" x2="951.5" y2="722" stroke="#1787d4"/>
+  <text x="748" y="699" text-anchor="middle" class="t s">40</text><text x="829" y="699" text-anchor="middle" class="t s">41</text><text x="910" y="699" text-anchor="middle" class="t s">42</text><text x="992" y="699" text-anchor="middle" class="t s">43</text>
+</g>
+
+<text x="600" y="803" text-anchor="middle" class="t m h">A cache movimenta blocos de dados, não apenas um valor isolado.</text>
+<text x="600" y="842" text-anchor="middle" class="t s muted">Isso ajuda a aproveitar a localidade espacial.</text>
+</svg>
