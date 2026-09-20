@@ -60,3 +60,51 @@
 
 @media(max-width:980px){.memory-ladder{grid-template-columns:repeat(3,1fr)}.memory-ladder>div::after{display:none}.policy-grid{grid-template-columns:1fr}.profile-chain{grid-template-columns:repeat(3,1fr)}.profile-chain span::after{display:none}}
 @media(max-width:760px){.draft-grid,.memory-compare{grid-template-columns:1fr}.cache-transfer{grid-template-columns:1fr}.cache-arrow b{transform:rotate(90deg)}.io-path{grid-template-columns:1fr}.io-node::after{display:none}.profile-chain{grid-template-columns:1fr}.memory-ladder{grid-template-columns:1fr}}
+
+
+/* Diagrama da seção de cache */
+.cache-overview-figure {
+  margin: 2rem 0 2.25rem;
+  padding: .75rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--surface);
+  box-shadow: 0 14px 36px rgba(15, 23, 42, .08);
+  overflow: hidden;
+}
+
+.cache-overview-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 14px;
+}
+
+.cache-overview-figure figcaption {
+  margin: .85rem .35rem .2rem;
+  color: var(--muted);
+  font-size: .92rem;
+  line-height: 1.55;
+  text-align: center;
+}
+
+body.theme-dark .cache-overview-figure {
+  box-shadow: 0 14px 36px rgba(0, 0, 0, .24);
+}
+
+@media (max-width: 720px) {
+  .cache-overview-figure {
+    margin: 1.5rem 0 1.75rem;
+    padding: .45rem;
+    border-radius: 16px;
+  }
+
+  .cache-overview-figure img {
+    border-radius: 11px;
+  }
+
+  .cache-overview-figure figcaption {
+    text-align: left;
+    font-size: .86rem;
+  }
+}
