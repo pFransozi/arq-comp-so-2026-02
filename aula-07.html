@@ -31,7 +31,7 @@
           <div>
             <p class="eyebrow">Aula 07 · representação de dados</p>
             <h1>Como o computador representa números</h1>
-            <p class="hero-lead">Na aula anterior acompanhamos <strong>onde os dados ficam e quanto custa acessá-los</strong>. Agora vamos olhar para dentro desses dados: como sequências de bits representam números e por que usamos diferentes bases para escrever a mesma informação.</p>
+            <p class="hero-lead">Na aula anterior acompanhamos <strong>onde os dados ficam e quanto custa acessá-los</strong>. Agora vamos olhar para dentro desses dados. Fisicamente, o hardware utiliza estados físicos distintos; a arquitetura digital os abstrai como <strong>bits 0 e 1</strong>. A partir desses padrões de bits, podemos representar e interpretar números usando diferentes bases.</p>
             <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a></div>
           </div>
           <aside class="guiding-card">
@@ -57,16 +57,15 @@
 
       <section class="section" id="visao">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Os bits são o suporte; a representação dá significado</h2><p>Vamos entender como números são representados em bits e como decimal, binário e hexadecimal descrevem valores.</p></div>
+          <div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Os bits são o suporte; a interpretação dá significado</h2><p>Vamos entender como padrões de bits podem representar números e como decimal, binário e hexadecimal são formas diferentes de escrever e interpretar uma mesma quantidade.</p></div>
           <div class="overview-grid">
             <article class="card topics-card">
               <h3>Conteúdo programático</h3>
               <div class="topic-list"><div>Bit, byte e palavra</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Conversão entre bases</div></div>
             </article>
-            <article class="card competency"><h3>C3 — Analisar e selecionar tecnologias</h3><div class="skill"><strong>H10</strong><span>Avaliar diversas tecnologias disponíveis, sendo capaz de analisar os prós e contras de diferentes opções tecnológicas.<br><small>Nesta aula: comparar formas de representação numérica e reconhecer quando cada notação facilita a leitura e a análise dos dados.</small></span></div></article>
             <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
           </div>
-          <div class="lesson-scope"><strong>Recorte desta aula</strong>Vamos trabalhar com sistemas posicionais, capacidade em bits, conversões entre decimal e binário e a relação direta entre binário e hexadecimal.</div>
+          <div class="lesson-scope"><strong>Recorte desta aula</strong>Vamos trabalhar com <strong>inteiros não negativos (sem sinal)</strong>, sistemas posicionais, capacidade em bits, conversões entre decimal e binário e a relação direta entre binário e hexadecimal. Representações de números negativos e ponto flutuante ficam para uma etapa posterior.</div>
         </div>
       </section>
 
@@ -74,18 +73,19 @@
         <div class="container">
           <div class="warmup">
             <div><p class="eyebrow">Retomada da Aula 06</p><h2>Sabemos onde o dado está. Mas como ele é escrito?</h2><p>Registradores, cache, RAM e armazenamento mantêm sequências de bits. Agora vamos observar como essas sequências podem representar valores numéricos.</p></div>
-            <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, como podemos descobrir o valor representado?</span></div><div><strong>3 · Capacidade</strong><span>O que muda quando aumentamos a quantidade de bits disponível?</span></div><div><strong>4 · Notação</strong><span>Por que pode ser útil escrever uma sequência binária de uma forma mais compacta?</span></div></div>
+            <div class="question-cloud"><div><strong>1 · Memória</strong><span>Qual é a menor unidade de informação que usamos para descrever a memória digital?</span></div><div><strong>2 · Dados</strong><span>Se uma posição contém <code>00101010</code>, o que precisamos saber para interpretar esse padrão?</span></div><div><strong>3 · Capacidade</strong><span>O que muda quando aumentamos a quantidade de bits disponível?</span></div><div><strong>4 · Notação</strong><span>Por que pode ser útil escrever uma sequência binária de uma forma mais compacta?</span></div></div>
           </div>
 
           <div class="same-bits">
             <div class="bit-word">00101010</div>
             <div class="interpretations">
-              <div><strong>Em binário</strong><code>00101010₂</code>.</div>
+              <div><strong>Se interpretarmos como inteiro sem sinal</strong><code>00101010₂</code>.</div>
               <div><strong>Em decimal</strong>42.</div>
               <div><strong>Em hexadecimal</strong><code>2A₁₆</code>.</div>
             </div>
           </div>
-          <p class="bridge-question"><strong>Ideia central:</strong> podemos escrever a mesma quantidade usando bases diferentes. O valor não muda; muda a forma de representação.</p>
+          <div class="precision-note"><strong>O padrão de bits, sozinho, não informa todo o significado.</strong> A mesma sequência pode representar um número, um caractere, parte de uma instrução, uma cor ou outro tipo de dado. Nesta aula, quando fizermos conversões numéricas, assumiremos <strong>inteiros não negativos</strong>.</div>
+          <p class="bridge-question"><strong>Ideia central:</strong> quando a interpretação é numérica, podemos escrever a mesma quantidade usando bases diferentes. O valor não muda; muda a notação.</p>
         </div>
       </section>
 
@@ -146,7 +146,7 @@
 
       <section class="section" id="bits">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>Um bit pode assumir apenas dois estados: <strong>0</strong> ou <strong>1</strong>. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
+          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>No modelo digital, um bit pode assumir dois valores lógicos: <strong>0</strong> ou <strong>1</strong>. Esses valores abstraem estados físicos do hardware. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
 
           <div class="trace-table-wrap">
             <table class="twos-table">
@@ -179,7 +179,7 @@
           <div class="number-story">
             <article><small>1 posição binária</small><strong>Bit</strong><p>É a menor unidade usada aqui para representar informação. Pode assumir 0 ou 1.</p></article>
             <article><small>8 bits</small><strong>Byte</strong><p>Um byte reúne 8 bits. Portanto, possui 2⁸ = 256 padrões possíveis.</p></article>
-            <article><small>Depende da arquitetura</small><strong>Palavra</strong><p>É uma unidade de dados associada à organização da máquina. Seu tamanho não precisa ser igual a um byte.</p></article>
+            <article><small>Depende da arquitetura</small><strong>Palavra</strong><p>É uma quantidade de bits tratada como uma unidade natural pela arquitetura ou pelo processador. Seu tamanho depende da máquina e não precisa ser igual a um byte.</p></article>
           </div>
 
           <h3 style="margin-top:2rem">Mais bits, mais possibilidades</h3>
@@ -244,17 +244,17 @@
             <table class="twos-table">
               <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
               <tbody>
-                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
-                <tr><td><strong>0</strong></td><td>2¹</td><td>2</td><td>0 × 2 = 0</td></tr>
-                <tr><td><strong>1</strong></td><td>2²</td><td>4</td><td>1 × 4 = 4</td></tr>
-                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
-                <tr><td><strong>0</strong></td><td>2⁴</td><td>16</td><td>0 × 16 = 0</td></tr>
                 <tr><td><strong>1</strong></td><td>2⁵</td><td>32</td><td>1 × 32 = 32</td></tr>
+                <tr><td><strong>0</strong></td><td>2⁴</td><td>16</td><td>0 × 16 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
+                <tr><td><strong>1</strong></td><td>2²</td><td>4</td><td>1 × 4 = 4</td></tr>
+                <tr><td><strong>0</strong></td><td>2¹</td><td>2</td><td>0 × 2 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
               </tbody>
             </table>
           </div>
 
-          <div class="base-equation">101101<sub>2</sub> = 1 + 0 + 4 + 8 + 0 + 32 = 45<sub>10</sub></div>
+          <div class="base-equation">101101<sub>2</sub> = 32 + 0 + 8 + 4 + 0 + 1 = 45<sub>10</sub></div>
 
           <div class="precision-note"><strong>Atalho mental:</strong> posições com bit <strong>0</strong> não acrescentam valor. Nesse exemplo, basta somar os pesos das posições que têm bit 1: <strong>32 + 8 + 4 + 1 = 45</strong>.</div>
 
@@ -353,7 +353,7 @@
         <div class="container">
           <div class="section-heading"><p class="eyebrow">4 · Hexadecimal</p><h2>Quatro bits de cada vez</h2><p>O binário é adequado ao hardware, mas sequências longas de 0 e 1 são difíceis de ler. O hexadecimal é uma forma mais compacta de escrever os mesmos padrões. Como <strong>16 = 2⁴</strong>, cada dígito hexadecimal representa exatamente <strong>4 bits</strong>.</p></div>
 
-          <div class="precision-note"><strong>Ideia principal:</strong> hexadecimal não cria novos dados e não altera os bits. Ele apenas oferece uma escrita mais curta para padrões binários.</div>
+          <div class="precision-note"><strong>Ideia principal:</strong> hexadecimal não cria novos dados e não altera os bits. Ele apenas oferece uma escrita mais curta para padrões binários. Um grupo de <strong>4 bits</strong> também é chamado de <strong>nibble</strong>.</div>
 
           <h3 style="margin-top:2rem">Por que aparecem as letras A, B, C, D, E e F?</h3>
           <p>Na base 10 temos dez símbolos, de 0 a 9. Na base 16 precisamos de <strong>dezesseis símbolos</strong>. Depois do 9, usamos as letras A até F para representar os valores de 10 a 15.</p>
@@ -441,7 +441,7 @@
             <div class="check-item">Consigo relacionar decimal, binário e hexadecimal como representações do mesmo valor.</div>
             <div class="check-item">Consigo converter diretamente grupos de 4 bits entre binário e hexadecimal.</div>
           </div>
-          <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos onde os dados ficam, quanto custa acessá-los e como números podem ser escritos em diferentes bases.</p>
+          <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos onde os dados ficam, quanto custa acessá-los e como padrões de bits podem ser interpretados numericamente e escritos em diferentes bases. Mais adiante podemos ampliar essa ideia para números negativos, ponto flutuante e outras codificações.</p>
         </div>
       </section>
 
@@ -449,7 +449,7 @@
         <div class="container">
           <div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual da aula</h2>
             <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 9 — Sistemas numéricos: sistema decimal, sistemas posicionais, binário, conversão binário–decimal e notação hexadecimal.</p>
-            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — Aritmética do computador.</p>
+            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 1 — conceitos de arquitetura, organização e representação de dados na máquina.</p>
           </div>
         </div>
       </section>
