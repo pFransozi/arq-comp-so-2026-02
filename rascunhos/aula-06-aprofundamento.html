@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex,nofollow">
   <meta name="description" content="Rascunho do aprofundamento da Aula 06 de Arquitetura de Computadores e Sistemas Operacionais: hierarquia de memória, cache, RAM, armazenamento e entrada/saída.">
   <meta name="theme-color" content="#101a24">
-  <title>Rascunho · Aula 06 — Aprofundamento | Arquitetura &amp; SO</title>
+  <title>Rascunho · Aula 06: Aprofundamento | Arquitetura &amp; SO</title>
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../aula-03-aprofundamento.css">
   <link rel="stylesheet" href="rascunhos.css">
@@ -18,7 +18,7 @@
 
   <header class="site-header" id="inicio">
     <div class="container nav-wrap">
-      <a class="brand" href="../index.html" aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal">
+      <a class="brand" href="../index.html" aria-label="Página principal de Arquitetura de Computadores e Sistemas Operacionais">
         <span class="brand-mark" aria-hidden="true">SO</span>
         <span><strong>Arquitetura &amp; SO</strong><small>Aula 06 · aprofundamento</small></span>
       </a>
@@ -107,7 +107,7 @@
             <div class="study-heading">
               <p class="study-kicker">2 · Cache: hit, miss e blocos</p>
               <h2>O que acontece quando o processador procura um dado?</h2>
-              <p>Antes de buscar um dado na memória principal, o processador consulta os níveis de cache. Se o dado necessário já estiver no nível consultado, ocorre um <strong>cache hit</strong> — um acerto. Se ele não estiver ali, ocorre um <strong>cache miss</strong> — uma falta — e a busca precisa continuar em um nível mais distante da hierarquia.</p>
+              <p>Antes de buscar um dado na memória principal, o processador consulta os níveis de cache. Se o dado necessário já estiver no nível consultado, ocorre um <strong>cache hit</strong>, ou seja, um acerto. Se ele não estiver ali, ocorre um <strong>cache miss</strong>, ou seja, uma falta, e a busca precisa continuar em um nível mais distante da hierarquia.</p>
             </div>
 
             <div class="study-prose">
@@ -170,7 +170,7 @@
             <div class="study-grid">
               <div class="study-prose">
                 <h3>Quando não há espaço livre</h3>
-                <p>Em caches associativas ou associativas por conjunto, pode ser necessário escolher qual linha será substituída. Políticas clássicas incluem aproximações de <strong>LRU</strong> — retirar aquilo que não foi usado recentemente —, FIFO e estratégias aleatórias.</p>
+                <p>Em caches associativas ou associativas por conjunto, pode ser necessário escolher qual linha será substituída. Políticas clássicas incluem aproximações de <strong>LRU</strong> (retirar aquilo que não foi usado recentemente), FIFO e estratégias aleatórias.</p>
                 <p>Neste ponto, o importante não é memorizar algoritmos, mas perceber que a cache é um recurso finito. Um padrão de acesso que alterna muitos blocos concorrentes pode provocar substituições frequentes e diminuir o aproveitamento do nível rápido.</p>
                 <h3>Escrever cria outro problema</h3>
                 <p>Se o processador modifica uma cópia na cache, precisamos definir em que momento a versão correspondente nos níveis inferiores será atualizada. Duas políticas clássicas descritas por Stallings são <em>write-through</em> e <em>write-back</em>.</p>
@@ -206,7 +206,7 @@
               <article>
                 <p class="study-kicker">DRAM</p>
                 <h3>Mais densa e adequada a grandes capacidades</h3>
-                <p>A RAM dinâmica armazena informação de forma que exige restauração periódica da carga — o <em>refresh</em>.</p>
+                <p>A RAM dinâmica armazena informação de forma que exige restauração periódica da carga, processo conhecido como <em>refresh</em>.</p>
                 <p>Ela oferece maior densidade e menor custo por bit, características apropriadas à memória principal.</p>
               </article>
             </div>
@@ -301,7 +301,7 @@
               <div class="study-prose">
                 <h3>O que muda da interrupção para o DMA?</h3>
                 <p>Na E/S por interrupção, a CPU deixa de esperar continuamente, mas ainda pode participar da movimentação de cada unidade de dados entre módulo de E/S e memória. Em transferências grandes, isso continua sendo um custo importante.</p>
-                <p>Com <strong>DMA</strong>, o processador configura a transferência — origem/destino, direção e quantidade — e o mecanismo de DMA assume a movimentação entre E/S e memória. Quando a transferência termina, o processador pode ser notificado.</p>
+                <p>Com <strong>DMA</strong>, o processador configura a transferência, definindo origem/destino, direção e quantidade, e o mecanismo de DMA assume a movimentação entre E/S e memória. Quando a transferência termina, o processador pode ser notificado.</p>
                 <p>O ganho conceitual não é “fazer E/S sem CPU”. A CPU continua coordenando o sistema. O ganho é <strong>retirar do processador o trabalho repetitivo de copiar cada unidade do bloco</strong>.</p>
                 <h3>Onde entram os buffers?</h3>
                 <p>Dispositivos, controladores, bibliotecas e o próprio sistema operacional podem usar áreas temporárias para acumular dados e compatibilizar diferenças de velocidade ou tamanho de transferência. Por isso, uma operação de alto nível da aplicação raramente corresponde de forma direta a uma única operação física.</p>
@@ -436,9 +436,9 @@
               <p>O aprofundamento foi construído a partir dos PDFs que integram o projeto da disciplina e preserva a separação entre arquitetura física e gerenciamento de memória pelo sistema operacional.</p>
             </div>
             <ol class="references">
-              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e organização de computadores</em>. Cap. 4 — memória cache; Cap. 5 — memória interna; Cap. 6 — memória externa; Cap. 7 — entrada/saída.</li>
+              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e organização de computadores</em>. Cap. 4: memória cache; Cap. 5: memória interna; Cap. 6: memória externa; Cap. 7: entrada/saída.</li>
               <li><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas operacionais modernos</em>. Utilizado para delimitar a transição posterior para gerenciamento de memória, paginação e memória virtual.</li>
-              <li><strong>UniSENAI PR.</strong> Ementário de Engenharia de Software — componente Arquitetura de Computadores e Sistemas Operacionais.</li>
+              <li><strong>UniSENAI PR.</strong> Ementário de Engenharia de Software: componente Arquitetura de Computadores e Sistemas Operacionais.</li>
             </ol>
             <div class="source-strip"><strong>Status editorial:</strong> rascunho. Após validação, a página deverá ser movida para a raiz do curso, receber sua folha de estilo definitiva e ser ligada à Aula 06 e ao índice principal.</div>
           </div>
