@@ -1,0 +1,548 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Aprofundamento da Aula 06 de Arquitetura de Computadores e Sistemas Operacionais: hierarquia de memória, cache, RAM, armazenamento e entrada/saída.">
+  <meta name="theme-color" content="#101a24">
+  <title>Aula 06: Aprofundamento | Arquitetura &amp; SO</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="aula-03-aprofundamento.css">
+  <link rel="stylesheet" href="aula-06-aprofundamento.css">
+  <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
+  <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=13">
+</head>
+<body class="teaching-page teaching-lesson study-page study-clean arch-page">
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
+  <header class="site-header" id="inicio">
+    <div class="container nav-wrap">
+      <a class="brand" href="index.html" aria-label="Página principal de Arquitetura de Computadores e Sistemas Operacionais">
+        <span class="brand-mark" aria-hidden="true">SO</span>
+        <span><strong>Arquitetura &amp; SO</strong><small>Aula 06 · aprofundamento</small></span>
+      </a>
+      <nav class="main-nav study-nav" aria-label="Navegação principal">
+        <a href="aula-06.html">Aula 06</a>
+        <a class="nav-highlight" href="aula-06-aprofundamento.html">Aprofundamento</a>
+        <a href="index.html">Portal</a>
+        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main id="conteudo">
+    <div class="study-clean-layout">
+      <div class="study-clean-content">
+        <section class="study-hero">
+          <div class="container study-hero-grid">
+            <div>
+              <p class="eyebrow">Aula 06 · aprofundamento teórico</p>
+              <h1>Da memória à E/S: como os dados percorrem o computador</h1>
+              <p class="study-lead">Na aula principal observamos que <strong>onde os dados estão e como são acessados</strong> pode alterar o tempo de execução. Agora vamos descer um nível: entender por que existe uma hierarquia de memória, como a cache trabalha com blocos, como RAM e armazenamento diferem fisicamente e como os mecanismos de entrada/saída movimentam dados sem transformar a CPU em uma simples copiadora.</p>
+              <div class="study-meta"><span>Hierarquia</span><span>Cache</span><span>SRAM e DRAM</span><span>HDD e SSD</span><span>E/S</span><span>DMA</span></div>
+              <div class="study-actions"><a class="button button-primary" href="#hierarquia">Começar</a><a class="button button-secondary" href="../aula-06.html">Voltar à Aula 06</a></div>
+            </div>
+            <aside class="study-card">
+              <strong style="margin-top:1rem">Papel deste aprofundamento</strong>
+              <p>A Aula 06 apresenta o comportamento observável: localidade, latência, vazão, RAM, armazenamento e perfis de carga. Este material retoma esses mesmos temas com mais detalhe sobre os mecanismos que existem por baixo deles.</p>
+            </aside>
+          </div>
+        </section>
+
+        <details class="study-mobile-toc">
+          <summary>Neste material</summary>
+          <nav>
+            <a href="#hierarquia">Hierarquia</a>
+            <a href="#cache">Blocos e linhas de cache</a>
+            <a href="#cache-projeto">Mapeamento e escrita</a>
+            <a href="#ram">SRAM, DRAM e DDR</a>
+            <a href="#armazenamento">HDD e SSD</a>
+            <a href="#io">Entrada/saída e DMA</a>
+            <a href="#software">O que aparece no software</a>
+            <a href="#perfis">Perfis de carga</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </details>
+
+        <section class="study-section" id="hierarquia">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">1 · A hierarquia como decisão de projeto</p>
+              <h2>Velocidade, capacidade e custo não crescem juntos</h2>
+              <p>A hierarquia de memória não existe apenas para organizar componentes. Ela é uma resposta à relação entre velocidade, capacidade e custo: tecnologias de memória mais rápidas tendem a ser mais caras por bit e, por isso, aparecem em capacidades menores; tecnologias de maior capacidade tendem a apresentar maior tempo de acesso.</p>
+            </div>
+
+            <div class="memory-ladder" aria-label="Hierarquia de memória do processador ao armazenamento">
+              <div><small>Mais próximo</small><strong>Registradores</strong><span>Estado imediato da execução dentro do processador.</span></div>
+              <div><small>Memória rápida</small><strong>Cache L1</strong><span>Pequena, muito próxima do core e voltada a reutilização imediata.</span></div>
+              <div><small>Mais capacidade</small><strong>L2 / L3</strong><span>Níveis progressivamente maiores que reduzem a necessidade de chegar à RAM.</span></div>
+              <div><small>Memória principal</small><strong>DRAM</strong><span>Grande capacidade para dados e instruções ativos.</span></div>
+              <div><small>Persistência</small><strong>SSD / HDD</strong><span>Capacidade elevada e armazenamento não volátil.</span></div>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Por que combinar tecnologias diferentes?</h3>
+                <p>Se toda a memória do computador fosse construída apenas com a tecnologia mais rápida disponível, o custo e a área necessários cresceriam de forma incompatível com a capacidade desejada. Se usássemos somente uma tecnologia de alta capacidade e baixo custo, o processador ficaria exposto com muito mais frequência ao tempo de acesso dos níveis lentos.</p>
+                <p>A solução é manter <strong>pequenas quantidades de informação próximas do processador</strong> e capacidades maiores nos níveis seguintes. Essa estratégia só funciona bem porque programas não acessam todos os seus dados com a mesma frequência.</p>
+                <h3>A localidade torna a hierarquia viável</h3>
+                <p>Durante certos intervalos da execução, referências a instruções e dados tendem a se concentrar. A <strong>localidade temporal</strong> descreve a reutilização de algo acessado recentemente; a <strong>localidade espacial</strong> descreve a tendência de acessar posições próximas.</p>
+                <p>Quando um pequeno subconjunto é usado repetidamente, os níveis rápidos podem atender grande parte das referências mesmo sendo muito menores que a memória total do sistema.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Relação fundamental</strong><p>Na hierarquia de memória, ao descer os níveis, normalmente aumentam a capacidade e o tempo de acesso, enquanto diminui o custo por bit.</p></div>
+                <div class="study-callout teal"><strong>Conexão com software</strong><p>A hierarquia não muda o algoritmo abstrato, mas muda o custo de executar seus acessos a dados. Por isso dois percursos logicamente equivalentes podem apresentar tempos diferentes.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section alt" id="cache">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">2 · Cache: hit, miss e blocos</p>
+              <h2>O que acontece quando o processador procura um dado?</h2>
+              <p>Antes de buscar um dado na memória principal, o processador consulta os níveis de cache. Se o dado necessário já estiver no nível consultado, ocorre um <strong>cache hit</strong>, ou seja, um acerto. Se ele não estiver ali, ocorre um <strong>cache miss</strong>, ou seja, uma falta, e a busca precisa continuar em um nível mais distante da hierarquia.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Hit: o dado já está próximo</h3>
+              <p>Em um <strong>hit</strong>, a cache já contém o bloco que inclui o endereço solicitado. O acesso pode ser atendido naquele nível, evitando naquele momento uma consulta à RAM ou a outro nível mais lento.</p>
+
+              <h3>Miss: é preciso procurar mais longe</h3>
+              <p>Em um <strong>miss</strong>, o bloco não está disponível no nível consultado. A busca continua na hierarquia. Quando o bloco é encontrado em um nível inferior, ele pode ser trazido para a cache para atender o acesso atual e, possivelmente, acessos seguintes.</p>
+
+              <p>Isso leva a uma ideia importante: a cache não trabalha apenas com o valor isolado solicitado. Ela movimenta <strong>blocos de dados</strong>. É justamente esse comportamento que permite aproveitar a localidade espacial.</p>
+            </div>
+
+            <figure class="study-figure cache-overview-figure">
+              <img
+                src="assets/cache-hit-miss-blocos-light.svg"
+                data-light-src="assets/cache-hit-miss-blocos-light.svg"
+                data-dark-src="assets/cache-hit-miss-blocos-dark.svg"
+                alt="Diagrama do fluxo de acesso à cache: a CPU consulta a cache; em um hit, o dado retorna diretamente; em um miss, um bloco é buscado na memória principal, carregado na cache e então entregue à CPU. Na parte inferior, o diagrama mostra o bloco com as posições 40, 41, 42 e 43 sendo copiado da RAM para uma linha de cache."
+                loading="lazy">
+              <figcaption>O caminho curto representa um <strong>hit</strong>. No <strong>miss</strong>, a busca alcança a RAM e um bloco é trazido para a cache.</figcaption>
+            </figure>
+
+            <div class="study-prose">
+              <h3>Bloco na memória, linha na cache</h3>
+              <p>A memória principal pode ser vista, para esse mecanismo, como dividida em <strong>blocos</strong>. A cache é dividida em <strong>linhas</strong> capazes de receber esses blocos. Quando o endereço procurado não está em um nível da cache, o sistema busca o bloco correspondente em um nível inferior e o copia para uma linha.</p>
+              <p>Esse comportamento explica por que, depois de acessar a posição 40, acessar 41, 42 ou 43 pode ser favorável: posições vizinhas podem já ter chegado junto com a primeira referência.</p>
+
+              <h3>Como a cache sabe se tem o dado correto?</h3>
+              <p>Uma linha precisa guardar não apenas os dados, mas também informação que permita identificar <strong>qual bloco da memória principal</strong> está representado ali. Essa identificação é associada ao campo conhecido como <strong>tag</strong>.</p>
+              <p>Assim, consultar a cache envolve verificar se existe uma linha válida cuja identificação corresponda ao endereço solicitado. Se houver correspondência, temos um <em>hit</em>; caso contrário, um <em>miss</em>.</p>
+            </div>
+
+            <div class="equation-box">
+              <code>Tempo médio ≈ tempo de hit + taxa de miss × penalidade de miss</code>
+              <p>É uma forma simplificada de enxergar o efeito da cache: uma taxa pequena de faltas ainda pode importar bastante quando buscar o próximo nível é muito mais caro.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Um exemplo apenas para interpretar a fórmula</h3>
+              <p>Se um acesso atendido pela cache custa aproximadamente 1 unidade de tempo, 5% dos acessos falham e cada falha acrescenta 50 unidades, o custo médio simplificado fica em <strong>1 + 0,05 × 50 = 3,5</strong>. A maior parte dos acessos ainda é atendida rapidamente, mas as faltas alteram de forma significativa a média.</p>
+              <p>O valor numérico é apenas ilustrativo. O ponto importante é compreender que o desempenho da hierarquia depende tanto da velocidade dos níveis quanto da frequência com que o programa consegue reutilizar o que já está próximo.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="cache-projeto">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">3 · Decisões internas da cache</p>
+              <h2>A cache precisa responder a três perguntas</h2>
+              <p>Até aqui vimos o que acontece em um <strong>hit</strong> e em um <strong>miss</strong>. Agora surge uma questão prática: quando um bloco chega da memória principal, <strong>onde ele pode ser colocado?</strong> Se o espaço permitido já estiver ocupado, <strong>quem deve sair?</strong> E, se o processador alterar um dado, <strong>quando essa mudança chega à RAM?</strong></p>
+            </div>
+
+            <div class="decision-steps" aria-label="Três decisões internas da cache">
+              <article class="decision-step">
+                <span>1</span>
+                <div>
+                  <strong>Onde colocar?</strong>
+                  <p>O mapeamento define quais linhas da cache podem receber cada bloco.</p>
+                </div>
+              </article>
+              <article class="decision-step">
+                <span>2</span>
+                <div>
+                  <strong>Quem sai?</strong>
+                  <p>Se todas as linhas permitidas estiverem ocupadas, uma política de substituição escolhe qual bloco será removido.</p>
+                </div>
+              </article>
+              <article class="decision-step">
+                <span>3</span>
+                <div>
+                  <strong>Quando escrever na RAM?</strong>
+                  <p>A política de escrita define quando uma alteração feita na cache é propagada para o nível inferior.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="study-prose">
+              <h3>Primeira decisão: onde o bloco pode entrar?</h3>
+              <p>Imagine uma cache pequena com quatro linhas. A memória principal possui muitos blocos, mas a cache só consegue manter alguns deles por vez. O mapeamento estabelece quais posições podem receber cada bloco.</p>
+            </div>
+
+            <div class="mapping-example" aria-label="Exemplo didático de mapeamento de blocos da memória para linhas da cache">
+              <div class="mapping-memory">
+                <small>Memória principal</small>
+                <strong>Blocos</strong>
+                <div class="mapping-cells"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+              </div>
+              <div class="mapping-arrow" aria-hidden="true">→</div>
+              <div class="mapping-cache">
+                <small>Cache</small>
+                <strong>4 linhas disponíveis</strong>
+                <div class="mapping-cells"><span>L0</span><span>L1</span><span>L2</span><span>L3</span></div>
+              </div>
+            </div>
+
+            <div class="policy-grid">
+              <article class="policy-card">
+                <small>Mapeamento direto</small>
+                <h3>Um único lugar possível</h3>
+                <p>Cada bloco possui uma linha determinada da cache. Por exemplo, os blocos 0 e 4 podem disputar a mesma linha. Mesmo que existam outras linhas livres, eles não podem ser colocados nelas.</p>
+                <p><strong>Ideia-chave:</strong> é simples localizar o bloco, mas podem ocorrer conflitos frequentes.</p>
+              </article>
+              <article class="policy-card">
+                <small>Mapeamento associativo</small>
+                <h3>Qualquer linha pode ser usada</h3>
+                <p>O bloco pode ocupar qualquer linha disponível. Se o bloco 0 já está na cache e chega o bloco 4, o novo bloco pode utilizar outra linha livre.</p>
+                <p><strong>Ideia-chave:</strong> há mais liberdade de posicionamento, mas o hardware precisa procurar o bloco entre várias linhas.</p>
+              </article>
+              <article class="policy-card">
+                <small>Associativo por conjunto</small>
+                <h3>Algumas linhas são possíveis</h3>
+                <p>A cache é dividida em conjuntos. Cada bloco é direcionado para um conjunto específico, mas pode ocupar uma das linhas daquele conjunto.</p>
+                <p><strong>Ideia-chave:</strong> é um meio-termo entre a rigidez do mapeamento direto e a liberdade do associativo.</p>
+              </article>
+            </div>
+
+            <div class="study-callout teal cache-takeaway">
+              <strong>O ponto mais importante</strong>
+              <p>Os três modelos não mudam o conteúdo do bloco. Eles mudam <strong>onde esse bloco pode ficar dentro da cache</strong>. Essa escolha influencia a quantidade de conflitos e a complexidade necessária para localizar os dados.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Segunda decisão: se não houver espaço, quem sai?</h3>
+                <p>No mapeamento direto não existe escolha: se outro bloco precisar daquela linha, o bloco atual será substituído. Nos modelos com mais de uma possibilidade de posição, pode ser necessário escolher entre várias linhas ocupadas.</p>
+                <p>Uma política conhecida é a <strong>LRU</strong>, que procura retirar o bloco que não é usado há mais tempo. Também existem políticas como FIFO e escolhas aleatórias.</p>
+                <p>Para esta aula, não é necessário memorizar todas as políticas. O importante é perceber que <strong>substituir um bloco pode eliminar um dado que seria reutilizado logo depois</strong>. Quando isso acontece repetidamente, aumentam os misses.</p>
+
+                <h3>Terceira decisão: quando a alteração chega à RAM?</h3>
+                <p>Suponha que o processador leia um valor da cache e depois o modifique. A cópia que está na cache mudou, mas precisamos decidir quando o nível inferior receberá essa nova versão.</p>
+              </div>
+
+              <div class="study-stack">
+                <div class="study-callout">
+                  <strong>Write-through</strong>
+                  <p>A escrita é atualizada na cache e também propagada ao nível inferior. Isso mantém a memória principal atualizada, mas aumenta o tráfego de escrita.</p>
+                </div>
+                <div class="study-callout violet">
+                  <strong>Write-back</strong>
+                  <p>A alteração permanece inicialmente na cache. O bloco modificado é enviado ao nível inferior quando precisa ser substituído, reduzindo escritas imediatas.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Como ligar tudo isso</strong>
+              <p>Primeiro o mapeamento determina <strong>onde o bloco pode ficar</strong>. Se as posições possíveis estiverem ocupadas, a substituição determina <strong>quem sai</strong>. Se o bloco for alterado, a política de escrita determina <strong>quando a mudança será propagada</strong>.</p>
+            </div>
+
+            <div class="boundary">
+              <strong>O software normalmente não escolhe essas políticas</strong>
+              <p>Mapeamento, substituição e política de escrita são mecanismos da arquitetura. O código influencia indiretamente o resultado ao determinar quais endereços são acessados, em que ordem e com que frequência.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section alt" id="ram">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">4 · A memória principal por dentro</p>
+              <h2>Por que cache e memória principal usam tecnologias diferentes?</h2>
+              <p>Cache e memória principal armazenam bits, mas cumprem papéis diferentes no computador. A cache precisa responder muito rapidamente e fica próxima do processador. A memória principal precisa oferecer muito mais capacidade. Por isso, elas normalmente usam tecnologias diferentes: <strong>SRAM</strong> na cache e <strong>DRAM</strong> na memória principal.</p>
+            </div>
+
+            <div class="study-callout teal">
+              <strong>Antes dos nomes: o que as duas têm em comum?</strong>
+              <p>SRAM e DRAM são tipos de memória semicondutora de acesso aleatório. Neste contexto, ambas são <strong>voláteis</strong>: precisam de alimentação elétrica para manter os dados. A diferença principal está em <strong>como cada tecnologia mantém um bit</strong> e nas consequências disso para velocidade, densidade e custo.</p>
+            </div>
+
+            <div class="memory-compare">
+              <article>
+                <p class="study-kicker">SRAM</p>
+                <h3>Usada quando a prioridade é responder rápido</h3>
+                <p>A <strong>Static RAM</strong> mantém o valor armazenado enquanto houver alimentação, sem precisar de um ciclo periódico de <em>refresh</em>.</p>
+                <p>Ela ocupa mais área por bit e custa mais, por isso aparece em capacidades menores, especialmente nos níveis de cache.</p>
+              </article>
+              <article>
+                <p class="study-kicker">DRAM</p>
+                <h3>Usada quando precisamos de muito mais capacidade</h3>
+                <p>A <strong>Dynamic RAM</strong> armazena o bit de uma forma que precisa ser restaurada periodicamente. Esse processo é chamado de <em>refresh</em>.</p>
+                <p>Ela permite maior densidade e menor custo por bit, por isso é adequada para a memória principal.</p>
+              </article>
+            </div>
+
+            <div class="boundary">
+              <strong>“Estática” e “dinâmica” não significam dados fixos ou variáveis</strong>
+              <p>Os nomes descrevem a forma como o estado elétrico é mantido. Na SRAM, o valor permanece estável enquanto houver alimentação. Na DRAM, a informação precisa ser restaurada periodicamente. Em ambos os casos, o programa pode ler e escrever dados normalmente.</p>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Por que não construir toda a RAM com SRAM?</h3>
+                <p>Seria possível imaginar uma memória principal feita com uma tecnologia muito rápida, mas o custo e a área necessários cresceriam bastante. Para disponibilizar gigabytes de memória de forma viável, a DRAM oferece uma relação mais adequada entre capacidade, área e custo.</p>
+                <p>Por isso, a hierarquia combina <strong>pouca SRAM muito rápida</strong> perto do processador com <strong>muito mais DRAM</strong> na memória principal.</p>
+
+                <h3>Onde entra o refresh da DRAM?</h3>
+                <p>As células de DRAM não preservam sua carga indefinidamente. O sistema precisa renovar periodicamente esses valores para que os bits armazenados não se percam. Esse trabalho é coordenado pelo hardware de memória e não pelo programa que está sendo executado.</p>
+
+                <h3>Da DRAM para a SDRAM</h3>
+                <p>A <strong>SDRAM</strong> é uma DRAM síncrona. Isso significa que comandos e transferências são organizados em relação a um sinal de clock. O controlador de memória consegue coordenar melhor a sequência de operações e transferências.</p>
+
+                <h3>E o que o DDR acrescenta?</h3>
+                <p><strong>DDR</strong> significa <em>Double Data Rate</em>. A interface transfere dados em duas transições do sinal de clock, aumentando a quantidade de informação que pode ser movimentada por ciclo.</p>
+                <p>As memórias DDR também trabalham bem com transferências em sequência, chamadas de <strong>rajadas</strong>. Depois que um acesso é preparado, vários dados próximos podem ser transferidos de forma eficiente. Isso se relaciona diretamente com a localidade espacial vista na seção de cache.</p>
+              </div>
+
+              <div class="study-stack">
+                <div class="study-callout">
+                  <strong>Cache</strong>
+                  <p>Normalmente usa SRAM porque precisa reduzir o tempo de acesso aos dados mais próximos do processador.</p>
+                </div>
+                <div class="study-callout teal">
+                  <strong>Memória principal</strong>
+                  <p>Normalmente usa DRAM porque precisa oferecer uma capacidade muito maior com custo e área viáveis.</p>
+                </div>
+                <div class="study-callout violet">
+                  <strong>Controlador de memória</strong>
+                  <p>Coordena comandos, endereços, refresh e transferências entre o sistema e os módulos de DRAM.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Uma forma simples de lembrar</strong>
+              <p><strong>SRAM:</strong> pouca, muito rápida, próxima da CPU. <strong>DRAM:</strong> muito mais capacidade, usada como memória principal. <strong>SDRAM/DDR:</strong> formas de organizar e acelerar a comunicação com a DRAM.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="armazenamento">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">5 · Persistência</p>
+              <h2>HDD e SSD têm mecanismos físicos muito diferentes</h2>
+              <p>Na aula principal comparamos armazenamento magnético e estado sólido em termos de acesso e desempenho. O aprofundamento mostra por que acesso sequencial e aleatório têm custos diferentes e por que um SSD não deve ser entendido apenas como “um disco mais rápido”.</p>
+            </div>
+
+            <div class="memory-compare">
+              <article>
+                <p class="study-kicker">HDD · disco magnético</p>
+                <h3>Posicionar componentes faz parte do acesso</h3>
+                <p>Dados são organizados em superfícies magnéticas divididas em estruturas como trilhas e setores. Para alcançar uma posição, um HDD com cabeça móvel precisa deslocar o mecanismo até a trilha adequada e aguardar a posição angular necessária.</p>
+                <p>Por isso, o tempo de acesso inclui componentes como <strong>tempo de busca</strong>, <strong>atraso rotacional</strong> e <strong>tempo de transferência</strong>.</p>
+              </article>
+              <article>
+                <p class="study-kicker">SSD · memória flash</p>
+                <h3>Sem movimento mecânico, mas com regras próprias</h3>
+                <p>Um SSD combina controlador, lógica de endereçamento, buffers, correção de erros e chips de memória flash NAND.</p>
+                <p>Não há busca mecânica de uma cabeça, o que reduz fortemente o custo relativo dos acessos aleatórios. Entretanto, a memória flash possui granularidades diferentes para leitura/escrita e apagamento, o que torna as escritas mais complexas que uma simples sobrescrita de byte.</p>
+              </article>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Por que sequencial e aleatório se comportam de forma diferente em HDD?</h3>
+                <p>Depois que a cabeça está posicionada e o setor correto chega à posição de leitura, transferir uma sequência contígua pode aproveitar esse posicionamento. Quando o padrão exige saltos frequentes entre regiões distantes, novos movimentos e esperas precisam ser introduzidos.</p>
+                <p>É por isso que, em discos magnéticos, o custo de acessar muitos pequenos pontos espalhados pode ser muito diferente do custo de transferir um grande trecho sequencial.</p>
+                <h3>O que o controlador do SSD precisa administrar?</h3>
+                <p>A memória flash NAND é organizada em páginas agrupadas em blocos. A escrita ocorre em páginas, mas o apagamento opera em blocos maiores. Se for necessário atualizar dados em uma região já usada, o controlador pode precisar reorganizar informação antes de reutilizar o bloco.</p>
+                <p>Essa característica explica por que desempenho de leitura e escrita não são idênticos e por que controladores de SSD possuem firmware, buffers e mecanismos de gerenciamento além dos chips de flash.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Latência</strong><p>Representa quanto tempo é necessário para começar e completar uma operação específica.</p></div>
+                <div class="study-callout teal"><strong>Vazão</strong><p>Representa quanto dado pode ser transferido por unidade de tempo quando o fluxo está estabelecido.</p></div>
+                <div class="study-callout violet"><strong>Não são sinônimos</strong><p>Um dispositivo pode ter boa vazão para grandes transferências e ainda apresentar custos relevantes quando a aplicação cria muitas operações pequenas.</p></div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Uma ressalva importante sobre a palavra “página”</strong>
+              <p>A memória flash também usa o termo <em>página</em> para sua granularidade de armazenamento. Isso não é o mesmo conceito que <strong>página de memória virtual</strong>. Paginação de memória virtual será tratada mais adiante, no bloco de Sistemas Operacionais.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section alt" id="io">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">6 · Entrada e saída</p>
+              <h2>Movimentar dados não precisa consumir a CPU palavra por palavra</h2>
+              <p>Uma operação de E/S envolve mais do que o dispositivo físico. Controladores ou módulos de E/S fazem a mediação com o sistema, mantêm registradores de dados e estado, recebem comandos e coordenam transferências.</p>
+            </div>
+
+            <div class="io-path" aria-label="Caminho conceitual entre dispositivo, módulo de E/S, memória e processador">
+              <div class="io-node"><small>Origem/destino</small><strong>Dispositivo</strong><span>SSD, rede, teclado ou outro periférico.</span></div>
+              <div class="io-node"><small>Mediação</small><strong>Módulo de E/S</strong><span>Controle, estado, buffers e comunicação com o dispositivo.</span></div>
+              <div class="io-node"><small>Dados ativos</small><strong>Memória principal</strong><span>Recebe ou fornece blocos usados pelo programa.</span></div>
+              <div class="io-node"><small>Execução</small><strong>CPU</strong><span>Configura operações e processa os dados quando necessário.</span></div>
+            </div>
+
+            <div class="policy-grid">
+              <article class="policy-card"><small>E/S programada</small><h3>A CPU verifica o estado</h3><p>O processador envia o comando e consulta repetidamente o módulo para descobrir quando a operação terminou. Esse modelo pode consumir tempo esperando ativamente.</p></article>
+              <article class="policy-card"><small>E/S por interrupção</small><h3>O dispositivo avisa</h3><p>Depois de iniciar a operação, a CPU pode continuar outro trabalho. Quando o módulo conclui, uma interrupção sinaliza que há algo a tratar.</p></article>
+              <article class="policy-card"><small>DMA</small><h3>O bloco vai direto à memória</h3><p>O acesso direto à memória permite que módulo de E/S e memória principal troquem dados sem fazer cada palavra passar pelo processador.</p></article>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>O que muda da interrupção para o DMA?</h3>
+                <p>Na E/S por interrupção, a CPU deixa de esperar continuamente, mas ainda pode participar da movimentação de cada unidade de dados entre módulo de E/S e memória. Em transferências grandes, isso continua sendo um custo importante.</p>
+                <p>Com <strong>DMA</strong>, o processador configura a transferência, definindo origem/destino, direção e quantidade, e o mecanismo de DMA assume a movimentação entre E/S e memória. Quando a transferência termina, o processador pode ser notificado.</p>
+                <p>O ganho conceitual não é “fazer E/S sem CPU”. A CPU continua coordenando o sistema. O ganho é <strong>retirar do processador o trabalho repetitivo de copiar cada unidade do bloco</strong>.</p>
+                <h3>Onde entram os buffers?</h3>
+                <p>Dispositivos, controladores, bibliotecas e o próprio sistema operacional podem usar áreas temporárias para acumular dados e compatibilizar diferenças de velocidade ou tamanho de transferência. Por isso, uma operação de alto nível da aplicação raramente corresponde de forma direta a uma única operação física.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Polling</strong><p>A CPU pergunta repetidamente “terminou?”. É simples, mas pode desperdiçar ciclos.</p></div>
+                <div class="study-callout violet"><strong>Interrupção</strong><p>O processador pode executar outro trabalho e responder quando o dispositivo sinaliza um evento.</p></div>
+                <div class="study-callout teal"><strong>DMA</strong><p>É particularmente útil para movimentar blocos sem exigir que cada item atravesse registradores da CPU.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="software">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">7 · Da arquitetura de volta ao código</p>
+              <h2>O software produz um padrão de movimentação</h2>
+              <p>O engenheiro de software não escolhe manualmente a linha da cache, a política de substituição ou o ciclo de refresh da DRAM. Mesmo assim, decisões de representação e acesso determinam a sequência de endereços que o hardware precisará atender.</p>
+            </div>
+
+            <div class="profile-chain" aria-label="Cadeia entre decisão de software e custo observado">
+              <span>Estrutura de dados</span><span>Ordem de acesso</span><span>Localidade</span><span>Tráfego na hierarquia</span><span>Tempo observado</span>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>Dados contíguos</h3>
+                <p>Quando uma estrutura é percorrida em posições adjacentes, um bloco trazido para a cache pode fornecer vários dos próximos elementos. O experimento por linhas da Aula 06 foi desenhado justamente para tornar esse comportamento visível.</p>
+                <h3>Referências espalhadas</h3>
+                <p>Estruturas em que cada objeto aponta para outro objeto distante podem exigir acessos a muitos blocos diferentes. A funcionalidade pode estar correta, mas a localidade espacial tende a ser menor.</p>
+                <h3>Processamento em blocos</h3>
+                <p>Dividir um conjunto grande em partes pode reduzir a quantidade de dados ativamente manipulada em cada fase, aumentando a chance de reutilizar informação antes que ela seja desalojada dos níveis rápidos.</p>
+                <h3>Agrupamento de escrita</h3>
+                <p>Na parte de persistência da Aula 06, muitas chamadas de <code>write()</code> foram comparadas com uma chamada agrupada. O objetivo não é afirmar que cada <code>write()</code> vira uma operação física. Ao contrário: o exemplo mostra que a aplicação, as bibliotecas e o sistema podem usar <strong>buffering</strong> e transformar várias operações de alto nível antes de o dispositivo realmente receber os dados.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Uma regra útil</strong><p>Antes de otimizar, identifique se a execução realmente é limitada por movimentação de dados. Localidade é importante, mas não substitui medição.</p></div>
+                <div class="study-callout teal"><strong>Mesma lógica, percurso diferente</strong><p>Duas implementações podem produzir exatamente a mesma resposta e ainda gerar padrões de cache, RAM e E/S muito diferentes.</p></div>
+              </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Não confundir abstração com caminho físico</strong>
+              <p>Uma chamada de função, uma leitura de arquivo ou um acesso a uma posição de uma coleção são operações vistas pelo software. Abaixo delas podem existir caches, buffers, tradução de endereços, controladores e transferências em blocos. O aprofundamento serve justamente para revelar parte dessas camadas.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section alt" id="perfis">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">8 · Perfis de carga revisitados</p>
+              <h2>CPU-bound, memory-bound e I/O-bound descrevem onde o tempo tende a se concentrar</h2>
+              <p>Depois de abrir a hierarquia e os mecanismos de E/S, os três perfis da aula principal podem ser interpretados com mais precisão. Eles não são rótulos permanentes da aplicação, mas descrições do recurso que domina uma fase observada.</p>
+            </div>
+
+            <div class="policy-grid">
+              <article class="policy-card"><small>CPU-bound</small><h3>O limite está no processamento</h3><p>As unidades de execução permanecem ocupadas com operações computacionais. Reduzir espera de E/S não altera significativamente o tempo se o processamento continuar sendo dominante.</p></article>
+              <article class="policy-card"><small>Memory-bound</small><h3>O limite está em alimentar a CPU</h3><p>Faltas de cache, baixa localidade ou grande volume de dados fazem a execução depender da capacidade de mover informação entre cache e memória principal.</p></article>
+              <article class="policy-card"><small>I/O-bound</small><h3>O limite está fora da memória principal</h3><p>A fase passa parcela importante do tempo aguardando leitura, escrita, rede ou outro dispositivo de entrada/saída.</p></article>
+            </div>
+
+            <div class="study-grid">
+              <div class="study-prose">
+                <h3>O perfil pode mudar durante uma única execução</h3>
+                <p>Uma aplicação pode começar lendo gigabytes de um SSD, passar para uma fase que percorre estruturas muito grandes em RAM e terminar realizando cálculos intensivos sobre um subconjunto dos dados. Cada etapa pode ter um gargalo diferente.</p>
+                <p>Por isso, a classificação deve ser usada como <strong>hipótese de análise</strong>. Medições de tempo, utilização e eventos de hardware ajudam a confirmar onde a execução está realmente limitada.</p>
+              </div>
+              <div class="study-stack">
+                <div class="study-callout"><strong>Arquitetura ajuda a explicar</strong><p>O perfil observado emerge da interação entre o trabalho exigido pelo software e a capacidade dos componentes que precisam atendê-lo.</p></div>
+                <div class="study-callout violet"><strong>Engenharia de Software ajuda a decidir</strong><p>A representação dos dados, a ordem de processamento, a quantidade de cópias e o padrão de persistência influenciam qual recurso será pressionado.</p></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section alt" id="sintese">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">9 · Síntese</p>
+              <h2>O caminho dos dados explica parte importante do desempenho</h2>
+              <p>O aprofundamento amplia a Aula 06 sem trocar seu eixo: o custo de um programa não depende apenas do cálculo realizado, mas também de onde os dados estão, de como se movem e de quanto o software consegue explorar a hierarquia.</p>
+            </div>
+
+            <div class="check-grid">
+              <article class="check-card"><span>01</span><strong>Hierarquia</strong><p>Combina tecnologias para equilibrar tempo de acesso, capacidade e custo.</p></article>
+              <article class="check-card"><span>02</span><strong>Cache</strong><p>Move blocos para linhas e depende de localidade para manter alta taxa de acerto.</p></article>
+              <article class="check-card"><span>03</span><strong>Mapeamento</strong><p>Define onde blocos podem ser colocados; substituição decide o que sai quando necessário.</p></article>
+              <article class="check-card"><span>04</span><strong>Escrita</strong><p>Write-through e write-back usam estratégias diferentes para equilibrar atualização da memória e tráfego de escrita.</p></article>
+              <article class="check-card"><span>05</span><strong>RAM</strong><p>SRAM e DRAM têm características diferentes; DDR busca ampliar a taxa de transferência da memória principal.</p></article>
+              <article class="check-card"><span>06</span><strong>Persistência</strong><p>HDD depende de mecanismos físicos de posicionamento; SSD depende de controlador e regras da flash NAND.</p></article>
+              <article class="check-card"><span>07</span><strong>E/S</strong><p>Interrupções reduzem espera ativa e DMA permite transferência direta entre módulo de E/S e memória.</p></article>
+              <article class="check-card"><span>08</span><strong>Software</strong><p>Estruturas e padrões de acesso definem o tráfego que a hierarquia precisa atender.</p></article>
+              <article class="check-card"><span>09</span><strong>Próximo passo</strong><p>Memória virtual e paginação entram quando o foco passa para gerenciamento de memória pelo SO.</p></article>
+            </div>
+          </div>
+        </section>
+
+        <section class="study-section" id="referencias">
+          <div class="container">
+            <div class="study-heading">
+              <p class="study-kicker">Referências</p>
+              <h2>Base conceitual do material</h2>
+              <p>O aprofundamento foi construído a partir dos PDFs que integram o projeto da disciplina e preserva a separação entre arquitetura física e gerenciamento de memória pelo sistema operacional.</p>
+            </div>
+            <ol class="references">
+              <li><strong>STALLINGS, William.</strong> <em>Arquitetura e organização de computadores</em>. Cap. 4: memória cache; Cap. 5: memória interna; Cap. 6: memória externa; Cap. 7: entrada/saída.</li>
+              <li><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas operacionais modernos</em>. Utilizado para delimitar a transição posterior para gerenciamento de memória, paginação e memória virtual.</li>
+            </ol>
+          </div>
+        </section>
+      </div>
+
+      <aside class="study-clean-aside" aria-label="Índice deste aprofundamento">
+        <div class="study-clean-toc-head">
+          <span class="study-clean-toc-label">Neste material</span>
+        </div>
+        <div class="study-toc-shell">
+          <nav class="study-toc">
+            <a href="#hierarquia">Hierarquia</a>
+            <a href="#cache">Blocos e linhas</a>
+            <a href="#cache-projeto">Mapeamento e escrita</a>
+            <a href="#ram">SRAM, DRAM e DDR</a>
+            <a href="#armazenamento">HDD e SSD</a>
+            <a href="#io">E/S e DMA</a>
+            <a href="#software">Software</a>
+            <a href="#perfis">Perfis de carga</a>
+            <a href="#sintese">Síntese</a>
+            <a href="#referencias">Referências</a>
+          </nav>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-grid"><div><strong>Arquitetura de Computadores e Sistemas Operacionais</strong><p>Aula 06 · aprofundamento teórico</p></div><a href="#inicio">Voltar ao início ↑</a></div></footer>
+  <script defer src="script.js"></script>
+</body>
+</html>
