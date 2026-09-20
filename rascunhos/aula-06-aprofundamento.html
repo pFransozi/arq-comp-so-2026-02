@@ -74,7 +74,7 @@
             <div class="study-heading">
               <p class="study-kicker">1 · A hierarquia como decisão de projeto</p>
               <h2>Velocidade, capacidade e custo não crescem juntos</h2>
-              <p>A hierarquia de memória não existe apenas para organizar componentes. Ela é uma resposta a um compromisso de engenharia: tecnologias de memória mais rápidas tendem a ser mais caras por bit e, por isso, aparecem em capacidades menores; tecnologias de maior capacidade tendem a apresentar maior tempo de acesso.</p>
+              <p>A hierarquia de memória não existe apenas para organizar componentes. Ela é uma resposta à relação entre velocidade, capacidade e custo: tecnologias de memória mais rápidas tendem a ser mais caras por bit e, por isso, aparecem em capacidades menores; tecnologias de maior capacidade tendem a apresentar maior tempo de acesso.</p>
             </div>
 
             <div class="memory-ladder" aria-label="Hierarquia de memória do processador ao armazenamento">
@@ -269,40 +269,71 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">4 · A memória principal por dentro</p>
-              <h2>SRAM e DRAM armazenam bits, mas fazem compromissos diferentes</h2>
-              <p>A Aula 06 trata a cache e a RAM como níveis com capacidades e tempos de acesso distintos. A diferença não é apenas de tamanho: elas normalmente usam tecnologias de memória semicondutora com características diferentes.</p>
+              <h2>Por que cache e memória principal usam tecnologias diferentes?</h2>
+              <p>Cache e memória principal armazenam bits, mas cumprem papéis diferentes no computador. A cache precisa responder muito rapidamente e fica próxima do processador. A memória principal precisa oferecer muito mais capacidade. Por isso, elas normalmente usam tecnologias diferentes: <strong>SRAM</strong> na cache e <strong>DRAM</strong> na memória principal.</p>
+            </div>
+
+            <div class="study-callout teal">
+              <strong>Antes dos nomes: o que as duas têm em comum?</strong>
+              <p>SRAM e DRAM são tipos de memória semicondutora de acesso aleatório. Neste contexto, ambas são <strong>voláteis</strong>: precisam de alimentação elétrica para manter os dados. A diferença principal está em <strong>como cada tecnologia mantém um bit</strong> e nas consequências disso para velocidade, densidade e custo.</p>
             </div>
 
             <div class="memory-compare">
               <article>
                 <p class="study-kicker">SRAM</p>
-                <h3>Rápida, cara e menos densa</h3>
-                <p>A RAM estática mantém o estado enquanto houver alimentação, sem o ciclo periódico de <em>refresh</em> característico da DRAM.</p>
-                <p>Seu custo e área por bit são maiores, o que ajuda a explicar seu uso em capacidades menores, como caches.</p>
+                <h3>Usada quando a prioridade é responder rápido</h3>
+                <p>A <strong>Static RAM</strong> mantém o valor armazenado enquanto houver alimentação, sem precisar de um ciclo periódico de <em>refresh</em>.</p>
+                <p>Ela ocupa mais área por bit e custa mais, por isso aparece em capacidades menores, especialmente nos níveis de cache.</p>
               </article>
               <article>
                 <p class="study-kicker">DRAM</p>
-                <h3>Mais densa e adequada a grandes capacidades</h3>
-                <p>A RAM dinâmica armazena informação de forma que exige restauração periódica da carga, processo conhecido como <em>refresh</em>.</p>
-                <p>Ela oferece maior densidade e menor custo por bit, características apropriadas à memória principal.</p>
+                <h3>Usada quando precisamos de muito mais capacidade</h3>
+                <p>A <strong>Dynamic RAM</strong> armazena o bit de uma forma que precisa ser restaurada periodicamente. Esse processo é chamado de <em>refresh</em>.</p>
+                <p>Ela permite maior densidade e menor custo por bit, por isso é adequada para a memória principal.</p>
               </article>
+            </div>
+
+            <div class="boundary">
+              <strong>“Estática” e “dinâmica” não significam dados fixos ou variáveis</strong>
+              <p>Os nomes descrevem a forma como o estado elétrico é mantido. Na SRAM, o valor permanece estável enquanto houver alimentação. Na DRAM, a informação precisa ser restaurada periodicamente. Em ambos os casos, o programa pode ler e escrever dados normalmente.</p>
             </div>
 
             <div class="study-grid">
               <div class="study-prose">
-                <h3>Por que a RAM principal não é simplesmente uma cache gigante?</h3>
-                <p>Stallings destaca que a SRAM de alta velocidade é significativamente mais cara que a DRAM. Aumentar indefinidamente a cache esbarra em custo, área e retornos decrescentes. Por isso a hierarquia combina uma quantidade limitada de SRAM com uma memória principal muito maior baseada em DRAM.</p>
-                <h3>SDRAM: coordenar a memória com o sistema</h3>
-                <p>A <strong>SDRAM</strong> é uma DRAM síncrona: comandos e transferências são coordenados por um sinal de clock. Em vez de funcionar apenas como um componente assíncrono que responde depois de um atraso, ela participa de um protocolo temporizado com o controlador.</p>
-                <h3>DDR: transferir mais dados por ciclo</h3>
-                <p>A família <strong>DDR-DRAM</strong> evolui a interface de memória para aumentar a taxa de transferência. O nome <em>Double Data Rate</em> remete à transferência de dados em duas transições do clock, ampliando a quantidade de informação movimentada sem exigir que o núcleo de memória opere simplesmente duas vezes mais rápido.</p>
-                <p>O uso de rajadas também é importante: depois da preparação inicial de um acesso, uma sequência de dados pode ser transferida de forma mais eficiente. Isso volta a conectar hardware e localidade espacial.</p>
+                <h3>Por que não construir toda a RAM com SRAM?</h3>
+                <p>Seria possível imaginar uma memória principal feita com uma tecnologia muito rápida, mas o custo e a área necessários cresceriam bastante. Para disponibilizar gigabytes de memória de forma viável, a DRAM oferece uma relação mais adequada entre capacidade, área e custo.</p>
+                <p>Por isso, a hierarquia combina <strong>pouca SRAM muito rápida</strong> perto do processador com <strong>muito mais DRAM</strong> na memória principal.</p>
+
+                <h3>Onde entra o refresh da DRAM?</h3>
+                <p>As células de DRAM não preservam sua carga indefinidamente. O sistema precisa renovar periodicamente esses valores para que os bits armazenados não se percam. Esse trabalho é coordenado pelo hardware de memória e não pelo programa que está sendo executado.</p>
+
+                <h3>Da DRAM para a SDRAM</h3>
+                <p>A <strong>SDRAM</strong> é uma DRAM síncrona. Isso significa que comandos e transferências são organizados em relação a um sinal de clock. O controlador de memória consegue coordenar melhor a sequência de operações e transferências.</p>
+
+                <h3>E o que o DDR acrescenta?</h3>
+                <p><strong>DDR</strong> significa <em>Double Data Rate</em>. A interface transfere dados em duas transições do sinal de clock, aumentando a quantidade de informação que pode ser movimentada por ciclo.</p>
+                <p>As memórias DDR também trabalham bem com transferências em sequência, chamadas de <strong>rajadas</strong>. Depois que um acesso é preparado, vários dados próximos podem ser transferidos de forma eficiente. Isso se relaciona diretamente com a localidade espacial vista na seção de cache.</p>
               </div>
+
               <div class="study-stack">
-                <div class="study-callout"><strong>Cache</strong><p>Prioriza tempo de acesso e proximidade do processador; por isso aceita menor capacidade e maior custo por bit.</p></div>
-                <div class="study-callout teal"><strong>Memória principal</strong><p>Prioriza capacidade e custo por bit, aceitando um tempo de acesso maior que o da cache.</p></div>
-                <div class="study-callout violet"><strong>Controlador de memória</strong><p>Coordena comandos, endereços e transferências entre processador/interconexão e os módulos de DRAM.</p></div>
+                <div class="study-callout">
+                  <strong>Cache</strong>
+                  <p>Normalmente usa SRAM porque precisa reduzir o tempo de acesso aos dados mais próximos do processador.</p>
+                </div>
+                <div class="study-callout teal">
+                  <strong>Memória principal</strong>
+                  <p>Normalmente usa DRAM porque precisa oferecer uma capacidade muito maior com custo e área viáveis.</p>
+                </div>
+                <div class="study-callout violet">
+                  <strong>Controlador de memória</strong>
+                  <p>Coordena comandos, endereços, refresh e transferências entre o sistema e os módulos de DRAM.</p>
+                </div>
               </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Uma forma simples de lembrar</strong>
+              <p><strong>SRAM:</strong> pouca, muito rápida, próxima da CPU. <strong>DRAM:</strong> muito mais capacidade, usada como memória principal. <strong>SDRAM/DDR:</strong> formas de organizar e acelerar a comunicação com a DRAM.</p>
             </div>
           </div>
         </section>
@@ -495,8 +526,8 @@
               <article class="check-card"><span>01</span><strong>Hierarquia</strong><p>Combina tecnologias para equilibrar tempo de acesso, capacidade e custo.</p></article>
               <article class="check-card"><span>02</span><strong>Cache</strong><p>Move blocos para linhas e depende de localidade para manter alta taxa de acerto.</p></article>
               <article class="check-card"><span>03</span><strong>Mapeamento</strong><p>Define onde blocos podem ser colocados; substituição decide o que sai quando necessário.</p></article>
-              <article class="check-card"><span>04</span><strong>Escrita</strong><p>Write-through e write-back representam compromissos diferentes entre consistência imediata e tráfego.</p></article>
-              <article class="check-card"><span>05</span><strong>RAM</strong><p>SRAM e DRAM fazem compromissos diferentes; DDR busca ampliar a taxa de transferência da memória principal.</p></article>
+              <article class="check-card"><span>04</span><strong>Escrita</strong><p>Write-through e write-back usam estratégias diferentes para equilibrar atualização da memória e tráfego de escrita.</p></article>
+              <article class="check-card"><span>05</span><strong>RAM</strong><p>SRAM e DRAM têm características diferentes; DDR busca ampliar a taxa de transferência da memória principal.</p></article>
               <article class="check-card"><span>06</span><strong>Persistência</strong><p>HDD depende de mecanismos físicos de posicionamento; SSD depende de controlador e regras da flash NAND.</p></article>
               <article class="check-card"><span>07</span><strong>E/S</strong><p>Interrupções reduzem espera ativa e DMA permite transferência direta entre módulo de E/S e memória.</p></article>
               <article class="check-card"><span>08</span><strong>Software</strong><p>Estruturas e padrões de acesso definem o tráfego que a hierarquia precisa atender.</p></article>
