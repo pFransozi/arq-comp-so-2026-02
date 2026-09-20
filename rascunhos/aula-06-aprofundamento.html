@@ -157,28 +157,105 @@
           <div class="container">
             <div class="study-heading">
               <p class="study-kicker">3 · Decisões internas da cache</p>
-              <h2>Onde um bloco pode ficar e quando uma escrita chega à RAM?</h2>
-              <p>Uma cache precisa resolver duas questões diferentes: <strong>onde colocar um bloco</strong> e <strong>como manter as escritas coerentes com os níveis inferiores</strong>. Essas decisões afetam complexidade do hardware, conflitos e tráfego de memória.</p>
+              <h2>A cache precisa responder a três perguntas</h2>
+              <p>Até aqui vimos o que acontece em um <strong>hit</strong> e em um <strong>miss</strong>. Agora surge uma questão prática: quando um bloco chega da memória principal, <strong>onde ele pode ser colocado?</strong> Se o espaço permitido já estiver ocupado, <strong>quem deve sair?</strong> E, se o processador alterar um dado, <strong>quando essa mudança chega à RAM?</strong></p>
+            </div>
+
+            <div class="decision-steps" aria-label="Três decisões internas da cache">
+              <article class="decision-step">
+                <span>1</span>
+                <div>
+                  <strong>Onde colocar?</strong>
+                  <p>O mapeamento define quais linhas da cache podem receber cada bloco.</p>
+                </div>
+              </article>
+              <article class="decision-step">
+                <span>2</span>
+                <div>
+                  <strong>Quem sai?</strong>
+                  <p>Se todas as linhas permitidas estiverem ocupadas, uma política de substituição escolhe qual bloco será removido.</p>
+                </div>
+              </article>
+              <article class="decision-step">
+                <span>3</span>
+                <div>
+                  <strong>Quando escrever na RAM?</strong>
+                  <p>A política de escrita define quando uma alteração feita na cache é propagada para o nível inferior.</p>
+                </div>
+              </article>
+            </div>
+
+            <div class="study-prose">
+              <h3>Primeira decisão: onde o bloco pode entrar?</h3>
+              <p>Imagine uma cache pequena com quatro linhas. A memória principal possui muitos blocos, mas a cache só consegue manter alguns deles por vez. O mapeamento estabelece quais posições podem receber cada bloco.</p>
+            </div>
+
+            <div class="mapping-example" aria-label="Exemplo didático de mapeamento de blocos da memória para linhas da cache">
+              <div class="mapping-memory">
+                <small>Memória principal</small>
+                <strong>Blocos</strong>
+                <div class="mapping-cells"><span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span></div>
+              </div>
+              <div class="mapping-arrow" aria-hidden="true">→</div>
+              <div class="mapping-cache">
+                <small>Cache</small>
+                <strong>4 linhas disponíveis</strong>
+                <div class="mapping-cells"><span>L0</span><span>L1</span><span>L2</span><span>L3</span></div>
+              </div>
             </div>
 
             <div class="policy-grid">
-              <article class="policy-card"><small>Mapeamento direto</small><h3>Um local possível</h3><p>Cada bloco da memória principal é associado a uma linha específica da cache. A localização é simples, mas blocos diferentes podem competir pela mesma linha.</p></article>
-              <article class="policy-card"><small>Associativo</small><h3>Qualquer linha</h3><p>Um bloco pode ser colocado em qualquer linha. Isso reduz restrições de posicionamento, mas exige uma busca associativa mais complexa.</p></article>
-              <article class="policy-card"><small>Associativo por conjunto</small><h3>Algumas linhas possíveis</h3><p>A cache é dividida em conjuntos. O bloco é associado a um conjunto, mas pode ocupar uma das linhas disponíveis dentro dele.</p></article>
+              <article class="policy-card">
+                <small>Mapeamento direto</small>
+                <h3>Um único lugar possível</h3>
+                <p>Cada bloco possui uma linha determinada da cache. Por exemplo, os blocos 0 e 4 podem disputar a mesma linha. Mesmo que existam outras linhas livres, eles não podem ser colocados nelas.</p>
+                <p><strong>Ideia-chave:</strong> é simples localizar o bloco, mas podem ocorrer conflitos frequentes.</p>
+              </article>
+              <article class="policy-card">
+                <small>Mapeamento associativo</small>
+                <h3>Qualquer linha pode ser usada</h3>
+                <p>O bloco pode ocupar qualquer linha disponível. Se o bloco 0 já está na cache e chega o bloco 4, o novo bloco pode utilizar outra linha livre.</p>
+                <p><strong>Ideia-chave:</strong> há mais liberdade de posicionamento, mas o hardware precisa procurar o bloco entre várias linhas.</p>
+              </article>
+              <article class="policy-card">
+                <small>Associativo por conjunto</small>
+                <h3>Algumas linhas são possíveis</h3>
+                <p>A cache é dividida em conjuntos. Cada bloco é direcionado para um conjunto específico, mas pode ocupar uma das linhas daquele conjunto.</p>
+                <p><strong>Ideia-chave:</strong> é um meio-termo entre a rigidez do mapeamento direto e a liberdade do associativo.</p>
+              </article>
+            </div>
+
+            <div class="study-callout teal cache-takeaway">
+              <strong>O ponto mais importante</strong>
+              <p>Os três modelos não mudam o conteúdo do bloco. Eles mudam <strong>onde esse bloco pode ficar dentro da cache</strong>. Essa escolha influencia a quantidade de conflitos e a complexidade necessária para localizar os dados.</p>
             </div>
 
             <div class="study-grid">
               <div class="study-prose">
-                <h3>Quando não há espaço livre</h3>
-                <p>Em caches associativas ou associativas por conjunto, pode ser necessário escolher qual linha será substituída. Políticas clássicas incluem aproximações de <strong>LRU</strong> (retirar aquilo que não foi usado recentemente), FIFO e estratégias aleatórias.</p>
-                <p>Neste ponto, o importante não é memorizar algoritmos, mas perceber que a cache é um recurso finito. Um padrão de acesso que alterna muitos blocos concorrentes pode provocar substituições frequentes e diminuir o aproveitamento do nível rápido.</p>
-                <h3>Escrever cria outro problema</h3>
-                <p>Se o processador modifica uma cópia na cache, precisamos definir em que momento a versão correspondente nos níveis inferiores será atualizada. Duas políticas clássicas descritas por Stallings são <em>write-through</em> e <em>write-back</em>.</p>
+                <h3>Segunda decisão: se não houver espaço, quem sai?</h3>
+                <p>No mapeamento direto não existe escolha: se outro bloco precisar daquela linha, o bloco atual será substituído. Nos modelos com mais de uma possibilidade de posição, pode ser necessário escolher entre várias linhas ocupadas.</p>
+                <p>Uma política conhecida é a <strong>LRU</strong>, que procura retirar o bloco que não é usado há mais tempo. Também existem políticas como FIFO e escolhas aleatórias.</p>
+                <p>Para esta aula, não é necessário memorizar todas as políticas. O importante é perceber que <strong>substituir um bloco pode eliminar um dado que seria reutilizado logo depois</strong>. Quando isso acontece repetidamente, aumentam os misses.</p>
+
+                <h3>Terceira decisão: quando a alteração chega à RAM?</h3>
+                <p>Suponha que o processador leia um valor da cache e depois o modifique. A cópia que está na cache mudou, mas precisamos decidir quando o nível inferior receberá essa nova versão.</p>
               </div>
+
               <div class="study-stack">
-                <div class="study-callout"><strong>Write-through</strong><p>A escrita é propagada para a memória principal e para a cache. A memória principal permanece atualizada, mas há maior tráfego de escrita.</p></div>
-                <div class="study-callout violet"><strong>Write-back</strong><p>A alteração ocorre primeiro na cache. A linha modificada é escrita no nível inferior quando precisa ser substituída, reduzindo escritas imediatas.</p></div>
+                <div class="study-callout">
+                  <strong>Write-through</strong>
+                  <p>A escrita é atualizada na cache e também propagada ao nível inferior. Isso mantém a memória principal atualizada, mas aumenta o tráfego de escrita.</p>
+                </div>
+                <div class="study-callout violet">
+                  <strong>Write-back</strong>
+                  <p>A alteração permanece inicialmente na cache. O bloco modificado é enviado ao nível inferior quando precisa ser substituído, reduzindo escritas imediatas.</p>
+                </div>
               </div>
+            </div>
+
+            <div class="boundary">
+              <strong>Como ligar tudo isso</strong>
+              <p>Primeiro o mapeamento determina <strong>onde o bloco pode ficar</strong>. Se as posições possíveis estiverem ocupadas, a substituição determina <strong>quem sai</strong>. Se o bloco for alterado, a política de escrita determina <strong>quando a mudança será propagada</strong>.</p>
             </div>
 
             <div class="boundary">
