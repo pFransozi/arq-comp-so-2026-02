@@ -99,6 +99,27 @@
 
           <div class="precision-note"><strong>O mesmo padrão pode receber significados diferentes.</strong> Dependendo do contexto, uma sequência de bits pode representar um número, um caractere, parte de uma instrução, uma cor ou outro tipo de dado. Nesta aula vamos observar principalmente a <strong>interpretação numérica</strong>.</div>
 
+          <div class="concept-grid">
+            <article class="concept-card">
+              <h3>Como número</h3>
+              <div class="concept-item"><strong>00101010</strong><p>Se interpretarmos os 8 bits como um inteiro sem sinal, o valor é <strong>42</strong>.</p></div>
+            </article>
+            <article class="concept-card">
+              <h3>Como caractere</h3>
+              <div class="concept-item"><strong>00101010</strong><p>Na codificação ASCII, o valor 42 corresponde ao caractere <strong>*</strong>.</p></div>
+            </article>
+            <article class="concept-card">
+              <h3>Como parte de uma cor</h3>
+              <div class="concept-item"><strong>00101010</strong><p>Em uma imagem, esses 8 bits podem indicar a intensidade de um canal de cor. O valor 42 passa a significar uma intensidade dentro da faixa daquele canal.</p></div>
+            </article>
+            <article class="concept-card">
+              <h3>Como parte de uma instrução</h3>
+              <div class="concept-item"><strong>00101010</strong><p>Em código de máquina, o mesmo byte pode fazer parte de uma instrução. O significado depende da arquitetura e da posição desse byte na instrução.</p></div>
+            </article>
+          </div>
+
+          <p class="bridge-question"><strong>Observe:</strong> os bits não mudaram em nenhum dos exemplos. O que mudou foi a <strong>regra usada para interpretá-los</strong>.</p>
+
           <p class="bridge-question"><strong>Ideia central:</strong> primeiro existem os padrões de bits; depois vem a interpretação. Quando a interpretação é numérica, podemos escrever a mesma quantidade em bases diferentes sem alterar o valor representado.</p>
         </div>
       </section>
