@@ -105,9 +105,19 @@
         <section class="study-section alt" id="cache">
           <div class="container">
             <div class="study-heading">
-              <p class="study-kicker">2 · Cache além do hit e miss</p>
-              <h2>A cache trabalha com blocos, não com valores isolados</h2>
-              <p>Na Aula 06 vimos que a cache tenta responder antes que a busca chegue à RAM. Para compreender por que a localidade espacial é tão importante, é preciso observar a unidade de transferência: quando ocorre uma falta, não é necessariamente apenas o byte solicitado que se aproxima do processador.</p>
+              <p class="study-kicker">2 · Cache: hit, miss e blocos</p>
+              <h2>O que acontece quando o processador procura um dado?</h2>
+              <p>Antes de buscar um dado na memória principal, o processador consulta os níveis de cache. Se o dado necessário já estiver no nível consultado, ocorre um <strong>cache hit</strong> — um acerto. Se ele não estiver ali, ocorre um <strong>cache miss</strong> — uma falta — e a busca precisa continuar em um nível mais distante da hierarquia.</p>
+            </div>
+
+            <div class="study-prose">
+              <h3>Hit: o dado já está próximo</h3>
+              <p>Em um <strong>hit</strong>, a cache já contém o bloco que inclui o endereço solicitado. O acesso pode ser atendido naquele nível, evitando naquele momento uma consulta à RAM ou a outro nível mais lento.</p>
+
+              <h3>Miss: é preciso procurar mais longe</h3>
+              <p>Em um <strong>miss</strong>, o bloco não está disponível no nível consultado. A busca continua na hierarquia. Quando o bloco é encontrado em um nível inferior, ele pode ser trazido para a cache para atender o acesso atual e, possivelmente, acessos seguintes.</p>
+
+              <p>Isso leva a uma ideia importante: a cache não trabalha apenas com o valor isolado solicitado. Ela movimenta <strong>blocos de dados</strong>. É justamente esse comportamento que permite aproveitar a localidade espacial.</p>
             </div>
 
             <div class="cache-transfer">
