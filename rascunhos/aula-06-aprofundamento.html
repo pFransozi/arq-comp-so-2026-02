@@ -120,32 +120,24 @@
               <p>Isso leva a uma ideia importante: a cache não trabalha apenas com o valor isolado solicitado. Ela movimenta <strong>blocos de dados</strong>. É justamente esse comportamento que permite aproveitar a localidade espacial.</p>
             </div>
 
-            <div class="cache-transfer">
-              <div class="cache-bank">
-                <strong>Memória principal · bloco</strong>
-                <div class="cache-cells"><span>40</span><span>41</span><span>42</span><span>43</span></div>
-              </div>
-              <div class="cache-arrow"><b>→</b>um bloco é copiado para uma linha</div>
-              <div class="cache-bank">
-                <strong>Cache · linha</strong>
-                <div class="cache-cells"><span>40</span><span>41</span><span>42</span><span>43</span></div>
-              </div>
-            </div>
+            <figure class="study-figure cache-overview-figure">
+              <img
+                src="../assets/cache-hit-miss-blocos-light.svg"
+                data-light-src="../assets/cache-hit-miss-blocos-light.svg"
+                data-dark-src="../assets/cache-hit-miss-blocos-dark.svg"
+                alt="Diagrama do fluxo de acesso à cache: a CPU consulta a cache; em um hit, o dado retorna diretamente; em um miss, um bloco é buscado na memória principal, carregado na cache e então entregue à CPU. Na parte inferior, o diagrama mostra o bloco com as posições 40, 41, 42 e 43 sendo copiado da RAM para uma linha de cache."
+                loading="lazy">
+              <figcaption>O caminho curto representa um <strong>hit</strong>. No <strong>miss</strong>, a busca alcança a RAM e um bloco é trazido para a cache.</figcaption>
+            </figure>
 
-            <div class="study-grid">
-              <div class="study-prose">
-                <h3>Bloco na memória, linha na cache</h3>
-                <p>A memória principal pode ser vista, para esse mecanismo, como dividida em <strong>blocos</strong>. A cache é dividida em <strong>linhas</strong> capazes de receber esses blocos. Quando o endereço procurado não está em um nível da cache, o sistema busca o bloco correspondente em um nível inferior e o copia para uma linha.</p>
-                <p>Esse comportamento explica por que, depois de acessar a posição 40, acessar 41, 42 ou 43 pode ser favorável: posições vizinhas podem já ter chegado junto com a primeira referência.</p>
-                <h3>Como a cache sabe se tem o dado correto?</h3>
-                <p>Uma linha precisa guardar não apenas os dados, mas também informação que permita identificar <strong>qual bloco da memória principal</strong> está representado ali. Essa identificação é associada ao campo conhecido como <strong>tag</strong>.</p>
-                <p>Assim, consultar a cache envolve verificar se existe uma linha válida cuja identificação corresponda ao endereço solicitado. Se houver correspondência, temos um <em>hit</em>; caso contrário, um <em>miss</em>.</p>
-              </div>
-              <div class="study-stack">
-                <div class="study-callout"><strong>Hit</strong><p>O bloco procurado já está no nível consultado. O dado pode ser entregue sem buscar aquele bloco em um nível inferior.</p></div>
-                <div class="study-callout violet"><strong>Miss</strong><p>O bloco não está disponível naquele nível. A busca prossegue na hierarquia e a falta introduz uma penalidade adicional.</p></div>
-                <div class="study-callout teal"><strong>Por que trazer um bloco?</strong><p>Porque a localidade espacial torna provável que posições próximas sejam utilizadas em seguida.</p></div>
-              </div>
+            <div class="study-prose">
+              <h3>Bloco na memória, linha na cache</h3>
+              <p>A memória principal pode ser vista, para esse mecanismo, como dividida em <strong>blocos</strong>. A cache é dividida em <strong>linhas</strong> capazes de receber esses blocos. Quando o endereço procurado não está em um nível da cache, o sistema busca o bloco correspondente em um nível inferior e o copia para uma linha.</p>
+              <p>Esse comportamento explica por que, depois de acessar a posição 40, acessar 41, 42 ou 43 pode ser favorável: posições vizinhas podem já ter chegado junto com a primeira referência.</p>
+
+              <h3>Como a cache sabe se tem o dado correto?</h3>
+              <p>Uma linha precisa guardar não apenas os dados, mas também informação que permita identificar <strong>qual bloco da memória principal</strong> está representado ali. Essa identificação é associada ao campo conhecido como <strong>tag</strong>.</p>
+              <p>Assim, consultar a cache envolve verificar se existe uma linha válida cuja identificação corresponda ao endereço solicitado. Se houver correspondência, temos um <em>hit</em>; caso contrário, um <em>miss</em>.</p>
             </div>
 
             <div class="equation-box">
