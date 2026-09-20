@@ -226,3 +226,11 @@ body.theme-dark .cache-overview-figure {
     justify-self: center;
   }
 }
+
+
+/* Mantém destaques dentro dos parágrafos dos callouts no fluxo da frase */
+.study-callout p strong {
+  display: inline;
+  margin: 0;
+  color: inherit;
+}
