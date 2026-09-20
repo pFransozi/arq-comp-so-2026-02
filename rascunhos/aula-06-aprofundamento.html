@@ -63,7 +63,6 @@
             <a href="#io">Entrada/saída e DMA</a>
             <a href="#software">O que aparece no software</a>
             <a href="#perfis">Perfis de carga</a>
-            <a href="#so">Ponte para SO</a>
             <a href="#sintese">Síntese</a>
             <a href="#referencias">Referências</a>
           </nav>
@@ -487,37 +486,10 @@
           </div>
         </section>
 
-        <section class="study-section" id="so">
-          <div class="container">
-            <div class="study-heading">
-              <p class="study-kicker">9 · Limite deste aprofundamento</p>
-              <h2>Da memória física para a abstração criada pelo Sistema Operacional</h2>
-              <p>Até aqui tratamos principalmente da hierarquia física e dos mecanismos que movimentam dados. Há uma segunda pergunta, que será respondida quando a disciplina entrar em Sistemas Operacionais: <strong>como vários processos compartilham e enxergam a memória?</strong></p>
-            </div>
-            <div class="study-grid">
-              <div class="study-prose">
-                <h3>O que ainda não estamos explicando</h3>
-                <p>Um programa normalmente trabalha com um espaço de endereços que não corresponde de forma direta e simples à disposição física dos chips de RAM. Hardware e sistema operacional cooperam para fornecer uma abstração de memória aos processos.</p>
-                <p>Nesse próximo bloco aparecerão conceitos como <strong>memória virtual</strong>, <strong>páginas e frames</strong>, <strong>tabelas de páginas</strong>, <strong>TLB</strong>, <strong>page fault</strong> e políticas de substituição.</p>
-                <p>Esses conceitos foram deliberadamente deixados fora deste aprofundamento porque pertencem à gestão da memória pelo sistema operacional, não apenas à hierarquia física vista pela arquitetura.</p>
-              </div>
-              <div class="study-stack">
-                <div class="study-callout"><strong>Neste material</strong><p>Como tecnologias e mecanismos de hardware aproximam e movimentam dados.</p></div>
-                <div class="study-callout teal"><strong>No bloco de SO</strong><p>Como o sistema operacional administra o recurso memória, isola processos e cria a abstração de memória virtual.</p></div>
-              </div>
-            </div>
-
-            <div class="boundary">
-              <strong>Uma mesma palavra pode aparecer em contextos diferentes</strong>
-              <p>SSD/flash pode ter “páginas” internas de armazenamento; memória virtual também será dividida em “páginas”. Os dois usos não devem ser confundidos. O contexto e o mecanismo são diferentes.</p>
-            </div>
-          </div>
-        </section>
-
         <section class="study-section alt" id="sintese">
           <div class="container">
             <div class="study-heading">
-              <p class="study-kicker">10 · Síntese</p>
+              <p class="study-kicker">9 · Síntese</p>
               <h2>O caminho dos dados explica parte importante do desempenho</h2>
               <p>O aprofundamento amplia a Aula 06 sem trocar seu eixo: o custo de um programa não depende apenas do cálculo realizado, mas também de onde os dados estão, de como se movem e de quanto o software consegue explorar a hierarquia.</p>
             </div>
@@ -566,7 +538,6 @@
             <a href="#io">E/S e DMA</a>
             <a href="#software">Software</a>
             <a href="#perfis">Perfis de carga</a>
-            <a href="#so">Ponte para SO</a>
             <a href="#sintese">Síntese</a>
             <a href="#referencias">Referências</a>
           </nav>
