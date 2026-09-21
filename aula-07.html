@@ -62,7 +62,7 @@
           <div class="overview-grid">
             <article class="card topics-card">
               <h3>Conteúdo programático</h3>
-              <div class="topic-list"><div>Bit, byte e palavra</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Conversão entre bases</div></div>
+              <div class="topic-list"><div>Bit, byte, KB, MB, GB e TB</div><div>Sistemas posicionais</div><div>Decimal e binário</div><div>Notação hexadecimal</div><div>Capacidade de n bits</div><div>Conversão entre bases</div></div>
             </article>
             <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
           </div>
@@ -171,6 +171,27 @@
             <article><small>8 bits</small><strong>Byte</strong><p>Um byte reúne 8 bits. Portanto, possui 2⁸ = 256 padrões possíveis.</p></article>
             <article><small>Depende da arquitetura</small><strong>Palavra</strong><p>É uma quantidade de bits tratada como uma unidade natural pela arquitetura ou pelo processador. Seu tamanho depende da máquina e não precisa ser igual a um byte.</p></article>
           </div>
+
+          <h3 style="margin-top:2rem">Do byte às capacidades que vemos no dia a dia</h3>
+          <p>Um byte ainda é uma unidade muito pequena. Por isso, capacidades de memória e armazenamento costumam ser expressas com unidades maiores. A ideia é sempre a mesma: <strong>agrupar muitos bytes</strong> para tornar os valores mais fáceis de ler.</p>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Unidade</th><th>Relação usada aqui</th><th>Ordem de grandeza</th><th>Onde aparece</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1 KB</strong></td><td>1.024 bytes</td><td>milhares de bytes</td><td>arquivos de texto pequenos</td></tr>
+                <tr><td><strong>1 MB</strong></td><td>1.024 KB</td><td>milhões de bytes</td><td>imagens, documentos e pequenos programas</td></tr>
+                <tr><td><strong>1 GB</strong></td><td>1.024 MB</td><td>bilhões de bytes</td><td>memória RAM, aplicativos e arquivos maiores</td></tr>
+                <tr><td><strong>1 TB</strong></td><td>1.024 GB</td><td>trilhões de bytes</td><td>SSDs, discos e grandes volumes de dados</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">1 byte = 8 bits → 1 KB = 1.024 bytes → 1 MB = 1.024 KB → 1 GB = 1.024 MB → 1 TB = 1.024 GB</div>
+
+          <div class="precision-note"><strong>Uma observação de nomenclatura:</strong> em arquitetura de computadores é comum encontrar KB, MB, GB e TB usados com fatores de 1.024. Tecnicamente, os prefixos binários <strong>KiB, MiB, GiB e TiB</strong> deixam essa convenção explícita, enquanto os prefixos SI kB, MB, GB e TB podem representar fatores de 1.000. Nesta aula, usaremos a convenção de 1.024 para manter a relação direta com potências de 2.</div>
+
+          <p class="bridge-question"><strong>Para formar uma imagem mental:</strong> um texto simples pode ocupar alguns KB; uma foto costuma ser medida em MB; a memória RAM de um computador é normalmente descrita em GB; e a capacidade de SSDs pode chegar a centenas de GB ou vários TB.</p>
 
           <h3 style="margin-top:2rem">Mais bits, mais possibilidades</h3>
           <div class="trace-table-wrap">
