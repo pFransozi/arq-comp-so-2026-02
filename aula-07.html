@@ -47,8 +47,8 @@
           <a href="#visao">Visão da aula</a>
           <a href="#retomada">Retomada</a>
           <a href="#interpretacao">Bits e interpretação</a>
-          <a href="#posicional">Sistemas posicionais</a>
           <a href="#bits">Bits e capacidade</a>
+          <a href="#posicional">Sistemas posicionais</a>
           <a href="#conversoes">Binário e decimal</a>
           <a href="#hexadecimal">Hexadecimal</a>
           <a href="#fechamento">Síntese</a>
@@ -134,64 +134,9 @@
         </div>
       </section>
 
-      <section class="section" id="posicional">
-        <div class="container">
-          <div class="section-heading"><p class="eyebrow">1 · Sistemas posicionais</p><h2>Antes do binário: por que a posição importa?</h2><p>Comece pelo sistema que já usamos todos os dias. Em <strong>538</strong>, os algarismos 5, 3 e 8 não valem apenas cinco, três e oito: cada um é multiplicado pelo peso da posição em que aparece.</p></div>
-
-          <div class="base-equation">538<sub>10</sub> = 8 × 1 + 3 × 10 + 5 × 100 = 538</div>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Dígito</th><th>Posição</th><th>Peso</th><th>Contribuição</th></tr></thead>
-              <tbody>
-                <tr><td><strong>8</strong></td><td>unidades</td><td>10⁰ = 1</td><td>8 × 1 = 8</td></tr>
-                <tr><td><strong>3</strong></td><td>dezenas</td><td>10¹ = 10</td><td>3 × 10 = 30</td></tr>
-                <tr><td><strong>5</strong></td><td>centenas</td><td>10² = 100</td><td>5 × 100 = 500</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p class="bridge-question"><strong>É por isso que o sistema é chamado de posicional:</strong> o valor de um dígito depende do próprio dígito <em>e</em> da posição que ele ocupa.</p>
-
-          <div class="section-heading" style="margin-top:2.25rem"><h3>O que significa a base?</h3><p>A base informa quantos símbolos diferentes podem ser usados em cada posição. Ela também define os pesos das posições, contados da direita para a esquerda: base⁰, base¹, base², base³...</p></div>
-
-          <div class="number-story">
-            <article><small>Base 10</small><strong>Decimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>1000 = 10³ ← 100 = 10² ← 10 = 10¹ ← 1 = 10⁰</p></article>
-            <article><small>Base 2</small><strong>Binário</strong><p><strong>Leia da direita para a esquerda:</strong><br>16 = 2⁴ ← 8 = 2³ ← 4 = 2² ← 2 = 2¹ ← 1 = 2⁰</p></article>
-            <article><small>Base 16</small><strong>Hexadecimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>4096 = 16³ ← 256 = 16² ← 16 = 16¹ ← 1 = 16⁰</p></article>
-          </div>
-
-          <div class="precision-note"><strong>Regra para ler qualquer sistema posicional:</strong> comece pela posição mais à direita, cujo peso é base⁰ = 1, e avance para a esquerda: base¹, base², base³...</div>
-
-          <h3 style="margin-top:2rem">A mesma regra no binário</h3>
-          <p>No número <strong>1011₂</strong>, começamos pelo bit mais à direita. Como a base é 2, os pesos crescem assim: 1, 2, 4 e 8.</p>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
-              <tbody>
-                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
-                <tr><td><strong>1</strong></td><td>2¹</td><td>2</td><td>1 × 2 = 2</td></tr>
-                <tr><td><strong>0</strong></td><td>2²</td><td>4</td><td>0 × 4 = 0</td></tr>
-                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="base-equation">1011<sub>2</sub> = 1 + 2 + 0 + 8 = 11<sub>10</sub></div>
-
-          <div class="concept-grid">
-            <article class="concept-card"><h3>A base muda a escrita, não o valor</h3><div class="concept-item"><strong>Exemplo</strong><p><span class="formula-line">42<sub>10</sub> = 101010<sub>2</sub> = 2A<sub>16</sub></span></p></div><p>As três notações representam a mesma quantidade.</p></article>
-            <article class="concept-card"><h3>Como saber qual base está sendo usada?</h3><div class="concept-item"><strong>Nesta aula</strong><p>Usaremos um índice para indicar a base: <code>1011₂</code>, <code>42₁₀</code> e <code>2A₁₆</code>. Em programação, também são comuns prefixos como <code>0b</code> para binário e <code>0x</code> para hexadecimal.</p></div></article>
-          </div>
-
-          <p class="bridge-question"><strong>Próximo passo:</strong> no computador, a base 2 é especialmente importante porque cada posição pode assumir apenas dois estados. Agora vamos ver o que acontece quando combinamos vários bits.</p>
-        </div>
-      </section>
-
       <section class="section" id="bits">
         <div class="container">
-          <div class="section-heading"><p class="eyebrow">2 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>No modelo digital, um bit pode assumir dois valores lógicos: <strong>0</strong> ou <strong>1</strong>. Esses valores abstraem estados físicos do hardware. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
+          <div class="section-heading"><p class="eyebrow">1 · Bits, bytes e capacidade</p><h2>De um bit a muitos padrões</h2><p>No modelo digital, um bit pode assumir dois valores lógicos: <strong>0</strong> ou <strong>1</strong>. Esses valores abstraem estados físicos do hardware. Quando adicionamos outro bit, cada padrão existente pode terminar em 0 ou em 1. Por isso, a quantidade de combinações dobra a cada novo bit.</p></div>
 
           <div class="trace-table-wrap">
             <table class="twos-table">
@@ -266,6 +211,61 @@
           </div>
 
           <p class="bridge-question"><strong>Ideia central:</strong> a quantidade de bits determina quantos padrões podem existir.</p>
+        </div>
+      </section>
+
+      <section class="section" id="posicional">
+        <div class="container">
+          <div class="section-heading"><p class="eyebrow">2 · Sistemas posicionais</p><h2>Antes do binário: por que a posição importa?</h2><p>Comece pelo sistema que já usamos todos os dias. Em <strong>538</strong>, os algarismos 5, 3 e 8 não valem apenas cinco, três e oito: cada um é multiplicado pelo peso da posição em que aparece.</p></div>
+
+          <div class="base-equation">538<sub>10</sub> = 8 × 1 + 3 × 10 + 5 × 100 = 538</div>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Dígito</th><th>Posição</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>8</strong></td><td>unidades</td><td>10⁰ = 1</td><td>8 × 1 = 8</td></tr>
+                <tr><td><strong>3</strong></td><td>dezenas</td><td>10¹ = 10</td><td>3 × 10 = 30</td></tr>
+                <tr><td><strong>5</strong></td><td>centenas</td><td>10² = 100</td><td>5 × 100 = 500</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p class="bridge-question"><strong>É por isso que o sistema é chamado de posicional:</strong> o valor de um dígito depende do próprio dígito <em>e</em> da posição que ele ocupa.</p>
+
+          <div class="section-heading" style="margin-top:2.25rem"><h3>O que significa a base?</h3><p>A base informa quantos símbolos diferentes podem ser usados em cada posição. Ela também define os pesos das posições, contados da direita para a esquerda: base⁰, base¹, base², base³...</p></div>
+
+          <div class="number-story">
+            <article><small>Base 10</small><strong>Decimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>1000 = 10³ ← 100 = 10² ← 10 = 10¹ ← 1 = 10⁰</p></article>
+            <article><small>Base 2</small><strong>Binário</strong><p><strong>Leia da direita para a esquerda:</strong><br>16 = 2⁴ ← 8 = 2³ ← 4 = 2² ← 2 = 2¹ ← 1 = 2⁰</p></article>
+            <article><small>Base 16</small><strong>Hexadecimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>4096 = 16³ ← 256 = 16² ← 16 = 16¹ ← 1 = 16⁰</p></article>
+          </div>
+
+          <div class="precision-note"><strong>Regra para ler qualquer sistema posicional:</strong> comece pela posição mais à direita, cujo peso é base⁰ = 1, e avance para a esquerda: base¹, base², base³...</div>
+
+          <h3 style="margin-top:2rem">A mesma regra no binário</h3>
+          <p>No número <strong>1011₂</strong>, começamos pelo bit mais à direita. Como a base é 2, os pesos crescem assim: 1, 2, 4 e 8.</p>
+
+          <div class="trace-table-wrap">
+            <table class="twos-table">
+              <thead><tr><th>Bit</th><th>Potência</th><th>Peso</th><th>Contribuição</th></tr></thead>
+              <tbody>
+                <tr><td><strong>1</strong></td><td>2⁰</td><td>1</td><td>1 × 1 = 1</td></tr>
+                <tr><td><strong>1</strong></td><td>2¹</td><td>2</td><td>1 × 2 = 2</td></tr>
+                <tr><td><strong>0</strong></td><td>2²</td><td>4</td><td>0 × 4 = 0</td></tr>
+                <tr><td><strong>1</strong></td><td>2³</td><td>8</td><td>1 × 8 = 8</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="base-equation">1011<sub>2</sub> = 1 + 2 + 0 + 8 = 11<sub>10</sub></div>
+
+          <div class="concept-grid">
+            <article class="concept-card"><h3>A base muda a escrita, não o valor</h3><div class="concept-item"><strong>Exemplo</strong><p><span class="formula-line">42<sub>10</sub> = 101010<sub>2</sub> = 2A<sub>16</sub></span></p></div><p>As três notações representam a mesma quantidade.</p></article>
+            <article class="concept-card"><h3>Como saber qual base está sendo usada?</h3><div class="concept-item"><strong>Nesta aula</strong><p>Usaremos um índice para indicar a base: <code>1011₂</code>, <code>42₁₀</code> e <code>2A₁₆</code>. Em programação, também são comuns prefixos como <code>0b</code> para binário e <code>0x</code> para hexadecimal.</p></div></article>
+          </div>
+
+          <p class="bridge-question"><strong>Próximo passo:</strong> agora que já sabemos quantos padrões uma quantidade de bits permite, podemos usar a lógica dos sistemas posicionais para descobrir <strong>qual valor numérico cada padrão representa</strong>.</p>
         </div>
       </section>
 
@@ -502,7 +502,7 @@
 
     <aside class="aula03-toc" aria-label="Índice desta aula">
       <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
-      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#interpretacao">Bits e interpretação</a><a href="#posicional">Sistemas posicionais</a><a href="#bits">Bits e capacidade</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#interpretacao">Bits e interpretação</a><a href="#bits">Bits e capacidade</a><a href="#posicional">Sistemas posicionais</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
     </aside>
   </div>
 
