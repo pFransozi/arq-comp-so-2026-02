@@ -31,6 +31,14 @@ body.theme-dark .interpretation-figure{
 .positional-story article > p{
   margin:0;
 }
+.positional-story article > strong{
+  display:block;
+}
+.inline-emphasis{
+  display:inline;
+  font-weight:800;
+  color:var(--ink);
+}
 .position-row,
 .power-row{
   display:grid;
@@ -76,4 +84,5 @@ body.theme-dark .interpretation-figure{
   .position-labels{
     font-size:.75rem;
   }
+}
 }
