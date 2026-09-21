@@ -428,18 +428,80 @@
             <div class="inquiry-head"><span class="inquiry-kicker">Entendimento</span><span class="inquiry-tag">escolha pelo menos 5</span></div>
             <div class="inquiry-body">
               <div style="grid-column:1 / -1">
-                <h3>C · Explique com suas palavras</h3>
+                <h3>C · Entenda e explique o raciocínio</h3>
+                <p>Escolha pelo menos <strong>5</strong> itens. Sempre que possível, <strong>justifique sua resposta</strong> usando os pesos das posições, a quantidade de bits ou a ideia de sistema posicional.</p>
+
                 <ol class="prompt-list">
-                  <li>Por que converter um número para outra base não muda a quantidade representada?</li>
-                  <li>No número <strong>101101₂</strong>, quais posições têm bit 1 e quais pesos elas representam?</li>
-                  <li>Quantos padrões diferentes podem ser formados com <strong>6 bits</strong>?</li>
-                  <li>Qual é o valor decimal de <strong>111111₂</strong>?</li>
-                  <li>Por que uma posição com bit <strong>0</strong> não acrescenta valor à soma?</li>
-                  <li>Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique pelos pesos das posições.</li>
-                  <li>Qual é a menor quantidade de bits necessária para representar <strong>42₁₀</strong>?</li>
-                  <li>Complete a igualdade: <strong>32₁₀ = ____₂</strong>.</li>
-                  <li>Explique por que 8 bits produzem 256 padrões.</li>
-                  <li>Explique por que, em uma contagem iniciada em 0, 256 padrões terminam no valor 255.</li>
+                  <li>
+                    <strong>Mesma quantidade, outra escrita.</strong>
+                    Explique por que converter um número de decimal para binário <strong>não muda a quantidade representada</strong>. O que muda, exatamente?
+                  </li>
+
+                  <li>
+                    <strong>Lendo um número binário por partes.</strong>
+                    Observe <strong>101101₂</strong>:
+                    <ol type="a">
+                      <li>Quais posições têm bit 1?</li>
+                      <li>Quais pesos essas posições representam?</li>
+                      <li>Qual é a soma final em decimal?</li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>Padrões possíveis com 6 bits.</strong>
+                    Um sistema usa <strong>6 bits</strong> para representar valores:
+                    <ol type="a">
+                      <li>Quantos padrões diferentes podem ser formados?</li>
+                      <li>Qual é o menor valor possível?</li>
+                      <li>Qual é o maior valor possível, se a contagem começar em 0?</li>
+                      <li>Explique por que esse maior valor é uma unidade menor que a quantidade total de padrões.</li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>Todos os bits em 1.</strong>
+                    Considere <strong>111111₂</strong>:
+                    <ol type="a">
+                      <li>Qual é o valor decimal?</li>
+                      <li>Quais pesos aparecem nessa soma?</li>
+                      <li>O que esse padrão tem de especial entre os números que podem ser escritos com 6 bits?</li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>O papel do zero em uma posição.</strong>
+                    Explique por que uma posição com bit <strong>0</strong> não acrescenta valor à soma, mesmo tendo um peso associado.
+                  </li>
+
+                  <li>
+                    <strong>Comparando dois números binários.</strong>
+                    Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique comparando os pesos das posições.
+                  </li>
+
+                  <li>
+                    <strong>Quantidade mínima de bits.</strong>
+                    Queremos representar <strong>42₁₀</strong> em binário:
+                    <ol type="a">
+                      <li>Qual é a menor quantidade de bits necessária?</li>
+                      <li>Escreva 42 em binário.</li>
+                      <li>Explique por que com um bit a menos isso não seria possível.</li>
+                    </ol>
+                  </li>
+
+                  <li>
+                    <strong>Reconhecendo potências de 2.</strong>
+                    Complete <strong>32₁₀ = ____₂</strong> e explique por que números como 1, 2, 4, 8, 16, 32 e 64 têm representações binárias especialmente simples.
+                  </li>
+
+                  <li>
+                    <strong>Por que 8 bits geram 256 padrões?</strong>
+                    Explique usando a ideia de que <strong>cada novo bit dobra</strong> a quantidade de combinações possíveis.
+                  </li>
+
+                  <li>
+                    <strong>Do total de padrões ao maior valor.</strong>
+                    Explique por que, em uma contagem iniciada em 0, <strong>256 padrões</strong> terminam no valor <strong>255</strong> e não no valor 256.
+                  </li>
                 </ol>
               </div>
             </div>
