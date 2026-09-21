@@ -256,13 +256,46 @@
 
           <div class="section-heading" style="margin-top:2.25rem"><h3>O que significa a base?</h3><p>A base informa quantos símbolos diferentes podem ser usados em cada posição. Ela também define os pesos das posições, contados da direita para a esquerda: base⁰, base¹, base², base³...</p></div>
 
-          <div class="number-story">
-            <article><small>Base 10</small><strong>Decimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>1000 = 10³ ← 100 = 10² ← 10 = 10¹ ← 1 = 10⁰</p></article>
-            <article><small>Base 2</small><strong>Binário</strong><p><strong>Leia da direita para a esquerda:</strong><br>16 = 2⁴ ← 8 = 2³ ← 4 = 2² ← 2 = 2¹ ← 1 = 2⁰</p></article>
-            <article><small>Base 16</small><strong>Hexadecimal</strong><p><strong>Leia da direita para a esquerda:</strong><br>4096 = 16³ ← 256 = 16² ← 16 = 16¹ ← 1 = 16⁰</p></article>
+          <div class="number-story positional-story">
+            <article>
+              <small>Base 10</small>
+              <strong>Decimal</strong>
+              <p>Cada posição à esquerda vale <strong>10 vezes</strong> a posição anterior.</p>
+              <div class="position-row">
+                <span>1</span><span>10</span><span>100</span><span>1000</span>
+              </div>
+              <div class="power-row">
+                <span>10⁰</span><span>10¹</span><span>10²</span><span>10³</span>
+              </div>
+              <p class="position-labels">unidade → dezena → centena → milhar</p>
+            </article>
+
+            <article>
+              <small>Base 2</small>
+              <strong>Binário</strong>
+              <p>Cada posição à esquerda vale <strong>2 vezes</strong> a posição anterior.</p>
+              <div class="position-row">
+                <span>1</span><span>2</span><span>4</span><span>8</span><span>16</span>
+              </div>
+              <div class="power-row">
+                <span>2⁰</span><span>2¹</span><span>2²</span><span>2³</span><span>2⁴</span>
+              </div>
+            </article>
+
+            <article>
+              <small>Base 16</small>
+              <strong>Hexadecimal</strong>
+              <p>Cada posição à esquerda vale <strong>16 vezes</strong> a posição anterior.</p>
+              <div class="position-row">
+                <span>1</span><span>16</span><span>256</span><span>4096</span>
+              </div>
+              <div class="power-row">
+                <span>16⁰</span><span>16¹</span><span>16²</span><span>16³</span>
+              </div>
+            </article>
           </div>
 
-          <div class="precision-note"><strong>Regra para ler qualquer sistema posicional:</strong> comece pela posição mais à direita, cujo peso é base⁰ = 1, e avance para a esquerda: base¹, base², base³...</div>
+          <div class="precision-note"><strong>Regra geral:</strong> em um sistema posicional, cada casa à esquerda recebe o peso da casa anterior multiplicado pela base.</div>
 
           <h3 style="margin-top:2rem">A mesma regra no binário</h3>
           <p>No número <strong>1011₂</strong>, começamos pelo bit mais à direita. Como a base é 2, os pesos crescem assim: 1, 2, 4 e 8.</p>
