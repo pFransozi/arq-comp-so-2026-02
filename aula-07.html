@@ -8,7 +8,7 @@
   <title>Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="aula-06.css">
-  <link rel="stylesheet" href="aula-07.css?v=8">
+  <link rel="stylesheet" href="aula-07.css?v=9">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <!-- revisão sistemas posicionais v4 -->
@@ -878,167 +878,176 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
         <div class="container">
           <div class="section-heading">
             <p class="eyebrow">6 · Inteiros com sinal e limites</p>
-            <h2>Como representar valores negativos usando os mesmos bits?</h2>
-            <p>Até aqui interpretamos padrões binários principalmente como <strong>inteiros sem sinal</strong>: todos os bits contribuíam para um valor positivo. Mas programas também precisam representar valores negativos. Para isso, precisamos combinar a largura do dado com uma <strong>regra de interpretação</strong>.</p>
+            <h2>Como os mesmos bits podem representar números negativos?</h2>
+            <p>Até aqui usamos os bits para representar valores de <strong>0 para cima</strong>. Isso funciona para quantidades como tamanho de arquivo, número de itens ou intensidade de uma cor. Mas e quando o software precisa representar <strong>−3 °C</strong>, <strong>−20</strong> de saldo ou qualquer outro valor negativo?</p>
           </div>
 
-          <div class="same-bits">
-            <div class="bit-word">11111111</div>
-            <div class="interpretations">
-              <div><strong>Sem sinal, em 8 bits</strong><code>11111111₂ = 255₁₀</code>.</div>
-              <div><strong>Com sinal, em complemento de dois</strong>o mesmo padrão representa <code>−1₁₀</code>.</div>
-              <div><strong>Conclusão</strong>os bits não mudaram; mudou a regra usada para interpretá-los.</div>
-            </div>
+          <div class="signed-intro-grid">
+            <article>
+              <small>Sem sinal</small>
+              <strong>somente 0 e valores positivos</strong>
+              <p>Todos os padrões disponíveis são usados para representar números não negativos.</p>
+            </article>
+            <article>
+              <small>Com sinal</small>
+              <strong>negativos, zero e positivos</strong>
+              <p>Os mesmos padrões de bits são interpretados por outra regra para abrir espaço para valores negativos.</p>
+            </article>
           </div>
 
-          <h3 style="margin-top:2rem">Primeiro passo: complemento de 1</h3>
-          <p>O <strong>complemento de 1</strong> é obtido invertendo todos os bits de uma largura fixa: cada <code>0</code> vira <code>1</code> e cada <code>1</code> vira <code>0</code>. É exatamente a operação NOT que vimos anteriormente.</p>
+          <div class="precision-note"><strong>O ponto principal é este:</strong> o hardware continua armazenando apenas bits. O que muda é a <strong>regra usada para interpretar o padrão</strong>.</div>
 
-          <div class="ones-complement">
-            <div>
-              <small>+6₁₀ em 8 bits</small>
-              <strong>00000110</strong>
-            </div>
-            <span>inverta todos os bits →</span>
-            <div>
-              <small>complemento de 1</small>
-              <strong>11111001</strong>
-            </div>
+          <h3 style="margin-top:2.5rem">Vamos começar pequeno: apenas 4 bits</h3>
+          <p>Com 4 bits existem <strong>16 padrões possíveis</strong>. Se tratarmos todos eles como inteiros sem sinal, podemos representar de <strong>0 a 15</strong>. Em complemento de dois, os mesmos 16 padrões são distribuídos entre negativos e positivos: de <strong>−8 a 7</strong>.</p>
+
+          <div class="signed-map-wrap">
+            <table class="signed-map">
+              <thead>
+                <tr><th>Padrão</th><th>Sem sinal</th><th>Complemento de dois</th><th>O que observar</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><code>0000</code></td><td>0</td><td>0</td><td>zero</td></tr>
+                <tr><td><code>0001</code></td><td>1</td><td>1</td><td>começa com 0</td></tr>
+                <tr><td><code>0111</code></td><td>7</td><td>7</td><td>maior positivo com 4 bits</td></tr>
+                <tr><td><code>1000</code></td><td>8</td><td>−8</td><td>menor negativo com 4 bits</td></tr>
+                <tr><td><code>1110</code></td><td>14</td><td>−2</td><td>mesmos bits, outra interpretação</td></tr>
+                <tr><td><code>1111</code></td><td>15</td><td>−1</td><td>todos os bits em 1</td></tr>
+              </tbody>
+            </table>
           </div>
 
-          <div class="precision-note"><strong>Por que usar complemento de dois em vez de parar no complemento de 1?</strong> No complemento de 1, o zero pode aparecer de duas formas: <code>00000000</code> para o zero positivo e <code>11111111</code> para o zero negativo. Isso significa que dois padrões diferentes representam a mesma quantidade. O complemento de dois resolve esse problema: depois de inverter os bits, somamos 1. Assim, existe apenas uma representação para zero e a representação dos inteiros com sinal fica mais simples para o hardware.</div>
-
-          <h3 style="margin-top:2.5rem">Antes de somar 1: como funciona a soma binária?</h3>
-          <p>Para chegar ao complemento de dois, precisamos somar <strong>1</strong> ao complemento de 1. A parte que costuma causar dúvida é: <strong>o que acontece quando o bit já é 1?</strong></p>
-
-          <div class="carry-rules">
-            <article><code>0 + 1 = 1</code><p>Não há transporte para a próxima posição.</p></article>
-            <article><code>1 + 1 = 10₂</code><p>Escrevemos <strong>0</strong> nessa posição e levamos <strong>1</strong> para a próxima. É o “vai 1” da soma decimal.</p></article>
+          <div class="signed-rule">
+            <div><code>0...</code><strong>valor não negativo</strong><p>Em complemento de dois, padrões que começam com 0 representam zero ou números positivos.</p></div>
+            <div><code>1...</code><strong>valor negativo</strong><p>Em complemento de dois, padrões que começam com 1 representam números negativos.</p></div>
           </div>
 
-          <div class="binary-addition">
-            <div class="binary-addition-title">Exemplo pequeno</div>
-            <div><span></span><code>...0001</code></div>
-            <div><span>+</span><code>...0001</code></div>
-            <div class="binary-addition-line"><span></span><code>────────</code></div>
-            <div><span></span><code>...0010</code></div>
-          </div>
+          <p class="bridge-question"><strong>Importante:</strong> isso não significa que o primeiro bit seja simplesmente “tirado” e lido como um sinal. Em complemento de dois, ele faz parte da representação inteira. A regra acima é uma forma prática de reconhecer se o valor é negativo.</p>
 
-          <p>Quando existem vários bits <code>1</code> seguidos, o transporte continua até encontrar um <code>0</code>. Esse zero recebe o 1 transportado e vira 1.</p>
-
-          <div class="carry-chain">
-            <div><small>antes</small><code>...0111</code></div>
-            <span>+ 1 →</span>
-            <div><small>depois</small><code>...1000</code></div>
-          </div>
-
-          <h3 style="margin-top:2.5rem">Complemento de dois: complemento de 1 + 1</h3>
-          <p>Agora podemos construir um número negativo passo a passo. Vamos usar <strong>−6₁₀</strong> em 8 bits.</p>
+          <h3 style="margin-top:2.7rem">Como construir a representação de um número negativo?</h3>
+          <p>Vamos usar <strong>+3₁₀</strong> e descobrir como representar <strong>−3₁₀</strong> com 4 bits. O processo tem duas etapas: <strong>inverter os bits</strong> e depois <strong>somar 1</strong>.</p>
 
           <div class="decimal-binary-example">
             <article>
               <span>1</span>
-              <div><small>Comece pelo positivo</small><strong>+6₁₀ = 00000110₂</strong><p>Usamos exatamente 8 posições.</p></div>
+              <div><small>Escreva o positivo</small><strong>+3₁₀ = 0011₂</strong><p>Primeiro representamos o módulo normalmente.</p></div>
             </article>
             <article>
               <span>2</span>
-              <div><small>Faça o complemento de 1</small><strong>00000110 → 11111001</strong><p>Todos os bits são invertidos.</p></div>
+              <div><small>Inverta todos os bits</small><strong>0011 → 1100</strong><p>Esse resultado é o <strong>complemento de 1</strong>.</p></div>
             </article>
             <article>
               <span>3</span>
-              <div><small>Some 1</small><strong>11111001 + 1 → 11111010</strong><p>Na última posição ocorre <code>1 + 1 = 10₂</code>: fica 0 e o 1 é transportado.</p></div>
+              <div><small>Some 1</small><strong>1100 + 1 → 1101</strong><p>Agora temos o complemento de dois.</p></div>
             </article>
             <article>
               <span>4</span>
-              <div><small>Interprete o resultado</small><strong>11111010₂ = −6₁₀</strong><p>Agora estamos interpretando os 8 bits em complemento de dois.</p></div>
+              <div><small>Interprete o padrão</small><strong>1101₂ = −3₁₀</strong><p>O mesmo padrão, se fosse sem sinal, valeria 13. A interpretação é que mudou.</p></div>
             </article>
           </div>
 
+          <h3 style="margin-top:2.6rem">O que significa “somar 1” em binário?</h3>
+          <p>A regra é parecida com a soma decimal. Se encontramos um <code>0</code>, basta transformá-lo em <code>1</code>. Se encontramos um <code>1</code>, acontece um transporte para a próxima posição.</p>
+
+          <div class="carry-rules">
+            <article><code>0 + 1 = 1</code><p>O resultado cabe naquela posição. Não há “vai 1”.</p></article>
+            <article><code>1 + 1 = 10₂</code><p>Fica <strong>0</strong> naquela posição e <strong>vai 1</strong> para a posição seguinte.</p></article>
+          </div>
+
           <div class="binary-addition">
-            <div class="binary-addition-title">A soma que ocorre no passo 3</div>
+            <div class="binary-addition-title">Exemplo: o “vai 1”</div>
+            <div><span></span><code>0111</code></div>
+            <div><span>+</span><code>0001</code></div>
+            <div class="binary-addition-line"><span></span><code>────</code></div>
+            <div><span></span><code>1000</code></div>
+          </div>
+
+          <p>Observe o que aconteceu: o 1 foi sendo transportado enquanto encontrou outros bits 1. Quando finalmente encontrou um 0, esse 0 virou 1 e o transporte terminou.</p>
+
+          <h3 style="margin-top:2.6rem">Agora o mesmo processo com 8 bits</h3>
+          <p>Vamos representar <strong>−6₁₀</strong>. A lógica é exatamente a mesma; apenas usamos mais posições.</p>
+
+          <div class="twos-path">
+            <div><small>+6₁₀</small><strong>00000110</strong></div>
+            <div><small>complemento de 1</small><strong>11111001</strong></div>
+            <div><small>+ 1</small><strong>11111010</strong></div>
+            <div><small>resultado</small><strong>−6₁₀</strong></div>
+          </div>
+
+          <div class="binary-addition">
+            <div class="binary-addition-title">Somando 1 ao complemento de 1</div>
             <div><span></span><code>11111001</code></div>
             <div><span>+</span><code>00000001</code></div>
             <div class="binary-addition-line"><span></span><code>────────</code></div>
             <div><span></span><code>11111010</code></div>
           </div>
 
-          <h3 style="margin-top:2.5rem">E quando há vários 1 seguidos?</h3>
-          <p>O exemplo de <strong>−8₁₀</strong> deixa a propagação do “vai 1” mais visível.</p>
+          <div class="precision-note"><strong>Regra prática para formar −N:</strong> escreva <strong>+N</strong> usando a largura escolhida → inverta todos os bits → some 1. O resultado é a representação de <strong>−N</strong> em complemento de dois.</div>
 
-          <div class="twos-path">
-            <div><small>+8₁₀</small><strong>00001000</strong></div>
-            <div><small>complemento de 1</small><strong>11110111</strong></div>
-            <div><small>some 1</small><strong>11111000</strong></div>
-            <div><small>resultado</small><strong>−8₁₀</strong></div>
+          <h3 style="margin-top:2.6rem">Por que não usar apenas complemento de 1?</h3>
+          <p>Se simplesmente invertermos os bits, aparece um problema com o zero:</p>
+
+          <div class="zero-compare">
+            <article><small>zero positivo</small><code>00000000</code></article>
+            <article><small>invertendo os bits</small><code>11111111</code></article>
           </div>
+
+          <p>No complemento de 1, esses dois padrões poderiam representar zero: um “+0” e um “−0”. No complemento de dois, somamos 1 depois da inversão. Isso faz com que exista <strong>apenas um zero</strong>.</p>
 
           <div class="binary-addition">
-            <div class="binary-addition-title">Observe a propagação</div>
-            <div><span></span><code>11110111</code></div>
+            <div class="binary-addition-title">Zero em complemento de dois, mantendo 8 bits</div>
+            <div><span></span><code>11111111</code></div>
             <div><span>+</span><code>00000001</code></div>
             <div class="binary-addition-line"><span></span><code>────────</code></div>
-            <div><span></span><code>11111000</code></div>
+            <div><span></span><code>00000000</code></div>
           </div>
 
-          <div class="precision-note"><strong>O que aconteceu?</strong> O primeiro <code>1 + 1</code> gerou 0 e transportou 1. Como a posição seguinte também era 1, aconteceu novamente. O transporte continuou pelos três 1 consecutivos até encontrar o primeiro 0, que virou 1.</div>
+          <p>O transporte ultrapassa a oitava posição. Como estamos trabalhando com <strong>8 bits</strong>, esse bit extra fica fora da representação.</p>
 
-          <h3 style="margin-top:2.5rem">Um único zero</h3>
-          <p>Esse processo também ajuda a entender uma vantagem do complemento de dois. Se começarmos com zero em 8 bits, invertermos e somarmos 1:</p>
+          <h3 style="margin-top:2.6rem">Quantos valores cabem?</h3>
+          <p>A quantidade de padrões não mudou: com 8 bits continuamos tendo <strong>256 padrões</strong>. O que muda é como eles são distribuídos.</p>
 
-          <div class="zero-complement">
-            <div><small>zero</small><code>00000000</code></div>
-            <span>inverter →</span>
-            <div><small>complemento de 1</small><code>11111111</code></div>
-            <span>+ 1 →</span>
-            <div><small>mantendo 8 bits</small><code>00000000</code></div>
-          </div>
-
-          <p>Na soma <code>11111111 + 1</code>, o transporte ultrapassa a oitava posição. Como estamos trabalhando com uma largura fixa de 8 bits, esse bit extra fica fora da representação. O padrão de 8 bits permanece <code>00000000</code>. Assim, em complemento de dois existe <strong>uma única representação para zero</strong>.</p>
-
-          <h3 style="margin-top:2.5rem">O que muda no intervalo de valores?</h3>
           <div class="range-grid">
             <article class="range-card">
               <h3>8 bits sem sinal</h3>
               <code>0 … 255</code>
-              <p>Todos os 256 padrões são usados para representar valores não negativos.</p>
+              <p>Todos os 256 padrões representam valores não negativos.</p>
             </article>
             <article class="range-card">
               <h3>8 bits com sinal</h3>
               <code>−128 … 127</code>
-              <p>Os mesmos 256 padrões são distribuídos entre valores negativos, zero e positivos.</p>
+              <p>Os 256 padrões são divididos entre números negativos, zero e números positivos.</p>
             </article>
           </div>
 
-          <div class="complement-compare">
-            <article>
-              <small>Exemplo decimal</small>
-              <strong>+6₁₀</strong>
-              <code>00000110₂</code>
-            </article>
-            <article>
-              <small>Mesmo módulo, negativo</small>
-              <strong>−6₁₀</strong>
-              <code>11111010₂</code>
-            </article>
+          <div class="signed-examples">
+            <div><span>00000000</span><strong>0</strong></div>
+            <div><span>00000001</span><strong>+1</strong></div>
+            <div><span>01111111</span><strong>+127</strong></div>
+            <div><span>10000000</span><strong>−128</strong></div>
+            <div><span>11111111</span><strong>−1</strong></div>
           </div>
 
-          <h3 style="margin-top:2.5rem">Overflow: e quando o resultado não cabe?</h3>
-          <p>A largura continua impondo limites. Em um inteiro com sinal de 8 bits, o maior valor positivo é <strong>127</strong>. Portanto, uma soma matemática pode estar correta e ainda assim produzir um resultado que <strong>não cabe</strong> na representação escolhida.</p>
+          <h3 style="margin-top:2.6rem">E se o resultado não couber?</h3>
+          <p>A largura do dado funciona como uma caixa com tamanho fixo. Um inteiro com sinal de 8 bits só pode representar valores de <strong>−128 a 127</strong>. Se o resultado matemático sair desse intervalo, ocorre <strong>overflow</strong>.</p>
 
-          <div class="range-grid">
-            <article class="range-card">
-              <h3>Sem sinal</h3>
-              <code>250 + 10 = 260</code>
-              <p>O resultado 260 ultrapassa o limite 255 de um inteiro sem sinal de 8 bits.</p>
-            </article>
-            <article class="range-card">
-              <h3>Com sinal</h3>
-              <code>100 + 50 = 150</code>
-              <p>O resultado 150 ultrapassa o limite 127 de um inteiro com sinal de 8 bits.</p>
-            </article>
+          <div class="overflow-example">
+            <div><small>conta matemática</small><strong>100 + 50 = 150</strong></div>
+            <span>mas</span>
+            <div><small>limite de 8 bits com sinal</small><strong>máximo = 127</strong></div>
           </div>
 
-          <div class="precision-note"><strong>Para Engenharia de Software:</strong> conhecer a largura e a interpretação do dado evita erros em interoperabilidade, arquivos binários, APIs nativas, protocolos e código que trabalha próximo ao hardware.</div>
+          <div class="precision-note"><strong>Conclusão:</strong> a soma 100 + 50 está correta matematicamente, mas <strong>150 não cabe</strong> em um inteiro com sinal de 8 bits. Overflow não significa que a matemática está errada; significa que a representação escolhida não possui bits suficientes para guardar o resultado.</div>
+
+          <div class="lesson-check">
+            <strong>Se você entendeu esta seção, deve conseguir responder:</strong>
+            <ul>
+              <li>Por que <code>1111₂</code> pode significar 15 ou −1?</li>
+              <li>Como obter a representação de −6 a partir de +6?</li>
+              <li>O que acontece quando fazemos <code>1 + 1</code> em binário?</li>
+              <li>Por que 8 bits com sinal vão de −128 a 127?</li>
+              <li>Por que 150 causa overflow em um inteiro com sinal de 8 bits?</li>
+            </ul>
+          </div>
         </div>
       </section>
 
