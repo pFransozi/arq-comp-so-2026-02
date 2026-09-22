@@ -906,7 +906,7 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
             </div>
           </div>
 
-          <div class="precision-note"><strong>Por que não paramos aqui?</strong> O complemento de 1 pode representar números negativos, mas possui duas representações para zero: uma positiva e outra negativa. O complemento de dois elimina essa duplicidade e é a representação usada normalmente para inteiros com sinal.</div>
+          <div class="precision-note"><strong>Por que usar complemento de dois em vez de parar no complemento de 1?</strong> No complemento de 1, o zero pode aparecer de duas formas: <code>00000000</code> para o zero positivo e <code>11111111</code> para o zero negativo. Isso significa que dois padrões diferentes representam a mesma quantidade. O complemento de dois resolve esse problema: depois de inverter os bits, somamos 1. Assim, existe apenas uma representação para zero e a representação dos inteiros com sinal fica mais simples para o hardware.</div>
 
           <h3 style="margin-top:2.5rem">Antes de somar 1: como funciona a soma binária?</h3>
           <p>Para chegar ao complemento de dois, precisamos somar <strong>1</strong> ao complemento de 1. A parte que costuma causar dúvida é: <strong>o que acontece quando o bit já é 1?</strong></p>
