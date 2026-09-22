@@ -8,7 +8,7 @@
   <title>Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="aula-06.css">
-  <link rel="stylesheet" href="aula-07.css?v=5">
+  <link rel="stylesheet" href="aula-07.css?v=6">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <!-- revisão sistemas posicionais v4 -->
@@ -602,18 +602,65 @@
           <div class="section-heading">
             <p class="eyebrow">5 · Operações bit a bit</p>
             <h2>Até aqui lemos bits. Agora vamos manipulá-los</h2>
-            <p>Conversões ajudam a <strong>interpretar</strong> padrões de bits. Em software de baixo nível, protocolos, permissões, formatos compactos e drivers, também precisamos <strong>consultar e modificar posições específicas</strong>. Para isso usamos operações lógicas bit a bit.</p>
+            <p>Nas conversões anteriores, usamos os bits para <strong>descobrir um valor</strong>. Em muitas situações de software, porém, não queremos tratar o conjunto inteiro como um único número. Queremos olhar para <strong>bits específicos</strong>, verificar se uma opção está ligada, ativar uma permissão, remover uma flag ou extrair um pequeno campo armazenado dentro de um byte.</p>
           </div>
 
-          <div class="precision-note"><strong>Regra de leitura:</strong> operações bit a bit comparam posições correspondentes. O primeiro bit de um valor é combinado com o primeiro bit do outro, o segundo com o segundo, e assim por diante.</div>
+          <div class="concept-intro">
+            <div>
+              <strong>Operação aritmética</strong>
+              <p>Normalmente trata o valor inteiro como um número: somar, subtrair, multiplicar.</p>
+            </div>
+            <div>
+              <strong>Operação bit a bit</strong>
+              <p>Trabalha diretamente com as posições binárias: compara ou modifica cada bit.</p>
+            </div>
+          </div>
+
+          <div class="precision-note"><strong>Uma posição de cada vez:</strong> em AND, OR e XOR, os bits são alinhados e comparados coluna por coluna. O bit mais à direita de um valor é combinado com o bit mais à direita do outro, e assim sucessivamente.</div>
+
+          <h3 style="margin-top:2.2rem">Primeiro, conheça as quatro regras básicas</h3>
+          <p>Antes de usar os operadores em código, vale compreender a pergunta que cada operação faz para <strong>um par de bits</strong>.</p>
+
+          <div class="truth-table-wrap">
+            <table class="truth-table">
+              <thead>
+                <tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>A XOR B</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+                <tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="bit-rule-grid">
+            <article><strong>AND</strong><span>“Os dois são 1?”</span><p>Só produz 1 quando <strong>ambos</strong> os bits são 1.</p></article>
+            <article><strong>OR</strong><span>“Existe pelo menos um 1?”</span><p>Produz 1 quando <strong>qualquer um</strong> dos bits é 1.</p></article>
+            <article><strong>XOR</strong><span>“Os bits são diferentes?”</span><p>Produz 1 quando os dois bits possuem <strong>valores diferentes</strong>.</p></article>
+            <article><strong>NOT</strong><span>“Qual é o oposto deste bit?”</span><p>Trabalha com um único operando: 0 vira 1 e 1 vira 0.</p></article>
+          </div>
+
+          <h3 style="margin-top:2.5rem">Agora aplique a regra a vários bits</h3>
+          <p>Considere dois padrões de 4 bits, <code>1010</code> e <code>1100</code>. Eles permanecem alinhados. Em cada coluna, aplicamos exatamente a mesma regra da tabela acima.</p>
+
+          <div class="bitwise-worked">
+            <div class="bitwise-worked-head"><span>posição</span><span>3</span><span>2</span><span>1</span><span>0</span></div>
+            <div><strong>A</strong><code>1</code><code>0</code><code>1</code><code>0</code></div>
+            <div><strong>B</strong><code>1</code><code>1</code><code>0</code><code>0</code></div>
+            <div class="result-and"><strong>A &amp; B</strong><code>1</code><code>0</code><code>0</code><code>0</code></div>
+            <div class="result-or"><strong>A | B</strong><code>1</code><code>1</code><code>1</code><code>0</code></div>
+            <div class="result-xor"><strong>A ^ B</strong><code>0</code><code>1</code><code>1</code><code>0</code></div>
+          </div>
 
           <div class="bitwise-grid">
             <article class="bit-op-card">
               <span class="bit-op-symbol">&amp;</span>
               <div>
                 <small>AND</small>
-                <h3>Selecionar bits</h3>
-                <p>O resultado só recebe <strong>1</strong> onde os dois operandos possuem 1. Isso torna AND especialmente útil para <strong>máscaras</strong>.</p>
+                <h3>Selecionar ou testar bits</h3>
+                <p>Como AND só mantém 1 onde <strong>os dois lados têm 1</strong>, podemos construir uma máscara com 1 apenas nas posições que queremos observar.</p>
                 <div class="binary-demo"><code>1010</code><code>1100</code><strong>1000</strong></div>
               </div>
             </article>
@@ -622,8 +669,8 @@
               <span class="bit-op-symbol">|</span>
               <div>
                 <small>OR</small>
-                <h3>Ligar bits</h3>
-                <p>Se pelo menos um dos operandos possuir 1 naquela posição, o resultado será 1. É útil para <strong>ativar flags</strong> sem perder as demais.</p>
+                <h3>Ativar bits</h3>
+                <p>OR preserva os bits já ligados e também liga as posições marcadas com 1 no segundo operando. Por isso é útil para <strong>ativar flags</strong>.</p>
                 <div class="binary-demo"><code>1010</code><code>1100</code><strong>1110</strong></div>
               </div>
             </article>
@@ -632,8 +679,8 @@
               <span class="bit-op-symbol">^</span>
               <div>
                 <small>XOR</small>
-                <h3>Detectar diferença ou alternar bits</h3>
-                <p>O resultado é 1 quando os bits comparados são diferentes. XOR aparece em verificações, paridade e operações de alternância.</p>
+                <h3>Alternar ou comparar diferenças</h3>
+                <p>Uma máscara com 1 faz XOR inverter aquela posição; uma máscara com 0 a mantém. Também podemos usar XOR para identificar posições que são diferentes.</p>
                 <div class="binary-demo"><code>1010</code><code>1100</code><strong>0110</strong></div>
               </div>
             </article>
@@ -642,27 +689,54 @@
               <span class="bit-op-symbol">~</span>
               <div>
                 <small>NOT</small>
-                <h3>Inverter bits</h3>
-                <p>Em uma largura fixa, cada 0 vira 1 e cada 1 vira 0. Exemplo usando apenas 4 bits:</p>
+                <h3>Inverter todos os bits</h3>
+                <p>NOT troca 0 por 1 e 1 por 0. Para visualizar a ideia, considere uma largura fixa de 4 bits:</p>
                 <div class="binary-demo single"><code>1010</code><strong>0101</strong></div>
               </div>
             </article>
           </div>
 
-          <h3 style="margin-top:2.5rem">Máscaras e flags: um uso muito comum em software</h3>
-          <p>Uma <strong>flag</strong> usa um bit para representar um estado: ligado/desligado, permitido/negado, ativo/inativo. Várias flags podem ser reunidas no mesmo inteiro. Cada posição ganha um significado.</p>
+          <div class="precision-note"><strong>Atenção ao Python:</strong> inteiros em Python não são limitados automaticamente a 8, 16 ou 32 bits. Por isso, quando quisermos simular uma largura fixa, podemos aplicar uma máscara como <code>0xFF</code> para manter apenas os 8 bits menos significativos.</div>
+
+          <h3 style="margin-top:2.7rem">Máscaras e flags: por que isso é útil em software?</h3>
+          <p>Uma <strong>flag</strong> é um bit que representa uma condição. Em vez de armazenar três variáveis separadas, podemos reservar três posições de um inteiro. Assim, cada bit passa a responder a uma pergunta diferente.</p>
+
+          <div class="flag-meaning">
+            <div><span>bit 2</span><strong>EXECUTAR</strong><code>100</code></div>
+            <div><span>bit 1</span><strong>ESCREVER</strong><code>010</code></div>
+            <div><span>bit 0</span><strong>LER</strong><code>001</code></div>
+          </div>
+
+          <p>Agora imagine que queremos permitir <strong>leitura e escrita</strong>, mas não execução. Podemos combinar as duas flags desejadas com OR:</p>
+
+          <div class="step-calculation">
+            <div><span>LER</span><code>001</code></div>
+            <div><span>ESCREVER</span><code>010</code></div>
+            <div class="step-result"><span>LER | ESCREVER</span><code>011</code></div>
+          </div>
 
           <div class="flag-layout">
             <div class="flag-word">
-              <span><small>EXECUTAR</small>1</span>
+              <span><small>EXECUTAR</small>0</span>
               <span><small>ESCREVER</small>1</span>
-              <span><small>LER</small>0</span>
+              <span><small>LER</small>1</span>
             </div>
             <div class="flag-explanation">
-              <strong>Exemplo de três flags</strong>
-              <p>O padrão <code>110₂</code> pode ser lido como: executar = ligado, escrever = ligado, ler = desligado. O valor numérico existe, mas aqui o mais importante é o <strong>significado de cada posição</strong>.</p>
+              <strong>O padrão agora é 011₂</strong>
+              <p>O número decimal correspondente seria 3, mas neste contexto o significado mais importante é: <strong>leitura ligada, escrita ligada e execução desligada</strong>.</p>
             </div>
           </div>
+
+          <h3 style="margin-top:2.2rem">Como verificar apenas uma flag?</h3>
+          <p>Para perguntar “a permissão de escrita está ligada?”, usamos AND com a própria flag de escrita. A máscara <code>010</code> zera as posições que não interessam.</p>
+
+          <div class="step-calculation">
+            <div><span>permissões</span><code>011</code></div>
+            <div><span>máscara ESCREVER</span><code>010</code></div>
+            <div class="step-result"><span>resultado do AND</span><code>010</code></div>
+          </div>
+
+          <p>Como o resultado é diferente de zero, sabemos que o bit de escrita estava ligado. Observe que não foi necessário interpretar todo o valor como decimal.</p>
 
           <div class="code-example">
             <div class="code-example-head"><span>Exemplo em Python</span><span>ativar e verificar flags</span></div>
@@ -670,49 +744,90 @@
 ESCREVER = 0b010
 EXECUTAR = 0b100
 
+# Liga as permissões de leitura e escrita.
 permissoes = LER | ESCREVER
 
+# AND deixa passar apenas o bit de ESCRITA.
 if permissoes & ESCREVER:
     print("Escrita permitida")</code></pre>
           </div>
 
-          <div class="precision-note"><strong>Por que funciona?</strong> OR combina flags para ativá-las. AND com uma máscara deixa passar somente o bit que queremos testar. O Stallings usa exatamente essa ideia de AND como máscara para selecionar bits de uma palavra.</div>
+          <div class="where-used">
+            <strong>Onde você pode encontrar essa ideia?</strong>
+            <div>
+              <span>permissões</span><span>configurações</span><span>protocolos</span><span>formatos binários</span><span>registradores</span><span>drivers</span>
+            </div>
+          </div>
 
-          <h3 style="margin-top:2.5rem">Deslocamentos: mover bits para acessar campos</h3>
-          <p>Os operadores <code>&lt;&lt;</code> e <code>&gt;&gt;</code> movem os bits para a esquerda ou para a direita. Em operações lógicas, zeros entram pelo lado que fica vazio. Isso é útil tanto para cálculos com potências de 2 quanto para <strong>isolar campos dentro de um valor</strong>.</p>
+          <h3 style="margin-top:2.8rem">Deslocamentos: mover bits sem mudar a ordem entre eles</h3>
+          <p>Os operadores <code>&lt;&lt;</code> e <code>&gt;&gt;</code> deslocam todas as posições. Em uma visualização de largura fixa, os espaços que surgem são preenchidos com zeros nas operações lógicas.</p>
+
+          <div class="shift-visual">
+            <article>
+              <small>antes</small>
+              <code>00101101</code>
+              <span>desloca 1 posição à esquerda</span>
+              <code>01011010</code>
+              <strong><code>&lt;&lt; 1</code></strong>
+            </article>
+            <article>
+              <small>antes</small>
+              <code>00101101</code>
+              <span>desloca 4 posições à direita</span>
+              <code>00000010</code>
+              <strong><code>&gt;&gt; 4</code></strong>
+            </article>
+          </div>
 
           <div class="shift-grid">
             <article>
               <small>Shift à esquerda</small>
-              <strong><code>00101101 &lt;&lt; 1</code></strong>
-              <div class="shift-arrow">00101101 → 01011010</div>
-              <p>Sem overflow, deslocar uma posição à esquerda corresponde a multiplicar por 2.</p>
+              <h3>Por que pode multiplicar por 2?</h3>
+              <p>Cada bit passa para uma posição cujo peso é duas vezes maior. Se nenhum bit significativo for perdido, uma posição à esquerda equivale a multiplicar o valor por 2.</p>
             </article>
             <article>
               <small>Shift à direita</small>
-              <strong><code>00101101 &gt;&gt; 4</code></strong>
-              <div class="shift-arrow">00101101 → 00000010</div>
-              <p>O deslocamento pode trazer um campo que estava nos bits superiores para as posições mais baixas.</p>
+              <h3>Por que ajuda a extrair campos?</h3>
+              <p>Podemos trazer bits que estavam nas posições mais altas para a direita, onde fica mais simples aplicar uma máscara e interpretar o campo isoladamente.</p>
             </article>
           </div>
 
-          <h3 style="margin-top:2.5rem">Extraindo dois campos de um byte</h3>
-          <p>Suponha que um byte armazene duas informações: os <strong>4 bits superiores</strong> formam um campo e os <strong>4 bits inferiores</strong> formam outro.</p>
+          <h3 style="margin-top:2.7rem">Exemplo completo: extraindo dois campos de um byte</h3>
+          <p>Suponha que o byte <code>10110110₂</code> não represente um único número. Um protocolo decidiu usar os <strong>4 bits superiores</strong> para uma informação e os <strong>4 inferiores</strong> para outra.</p>
 
           <div class="field-byte">
             <span class="field-high">1011<small>campo alto</small></span>
             <span class="field-low">0110<small>campo baixo</small></span>
           </div>
 
+          <div class="field-explanation">
+            <article>
+              <span>1</span>
+              <div><strong>Campo baixo</strong><p>Ele já está nas quatro posições da direita. Basta aplicar a máscara <code>00001111</code>.</p></div>
+            </article>
+            <article>
+              <span>2</span>
+              <div><strong>Campo alto</strong><p>Primeiro deslocamos quatro posições à direita: <code>10110110 → 00001011</code>.</p></div>
+            </article>
+            <article>
+              <span>3</span>
+              <div><strong>Limpeza final</strong><p>Aplicamos <code>&amp; 00001111</code> para garantir que apenas os quatro bits do campo permaneçam.</p></div>
+            </article>
+          </div>
+
           <div class="code-example">
             <div class="code-example-head"><span>Exemplo em Python</span><span>shift + máscara</span></div>
             <pre><code>valor = 0b10110110
 
-campo_alto  = (valor >> 4) & 0b1111
-campo_baixo = valor & 0b1111</code></pre>
+# Mantém apenas os quatro bits inferiores.
+campo_baixo = valor & 0b00001111
+
+# Traz os quatro bits superiores para a direita
+# e garante que apenas quatro bits sejam mantidos.
+campo_alto = (valor >> 4) & 0b00001111</code></pre>
           </div>
 
-          <p class="bridge-question"><strong>Ideia central:</strong> máscaras selecionam posições; shifts reposicionam bits. Com as duas técnicas juntas, um programa consegue ler campos compactados em bytes e palavras.</p>
+          <p class="bridge-question"><strong>Ideia central:</strong> operações bit a bit permitem tratar um inteiro como um conjunto de pequenas posições independentes. Máscaras selecionam; OR ativa; XOR alterna; NOT inverte; shifts reposicionam. Isso permite que software leia e manipule informações compactadas dentro de bytes e palavras.</p>
         </div>
       </section>
 
