@@ -390,121 +390,144 @@
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Banco de prática</span><span class="inquiry-tag">listas independentes</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Antes de começar</span><span class="inquiry-tag">resolva primeiro · confira depois</span></div>
             <div class="inquiry-body">
-              <div>
-                <h3>A · Decimal → binário</h3>
-                <p>Resolva os itens usando os pesos das potências de 2.</p>
-                <ol class="prompt-list">
-                  <li>Converta <strong>6₁₀</strong> para binário.</li>
-                  <li>Converta <strong>11₁₀</strong> para binário.</li>
-                  <li>Converta <strong>14₁₀</strong> para binário.</li>
-                  <li>Converta <strong>19₁₀</strong> para binário.</li>
-                  <li>Converta <strong>27₁₀</strong> para binário.</li>
-                  <li>Converta <strong>36₁₀</strong> para binário.</li>
-                  <li>Converta <strong>43₁₀</strong> para binário.</li>
-                  <li>Converta <strong>58₁₀</strong> para binário.</li>
-                  <li>Converta <strong>73₁₀</strong> para binário.</li>
-                  <li>Converta <strong>94₁₀</strong> para binário.</li>
-                </ol>
-              </div>
-              <div>
-                <h3>B · Binário → decimal</h3>
-                <p>Resolva os itens começando sempre pelo bit mais à direita.</p>
-                <ol class="prompt-list">
-                  <li>Converta <strong>1001₂</strong> para decimal.</li>
-                  <li>Converta <strong>1100₂</strong> para decimal.</li>
-                  <li>Converta <strong>10001₂</strong> para decimal.</li>
-                  <li>Converta <strong>10110₂</strong> para decimal.</li>
-                  <li>Converta <strong>11101₂</strong> para decimal.</li>
-                  <li>Converta <strong>100011₂</strong> para decimal.</li>
-                  <li>Converta <strong>101001₂</strong> para decimal.</li>
-                  <li>Converta <strong>110110₂</strong> para decimal.</li>
-                  <li>Converta <strong>1000010₂</strong> para decimal.</li>
-                  <li>Converta <strong>1111011₂</strong> para decimal.</li>
-                </ol>
+              <div style="grid-column:1 / -1">
+                <h3>Como conferir seus resultados no Python</h3>
+                <p>Faça primeiro o raciocínio <strong>manualmente</strong>, usando os pesos das posições e as potências de 2. Depois, use Python apenas como uma forma de <strong>verificar</strong> se o resultado encontrado está correto.</p>
+
+                <div class="code-example">
+                  <div class="code-example-head"><span>Decimal → binário</span><span>use <code>bin()</code> ou <code>format()</code></span></div>
+                  <pre><code>valor = 18
+
+print(bin(valor))          # mostra o prefixo 0b
+print(format(valor, "08b"))  # mostra exatamente 8 bits</code></pre>
+                </div>
+
+                <div class="code-example">
+                  <div class="code-example-head"><span>Binário → decimal</span><span>use <code>int(..., 2)</code></span></div>
+                  <pre><code>binario = "10101"
+
+print(int(binario, 2))</code></pre>
+                </div>
+
+                <div class="code-example">
+                  <div class="code-example-head"><span>Quantidade de padrões</span><span>use as mesmas ideias estudadas</span></div>
+                  <pre><code>n = 4
+
+padroes = 2 ** n
+ultimo_valor = padroes - 1
+ultimo_padrao = format(ultimo_valor, f"0{n}b")
+
+print(padroes)
+print(ultimo_valor)
+print(ultimo_padrao)</code></pre>
+                </div>
+
+                <div class="precision-note"><strong>Importante:</strong> não use Python para substituir a resolução. Primeiro escreva como chegou ao resultado. Depois altere os valores nos exemplos acima e use a saída do programa para conferir seu trabalho.</div>
               </div>
             </div>
           </div>
 
           <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Entendimento</span><span class="inquiry-tag">resolva todos</span></div>
+            <div class="inquiry-head"><span class="inquiry-kicker">Lista de exercícios</span><span class="inquiry-tag">bits, padrões e conversões</span></div>
             <div class="inquiry-body">
               <div style="grid-column:1 / -1">
-                <h3>C · Entenda e explique o raciocínio</h3>
-                <p>Resolva <strong>todos os itens</strong>. Sempre que possível, justifique sua resposta usando os pesos das posições, a quantidade de bits ou a ideia de sistema posicional.</p>
-
+                <h3>A · Quantidade de bits, padrões e limites</h3>
+                <p>Use as duas ideias centrais desta aula: <strong>n bits produzem 2ⁿ padrões</strong> e o maior valor, quando começamos a contar em 0, é obtido pelo padrão formado somente por bits 1.</p>
                 <ol class="prompt-list">
                   <li>
-                    <strong>Mesma quantidade, outra escrita.</strong>
-                    Explique por que converter um número de decimal para binário <strong>não muda a quantidade representada</strong>. O que muda, exatamente?
-                  </li>
-
-                  <li>
-                    <strong>Lendo um número binário por partes.</strong>
-                    Observe <strong>101101₂</strong>:
+                    Com <strong>4 bits</strong>:
                     <ol type="a">
-                      <li>Quais posições têm bit 1?</li>
-                      <li>Quais pesos essas posições representam?</li>
-                      <li>Qual é a soma final em decimal?</li>
+                      <li>quantos padrões diferentes podem ser formados?</li>
+                      <li>qual é o primeiro padrão?</li>
+                      <li>qual é o último padrão?</li>
+                      <li>qual é o valor decimal desse último padrão?</li>
                     </ol>
                   </li>
-
                   <li>
-                    <strong>Padrões possíveis com 6 bits.</strong>
-                    Um sistema usa <strong>6 bits</strong> para representar valores:
+                    Repita o mesmo raciocínio para <strong>5 bits</strong>. Mostre os pesos usados para converter o último padrão para decimal.
+                  </li>
+                  <li>
+                    Um campo possui <strong>6 bits</strong>. Determine quantos padrões existem e qual é o maior valor sem sinal que pode ser representado.
+                  </li>
+                  <li>
+                    Um sistema reserva <strong>7 bits</strong> para um identificador numérico. Quantos identificadores diferentes são possíveis se a contagem começa em 0? Qual é o maior identificador?
+                  </li>
+                  <li>
+                    Um <strong>byte possui 8 bits</strong>. Quantos padrões diferentes cabem em um byte? Qual é o maior valor possível se os 8 bits forem interpretados como inteiro sem sinal?
+                  </li>
+                  <li>
+                    Com <strong>10 bits</strong>, determine:
                     <ol type="a">
-                      <li>Quantos padrões diferentes podem ser formados?</li>
-                      <li>Qual é o menor valor possível?</li>
-                      <li>Qual é o maior valor possível, se a contagem começar em 0?</li>
-                      <li>Explique por que esse maior valor é uma unidade menor que a quantidade total de padrões.</li>
+                      <li>a quantidade total de padrões;</li>
+                      <li>o padrão de menor valor;</li>
+                      <li>o padrão de maior valor;</li>
+                      <li>o valor decimal desse último padrão.</li>
                     </ol>
                   </li>
-
                   <li>
-                    <strong>Todos os bits em 1.</strong>
-                    Considere <strong>111111₂</strong>:
-                    <ol type="a">
-                      <li>Qual é o valor decimal?</li>
-                      <li>Quais pesos aparecem nessa soma?</li>
-                      <li>O que esse padrão tem de especial entre os números que podem ser escritos com 6 bits?</li>
-                    </ol>
+                    Um dispositivo informa que determinado campo pode assumir exatamente <strong>32 padrões diferentes</strong>. Quantos bits são necessários? Escreva o primeiro e o último padrão.
                   </li>
-
                   <li>
-                    <strong>O papel do zero em uma posição.</strong>
-                    Explique por que uma posição com bit <strong>0</strong> não acrescenta valor à soma, mesmo tendo um peso associado.
+                    Outro campo pode assumir <strong>256 padrões diferentes</strong>. Quantos bits são necessários? Qual é o maior valor se a contagem começar em 0?
                   </li>
-
                   <li>
-                    <strong>Comparando dois números binários.</strong>
-                    Qual é maior: <strong>1111₂</strong> ou <strong>10000₂</strong>? Justifique comparando os pesos das posições.
+                    Explique com suas palavras por que, para <strong>n bits</strong>, a quantidade de padrões é <strong>2ⁿ</strong>, mas o último valor da contagem é uma unidade menor.
                   </li>
-
                   <li>
-                    <strong>Quantidade mínima de bits.</strong>
-                    Queremos representar <strong>42₁₀</strong> em binário:
-                    <ol type="a">
-                      <li>Qual é a menor quantidade de bits necessária?</li>
-                      <li>Escreva 42 em binário.</li>
-                      <li>Explique por que com um bit a menos isso não seria possível.</li>
-                    </ol>
+                    Qual é a menor quantidade de bits necessária para representar o valor decimal <strong>70</strong> sem sinal? Justifique comparando 70 com os limites obtidos com quantidades diferentes de bits.
                   </li>
+                </ol>
+              </div>
 
-                  <li>
-                    <strong>Reconhecendo potências de 2.</strong>
-                    Complete <strong>32₁₀ = ____₂</strong> e explique por que números como 1, 2, 4, 8, 16, 32 e 64 têm representações binárias especialmente simples.
-                  </li>
+              <div>
+                <h3>B · Decimal → binário</h3>
+                <p>Resolva manualmente usando os pesos das potências de 2. Só depois confira no Python.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>7₁₀</strong> para binário.</li>
+                  <li>Converta <strong>10₁₀</strong> para binário.</li>
+                  <li>Converta <strong>15₁₀</strong> para binário.</li>
+                  <li>Converta <strong>21₁₀</strong> para binário.</li>
+                  <li>Converta <strong>29₁₀</strong> para binário.</li>
+                  <li>Converta <strong>34₁₀</strong> para binário.</li>
+                  <li>Converta <strong>47₁₀</strong> para binário.</li>
+                  <li>Converta <strong>53₁₀</strong> para binário.</li>
+                  <li>Converta <strong>68₁₀</strong> para binário.</li>
+                  <li>Converta <strong>79₁₀</strong> para binário.</li>
+                  <li>Converta <strong>96₁₀</strong> para binário.</li>
+                  <li>Converta <strong>125₁₀</strong> para binário.</li>
+                </ol>
+              </div>
 
-                  <li>
-                    <strong>Por que 8 bits geram 256 padrões?</strong>
-                    Explique usando a ideia de que <strong>cada novo bit dobra</strong> a quantidade de combinações possíveis.
-                  </li>
+              <div>
+                <h3>C · Binário → decimal</h3>
+                <p>Comece pelo bit mais à direita, associe os pesos 1, 2, 4, 8... e some somente os pesos das posições que possuem bit 1.</p>
+                <ol class="prompt-list">
+                  <li>Converta <strong>1001₂</strong> para decimal.</li>
+                  <li>Converta <strong>1100₂</strong> para decimal.</li>
+                  <li>Converta <strong>10001₂</strong> para decimal.</li>
+                  <li>Converta <strong>10110₂</strong> para decimal.</li>
+                  <li>Converta <strong>11010₂</strong> para decimal.</li>
+                  <li>Converta <strong>100101₂</strong> para decimal.</li>
+                  <li>Converta <strong>101001₂</strong> para decimal.</li>
+                  <li>Converta <strong>110110₂</strong> para decimal.</li>
+                  <li>Converta <strong>1000001₂</strong> para decimal.</li>
+                  <li>Converta <strong>1010010₂</strong> para decimal.</li>
+                  <li>Converta <strong>1100111₂</strong> para decimal.</li>
+                  <li>Converta <strong>1110110₂</strong> para decimal.</li>
+                </ol>
+              </div>
 
-                  <li>
-                    <strong>Do total de padrões ao maior valor.</strong>
-                    Explique por que, em uma contagem iniciada em 0, <strong>256 padrões</strong> terminam no valor <strong>255</strong> e não no valor 256.
-                  </li>
+              <div style="grid-column:1 / -1">
+                <h3>D · Misture as ideias</h3>
+                <ol class="prompt-list">
+                  <li>Escreva o maior número sem sinal que pode ser representado com <strong>5 bits</strong> em binário e em decimal.</li>
+                  <li>O padrão <strong>111111₂</strong> utiliza 6 bits. Quantos padrões de 6 bits existem? Qual é o valor decimal de <strong>111111₂</strong>?</li>
+                  <li>Qual precisa de mais bits para ser representado: <strong>63₁₀</strong> ou <strong>64₁₀</strong>? Explique usando as potências de 2.</li>
+                  <li>Um valor binário possui <strong>8 posições</strong> e todas estão em 1. Sem fazer a conversão diretamente no Python, determine seu valor decimal e depois confira.</li>
+                  <li>Um sistema precisa representar valores de <strong>0 até 500</strong>. Qual é a menor quantidade de bits necessária? Mostre por que a quantidade imediatamente menor não seria suficiente.</li>
+                  <li>Explique a relação entre as três expressões: <code>2ⁿ</code>, <code>2ⁿ − 1</code> e um padrão binário formado por <strong>n bits iguais a 1</strong>.</li>
                 </ol>
               </div>
             </div>
