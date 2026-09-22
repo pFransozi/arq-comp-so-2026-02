@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Aula 07 de Arquitetura de Computadores e Sistemas Operacionais: bits, capacidade, sistemas posicionais, conversões, hexadecimal, operações bit a bit, máscaras, shifts, complemento de dois, overflow, endianness e codificação de caracteres.">
+  <meta name="description" content="Aula 07 de Arquitetura de Computadores e Sistemas Operacionais: bits, capacidade, sistemas posicionais, conversões, hexadecimal, operações bit a bit, máscaras, shifts, complemento de dois e overflow.">
   <meta name="theme-color" content="#101a24">
   <title>Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="styles.css">
@@ -54,7 +54,6 @@
           <a href="#hexadecimal">Hexadecimal</a>
           <a href="#bitwise">Operações bit a bit</a>
           <a href="#inteiros-sinal">Inteiros com sinal e overflow</a>
-          <a href="#bytes-texto">Bytes, endianness e texto</a>
           <a href="#pratica-final">Prática guiada</a>
           <a href="#fechamento">Síntese</a>
           <a href="#referencias">Referências</a>
@@ -67,7 +66,7 @@
           <div class="overview-grid">
             <article class="card topics-card">
               <h3>Conteúdo programático</h3>
-              <div class="topic-list"><div>Bit, byte, KB, MB, GB e TB</div><div>Sistemas posicionais</div><div>Decimal, binário e hexadecimal</div><div>Operações bit a bit</div><div>Máscaras, flags e shifts</div><div>Complemento de dois e overflow</div><div>Endianness</div><div>ASCII, Unicode e codificação</div></div>
+              <div class="topic-list"><div>Bit, byte, KB, MB, GB e TB</div><div>Sistemas posicionais</div><div>Decimal, binário e hexadecimal</div><div>Operações bit a bit</div><div>Máscaras, flags e shifts</div><div>Complemento de dois e overflow</div></div>
             </article>
             <article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
           </div>
@@ -910,63 +909,10 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
         </div>
       </section>
 
-      <section class="section" id="bytes-texto">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">7 · Mais de um byte</p>
-            <h2>Ordem dos bytes e codificação também fazem parte da interpretação</h2>
-            <p>Quando um valor ocupa vários bytes, precisamos saber <strong>em que ordem esses bytes são armazenados</strong>. Quando os bytes representam texto, precisamos saber <strong>qual codificação transforma valores em caracteres</strong>.</p>
-          </div>
-
-          <h3>Big-endian e little-endian</h3>
-          <p>Considere o valor hexadecimal <strong>0x12345678</strong>. Ele ocupa quatro bytes: <code>12</code>, <code>34</code>, <code>56</code> e <code>78</code>. O valor lógico é o mesmo, mas a ordem dos bytes na memória pode variar.</p>
-
-          <div class="endian-grid">
-            <article>
-              <small>endereços menores → maiores</small>
-              <h3>Big-endian</h3>
-              <div class="byte-row"><span>12</span><span>34</span><span>56</span><span>78</span></div>
-              <p>O byte mais significativo aparece primeiro.</p>
-            </article>
-            <article>
-              <small>endereços menores → maiores</small>
-              <h3>Little-endian</h3>
-              <div class="byte-row"><span>78</span><span>56</span><span>34</span><span>12</span></div>
-              <p>O byte menos significativo aparece primeiro.</p>
-            </article>
-          </div>
-
-          <div class="precision-note"><strong>Por que isso importa?</strong> Ao ler bytes de um arquivo, protocolo de rede, dispositivo ou estrutura binária, interpretar a ordem errada pode produzir um valor completamente diferente.</div>
-
-          <h3 style="margin-top:2.5rem">Bytes também podem representar texto</h3>
-          <p>Um arquivo de texto continua sendo uma sequência de bytes. A aplicação precisa conhecer a convenção que transforma esses valores em caracteres. No ASCII, por exemplo, o valor decimal 42 representa <code>*</code>. Sistemas modernos também usam conjuntos de caracteres mais amplos, como Unicode.</p>
-
-          <div class="encoding-grid">
-            <article>
-              <small>padrão armazenado</small>
-              <strong>00101010</strong>
-              <p>O byte existe como padrão binário.</p>
-            </article>
-            <article>
-              <small>interpretação numérica</small>
-              <strong>42</strong>
-              <p>O mesmo byte pode ser lido como um inteiro.</p>
-            </article>
-            <article>
-              <small>interpretação ASCII</small>
-              <strong>*</strong>
-              <p>Com a tabela ASCII, o valor 42 passa a representar um caractere.</p>
-            </article>
-          </div>
-
-          <p class="bridge-question"><strong>Fechando o ciclo:</strong> memória armazena bits e bytes; software aplica regras para interpretá-los como números, flags, campos, caracteres ou estruturas completas.</p>
-        </div>
-      </section>
-
       <section class="section" id="pratica-final">
         <div class="container">
           <div class="section-heading">
-            <p class="eyebrow">8 · Exercícios guiados</p>
+            <p class="eyebrow">7 · Exercícios guiados</p>
             <h2>Pratique o raciocínio sem procurar a resposta pronta</h2>
             <p>Nos exercícios abaixo, o objetivo é seguir um <strong>roteiro de solução</strong>. As respostas não estão fornecidas: use os passos como guia para construir e justificar seu resultado.</p>
           </div>
@@ -1060,23 +1006,6 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
             <article>
               <span class="guided-number">6</span>
               <div>
-                <h3>Ordem dos bytes</h3>
-                <p>O valor <code>0xA1B2C3D4</code> ocupa quatro bytes. Mostre como esses bytes aparecem em endereços crescentes em big-endian e little-endian.</p>
-                <div class="guide-steps">
-                  <strong>Orientação da solução</strong>
-                  <ol>
-                    <li>Separe o hexadecimal em quatro grupos de dois dígitos.</li>
-                    <li>Identifique o byte mais significativo e o menos significativo.</li>
-                    <li>No big-endian, coloque o mais significativo no menor endereço.</li>
-                    <li>No little-endian, faça o inverso.</li>
-                  </ol>
-                </div>
-              </div>
-            </article>
-
-            <article>
-              <span class="guided-number">7</span>
-              <div>
                 <h3>Bits, número e caractere</h3>
                 <p>Uma aplicação recebe o byte <code>00110001₂</code>. Investigue como esse mesmo byte pode ser tratado como número e como caractere ASCII.</p>
                 <div class="guide-steps">
@@ -1107,8 +1036,6 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
             <div class="check-item">Consigo usar máscaras e shifts para selecionar e extrair campos.</div>
             <div class="check-item">Consigo distinguir inteiro sem sinal de inteiro em complemento de dois.</div>
             <div class="check-item">Consigo reconhecer situações de overflow.</div>
-            <div class="check-item">Consigo explicar a diferença entre big-endian e little-endian.</div>
-            <div class="check-item">Consigo explicar por que bytes precisam de uma codificação para representar texto.</div>
           </div>
           <p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos que a memória armazena padrões de bits, enquanto hardware e software definem como esses padrões são interpretados, organizados e manipulados. Isso prepara a entrada em sistemas operacionais, formatos binários, protocolos, chamadas de sistema e interação mais próxima com o hardware.</p>
         </div>
@@ -1120,8 +1047,7 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
             <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 9 — Sistemas numéricos: sistema decimal, sistemas posicionais, binário, conversão binário–decimal e notação hexadecimal.</p>
             <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 1 — conceitos de arquitetura, organização e representação de dados na máquina.</p>
             <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — representação de inteiros em complemento de dois e overflow.</p>
-            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 12 e Apêndice 12A — operações lógicas, deslocamentos, máscaras e ordenação big-endian/little-endian.</p>
-            <p>TANENBAUM, Andrew S.; BOS, Herbert. <strong>Sistemas operacionais modernos</strong>. Discussões sobre arquivos ASCII, Unicode e representação de dados em sistemas operacionais.</p>
+            <p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 12 e Apêndice 12A — operações lógicas, deslocamentos e máscaras.</p>
           </div>
         </div>
       </section>
@@ -1129,7 +1055,7 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
 
     <aside class="aula03-toc" aria-label="Índice desta aula">
       <div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-expanded="true" aria-label="Recolher índice">›</button></div>
-      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#interpretacao">Bits e interpretação</a><a href="#bits">Bits e capacidade</a><a href="#posicional">Sistemas posicionais</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#bitwise">Operações bit a bit</a><a href="#inteiros-sinal">Inteiros com sinal e overflow</a><a href="#bytes-texto">Bytes, endianness e texto</a><a href="#pratica-final">Prática guiada</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
+      <nav><a href="#visao">Visão da aula</a><a href="#retomada">Retomada</a><a href="#interpretacao">Bits e interpretação</a><a href="#bits">Bits e capacidade</a><a href="#posicional">Sistemas posicionais</a><a href="#conversoes">Binário e decimal</a><a href="#hexadecimal">Hexadecimal</a><a href="#bitwise">Operações bit a bit</a><a href="#inteiros-sinal">Inteiros com sinal e overflow</a><a href="#pratica-final">Prática guiada</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span class="aula03-toc-current" aria-hidden="true"></span>
     </aside>
   </div>
 
