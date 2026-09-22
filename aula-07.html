@@ -8,7 +8,7 @@
   <title>Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="aula-06.css">
-  <link rel="stylesheet" href="aula-07.css?v=6">
+  <link rel="stylesheet" href="aula-07.css?v=7">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <!-- revisão sistemas posicionais v4 -->
@@ -848,14 +848,44 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
             </div>
           </div>
 
-          <h3 style="margin-top:2rem">Complemento de dois: uma forma prática de representar negativos</h3>
-          <p>Em complemento de dois, os números positivos mantêm a forma binária usual. Para construir a representação de um negativo a partir do positivo correspondente, uma forma didática é <strong>inverter os bits e somar 1</strong>, mantendo a mesma largura.</p>
+          <h3 style="margin-top:2rem">Antes do complemento de dois: complemento de 1</h3>
+          <p>O primeiro passo para formar um número negativo pode ser entendido separadamente. No <strong>complemento de 1</strong>, invertemos todos os bits: cada <code>0</code> vira <code>1</code> e cada <code>1</code> vira <code>0</code>. É a mesma ideia da operação NOT aplicada a uma largura fixa.</p>
+
+          <div class="ones-complement">
+            <div>
+              <small>+5 em 8 bits</small>
+              <strong>00000101</strong>
+            </div>
+            <span>inverta todos os bits →</span>
+            <div>
+              <small>complemento de 1</small>
+              <strong>11111010</strong>
+            </div>
+          </div>
+
+          <div class="precision-note"><strong>Uma observação importante:</strong> complemento de 1 pode ser usado como forma de representar números negativos, mas tem uma característica pouco conveniente: existem duas representações para zero, uma positiva e outra negativa. Por isso, arquiteturas modernas normalmente utilizam <strong>complemento de dois</strong>.</div>
+
+          <h3 style="margin-top:2.5rem">Complemento de dois: complemento de 1 + 1</h3>
+          <p>O complemento de dois parte exatamente do resultado anterior. Depois de inverter todos os bits, tratamos o padrão obtido como um inteiro binário sem sinal e <strong>somamos 1</strong>. O Stallings apresenta a negação em complemento de dois justamente como essas duas etapas: complemento booleano bit a bit e soma de 1.</p>
 
           <div class="twos-path">
             <div><small>+5 em 8 bits</small><strong>00000101</strong></div>
-            <div><small>inverta os bits</small><strong>11111010</strong></div>
+            <div><small>complemento de 1</small><strong>11111010</strong></div>
             <div><small>some 1</small><strong>11111011</strong></div>
-            <div><small>interpretação</small><strong>−5</strong></div>
+            <div><small>complemento de dois</small><strong>−5</strong></div>
+          </div>
+
+          <div class="complement-compare">
+            <article>
+              <small>Complemento de 1</small>
+              <strong>inverter os bits</strong>
+              <code>00000101 → 11111010</code>
+            </article>
+            <article>
+              <small>Complemento de 2</small>
+              <strong>inverter e somar 1</strong>
+              <code>00000101 → 11111010 → 11111011</code>
+            </article>
           </div>
 
           <div class="precision-note"><strong>Observe o intervalo:</strong> com 8 bits sem sinal temos valores de 0 a 255. Em complemento de dois com 8 bits, a mesma quantidade de 256 padrões é distribuída entre valores negativos, zero e positivos: de −128 a 127.</div>
@@ -1002,8 +1032,8 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
                   <strong>Orientação da solução</strong>
                   <ol>
                     <li>Converta 18 para binário usando exatamente 8 posições.</li>
-                    <li>Inverta cada bit.</li>
-                    <li>Some 1 ao resultado, mantendo a largura de 8 bits.</li>
+                    <li>Inverta cada bit e identifique esse resultado como o <strong>complemento de 1</strong>.</li>
+                    <li>Some 1 ao complemento de 1 para obter o <strong>complemento de dois</strong>, mantendo a largura de 8 bits.</li>
                     <li>Faça uma verificação conceitual: o bit mais significativo deve indicar um valor negativo nessa interpretação.</li>
                   </ol>
                 </div>
