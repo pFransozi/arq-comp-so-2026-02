@@ -826,6 +826,50 @@ campo_baixo = valor & 0b00001111
 campo_alto = (valor >> 4) & 0b00001111</code></pre>
           </div>
 
+          <div class="inquiry" style="margin-top:2.5rem">
+            <div class="inquiry-head">
+              <span class="inquiry-kicker">Prática em sala</span>
+              <span class="inquiry-tag">3 problemas · sem resposta</span>
+            </div>
+            <div class="inquiry-body">
+              <div style="grid-column:1 / -1">
+                <h3>Deslocamentos, máscaras e filtros</h3>
+                <p>Em cada problema, escreva a operação bit a bit necessária e depois monte uma pequena expressão em Python. <strong>Não transforme o valor inteiro em decimal antes de resolver:</strong> tente raciocinar diretamente sobre as posições dos bits.</p>
+
+                <ol class="prompt-list">
+                  <li>
+                    <strong>Problema 1 · Campo no início de um byte</strong><br>
+                    Um sistema recebe o byte <code>11010110₂</code>. Os <strong>3 bits mais à esquerda</strong> representam o nível de prioridade de uma mensagem e os outros 5 bits pertencem a outros campos.
+                    <br><br>
+                    Extraia somente o campo de prioridade e deixe o resultado nas posições mais à direita do byte.
+                    <br><br>
+                    <strong>Você deve decidir:</strong> quantas posições deslocar, qual máscara usar e qual expressão em Python realiza a extração.
+                  </li>
+
+                  <li>
+                    <strong>Problema 2 · Filtrando flags específicas</strong><br>
+                    O byte <code>10101101₂</code> representa oito estados independentes. Para uma determinada verificação, o programa deve observar <strong>apenas os bits 5, 3 e 0</strong>, contando as posições da direita para a esquerda a partir de 0.
+                    <br><br>
+                    Construa uma máscara que mantenha somente essas três posições e zere todas as demais. Em seguida, escreva a operação que aplica esse filtro ao byte recebido.
+                    <br><br>
+                    <strong>Você deve decidir:</strong> como fica a máscara em 8 bits e qual operador deve ser usado para preservar apenas as posições desejadas.
+                  </li>
+
+                  <li>
+                    <strong>Problema 3 · Cabeçalho compactado de 16 bits</strong><br>
+                    Um protocolo armazena um cabeçalho no valor <code>1011 0110 11001010₂</code>, organizado assim:
+                    <br><br>
+                    <code>[ versão: 4 bits ][ tipo: 4 bits ][ tamanho: 8 bits ]</code>
+                    <br><br>
+                    Escreva expressões em Python para extrair separadamente <strong>versão</strong>, <strong>tipo</strong> e <strong>tamanho</strong>, deixando cada resultado alinhado à direita.
+                    <br><br>
+                    <strong>Você deve decidir:</strong> quais deslocamentos são necessários para cada campo e quais máscaras garantem que nenhum bit vizinho permaneça no resultado.
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+
           <p class="bridge-question"><strong>Ideia central:</strong> operações bit a bit permitem tratar um inteiro como um conjunto de pequenas posições independentes. Máscaras selecionam; OR ativa; XOR alterna; NOT inverte; shifts reposicionam. Isso permite que software leia e manipule informações compactadas dentro de bytes e palavras.</p>
         </div>
       </section>
