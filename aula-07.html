@@ -8,7 +8,7 @@
   <title>Aula 07 — Como o computador representa números</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="aula-06.css">
-  <link rel="stylesheet" href="aula-07.css?v=9">
+  <link rel="stylesheet" href="aula-07.css?v=10">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <!-- revisão sistemas posicionais v4 -->
@@ -982,6 +982,45 @@ campo_alto = (valor >> 4) & 0b00001111</code></pre>
           </div>
 
           <div class="precision-note"><strong>Regra prática para formar −N:</strong> escreva <strong>+N</strong> usando a largura escolhida → inverta todos os bits → some 1. O resultado é a representação de <strong>−N</strong> em complemento de dois.</div>
+
+          <h3 style="margin-top:2.7rem">Mas por que <code>11111010₂</code> significa −6?</h3>
+          <p>Essa é uma pergunta importante. O padrão <code>11111010</code> <strong>não contém um sinal de menos escrito dentro dele</strong>. Ele representa −6 porque decidimos interpretar esses 8 bits usando a regra do <strong>complemento de dois</strong>.</p>
+
+          <div class="twos-why-grid">
+            <article>
+              <small>Forma 1 · Faça o caminho inverso</small>
+              <h4>Descubra o módulo</h4>
+              <p>Como o padrão começa com <code>1</code>, sabemos que ele representa um valor negativo em complemento de dois. Para descobrir qual, fazemos novamente o processo de complemento de dois:</p>
+              <div class="twos-reverse">
+                <div><span>valor recebido</span><code>11111010</code></div>
+                <div><span>inverta os bits</span><code>00000101</code></div>
+                <div><span>some 1</span><code>00000110</code></div>
+                <div class="twos-reverse-result"><span>em decimal</span><code>6</code></div>
+              </div>
+              <p>O módulo é 6. Como o padrão original era negativo, concluímos: <strong><code>11111010₂ = −6₁₀</code></strong>.</p>
+            </article>
+
+            <article>
+              <small>Forma 2 · Use os pesos das posições</small>
+              <h4>O bit mais à esquerda recebe peso negativo</h4>
+              <p>Em um inteiro <strong>sem sinal</strong> de 8 bits, os pesos seriam 128, 64, 32, 16, 8, 4, 2 e 1. Em complemento de dois, o peso da posição mais à esquerda passa a ser <strong>−128</strong>.</p>
+              <div class="twos-weight-line">
+                <span>−128</span><span>64</span><span>32</span><span>16</span><span>8</span><span>4</span><span>2</span><span>1</span>
+              </div>
+              <div class="twos-bit-line">
+                <span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="twos-sum">
+            <span>11111010₂</span>
+            <strong>= −128 + 64 + 32 + 16 + 8 + 2</strong>
+            <strong>= −128 + 122</strong>
+            <strong>= −6₁₀</strong>
+          </div>
+
+          <div class="precision-note"><strong>O que realmente mudou?</strong> Não foi o padrão de bits. Mudou o <strong>peso associado à posição mais significativa</strong>. Em complemento de dois com 8 bits, essa posição vale −128; por isso os padrões que começam com 1 representam valores negativos.</div>
 
           <h3 style="margin-top:2.6rem">Por que não usar apenas complemento de 1?</h3>
           <p>Se simplesmente invertermos os bits, aparece um problema com o zero:</p>
