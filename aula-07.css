@@ -939,3 +939,106 @@ body.theme-dark .interpretation-figure{
   .signed-rule > div{grid-template-columns:auto 1fr}
   .signed-examples{grid-template-columns:1fr}
 }
+
+
+.twos-why-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin:22px 0;
+}
+.twos-why-grid article{
+  padding:20px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:var(--paper);
+}
+.twos-why-grid small{
+  display:block;
+  color:var(--teal);
+  font-size:.74rem;
+  font-weight:850;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.twos-why-grid h4{
+  margin:.35rem 0 .7rem;
+  font-size:1.05rem;
+}
+.twos-why-grid p{margin:.55rem 0;color:var(--muted)}
+.twos-reverse{
+  display:grid;
+  gap:8px;
+  margin:14px 0;
+}
+.twos-reverse > div{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:12px;
+  align-items:center;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:var(--soft);
+}
+.twos-reverse span{color:var(--muted);font-size:.82rem}
+.twos-reverse code{
+  font-family:"SFMono-Regular",Consolas,monospace;
+  font-weight:850;
+}
+.twos-reverse-result{border-color:var(--teal)!important;background:var(--paper)!important}
+.twos-weight-line,
+.twos-bit-line{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:5px;
+  margin-top:10px;
+}
+.twos-weight-line span,
+.twos-bit-line span{
+  display:grid;
+  place-items:center;
+  min-height:40px;
+  padding:.35rem .15rem;
+  border:1px solid var(--line);
+  border-radius:8px;
+  text-align:center;
+}
+.twos-weight-line span{
+  background:var(--soft);
+  color:var(--muted);
+  font-size:.78rem;
+  font-weight:800;
+}
+.twos-bit-line span{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"SFMono-Regular",Consolas,monospace;
+  font-size:1.05rem;
+  font-weight:900;
+}
+.twos-sum{
+  display:grid;
+  gap:7px;
+  max-width:720px;
+  margin:20px auto 24px;
+  padding:18px 20px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:var(--soft);
+  text-align:center;
+}
+.twos-sum span{
+  font-family:"SFMono-Regular",Consolas,monospace;
+  font-size:1.2rem;
+  font-weight:900;
+}
+.twos-sum strong{
+  font-family:"SFMono-Regular",Consolas,monospace;
+  font-size:.96rem;
+}
+@media(max-width:760px){
+  .twos-why-grid{grid-template-columns:1fr}
+  .twos-weight-line span{font-size:.68rem}
+  .twos-bit-line span{font-size:.9rem}
+}
