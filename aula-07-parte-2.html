@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Aula 07, Parte 2: hexadecimal, operações bit a bit, máscaras, flags, shifts, complemento de dois, overflow e exercícios guiados." name="description"/>
+<meta content="#101a24" name="theme-color"/>
+<title>Aula 07 · Parte 2 · Como o computador representa números</title>
+<link href="styles.css" rel="stylesheet"/>
+<link href="aula-06.css" rel="stylesheet"/>
+<link href="aula-07.css?v=10" rel="stylesheet"/>
+<script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
+<link href="https://pfransozi.github.io/assets/css/ensino.css?v=14" rel="stylesheet"/>
+<!-- revisão sistemas posicionais v4 -->
+<meta content="aula-07.html" name="source"/><style>
+/* Identificação e navegação dos dois arquivos. O tema da aula permanece o do site. */
+.hero-actions { flex-wrap: wrap; gap: .75rem; }
+.lesson-part-note { margin: 1rem 0; font-weight: 600; }
+.lesson-part-navigation { display: flex; flex-wrap: wrap; gap: .75rem; padding-block: 1.5rem 2.5rem; }
+.lesson-source { font-size: .85rem; }
+@media print { .lesson-part-navigation, .hero-actions, .aula03-toc, .aula03-mobile-toc, .theme-toggle, .nav-toggle { display: none !important; } }
+</style></head>
+<body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean">
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<div aria-hidden="true" class="progress" id="progress"></div>
+<header class="site-header">
+<div class="container nav-wrap">
+<a aria-label="Arquitetura de Computadores e Sistemas Operacionais — página principal" class="brand" href="index.html"><span aria-hidden="true" class="brand-mark">SO</span><span><strong>Arquitetura &amp; SO</strong><small>Aula 07 · Parte 2</small></span></a>
+<button aria-controls="menu-principal" aria-expanded="false" class="nav-toggle" type="button"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+<nav aria-label="Navegação da aula" class="main-nav" id="menu-principal"><a href="index.html">Página principal</a><a href="curso.html">Visão geral</a><button aria-label="Ativar modo noturno" aria-pressed="false" class="theme-toggle" type="button"><span aria-hidden="true" class="theme-icon">☾</span><span class="theme-text">Modo noturno</span></button></nav>
+</div>
+</header>
+<div class="aula03-shell aula03-page-grid">
+<main id="conteudo">
+<section class="hero" id="inicio">
+<div class="container hero-grid">
+<div>
+<p class="eyebrow">Aula 07 · Parte 2 · representação de dados</p>
+<h1>Como o computador representa números</h1>
+<p class="hero-lead">Continuação da Aula 07 a partir de <strong>4 · Hexadecimal</strong>. Esta parte reúne a representação hexadecimal, as operações bit a bit, as máscaras e os deslocamentos, os inteiros com sinal e os exercícios guiados.</p><p class="lesson-part-note">Parte 2: conteúdo a partir da seção 4 · Hexadecimal.</p>
+<div class="hero-actions"><a class="button button-primary" href="#hexadecimal">Começar em Hexadecimal</a><a class="button" href="aula-07-parte-1.html" rel="prev">Parte 1 · Fundamentos e conversões</a></div>
+</div>
+<aside class="guiding-card">
+<span>Pergunta orientadora</span>
+<blockquote>Se a memória armazena bits, como valores numéricos são escritos e interpretados pelo computador?</blockquote>
+</aside>
+</div>
+</section>
+<details class="aula03-mobile-toc">
+<summary>Nesta parte · 2</summary>
+<nav>
+<a href="#visao">Visão da aula</a>
+<a href="#hexadecimal">Hexadecimal</a>
+<a href="#bitwise">Operações bit a bit</a>
+<a href="#inteiros-sinal">Inteiros com sinal e overflow</a>
+<a href="#pratica-final">Prática guiada</a>
+<a href="#fechamento">Síntese</a>
+<a href="#referencias">Referências</a>
+</nav>
+</details>
+<section class="section" id="visao">
+<div class="container">
+<div class="section-heading"><p class="eyebrow">Visão da aula</p><h2>Hexadecimal, operações bit a bit e inteiros com sinal</h2><p>Vamos estudar a escrita hexadecimal, a manipulação de bits e a representação de inteiros com sinal, preservando a sequência da aula.</p></div>
+<div class="overview-grid">
+<article class="card topics-card">
+<h3>Conteúdo programático</h3>
+<div class="topic-list"><div>Hexadecimal</div><div>Operações bit a bit</div><div>Máscaras, flags e shifts</div><div>Complemento de dois e overflow</div></div>
+</article>
+<article class="card competency c6"><h3>C6 — Integrar sistemas de software</h3><div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br/><small>Nesta aula: relacionar bits, bytes e representação numérica à forma como o hardware organiza e manipula dados.</small></span></div></article>
+</div>
+</div>
+</section>
+<section class="section" id="hexadecimal">
+<div class="container">
+<div class="section-heading"><p class="eyebrow">4 · Hexadecimal</p><h2>Quatro bits de cada vez</h2><p>O binário é adequado ao hardware, mas sequências longas de 0 e 1 são difíceis de ler. O hexadecimal é uma forma mais compacta de escrever os mesmos padrões. Como <strong>16 = 2⁴</strong>, cada dígito hexadecimal representa exatamente <strong>4 bits</strong>.</p></div>
+<div class="precision-note"><strong>Ideia principal:</strong> hexadecimal não cria novos dados e não altera os bits. Ele apenas oferece uma escrita mais curta para padrões binários. Um grupo de <strong>4 bits</strong> também é chamado de <strong>nibble</strong>.</div>
+<h3 style="margin-top:2rem">Por que aparecem as letras A, B, C, D, E e F?</h3>
+<p>Na base 10 temos dez símbolos, de 0 a 9. Na base 16 precisamos de <strong>dezesseis símbolos</strong>. Depois do 9, usamos as letras A até F para representar os valores de 10 a 15.</p>
+<div class="hex-map">
+<div><strong>0</strong><span>0000</span></div><div><strong>1</strong><span>0001</span></div><div><strong>2</strong><span>0010</span></div><div><strong>3</strong><span>0011</span></div><div><strong>4</strong><span>0100</span></div><div><strong>5</strong><span>0101</span></div><div><strong>6</strong><span>0110</span></div><div><strong>7</strong><span>0111</span></div><div><strong>8</strong><span>1000</span></div><div><strong>9</strong><span>1001</span></div><div><strong>A</strong><span>1010</span></div><div><strong>B</strong><span>1011</span></div><div><strong>C</strong><span>1100</span></div><div><strong>D</strong><span>1101</span></div><div><strong>E</strong><span>1110</span></div><div><strong>F</strong><span>1111</span></div>
+</div>
+<div class="base-equation">A = 10 · B = 11 · C = 12 · D = 13 · E = 14 · F = 15</div>
+<div class="base-equation">1 dígito hexadecimal ↔ 4 bits</div>
+<p class="bridge-question"><strong>Observe:</strong> <code>1111₂</code> é o maior padrão possível com 4 bits. Em decimal ele vale 15 e, em hexadecimal, é escrito como <strong>F₁₆</strong>.</p>
+<h3 style="margin-top:2.5rem">Binário → hexadecimal: agrupe de 4 em 4</h3>
+<p>Para converter binário em hexadecimal, não precisamos passar primeiro pelo decimal. Basta separar os bits em grupos de 4, começando pela <strong>direita</strong>.</p>
+<div class="same-bits">
+<div class="bit-word">101010₂</div>
+<div class="interpretations">
+<div><strong>Passo 1 · Agrupe</strong>Da direita para a esquerda: <code>10 1010</code>.</div>
+<div><strong>Passo 2 · Complete</strong>O grupo da esquerda tem só 2 bits. Complete com zeros: <code>0010 1010</code>.</div>
+<div><strong>Passo 3 · Converta cada grupo</strong><code>0010 = 2</code> e <code>1010 = A</code>.</div>
+</div>
+</div>
+<div class="base-equation">101010<sub>2</sub> → 0010 1010 → 2 A → 2A<sub>16</sub></div>
+<div class="precision-note"><strong>Regra:</strong> complete com zeros apenas à <strong>esquerda</strong> do primeiro grupo, quando necessário. Adicionar zeros à esquerda não altera o valor representado.</div>
+<h3 style="margin-top:2.5rem">Hexadecimal → binário: faça o caminho inverso</h3>
+<p>Agora cada dígito hexadecimal é substituído diretamente pelo seu grupo de 4 bits.</p>
+<div class="same-bits">
+<div class="bit-word">3F₁₆</div>
+<div class="interpretations">
+<div><strong>Primeiro dígito</strong><code>3 = 0011</code>.</div>
+<div><strong>Segundo dígito</strong><code>F = 1111</code>.</div>
+<div><strong>Junte os grupos</strong><code>3F₁₆ = 00111111₂</code>.</div>
+</div>
+</div>
+<div class="base-equation">3F<sub>16</sub> → 0011 1111 → 00111111<sub>2</sub></div>
+<div class="number-story">
+<article><small>4 bits</small><strong>1 dígito hexadecimal</strong><p>Um grupo de 4 bits pode assumir 16 padrões, de <code>0000</code> a <code>1111</code>: exatamente os símbolos 0 a F.</p></article>
+<article><small>8 bits</small><strong>2 dígitos hexadecimais</strong><p>Um byte pode ser escrito com dois dígitos hexadecimais: de <code>00</code> até <code>FF</code>.</p></article>
+<article><small>Uso prático</small><strong>Mais fácil de inspecionar</strong><p>Hexadecimal aparece em bytes, endereços de memória, dumps, opcodes e documentação de baixo nível porque reduz sequências longas de bits.</p></article>
+</div>
+<div class="inquiry">
+<div class="inquiry-head"><span class="inquiry-kicker">Cheque a ideia</span><span class="inquiry-tag">faça manualmente</span></div>
+<div class="inquiry-body">
+<div>
+<h3>Binário → hexadecimal</h3>
+<ol class="prompt-list">
+<li>Converta <strong>1111₂</strong> para hexadecimal.</li>
+<li>Converta <strong>101010₂</strong> para hexadecimal.</li>
+<li>Converta <strong>11001100₂</strong> para hexadecimal.</li>
+<li>Converta <strong>11111111₂</strong> para hexadecimal.</li>
+</ol>
+</div>
+<div>
+<h3>Hexadecimal → binário</h3>
+<ol class="prompt-list">
+<li>Converta <strong>A₁₆</strong> para binário.</li>
+<li>Converta <strong>2F₁₆</strong> para binário.</li>
+<li>Converta <strong>7C₁₆</strong> para binário.</li>
+<li>Converta <strong>FF₁₆</strong> para binário.</li>
+</ol>
+</div>
+</div>
+</div>
+<p class="bridge-question"><strong>Ideia central:</strong> hexadecimal funciona como uma abreviação do binário. Cada dígito hexadecimal corresponde a 4 bits; por isso, a conversão entre as duas bases pode ser feita diretamente por agrupamento.</p>
+</div>
+</section>
+<section class="section" id="bitwise">
+<div class="container">
+<div class="section-heading">
+<p class="eyebrow">5 · Operações bit a bit</p>
+<h2>Até aqui lemos bits. Agora vamos manipulá-los</h2>
+<p>Nas conversões anteriores, usamos os bits para <strong>descobrir um valor</strong>. Em muitas situações de software, porém, não queremos tratar o conjunto inteiro como um único número. Queremos olhar para <strong>bits específicos</strong>, verificar se uma opção está ligada, ativar uma permissão, remover uma flag ou extrair um pequeno campo armazenado dentro de um byte.</p>
+</div>
+<div class="concept-intro">
+<div>
+<strong>Operação aritmética</strong>
+<p>Normalmente trata o valor inteiro como um número: somar, subtrair, multiplicar.</p>
+</div>
+<div>
+<strong>Operação bit a bit</strong>
+<p>Trabalha diretamente com as posições binárias: compara ou modifica cada bit.</p>
+</div>
+</div>
+<div class="precision-note"><strong>Uma posição de cada vez:</strong> em AND, OR e XOR, os bits são alinhados e comparados coluna por coluna. O bit mais à direita de um valor é combinado com o bit mais à direita do outro, e assim sucessivamente.</div>
+<h3 style="margin-top:2.2rem">Primeiro, conheça as quatro regras básicas</h3>
+<p>Antes de usar os operadores em código, vale compreender a pergunta que cada operação faz para <strong>um par de bits</strong>.</p>
+<div class="truth-table-wrap">
+<table class="truth-table">
+<thead>
+<tr><th>A</th><th>B</th><th>A AND B</th><th>A OR B</th><th>A XOR B</th></tr>
+</thead>
+<tbody>
+<tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+<tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td></tr>
+<tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr>
+</tbody>
+</table>
+</div>
+<div class="bit-rule-grid">
+<article><strong>AND</strong><span>“Os dois são 1?”</span><p>Só produz 1 quando <strong>ambos</strong> os bits são 1.</p></article>
+<article><strong>OR</strong><span>“Existe pelo menos um 1?”</span><p>Produz 1 quando <strong>qualquer um</strong> dos bits é 1.</p></article>
+<article><strong>XOR</strong><span>“Os bits são diferentes?”</span><p>Produz 1 quando os dois bits possuem <strong>valores diferentes</strong>.</p></article>
+<article><strong>NOT</strong><span>“Qual é o oposto deste bit?”</span><p>Trabalha com um único operando: 0 vira 1 e 1 vira 0.</p></article>
+</div>
+<h3 style="margin-top:2.5rem">Agora aplique a regra a vários bits</h3>
+<p>Considere dois padrões de 4 bits, <code>1010</code> e <code>1100</code>. Eles permanecem alinhados. Em cada coluna, aplicamos exatamente a mesma regra da tabela acima.</p>
+<div class="bitwise-worked">
+<div class="bitwise-worked-head"><span>posição</span><span>3</span><span>2</span><span>1</span><span>0</span></div>
+<div><strong>A</strong><code>1</code><code>0</code><code>1</code><code>0</code></div>
+<div><strong>B</strong><code>1</code><code>1</code><code>0</code><code>0</code></div>
+<div class="result-and"><strong>A &amp; B</strong><code>1</code><code>0</code><code>0</code><code>0</code></div>
+<div class="result-or"><strong>A | B</strong><code>1</code><code>1</code><code>1</code><code>0</code></div>
+<div class="result-xor"><strong>A ^ B</strong><code>0</code><code>1</code><code>1</code><code>0</code></div>
+</div>
+<div class="bitwise-grid">
+<article class="bit-op-card">
+<span class="bit-op-symbol">&amp;</span>
+<div>
+<small>AND</small>
+<h3>Selecionar ou testar bits</h3>
+<p>Como AND só mantém 1 onde <strong>os dois lados têm 1</strong>, podemos construir uma máscara com 1 apenas nas posições que queremos observar.</p>
+<div class="binary-demo"><code>1010</code><code>1100</code><strong>1000</strong></div>
+</div>
+</article>
+<article class="bit-op-card">
+<span class="bit-op-symbol">|</span>
+<div>
+<small>OR</small>
+<h3>Ativar bits</h3>
+<p>OR preserva os bits já ligados e também liga as posições marcadas com 1 no segundo operando. Por isso é útil para <strong>ativar flags</strong>.</p>
+<div class="binary-demo"><code>1010</code><code>1100</code><strong>1110</strong></div>
+</div>
+</article>
+<article class="bit-op-card">
+<span class="bit-op-symbol">^</span>
+<div>
+<small>XOR</small>
+<h3>Alternar ou comparar diferenças</h3>
+<p>Uma máscara com 1 faz XOR inverter aquela posição; uma máscara com 0 a mantém. Também podemos usar XOR para identificar posições que são diferentes.</p>
+<div class="binary-demo"><code>1010</code><code>1100</code><strong>0110</strong></div>
+</div>
+</article>
+<article class="bit-op-card">
+<span class="bit-op-symbol">~</span>
+<div>
+<small>NOT</small>
+<h3>Inverter todos os bits</h3>
+<p>NOT troca 0 por 1 e 1 por 0. Para visualizar a ideia, considere uma largura fixa de 4 bits:</p>
+<div class="binary-demo single"><code>1010</code><strong>0101</strong></div>
+</div>
+</article>
+</div>
+<div class="precision-note"><strong>Atenção ao Python:</strong> inteiros em Python não são limitados automaticamente a 8, 16 ou 32 bits. Por isso, quando quisermos simular uma largura fixa, podemos aplicar uma máscara como <code>0xFF</code> para manter apenas os 8 bits menos significativos.</div>
+<h3 style="margin-top:2.7rem">Máscaras e flags: por que isso é útil em software?</h3>
+<p>Uma <strong>flag</strong> é um bit que representa uma condição. Em vez de armazenar três variáveis separadas, podemos reservar três posições de um inteiro. Assim, cada bit passa a responder a uma pergunta diferente.</p>
+<div class="flag-meaning">
+<div><span>bit 2</span><strong>EXECUTAR</strong><code>100</code></div>
+<div><span>bit 1</span><strong>ESCREVER</strong><code>010</code></div>
+<div><span>bit 0</span><strong>LER</strong><code>001</code></div>
+</div>
+<p>Agora imagine que queremos permitir <strong>leitura e escrita</strong>, mas não execução. Podemos combinar as duas flags desejadas com OR:</p>
+<div class="step-calculation">
+<div><span>LER</span><code>001</code></div>
+<div><span>ESCREVER</span><code>010</code></div>
+<div class="step-result"><span>LER | ESCREVER</span><code>011</code></div>
+</div>
+<div class="flag-layout">
+<div class="flag-word">
+<span><small>EXECUTAR</small>0</span>
+<span><small>ESCREVER</small>1</span>
+<span><small>LER</small>1</span>
+</div>
+<div class="flag-explanation">
+<strong>O padrão agora é 011₂</strong>
+<p>O número decimal correspondente seria 3, mas neste contexto o significado mais importante é: <strong>leitura ligada, escrita ligada e execução desligada</strong>.</p>
+</div>
+</div>
+<h3 style="margin-top:2.2rem">Como verificar apenas uma flag?</h3>
+<p>Para perguntar “a permissão de escrita está ligada?”, usamos AND com a própria flag de escrita. A máscara <code>010</code> zera as posições que não interessam.</p>
+<div class="step-calculation">
+<div><span>permissões</span><code>011</code></div>
+<div><span>máscara ESCREVER</span><code>010</code></div>
+<div class="step-result"><span>resultado do AND</span><code>010</code></div>
+</div>
+<p>Como o resultado é diferente de zero, sabemos que o bit de escrita estava ligado. Observe que não foi necessário interpretar todo o valor como decimal.</p>
+<div class="code-example">
+<div class="code-example-head"><span>Exemplo em Python</span><span>ativar e verificar flags</span></div>
+<pre><code>LER      = 0b001
+ESCREVER = 0b010
+EXECUTAR = 0b100
+# Liga as permissões de leitura e escrita.
+permissoes = LER | ESCREVER
+# AND deixa passar apenas o bit de ESCRITA.
+if permissoes &amp; ESCREVER:
+    print("Escrita permitida")</code></pre>
+</div>
+<div class="where-used">
+<strong>Onde você pode encontrar essa ideia?</strong>
+<div>
+<span>permissões</span><span>configurações</span><span>protocolos</span><span>formatos binários</span><span>registradores</span><span>drivers</span>
+</div>
+</div>
+<h3 style="margin-top:2.8rem">Deslocamentos: mover bits sem mudar a ordem entre eles</h3>
+<p>Os operadores <code>&lt;&lt;</code> e <code>&gt;&gt;</code> deslocam todas as posições. Em uma visualização de largura fixa, os espaços que surgem são preenchidos com zeros nas operações lógicas.</p>
+<div class="shift-visual">
+<article>
+<small>antes</small>
+<code>00101101</code>
+<span>desloca 1 posição à esquerda</span>
+<code>01011010</code>
+<strong><code>&lt;&lt; 1</code></strong>
+</article>
+<article>
+<small>antes</small>
+<code>00101101</code>
+<span>desloca 4 posições à direita</span>
+<code>00000010</code>
+<strong><code>&gt;&gt; 4</code></strong>
+</article>
+</div>
+<div class="shift-grid">
+<article>
+<small>Shift à esquerda</small>
+<h3>Por que pode multiplicar por 2?</h3>
+<p>Cada bit passa para uma posição cujo peso é duas vezes maior. Se nenhum bit significativo for perdido, uma posição à esquerda equivale a multiplicar o valor por 2.</p>
+</article>
+<article>
+<small>Shift à direita</small>
+<h3>Por que ajuda a extrair campos?</h3>
+<p>Podemos trazer bits que estavam nas posições mais altas para a direita, onde fica mais simples aplicar uma máscara e interpretar o campo isoladamente.</p>
+</article>
+</div>
+<h3 style="margin-top:2.7rem">Exemplo completo: extraindo dois campos de um byte</h3>
+<p>Suponha que o byte <code>10110110₂</code> não represente um único número. Um protocolo decidiu usar os <strong>4 bits superiores</strong> para uma informação e os <strong>4 inferiores</strong> para outra.</p>
+<div class="field-byte">
+<span class="field-high">1011<small>campo alto</small></span>
+<span class="field-low">0110<small>campo baixo</small></span>
+</div>
+<div class="field-explanation">
+<article>
+<span>1</span>
+<div><strong>Campo baixo</strong><p>Ele já está nas quatro posições da direita. Basta aplicar a máscara <code>00001111</code>.</p></div>
+</article>
+<article>
+<span>2</span>
+<div><strong>Campo alto</strong><p>Primeiro deslocamos quatro posições à direita: <code>10110110 → 00001011</code>.</p></div>
+</article>
+<article>
+<span>3</span>
+<div><strong>Limpeza final</strong><p>Aplicamos <code>&amp; 00001111</code> para garantir que apenas os quatro bits do campo permaneçam.</p></div>
+</article>
+</div>
+<div class="code-example">
+<div class="code-example-head"><span>Exemplo em Python</span><span>shift + máscara</span></div>
+<pre><code>valor = 0b10110110
+# Mantém apenas os quatro bits inferiores.
+campo_baixo = valor &amp; 0b00001111
+# Traz os quatro bits superiores para a direita
+# e garante que apenas quatro bits sejam mantidos.
+campo_alto = (valor &gt;&gt; 4) &amp; 0b00001111</code></pre>
+</div>
+<div class="inquiry" style="margin-top:2.5rem">
+<div class="inquiry-head">
+<span class="inquiry-kicker">Prática em sala</span>
+<span class="inquiry-tag">3 problemas · sem resposta</span>
+</div>
+<div class="inquiry-body">
+<div style="grid-column:1 / -1">
+<h3>Deslocamentos, máscaras e filtros</h3>
+<p>Em cada problema, escreva a operação bit a bit necessária e depois monte uma pequena expressão em Python. <strong>Não transforme o valor inteiro em decimal antes de resolver:</strong> tente raciocinar diretamente sobre as posições dos bits.</p>
+<ol class="prompt-list">
+<li>
+<strong>Problema 1 · Campo no início de um byte</strong><br/>
+                    Um sistema recebe o byte <code>11010110₂</code>. Os <strong>3 bits mais à esquerda</strong> representam o nível de prioridade de uma mensagem e os outros 5 bits pertencem a outros campos.
+                    <br/><br/>
+                    Extraia somente o campo de prioridade e deixe o resultado nas posições mais à direita do byte.
+                    <br/><br/>
+<strong>Você deve decidir:</strong> quantas posições deslocar, qual máscara usar e qual expressão em Python realiza a extração.
+                  </li>
+<li>
+<strong>Problema 2 · Filtrando flags específicas</strong><br/>
+                    O byte <code>10101101₂</code> representa oito estados independentes. Para uma determinada verificação, o programa deve observar <strong>apenas os bits 5, 3 e 0</strong>, contando as posições da direita para a esquerda a partir de 0.
+                    <br/><br/>
+                    Construa uma máscara que mantenha somente essas três posições e zere todas as demais. Em seguida, escreva a operação que aplica esse filtro ao byte recebido.
+                    <br/><br/>
+<strong>Você deve decidir:</strong> como fica a máscara em 8 bits e qual operador deve ser usado para preservar apenas as posições desejadas.
+                  </li>
+<li>
+<strong>Problema 3 · Cabeçalho compactado de 16 bits</strong><br/>
+                    Um protocolo armazena um cabeçalho no valor <code>1011 0110 11001010₂</code>, organizado assim:
+                    <br/><br/>
+<code>[ versão: 4 bits ][ tipo: 4 bits ][ tamanho: 8 bits ]</code>
+<br/><br/>
+                    Escreva expressões em Python para extrair separadamente <strong>versão</strong>, <strong>tipo</strong> e <strong>tamanho</strong>, deixando cada resultado alinhado à direita.
+                    <br/><br/>
+<strong>Você deve decidir:</strong> quais deslocamentos são necessários para cada campo e quais máscaras garantem que nenhum bit vizinho permaneça no resultado.
+                  </li>
+</ol>
+</div>
+</div>
+</div>
+<p class="bridge-question"><strong>Ideia central:</strong> operações bit a bit permitem tratar um inteiro como um conjunto de pequenas posições independentes. Máscaras selecionam; OR ativa; XOR alterna; NOT inverte; shifts reposicionam. Isso permite que software leia e manipule informações compactadas dentro de bytes e palavras.</p>
+</div>
+</section>
+<section class="section" id="inteiros-sinal">
+<div class="container">
+<div class="section-heading">
+<p class="eyebrow">6 · Inteiros com sinal e limites</p>
+<h2>Como os mesmos bits podem representar números negativos?</h2>
+<p>Até aqui usamos os bits para representar valores de <strong>0 para cima</strong>. Isso funciona para quantidades como tamanho de arquivo, número de itens ou intensidade de uma cor. Mas e quando o software precisa representar <strong>−3 °C</strong>, <strong>−20</strong> de saldo ou qualquer outro valor negativo?</p>
+</div>
+<div class="signed-intro-grid">
+<article>
+<small>Sem sinal</small>
+<strong>somente 0 e valores positivos</strong>
+<p>Todos os padrões disponíveis são usados para representar números não negativos.</p>
+</article>
+<article>
+<small>Com sinal</small>
+<strong>negativos, zero e positivos</strong>
+<p>Os mesmos padrões de bits são interpretados por outra regra para abrir espaço para valores negativos.</p>
+</article>
+</div>
+<div class="precision-note"><strong>O ponto principal é este:</strong> o hardware continua armazenando apenas bits. O que muda é a <strong>regra usada para interpretar o padrão</strong>.</div>
+<h3 style="margin-top:2.5rem">Vamos começar pequeno: apenas 4 bits</h3>
+<p>Com 4 bits existem <strong>16 padrões possíveis</strong>. Se tratarmos todos eles como inteiros sem sinal, podemos representar de <strong>0 a 15</strong>. Em complemento de dois, os mesmos 16 padrões são distribuídos entre negativos e positivos: de <strong>−8 a 7</strong>.</p>
+<div class="signed-map-wrap">
+<table class="signed-map">
+<thead>
+<tr><th>Padrão</th><th>Sem sinal</th><th>Complemento de dois</th><th>O que observar</th></tr>
+</thead>
+<tbody>
+<tr><td><code>0000</code></td><td>0</td><td>0</td><td>zero</td></tr>
+<tr><td><code>0001</code></td><td>1</td><td>1</td><td>começa com 0</td></tr>
+<tr><td><code>0111</code></td><td>7</td><td>7</td><td>maior positivo com 4 bits</td></tr>
+<tr><td><code>1000</code></td><td>8</td><td>−8</td><td>menor negativo com 4 bits</td></tr>
+<tr><td><code>1110</code></td><td>14</td><td>−2</td><td>mesmos bits, outra interpretação</td></tr>
+<tr><td><code>1111</code></td><td>15</td><td>−1</td><td>todos os bits em 1</td></tr>
+</tbody>
+</table>
+</div>
+<div class="signed-rule">
+<div><code>0...</code><strong>valor não negativo</strong><p>Em complemento de dois, padrões que começam com 0 representam zero ou números positivos.</p></div>
+<div><code>1...</code><strong>valor negativo</strong><p>Em complemento de dois, padrões que começam com 1 representam números negativos.</p></div>
+</div>
+<p class="bridge-question"><strong>Importante:</strong> isso não significa que o primeiro bit seja simplesmente “tirado” e lido como um sinal. Em complemento de dois, ele faz parte da representação inteira. A regra acima é uma forma prática de reconhecer se o valor é negativo.</p>
+<h3 style="margin-top:2.7rem">Como construir a representação de um número negativo?</h3>
+<p>Vamos usar <strong>+3₁₀</strong> e descobrir como representar <strong>−3₁₀</strong> com 4 bits. O processo tem duas etapas: <strong>inverter os bits</strong> e depois <strong>somar 1</strong>.</p>
+<div class="decimal-binary-example">
+<article>
+<span>1</span>
+<div><small>Escreva o positivo</small><strong>+3₁₀ = 0011₂</strong><p>Primeiro representamos o módulo normalmente.</p></div>
+</article>
+<article>
+<span>2</span>
+<div><small>Inverta todos os bits</small><strong>0011 → 1100</strong><p>Esse resultado é o <strong>complemento de 1</strong>.</p></div>
+</article>
+<article>
+<span>3</span>
+<div><small>Some 1</small><strong>1100 + 1 → 1101</strong><p>Agora temos o complemento de dois.</p></div>
+</article>
+<article>
+<span>4</span>
+<div><small>Interprete o padrão</small><strong>1101₂ = −3₁₀</strong><p>O mesmo padrão, se fosse sem sinal, valeria 13. A interpretação é que mudou.</p></div>
+</article>
+</div>
+<h3 style="margin-top:2.6rem">O que significa “somar 1” em binário?</h3>
+<p>A regra é parecida com a soma decimal. Se encontramos um <code>0</code>, basta transformá-lo em <code>1</code>. Se encontramos um <code>1</code>, acontece um transporte para a próxima posição.</p>
+<div class="carry-rules">
+<article><code>0 + 1 = 1</code><p>O resultado cabe naquela posição. Não há “vai 1”.</p></article>
+<article><code>1 + 1 = 10₂</code><p>Fica <strong>0</strong> naquela posição e <strong>vai 1</strong> para a posição seguinte.</p></article>
+</div>
+<div class="binary-addition">
+<div class="binary-addition-title">Exemplo: o “vai 1”</div>
+<div><span></span><code>0111</code></div>
+<div><span>+</span><code>0001</code></div>
+<div class="binary-addition-line"><span></span><code>────</code></div>
+<div><span></span><code>1000</code></div>
+</div>
+<p>Observe o que aconteceu: o 1 foi sendo transportado enquanto encontrou outros bits 1. Quando finalmente encontrou um 0, esse 0 virou 1 e o transporte terminou.</p>
+<h3 style="margin-top:2.6rem">Agora o mesmo processo com 8 bits</h3>
+<p>Vamos representar <strong>−6₁₀</strong>. A lógica é exatamente a mesma; apenas usamos mais posições.</p>
+<div class="twos-path">
+<div><small>+6₁₀</small><strong>00000110</strong></div>
+<div><small>complemento de 1</small><strong>11111001</strong></div>
+<div><small>+ 1</small><strong>11111010</strong></div>
+<div><small>resultado</small><strong>−6₁₀</strong></div>
+</div>
+<div class="binary-addition">
+<div class="binary-addition-title">Somando 1 ao complemento de 1</div>
+<div><span></span><code>11111001</code></div>
+<div><span>+</span><code>00000001</code></div>
+<div class="binary-addition-line"><span></span><code>────────</code></div>
+<div><span></span><code>11111010</code></div>
+</div>
+<div class="precision-note"><strong>Regra prática para formar −N:</strong> escreva <strong>+N</strong> usando a largura escolhida → inverta todos os bits → some 1. O resultado é a representação de <strong>−N</strong> em complemento de dois.</div>
+<h3 style="margin-top:2.7rem">Mas por que <code>11111010₂</code> significa −6?</h3>
+<p>Essa é uma pergunta importante. O padrão <code>11111010</code> <strong>não contém um sinal de menos escrito dentro dele</strong>. Ele representa −6 porque decidimos interpretar esses 8 bits usando a regra do <strong>complemento de dois</strong>.</p>
+<div class="twos-why-grid">
+<article>
+<small>Forma 1 · Faça o caminho inverso</small>
+<h4>Descubra o módulo</h4>
+<p>Como o padrão começa com <code>1</code>, sabemos que ele representa um valor negativo em complemento de dois. Para descobrir qual, fazemos novamente o processo de complemento de dois:</p>
+<div class="twos-reverse">
+<div><span>valor recebido</span><code>11111010</code></div>
+<div><span>inverta os bits</span><code>00000101</code></div>
+<div><span>some 1</span><code>00000110</code></div>
+<div class="twos-reverse-result"><span>em decimal</span><code>6</code></div>
+</div>
+<p>O módulo é 6. Como o padrão original era negativo, concluímos: <strong><code>11111010₂ = −6₁₀</code></strong>.</p>
+</article>
+<article>
+<small>Forma 2 · Use os pesos das posições</small>
+<h4>O bit mais à esquerda recebe peso negativo</h4>
+<p>Em um inteiro <strong>sem sinal</strong> de 8 bits, os pesos seriam 128, 64, 32, 16, 8, 4, 2 e 1. Em complemento de dois, o peso da posição mais à esquerda passa a ser <strong>−128</strong>.</p>
+<div class="twos-weight-line">
+<span>−128</span><span>64</span><span>32</span><span>16</span><span>8</span><span>4</span><span>2</span><span>1</span>
+</div>
+<div class="twos-bit-line">
+<span>1</span><span>1</span><span>1</span><span>1</span><span>1</span><span>0</span><span>1</span><span>0</span>
+</div>
+</article>
+</div>
+<div class="twos-sum">
+<span>11111010₂</span>
+<strong>= −128 + 64 + 32 + 16 + 8 + 2</strong>
+<strong>= −128 + 122</strong>
+<strong>= −6₁₀</strong>
+</div>
+<div class="precision-note"><strong>O que realmente mudou?</strong> Não foi o padrão de bits. Mudou o <strong>peso associado à posição mais significativa</strong>. Em complemento de dois com 8 bits, essa posição vale −128; por isso os padrões que começam com 1 representam valores negativos.</div>
+<h3 style="margin-top:2.6rem">Por que não usar apenas complemento de 1?</h3>
+<p>Se simplesmente invertermos os bits, aparece um problema com o zero:</p>
+<div class="zero-compare">
+<article><small>zero positivo</small><code>00000000</code></article>
+<article><small>invertendo os bits</small><code>11111111</code></article>
+</div>
+<p>No complemento de 1, esses dois padrões poderiam representar zero: um “+0” e um “−0”. No complemento de dois, somamos 1 depois da inversão. Isso faz com que exista <strong>apenas um zero</strong>.</p>
+<div class="binary-addition">
+<div class="binary-addition-title">Zero em complemento de dois, mantendo 8 bits</div>
+<div><span></span><code>11111111</code></div>
+<div><span>+</span><code>00000001</code></div>
+<div class="binary-addition-line"><span></span><code>────────</code></div>
+<div><span></span><code>00000000</code></div>
+</div>
+<p>O transporte ultrapassa a oitava posição. Como estamos trabalhando com <strong>8 bits</strong>, esse bit extra fica fora da representação.</p>
+<h3 style="margin-top:2.6rem">Quantos valores cabem?</h3>
+<p>A quantidade de padrões não mudou: com 8 bits continuamos tendo <strong>256 padrões</strong>. O que muda é como eles são distribuídos.</p>
+<div class="range-grid">
+<article class="range-card">
+<h3>8 bits sem sinal</h3>
+<code>0 … 255</code>
+<p>Todos os 256 padrões representam valores não negativos.</p>
+</article>
+<article class="range-card">
+<h3>8 bits com sinal</h3>
+<code>−128 … 127</code>
+<p>Os 256 padrões são divididos entre números negativos, zero e números positivos.</p>
+</article>
+</div>
+<div class="signed-examples">
+<div><span>00000000</span><strong>0</strong></div>
+<div><span>00000001</span><strong>+1</strong></div>
+<div><span>01111111</span><strong>+127</strong></div>
+<div><span>10000000</span><strong>−128</strong></div>
+<div><span>11111111</span><strong>−1</strong></div>
+</div>
+<h3 style="margin-top:2.6rem">E se o resultado não couber?</h3>
+<p>A largura do dado funciona como uma caixa com tamanho fixo. Um inteiro com sinal de 8 bits só pode representar valores de <strong>−128 a 127</strong>. Se o resultado matemático sair desse intervalo, ocorre <strong>overflow</strong>.</p>
+<div class="overflow-example">
+<div><small>conta matemática</small><strong>100 + 50 = 150</strong></div>
+<span>mas</span>
+<div><small>limite de 8 bits com sinal</small><strong>máximo = 127</strong></div>
+</div>
+<div class="precision-note"><strong>Conclusão:</strong> a soma 100 + 50 está correta matematicamente, mas <strong>150 não cabe</strong> em um inteiro com sinal de 8 bits. Overflow não significa que a matemática está errada; significa que a representação escolhida não possui bits suficientes para guardar o resultado.</div>
+<div class="lesson-check">
+<strong>Se você entendeu esta seção, deve conseguir responder:</strong>
+<ul>
+<li>Por que <code>1111₂</code> pode significar 15 ou −1?</li>
+<li>Como obter a representação de −6 a partir de +6?</li>
+<li>O que acontece quando fazemos <code>1 + 1</code> em binário?</li>
+<li>Por que 8 bits com sinal vão de −128 a 127?</li>
+<li>Por que 150 causa overflow em um inteiro com sinal de 8 bits?</li>
+</ul>
+</div>
+</div>
+</section>
+<section class="section" id="pratica-final">
+<div class="container">
+<div class="section-heading">
+<p class="eyebrow">7 · Exercícios guiados</p>
+<h2>Pratique o raciocínio sem procurar a resposta pronta</h2>
+<p>Nos exercícios abaixo, o objetivo é seguir um <strong>roteiro de solução</strong>. As respostas não estão fornecidas: use os passos como guia para construir e justificar seu resultado.</p>
+</div>
+<div class="guided-practice">
+<article>
+<span class="guided-number">1</span>
+<div>
+<h3>Máscara com AND</h3>
+<p>Considere o byte <code>10110110₂</code>. Use uma máscara para manter apenas os 4 bits inferiores.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Escreva uma máscara de 8 bits com 1 somente nas posições que devem permanecer.</li>
+<li>Alinhe valor e máscara bit a bit.</li>
+<li>Aplique a regra do AND em cada coluna.</li>
+<li>Explique por que os bits superiores foram zerados.</li>
+</ol>
+</div>
+</div>
+</article>
+<article>
+<span class="guided-number">2</span>
+<div>
+<h3>Flags de permissão</h3>
+<p>Considere três flags: <code>LER = 001₂</code>, <code>ESCREVER = 010₂</code> e <code>EXECUTAR = 100₂</code>. Monte uma configuração que ative apenas LER e EXECUTAR.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Identifique quais bits precisam ficar em 1.</li>
+<li>Combine as flags usando OR.</li>
+<li>Depois construa um teste com AND para verificar se EXECUTAR está ativo.</li>
+<li>Explique por que o teste funciona mesmo que outras flags também estejam ligadas.</li>
+</ol>
+</div>
+</div>
+</article>
+<article>
+<span class="guided-number">3</span>
+<div>
+<h3>Extração de campos</h3>
+<p>O byte <code>11010101₂</code> possui dois campos de 4 bits. Extraia o campo alto e o campo baixo separadamente.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Separe visualmente os 4 bits superiores e os 4 inferiores.</li>
+<li>Para o campo baixo, pense em uma máscara com quatro 1s no final.</li>
+<li>Para o campo alto, primeiro desloque o valor quatro posições à direita.</li>
+<li>Use uma máscara final para garantir que apenas quatro bits permaneçam.</li>
+</ol>
+</div>
+</div>
+</article>
+<article>
+<span class="guided-number">4</span>
+<div>
+<h3>Complemento de dois</h3>
+<p>Represente <strong>−18</strong> em complemento de dois usando 8 bits.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Converta 18 para binário usando exatamente 8 posições.</li>
+<li>Inverta cada bit e identifique esse resultado como o <strong>complemento de 1</strong>.</li>
+<li>Some 1 ao complemento de 1 para obter o <strong>complemento de dois</strong>, mantendo a largura de 8 bits.</li>
+<li>Faça uma verificação conceitual: o bit mais significativo deve indicar um valor negativo nessa interpretação.</li>
+</ol>
+</div>
+</div>
+</article>
+<article>
+<span class="guided-number">5</span>
+<div>
+<h3>Verificando overflow</h3>
+<p>Analise se <strong>120 + 20</strong> pode ser representado por um inteiro com sinal de 8 bits.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Escreva o intervalo de um inteiro com sinal de 8 bits em complemento de dois.</li>
+<li>Calcule a soma em decimal.</li>
+<li>Compare o resultado matemático com os limites do intervalo.</li>
+<li>Conclua se o resultado cabe ou não na largura disponível.</li>
+</ol>
+</div>
+</div>
+</article>
+<article>
+<span class="guided-number">6</span>
+<div>
+<h3>Bits, número e caractere</h3>
+<p>Uma aplicação recebe o byte <code>00110001₂</code>. Investigue como esse mesmo byte pode ser tratado como número e como caractere ASCII.</p>
+<div class="guide-steps">
+<strong>Orientação da solução</strong>
+<ol>
+<li>Converta o padrão binário para decimal.</li>
+<li>Consulte a posição correspondente na tabela ASCII.</li>
+<li>Compare as duas interpretações.</li>
+<li>Explique por que nenhuma delas altera os bits armazenados.</li>
+</ol>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<section class="section" id="fechamento">
+<div class="container">
+<div class="section-heading"><p class="eyebrow">Síntese</p><h2>O que você deve levar desta aula</h2></div>
+<div class="checklist">
+<div class="check-item">Consigo explicar o que significa um sistema numérico posicional.</div>
+<div class="check-item">Consigo explicar por que n bits produzem 2ⁿ padrões possíveis.</div>
+<div class="check-item">Consigo converter inteiros simples entre decimal e binário.</div>
+<div class="check-item">Consigo relacionar decimal, binário e hexadecimal como representações do mesmo valor.</div>
+<div class="check-item">Consigo converter diretamente grupos de 4 bits entre binário e hexadecimal.</div>
+<div class="check-item">Consigo explicar e aplicar AND, OR, XOR e NOT em padrões de bits.</div>
+<div class="check-item">Consigo usar máscaras e shifts para selecionar e extrair campos.</div>
+<div class="check-item">Consigo distinguir inteiro sem sinal de inteiro em complemento de dois.</div>
+<div class="check-item">Consigo reconhecer situações de overflow.</div>
+</div>
+<p class="bridge-question"><strong>Ponte para a sequência:</strong> agora sabemos que a memória armazena padrões de bits, enquanto hardware e software definem como esses padrões são interpretados, organizados e manipulados. Isso prepara a entrada em sistemas operacionais, formatos binários, protocolos, chamadas de sistema e interação mais próxima com o hardware.</p>
+</div>
+</section>
+<section class="section" id="referencias">
+<div class="container">
+<div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual da aula</h2>
+<p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 9 — Sistemas numéricos: sistema decimal, sistemas posicionais, binário, conversão binário–decimal e notação hexadecimal.</p>
+<p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 1 — conceitos de arquitetura, organização e representação de dados na máquina.</p>
+<p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 10 — representação de inteiros em complemento de dois e overflow.</p>
+<p>STALLINGS, William. <strong>Arquitetura e organização de computadores</strong>. Capítulo 12 e Apêndice 12A — operações lógicas, deslocamentos e máscaras.</p>
+</div>
+</div>
+</section>
+<div aria-label="Navegação entre as partes" class="lesson-part-navigation container">
+<a class="button button-primary" href="aula-07-parte-1.html" rel="prev">Voltar à Parte 1 · Fundamentos e conversões</a>
+<a class="button" href="#inicio">Voltar ao início</a>
+</div></main>
+<aside aria-label="Índice da Parte 2" class="aula03-toc">
+<div class="aula03-toc-head"><span class="aula03-toc-label">Nesta parte · 2</span><button aria-expanded="true" aria-label="Recolher índice" class="aula03-toc-toggle" type="button">›</button></div>
+<nav><a href="#visao">Visão da aula</a><a href="#hexadecimal">Hexadecimal</a><a href="#bitwise">Operações bit a bit</a><a href="#inteiros-sinal">Inteiros com sinal e overflow</a><a href="#pratica-final">Prática guiada</a><a href="#fechamento">Síntese</a><a href="#referencias">Referências</a></nav><span aria-hidden="true" class="aula03-toc-current"></span>
+</aside>
+</div>
+<footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p><p class="lesson-source"><a href="aula-07.html">Aula 07 · Acesso às duas partes</a></p></div></footer>
+</body>
+</html>
