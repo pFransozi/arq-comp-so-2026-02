@@ -39,6 +39,13 @@
     .map-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:1rem}
     .map-list article{padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:14px;background:var(--surface,#fff)}
     .map-list h3{margin-top:0}
+    .source-figure img{cursor:zoom-in}
+    .image-lightbox{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:2rem;background:rgba(8,12,16,.88);backdrop-filter:blur(2px)}
+    .image-lightbox.is-open{display:flex}
+    .image-lightbox img{max-width:min(96vw,1400px);max-height:90vh;width:auto;height:auto;object-fit:contain;border-radius:8px;box-shadow:0 18px 60px rgba(0,0,0,.45);background:#fff}
+    .image-lightbox button{position:absolute;top:1rem;right:1rem;width:44px;height:44px;border:0;border-radius:999px;background:rgba(255,255,255,.92);font-size:1.6rem;line-height:1;cursor:pointer}
+    .image-lightbox button:focus-visible{outline:3px solid #fff;outline-offset:3px}
+    body.lightbox-open{overflow:hidden}
     @media(max-width:760px){.resource-grid,.goal-grid,.map-list{grid-template-columns:1fr}}
     @media print{.draft-lesson-banner,.theme-toggle,.nav-toggle,.aula03-mobile-toc,.aula03-toc{display:none!important}}
   </style>
@@ -667,7 +674,59 @@ CPU · memória · armazenamento · rede · dispositivos</div>
 </main>
 </div>
 
+<div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Imagem ampliada" aria-hidden="true">
+  <button type="button" id="image-lightbox-close" aria-label="Fechar imagem ampliada">×</button>
+  <img id="image-lightbox-img" src="" alt="">
+</div>
+
 <footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p></div></footer>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const lightbox = document.getElementById('image-lightbox');
+  const lightboxImg = document.getElementById('image-lightbox-img');
+  const closeButton = document.getElementById('image-lightbox-close');
+  if (!lightbox || !lightboxImg || !closeButton) return;
+
+  const figures = document.querySelectorAll('.source-figure img');
+
+  function openLightbox(img) {
+    lightboxImg.src = img.currentSrc || img.src;
+    lightboxImg.alt = img.alt || '';
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+    closeButton.focus();
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    lightboxImg.src = '';
+  }
+
+  figures.forEach(function (img) {
+    img.setAttribute('tabindex', '0');
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', (img.alt ? img.alt + '. ' : '') + 'Clique para ampliar');
+    img.addEventListener('click', function () { openLightbox(img); });
+    img.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        openLightbox(img);
+      }
+    });
+  });
+
+  closeButton.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', function (event) {
+    if (event.target === lightbox) closeLightbox();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+  });
+});
+</script>
 <script defer src="../script.js"></script>
 </body>
 </html>
