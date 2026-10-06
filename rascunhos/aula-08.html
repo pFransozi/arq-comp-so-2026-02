@@ -158,7 +158,22 @@
       </ol>
     </div>
 
-    <p class="bridge-question"><strong>Primeira ideia:</strong> a existência do SO permite que o desenvolvimento de aplicações aconteça em um nível de abstração diferente daquele em que o hardware efetivamente opera.</p>
+    <div class="bridge-question">
+      <p><strong>Primeira ideia:</strong> a existência do SO permite que o desenvolvimento de aplicações aconteça em um nível de abstração diferente daquele em que o hardware efetivamente opera.</p>
+      <p>Essa separação pode ser compreendida como uma <strong>organização em camadas</strong>. Cada camada utiliza serviços fornecidos pelas camadas inferiores e oferece mecanismos mais adequados às camadas superiores.</p>
+      <p>Uma aplicação, por exemplo, normalmente não controla diretamente um dispositivo de armazenamento. Ela utiliza uma interface de software; essa solicitação atravessa outros níveis até alcançar os mecanismos capazes de operar sobre o hardware.</p>
+      <p>Essa organização reduz a quantidade de detalhes que cada nível precisa conhecer e estabelece fronteiras entre diferentes partes do sistema.</p>
+      <div class="mental-map">Aplicações
+    ↓
+Bibliotecas e interfaces
+    ↓
+Sistema operacional
+    ↓
+Arquitetura / ISA
+    ↓
+Hardware</div>
+      <p><strong>Questão de ligação:</strong> o que cada camada precisa conhecer sobre a camada imediatamente abaixo dela?</p>
+    </div>
   </div>
 </section>
 
