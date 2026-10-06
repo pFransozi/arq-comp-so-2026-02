@@ -105,8 +105,8 @@
   <div class="container">
     <div class="section-heading">
       <p class="eyebrow">Visão da aula</p>
-      <h2>A aula será organizada por problemas, não por definições isoladas</h2>
-      <p>Cada conceito será introduzido a partir de uma necessidade concreta: simplificar o hardware, compartilhar recursos, proteger o sistema e permitir que aplicações solicitem serviços de maneira controlada.</p>
+      <h2>A aula será organizada a partir de problemas concretos</h2>
+      <p>Cada conceito será introduzido a partir de uma necessidade concreta: simplificar o uso do hardware, compartilhar recursos, proteger o sistema e permitir que aplicações solicitem serviços de maneira controlada.</p>
     </div>
     <div class="overview-grid">
       <article class="card topics-card">
@@ -164,7 +164,7 @@
   <div class="container">
     <div class="section-heading">
       <p class="eyebrow">2 · O problema antes da definição</p>
-      <h2>O que uma aplicação teria de fazer se não houvesse sistema operacional?</h2>
+      <h2>Que responsabilidades o sistema operacional assume para as aplicações?</h2>
       <p>Considere uma tarefa aparentemente simples: abrir um arquivo, ler seus dados e mostrar o conteúdo na tela.</p>
     </div>
 
@@ -182,7 +182,7 @@
     <div class="mental-map">Aplicação deseja:
     abrir("relatorio.pdf")
 
-Sem uma camada intermediária, ela precisaria lidar com:
+O sistema operacional assume responsabilidades como:
     localização física dos dados
     controlador de armazenamento
     transferência para a memória
@@ -256,15 +256,15 @@ Sem uma camada intermediária, ela precisaria lidar com:
 
     <div class="question-set">
       <h3>Problema para pensar</h3>
-      <p>Um computador possui <strong>8 núcleos</strong> e o monitor de processos mostra <strong>180 processos</strong>.</p>
+      <p>Considere um computador com <strong>8 núcleos</strong> e <strong>180 processos</strong> ativos no monitor do sistema.</p>
       <ol>
-        <li>Isso significa que 180 processos estão executando instruções literalmente ao mesmo tempo?</li>
-        <li>O que precisa acontecer com os processos que não estão executando naquele instante?</li>
+        <li>Como esses 180 processos compartilham os 8 núcleos disponíveis?</li>
+        <li>Como o sistema mantém os processos que aguardam seu momento de execução?</li>
         <li>Que parte do sistema deverá manter informações sobre esses processos e decidir quando cada um pode usar a CPU?</li>
       </ol>
     </div>
 
-    <p class="bridge-question"><strong>Observe:</strong> ainda não estamos estudando algoritmos de escalonamento. Primeiro estamos identificando o problema que torna o escalonamento necessário.</p>
+    <p class="bridge-question"><strong>Observe:</strong> nesta etapa identificamos o problema que dá origem ao escalonamento; os algoritmos serão estudados em seguida.</p>
   </div>
 </section>
 
@@ -309,7 +309,7 @@ Sem uma camada intermediária, ela precisaria lidar com:
     <div class="section-heading">
       <p class="eyebrow">6 · Compartilhar não basta: é preciso proteger</p>
       <h2>Modo usuário e modo núcleo</h2>
-      <p>Se qualquer aplicação pudesse executar qualquer instrução e controlar diretamente todos os dispositivos, um erro em um único programa poderia comprometer todo o computador. A arquitetura fornece mecanismos de privilégio que o sistema operacional utiliza para impor limites.</p>
+      <p>A arquitetura fornece mecanismos de privilégio que o sistema operacional utiliza para separar responsabilidades, proteger recursos e manter o isolamento entre aplicações.</p>
     </div>
 
     <figure class="source-figure compact">
@@ -369,14 +369,14 @@ estrutura do SO ou recurso físico</div>
       <p>Quando um programa em Python executa uma operação de abertura de arquivo, por que não devemos interpretar isso como “Python controla diretamente o SSD”?</p>
     </div>
 
-    <p class="bridge-question"><strong>Limite desta aula:</strong> não estudaremos ainda a implementação da transição entre modos, traps ou registradores envolvidos. Nesta primeira aula basta compreender a função da fronteira.</p>
+    <p class="bridge-question"><strong>Limite desta aula:</strong> a implementação da transição entre modos, traps e registradores envolvidos será estudada posteriormente. Nesta aula, o foco está em compreender a função dessa fronteira.</p>
   </div>
 </section>
 
 <section class="section" id="historia">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">8 · História sem transformar a aula em cronologia</p>
+      <p class="eyebrow">8 · Evolução dos sistemas operacionais</p>
       <h2>Os sistemas operacionais evoluíram porque novos problemas apareceram</h2>
       <p>O capítulo introdutório de Tanenbaum apresenta uma história extensa dos sistemas operacionais. Para esta aula vamos utilizar apenas o fio conceitual: à medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
     </div>
@@ -391,7 +391,7 @@ estrutura do SO ou recurso físico</div>
     </div>
 
     <div class="question-set">
-      <h3>Em vez de decorar datas, identifique o padrão</h3>
+      <h3>Identifique o padrão de evolução</h3>
       <ol>
         <li>Por que esperar uma operação de E/S pode desperdiçar tempo de CPU?</li>
         <li>O que muda quando colocamos mais de uma tarefa na memória?</li>
@@ -461,7 +461,7 @@ top</code></pre></div>
     <div class="code-frame"><div class="code-caption">Informações expostas pelo kernel</div><pre><code>ls /proc</code></pre></div>
 
     <div class="question-set">
-      <h3>Não responda apenas “o que o comando mostra”</h3>
+      <h3>Relacione cada comando aos conceitos da aula</h3>
       <ol>
         <li>Qual problema de gerenciamento do SO está relacionado a cada comando?</li>
         <li>Por que aparecem processos que você não abriu manualmente?</li>
@@ -487,7 +487,7 @@ top</code></pre></div>
         <li>Quais programas podem disputar tempo de CPU?</li>
         <li>Que abstrações do SO estão sendo utilizadas?</li>
         <li>Quais operações provavelmente precisam atravessar a fronteira entre modo usuário e modo núcleo?</li>
-        <li>Por que o navegador não deveria conseguir acessar livremente a memória do reprodutor de música?</li>
+        <li>Como o sistema operacional mantém a memória do navegador separada da memória do reprodutor de música?</li>
         <li>Identifique uma situação relacionada à <strong>conveniência</strong> e outra relacionada à <strong>eficiência</strong>.</li>
         <li>Se a máquina começar a ficar lenta, quais recursos você investigaria primeiro? Justifique.</li>
         <li>Associe cada problema identificado a um dos temas futuros: processos, escalonamento, memória, arquivos, E/S ou proteção.</li>
