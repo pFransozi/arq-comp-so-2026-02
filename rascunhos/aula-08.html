@@ -97,6 +97,7 @@
     <a href="#tipos">Tipos de SO</a>
     <a href="#observacao">Observação no Linux</a>
     <a href="#integracao">Atividade de integração</a>
+    <a href="#programa-processo">Do programa ao processo</a>
     <a href="#fechamento">Síntese</a>
   </nav>
 </details>
@@ -513,6 +514,44 @@ top</code></pre></div>
   </div>
 </section>
 
+<section class="section" id="programa-processo">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">13 · Do programa ao processo</p>
+      <h2>Da possibilidade de execução à execução em andamento</h2>
+      <p>Um programa armazenado representa uma possibilidade de execução: ele contém instruções, dados e estruturas que descrevem um comportamento que poderá ser realizado.</p>
+    </div>
+
+    <div class="concept-grid">
+      <article class="concept-card">
+        <h3>Programa</h3>
+        <div class="concept-item">
+          <strong>Promessa de execução</strong>
+          <p>O programa descreve o que poderá acontecer quando suas instruções forem executadas.</p>
+        </div>
+      </article>
+
+      <article class="concept-card">
+        <h3>Processo</h3>
+        <div class="concept-item">
+          <strong>Promessa sendo realizada</strong>
+          <p>Quando o programa entra em execução, o sistema operacional passa a acompanhar uma instância ativa, associando a ela CPU, memória, estado e outros recursos.</p>
+        </div>
+      </article>
+    </div>
+
+    <div class="mental-map" style="margin-top:1.3rem">Programa
+    ↓ possibilidade de execução
+Processo
+    ↓ execução acompanhada pelo sistema operacional
+CPU · memória · estado · recursos</div>
+
+    <p>Essa distinção é importante porque um processo envolve mais do que o código do programa. Durante a execução, o sistema operacional precisa acompanhar informações como estado, memória utilizada, contexto de execução e recursos associados.</p>
+
+    <p class="bridge-question"><strong>Próxima pergunta:</strong> se vários programas podem se transformar em processos ao mesmo tempo, como o sistema operacional representa, organiza e acompanha cada um deles?</p>
+  </div>
+</section>
+
 <section class="section" id="fechamento">
   <div class="container">
     <div class="section-heading">
@@ -533,7 +572,7 @@ Sistema Operacional
     ↓ gerencia · compartilha · protege
 CPU · memória · armazenamento · rede · dispositivos</div>
 
-    <p class="bridge-question"><strong>Próxima pergunta:</strong> se vários programas podem estar ativos ao mesmo tempo, como o sistema operacional representa cada programa em execução? Esse será o ponto de partida para estudar <strong>processos</strong>.</p>
+    <p class="bridge-question"><strong>Continuidade:</strong> a próxima aula aprofundará a representação, os estados e o gerenciamento de processos pelo sistema operacional.</p>
   </div>
 </section>
 
