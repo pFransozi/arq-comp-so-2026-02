@@ -242,37 +242,61 @@ Hardware</div>
 <section class="section" id="abstracao">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">3 · Primeira perspectiva</p>
-      <h2>O sistema operacional fornece abstrações</h2>
-      <p>Uma das funções centrais do sistema operacional é fornecer aos programas recursos abstratos mais simples que os mecanismos físicos da máquina. O hardware permanece presente, mas o software passa a utilizar interfaces que evitam repetir toda a complexidade de cada dispositivo.</p>
+      <p class="eyebrow">3 · Abstrações fornecidas pelo sistema operacional</p>
+      <h2>Do recurso físico ao serviço utilizado pela aplicação</h2>
+      <p>Uma das funções centrais do sistema operacional é transformar mecanismos físicos da máquina em serviços que possam ser utilizados pelas aplicações. A aplicação trabalha com conceitos adequados ao seu problema; o sistema operacional coordena os detalhes necessários para que esses conceitos sejam realizados sobre o hardware.</p>
     </div>
 
-    <figure class="source-figure compact">
-      <img src="assets/aula-08/tanenbaum-fig-1-2.jpg" alt="Representação do sistema operacional entre programas aplicativos e hardware, transformando uma interface complexa em uma interface mais simples.">
-      <figcaption><strong>Abstração.</strong> A figura resume a ideia de que o SO oferece aos programas uma interface mais adequada que a interface física do hardware.</figcaption>
-    </figure>
+    <p>Esse mecanismo pode ser entendido como uma <strong>abstração</strong>. A abstração preserva aquilo que a aplicação precisa conhecer e concentra, nas camadas inferiores, detalhes relacionados à implementação, ao dispositivo e à arquitetura.</p>
 
-    <div class="trace-table-wrap">
+    <div class="concept-grid">
+      <article class="concept-card">
+        <h3>Armazenamento</h3>
+        <div class="concept-item"><strong>Para a aplicação</strong><p>arquivos, diretórios, nomes, leitura e gravação.</p></div>
+        <div class="concept-item"><strong>Para o sistema</strong><p>blocos de armazenamento, controladores, buffers, permissões e organização do sistema de arquivos.</p></div>
+      </article>
+      <article class="concept-card">
+        <h3>Memória</h3>
+        <div class="concept-item"><strong>Para a aplicação</strong><p>um espaço de memória no qual código e dados podem ser utilizados durante a execução.</p></div>
+        <div class="concept-item"><strong>Para o sistema</strong><p>endereços físicos, mapeamentos, proteção e distribuição da memória entre diferentes programas.</p></div>
+      </article>
+      <article class="concept-card">
+        <h3>Processador</h3>
+        <div class="concept-item"><strong>Para a aplicação</strong><p>a possibilidade de executar suas instruções e continuar avançando ao longo do tempo.</p></div>
+        <div class="concept-item"><strong>Para o sistema</strong><p>núcleos disponíveis, estados de execução e compartilhamento do tempo de processamento entre atividades concorrentes.</p></div>
+      </article>
+      <article class="concept-card">
+        <h3>Comunicação em rede</h3>
+        <div class="concept-item"><strong>Para a aplicação</strong><p>enviar e receber dados por uma interface de comunicação.</p></div>
+        <div class="concept-item"><strong>Para o sistema</strong><p>buffers, protocolos, drivers, controlador de rede e acesso coordenado ao dispositivo.</p></div>
+      </article>
+    </div>
+
+    <div class="trace-table-wrap" style="margin-top:1.3rem">
       <table class="twos-table">
-        <thead><tr><th>Hardware ou mecanismo</th><th>Abstração útil ao software</th></tr></thead>
+        <thead><tr><th>Recurso ou mecanismo físico</th><th>Abstração percebida pela aplicação</th><th>Função do SO envolvida</th></tr></thead>
         <tbody>
-          <tr><td>CPU</td><td>processo e thread</td></tr>
-          <tr><td>memória física</td><td>espaço de endereçamento</td></tr>
-          <tr><td>dispositivo de armazenamento</td><td>arquivo e diretório</td></tr>
-          <tr><td>placa/controlador de rede</td><td>interfaces de comunicação</td></tr>
-          <tr><td>dispositivos de E/S</td><td>operações padronizadas mediadas pelo SO</td></tr>
+          <tr><td>CPU e núcleos</td><td>execução de um programa</td><td>gerenciamento de processos e escalonamento</td></tr>
+          <tr><td>memória física</td><td>espaço de memória da aplicação</td><td>gerenciamento de memória</td></tr>
+          <tr><td>SSD ou outro armazenamento</td><td>arquivo e diretório</td><td>sistema de arquivos e gerenciamento de E/S</td></tr>
+          <tr><td>placa/controlador de rede</td><td>interface de comunicação</td><td>rede, buffers, protocolos e drivers</td></tr>
+          <tr><td>teclado, tela, USB e outros dispositivos</td><td>operações padronizadas de entrada e saída</td><td>gerenciamento de E/S e drivers</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="question-set">
-      <h3>Cheque a ideia</h3>
+      <h3>Relacione abstração e função do sistema operacional</h3>
       <ol>
-        <li>Um arquivo existe fisicamente no SSD exatamente como a aplicação o enxerga?</li>
-        <li>Por que <code>abrir um arquivo</code> é uma abstração mais útil para uma aplicação do que manipular diretamente blocos físicos?</li>
-        <li>Qual vantagem existe em duas aplicações diferentes utilizarem a mesma abstração de arquivo?</li>
+        <li><strong>Compare os dois níveis.</strong> Escolha uma linha da tabela e explique a diferença entre o que a aplicação percebe e o que o sistema operacional precisa coordenar.</li>
+        <li><strong>Considere o armazenamento.</strong> Por que trabalhar com arquivos e diretórios é mais adequado para uma aplicação do que manipular diretamente blocos de um SSD?</li>
+        <li><strong>Considere a memória.</strong> Que vantagem existe em cada aplicação trabalhar com seu próprio espaço de memória em vez de conhecer diretamente a organização completa da RAM?</li>
+        <li><strong>Retome o exemplo de rede.</strong> Se a interface física mudar de Ethernet para Wi-Fi, quais partes da abstração utilizada pela aplicação podem permanecer iguais?</li>
+        <li><strong>Identifique a função do SO.</strong> Em cada exemplo, que tipo de responsabilidade foi deslocada da aplicação para o sistema operacional?</li>
       </ol>
     </div>
+
+    <p class="bridge-question"><strong>Próxima ideia:</strong> oferecer abstrações é apenas uma parte do trabalho. Como CPU, memória, armazenamento e dispositivos são recursos compartilhados e limitados, o sistema operacional também precisa decidir como esses recursos serão utilizados.</p>
   </div>
 </section>
 
