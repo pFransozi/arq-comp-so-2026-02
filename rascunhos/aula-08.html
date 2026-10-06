@@ -186,6 +186,13 @@ Hardware</div>
       <p>Considere uma aplicação que precisa enviar dados para um servidor pela rede. Para o programa, a intenção pode ser simples: estabelecer uma comunicação, enviar uma mensagem e receber uma resposta. Para que isso aconteça, diferentes mecanismos de software e hardware precisam atuar de forma coordenada.</p>
     </div>
 
+    <figure class="source-figure compact">
+      <img src="assets/aula-08/application-intent-network.svg" alt="Diagrama simples mostrando uma aplicação cliente enviando dados para um servidor e recebendo uma resposta.">
+      <figcaption><strong>Intenção da aplicação.</strong> Para o programa, o objetivo é comunicar-se com outro sistema: enviar dados e receber uma resposta. Os mecanismos necessários para realizar essa intenção serão revelados na próxima figura.</figcaption>
+    </figure>
+
+    <p class="bridge-question"><strong>Observe a diferença de perspectiva:</strong> a aplicação descreve <em>o que deseja realizar</em>. O sistema operacional organiza <em>como essa intenção será concretizada</em> pelos recursos da máquina.</p>
+
     <figure class="source-figure">
       <img src="assets/aula-08/service-request-flow.svg" alt="Diagrama mostrando uma aplicação enviando dados a um servidor, o sistema operacional coordenando sockets, buffers, pilha de protocolos e driver de rede, e o hardware com CPU, RAM, placa de rede e barramento.">
       <figcaption><strong>Da intenção da aplicação à comunicação em rede.</strong> A aplicação expressa a necessidade de enviar e receber dados; o sistema operacional organiza essa solicitação e coordena os recursos necessários para que a comunicação aconteça.</figcaption>
