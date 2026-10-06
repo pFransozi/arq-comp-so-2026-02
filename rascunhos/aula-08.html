@@ -101,11 +101,8 @@
     <a href="#privilegios">Modo usuário e núcleo</a>
     <a href="#syscalls">Chamadas de sistema</a>
     <a href="#historia">Uma história de problemas</a>
-    <a href="#mapa">Mapa da disciplina</a>
     <a href="#tipos">Tipos de SO</a>
-    <a href="#observacao">Observação no Linux</a>
     <a href="#integracao">Atividade de integração</a>
-    <a href="#programa-processo">Do programa ao processo</a>
     <a href="#fechamento">Síntese</a>
   </nav>
 </details>
@@ -530,31 +527,10 @@ Aplicação continua a execução</div>
   </div>
 </section>
 
-<section class="section" id="mapa">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">9 · O mapa da disciplina</p>
-      <h2>Agora podemos entender por que cada tema existe</h2>
-      <p>Os próximos assuntos não são uma lista arbitrária. Cada um responde a um problema que apareceu nesta aula.</p>
-    </div>
-
-    <div class="map-list">
-      <article><h3>Processos</h3><p>Como o SO representa e acompanha programas em execução?</p></article>
-      <article><h3>Escalonamento</h3><p>Quem usa a CPU agora e por quanto tempo?</p></article>
-      <article><h3>Memória</h3><p>Como vários processos ocupam e protegem seus espaços de memória?</p></article>
-      <article><h3>Sistemas de arquivos</h3><p>Como dados persistentes são organizados e acessados?</p></article>
-      <article><h3>E/S e drivers</h3><p>Como o SO controla dispositivos diferentes por interfaces utilizáveis?</p></article>
-      <article><h3>Proteção e usuários</h3><p>Quem pode acessar qual recurso e realizar qual operação?</p></article>
-      <article><h3>Inicialização</h3><p>Como o software de sistema chega ao estado em que pode oferecer todos esses serviços?</p></article>
-      <article><h3>Concorrência</h3><p>O que acontece quando atividades diferentes avançam e compartilham dados ou recursos?</p></article>
-    </div>
-  </div>
-</section>
-
 <section class="section" id="tipos">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">10 · Diferentes sistemas, diferentes prioridades</p>
+      <p class="eyebrow">9 · Diferentes sistemas, diferentes prioridades</p>
       <h2>Um sistema operacional não é definido por uma única forma de uso</h2>
       <p>Os princípios gerais permanecem, mas as prioridades mudam conforme o contexto.</p>
     </div>
@@ -574,36 +550,10 @@ Aplicação continua a execução</div>
   </div>
 </section>
 
-<section class="section" id="observacao">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">11 · Observação prática</p>
-      <h2>Procure evidências do que acabamos de estudar</h2>
-      <p>Em Linux ou WSL, use alguns comandos apenas como instrumentos de observação.</p>
-    </div>
-
-    <div class="code-frame"><div class="code-caption">Processos</div><pre><code>ps
-top</code></pre></div>
-    <div class="code-frame"><div class="code-caption">Memória</div><pre><code>free -h</code></pre></div>
-    <div class="code-frame"><div class="code-caption">Sistemas de arquivos</div><pre><code>df -h</code></pre></div>
-    <div class="code-frame"><div class="code-caption">Informações expostas pelo kernel</div><pre><code>ls /proc</code></pre></div>
-
-    <div class="question-set">
-      <h3>Relacione cada comando aos conceitos da aula</h3>
-      <ol>
-        <li>Qual problema de gerenciamento do SO está relacionado a cada comando?</li>
-        <li>Por que aparecem processos que você não abriu manualmente?</li>
-        <li>Por que memória “em uso” não pertence a uma única aplicação?</li>
-        <li>O que a existência de vários sistemas de arquivos indica sobre abstração?</li>
-      </ol>
-    </div>
-  </div>
-</section>
-
 <section class="section" id="integracao">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">12 · Atividade de integração</p>
+      <p class="eyebrow">10 · Atividade de integração</p>
       <h2>Analise uma situação cotidiana usando o modelo da aula</h2>
       <p>Considere um notebook em que o estudante mantém o navegador aberto com várias abas, reproduz música, conecta um pendrive e executa uma suíte de testes Python que utiliza intensamente a CPU.</p>
     </div>
@@ -623,44 +573,6 @@ top</code></pre></div>
     </div>
 
     <p class="bridge-question"><strong>Objetivo da atividade:</strong> não encontrar um único “culpado”, mas perceber que o sistema operacional coordena vários recursos simultaneamente e oferece às aplicações uma visão organizada dessa máquina.</p>
-  </div>
-</section>
-
-<section class="section" id="programa-processo">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">13 · Do programa ao processo</p>
-      <h2>Da possibilidade de execução à execução em andamento</h2>
-      <p>Um programa armazenado representa uma possibilidade de execução: ele contém instruções, dados e estruturas que descrevem um comportamento que poderá ser realizado.</p>
-    </div>
-
-    <div class="concept-grid">
-      <article class="concept-card">
-        <h3>Programa</h3>
-        <div class="concept-item">
-          <strong>Promessa de execução</strong>
-          <p>O programa descreve o que poderá acontecer quando suas instruções forem executadas.</p>
-        </div>
-      </article>
-
-      <article class="concept-card">
-        <h3>Processo</h3>
-        <div class="concept-item">
-          <strong>Promessa sendo realizada</strong>
-          <p>Quando o programa entra em execução, o sistema operacional passa a acompanhar uma instância ativa, associando a ela CPU, memória, estado e outros recursos.</p>
-        </div>
-      </article>
-    </div>
-
-    <div class="mental-map" style="margin-top:1.3rem">Programa
-    ↓ possibilidade de execução
-Processo
-    ↓ execução acompanhada pelo sistema operacional
-CPU · memória · estado · recursos</div>
-
-    <p>Essa distinção é importante porque um processo envolve mais do que o código do programa. Durante a execução, o sistema operacional precisa acompanhar informações como estado, memória utilizada, contexto de execução e recursos associados.</p>
-
-    <p class="bridge-question"><strong>Próxima pergunta:</strong> se vários programas podem se transformar em processos ao mesmo tempo, como o sistema operacional representa, organiza e acompanha cada um deles?</p>
   </div>
 </section>
 
