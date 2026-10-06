@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 830 425" role="img" aria-labelledby="title desc">
+<title id="title">Hardware de computador e estrutura de software</title>
+<desc id="desc">Diagrama em camadas com programas aplicativos, bibliotecas e utilitários, sistema operacional, hardware de execução, barramento, tradução de memória, rede e dispositivos de entrada e saída e memória principal. As interfaces API, ABI e ISA aparecem à esquerda.</desc>
+<style>
+  text{font-family:Georgia, "Times New Roman", serif; fill:#242424}
+  .label{font-size:16px;font-weight:600}
+  .boxtext{font-size:17px;font-weight:700;text-anchor:middle}
+  .small{font-size:15px;font-weight:700;text-anchor:middle}
+  .soft{fill:#dfe7e7;stroke:#333;stroke-width:1.2}
+  .mid{fill:#b6c9c9;stroke:#333;stroke-width:1.2}
+  .light{fill:#ededf0;stroke:#333;stroke-width:1.2}
+  .gray{fill:#c9c9cc;stroke:#333;stroke-width:1.2}
+  .line{stroke:#333;stroke-width:1.2;fill:none}
+</style>
+<path class="soft" d="M290 15 H625 V160 H580 V101 H542 V160 H290 Z"/>
+<rect class="mid" x="290" y="64" width="290" height="96"/>
+<rect class="soft" x="290" y="101" width="252" height="59"/>
+<text class="boxtext" x="457" y="46">Programas aplicativos</text>
+<text class="boxtext" x="435" y="91">Bibliotecas/utilitários</text>
+<text class="boxtext" x="416" y="140">Sistema operacional</text>
+<rect class="light" x="290" y="160" width="335" height="50"/>
+<text class="boxtext" x="458" y="190">Hardware de execução</text>
+<rect class="gray" x="290" y="210" width="255" height="90"/>
+<text class="small" x="418" y="265">Interconexão de sistema</text>
+<text class="small" x="418" y="285">(barramento)</text>
+<rect class="light" x="545" y="210" width="80" height="90"/>
+<text class="small" x="585" y="252">Tradução</text>
+<text class="small" x="585" y="271">de</text>
+<text class="small" x="585" y="290">memória</text>
+<rect class="light" x="290" y="300" width="132" height="80"/>
+<text class="small" x="356" y="331">Rede e</text>
+<text class="small" x="356" y="350">dispositivos</text>
+<text class="small" x="356" y="369">de E/S</text>
+<rect class="light" x="493" y="300" width="132" height="80"/>
+<text class="small" x="559" y="338">Memória</text>
+<text class="small" x="559" y="358">principal</text>
+<text class="label" x="235" y="50" text-anchor="end">Interface de</text>
+<text class="label" x="235" y="70" text-anchor="end">programação de aplicativo</text>
+<line class="line" x1="240" y1="64" x2="290" y2="64"/>
+<text class="label" x="235" y="96" text-anchor="end">Interface binária</text>
+<text class="label" x="235" y="116" text-anchor="end">de aplicativo</text>
+<line class="line" x1="240" y1="101" x2="290" y2="101"/>
+<text class="label" x="235" y="151" text-anchor="end">Arquitetura do</text>
+<text class="label" x="235" y="171" text-anchor="end">conjunto de instrução</text>
+<line class="line" x1="240" y1="160" x2="290" y2="160"/>
+<path class="line" d="M636 15 C649 15 649 35 649 52 C649 71 660 81 673 82 C660 83 649 95 649 113 C649 135 649 160 636 160"/>
+<text class="label" x="681" y="92">Software</text>
+<path class="line" d="M636 160 C649 160 649 182 649 204 C649 229 660 240 673 241 C660 242 649 256 649 278 C649 322 649 380 636 380"/>
+<text class="label" x="681" y="250">Hardware</text>
+</svg>

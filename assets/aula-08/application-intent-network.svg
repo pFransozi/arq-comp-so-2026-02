@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 360" role="img" aria-labelledby="title desc">
+  <title id="title">Intenção da aplicação em uma comunicação de rede</title>
+  <desc id="desc">Diagrama simples mostrando uma aplicação enviando dados para um servidor e recebendo uma resposta, sem expor os mecanismos internos da comunicação.</desc>
+  <style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#24323a}
+    .title{font-size:20px;font-weight:700}
+    .body{font-size:16px}
+    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:16px}
+    .box{fill:#f7fafb;stroke:#7ea1ae;stroke-width:1.8}
+    .chip{fill:#e7f0f3;stroke:#7ea1ae;stroke-width:1.2}
+    .arrow{stroke:#50717d;stroke-width:2.4;fill:none;marker-end:url(#arrow)}
+    .return{stroke:#7b8f98;stroke-width:2.1;fill:none;marker-end:url(#arrow2)}
+  </style>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#50717d"/>
+    </marker>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3.5" orient="auto">
+      <polygon points="0 0, 9 3.5, 0 7" fill="#7b8f98"/>
+    </marker>
+  </defs>
+
+  <text x="490" y="38" text-anchor="middle" class="title">Intenção da aplicação</text>
+
+  <rect x="65" y="85" width="265" height="170" rx="20" class="box"/>
+  <text x="198" y="120" text-anchor="middle" class="title">Aplicação cliente</text>
+  <rect x="98" y="145" width="200" height="46" rx="12" class="chip"/>
+  <text x="198" y="174" text-anchor="middle" class="code">enviar(dados)</text>
+  <text x="198" y="222" text-anchor="middle" class="body">“Quero enviar esta informação”</text>
+
+  <rect x="650" y="85" width="265" height="170" rx="20" class="box"/>
+  <text x="782" y="120" text-anchor="middle" class="title">Servidor</text>
+  <rect x="682" y="145" width="200" height="46" rx="12" class="chip"/>
+  <text x="782" y="174" text-anchor="middle" class="code">dados recebidos</text>
+  <text x="782" y="222" text-anchor="middle" class="body">“A informação chegou”</text>
+
+  <path d="M330 145 C430 105,550 105,650 145" class="arrow"/>
+  <text x="490" y="108" text-anchor="middle" class="body">enviar dados</text>
+
+  <path d="M650 205 C550 245,430 245,330 205" class="return"/>
+  <text x="490" y="262" text-anchor="middle" class="body">receber resposta</text>
+
+  <text x="490" y="318" text-anchor="middle" class="body">Para a aplicação, o objetivo é simples: comunicar-se com outro sistema.</text>
+</svg>
