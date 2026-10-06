@@ -193,6 +193,19 @@ Hardware</div>
       <figcaption><strong>Da intenção da aplicação à comunicação em rede.</strong> A aplicação expressa a necessidade de enviar e receber dados; o sistema operacional organiza essa solicitação e coordena os recursos necessários para que a comunicação aconteça.</figcaption>
     </figure>
 
+    <div class="question-set">
+      <h3>Agora analise os mecanismos envolvidos</h3>
+      <ol>
+        <li><strong>Identifique as etapas intermediárias.</strong> Quais componentes do sistema operacional aparecem entre a aplicação e o hardware de rede?</li>
+        <li><strong>Relacione software e hardware.</strong> Como socket, buffers, pilha de protocolos e driver se conectam a CPU, memória, barramento e controlador de rede durante o envio dos dados?</li>
+        <li><strong>Explique a mediação realizada pelo sistema operacional.</strong> Por que a aplicação utiliza os serviços do SO em vez de controlar diretamente a placa de rede e o barramento?</li>
+        <li><strong>Acompanhe os dados durante a transmissão.</strong> Por quais estruturas mostradas na figura os dados podem passar antes de chegar ao hardware de rede?</li>
+        <li><strong>Considere a resposta do servidor.</strong> Como a figura ajuda a representar o caminho de retorno até os dados se tornarem disponíveis para a aplicação?</li>
+        <li><strong>Analise o compartilhamento.</strong> Se várias aplicações utilizarem a rede ao mesmo tempo, quais recursos mostrados na figura precisarão ser coordenados pelo sistema operacional?</li>
+        <li><strong>Relacione a figura à organização em camadas.</strong> Quais detalhes permanecem nas camadas inferiores e quais informações chegam à aplicação?</li>
+      </ol>
+    </div>
+
     <div class="concept-grid">
       <article class="concept-card">
         <h3>O que a aplicação expressa</h3>
@@ -213,16 +226,12 @@ Hardware</div>
       </figure>
 
       <ol>
-        <li><strong>Reconstrua a intenção da aplicação.</strong> O programa deseja enviar dados para um servidor. O que essa intenção representa do ponto de vista da aplicação e quais detalhes da comunicação ainda não aparecem nesse nível?</li>
-        <li><strong>Identifique as etapas intermediárias.</strong> Entre a solicitação da aplicação e a transmissão pela placa de rede, quais componentes do sistema operacional aparecem na figura? Explique a função que cada um pode exercer.</li>
-        <li><strong>Relacione software e hardware.</strong> Como sockets, buffers, pilha de protocolos e driver se conectam a CPU, memória, barramento e controlador de rede durante o envio dos dados?</li>
-        <li><strong>Explique a mediação realizada pelo sistema operacional.</strong> Por que a aplicação utiliza serviços do SO em vez de controlar diretamente a placa de rede e o barramento? Considere abstração, compatibilidade, compartilhamento e proteção.</li>
-        <li><strong>Acompanhe os dados durante a transmissão.</strong> Antes de chegarem ao hardware de rede, por quais estruturas de software e regiões de memória os dados podem passar? Qual é o papel da memória principal nesse percurso?</li>
-        <li><strong>Considere a resposta do servidor.</strong> Quando dados retornam pela rede, como eles percorrem o caminho inverso até se tornarem disponíveis para a aplicação?</li>
-        <li><strong>Analise o compartilhamento.</strong> Várias aplicações podem usar a rede ao mesmo tempo. Que responsabilidades passam a existir para o sistema operacional quando diferentes processos disputam memória, CPU e acesso ao dispositivo de rede?</li>
-        <li><strong>Relacione a figura à organização em camadas.</strong> Quais detalhes ficam concentrados nas camadas inferiores e quais informações são apresentadas à aplicação? Como essa separação simplifica o desenvolvimento de software?</li>
-        <li><strong>Considere outra interface de rede.</strong> Se o computador trocar Ethernet por Wi-Fi, quais partes da aplicação poderiam permanecer iguais e quais partes do sistema provavelmente precisariam mudar?</li>
-        <li><strong>Generalize o princípio.</strong> O que esse exemplo revela sobre o papel do sistema operacional como intermediário entre a intenção de um programa e os mecanismos físicos necessários para realizá-la?</li>
+        <li><strong>Reconstrua a intenção da aplicação.</strong> O programa deseja enviar dados para um servidor. O que essa intenção representa do ponto de vista da aplicação?</li>
+        <li><strong>Observe o que a figura mostra.</strong> Quais são os dois extremos da comunicação e quais ações aparecem entre eles?</li>
+        <li><strong>Observe o que a figura ainda não mostra.</strong> Que detalhes técnicos seriam necessários para que essa comunicação realmente acontecesse?</li>
+        <li><strong>Relacione intenção e abstração.</strong> Por que é útil para a aplicação expressar apenas “enviar dados” e “receber resposta”, sem precisar definir todos os mecanismos envolvidos?</li>
+        <li><strong>Considere a troca de tecnologia.</strong> Se a conexão mudar de cabo Ethernet para Wi-Fi, o objetivo da aplicação continua o mesmo? O que essa permanência sugere sobre abstração?</li>
+        <li><strong>Generalize a ideia.</strong> Que outras operações de uma aplicação podem ser descritas de forma simples, mesmo dependendo de vários mecanismos internos para serem realizadas?</li>
       </ol>
     </div>
 
