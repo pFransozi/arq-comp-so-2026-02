@@ -24,6 +24,7 @@
     .mental-map{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.65;padding:1.25rem;border:1px solid var(--line,#d8e1e7);border-radius:16px;background:var(--surface,#fff);overflow:auto}
     .source-figure{max-width:900px;margin:2rem auto;padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:18px;background:var(--surface,#fff)}
     .source-figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:10px}
+    .source-figure img.user-kernel-figure{width:100%;aspect-ratio:1115/360;object-fit:cover;object-position:center 56%;border-radius:6px}
     .source-figure figcaption{margin-top:.8rem;font-size:.9rem;line-height:1.5;opacity:.82}
     .source-figure.compact{max-width:740px}
     .question-set{display:grid;gap:.75rem;margin:1.25rem 0;padding:1.1rem 1.2rem;border-left:4px solid var(--accent,#1f7891);background:var(--surface,#fff);border-radius:0 14px 14px 0}
@@ -368,30 +369,60 @@ Hardware</div>
 <section class="section" id="privilegios">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">6 · Compartilhar não basta: é preciso proteger</p>
+      <p class="eyebrow">6 · Proteção e privilégio</p>
       <h2>Modo usuário e modo núcleo</h2>
-      <p>A arquitetura fornece mecanismos de privilégio que o sistema operacional utiliza para separar responsabilidades, proteger recursos e manter o isolamento entre aplicações.</p>
+      <p>O sistema operacional utiliza mecanismos de privilégio fornecidos pela arquitetura para separar a execução das aplicações das operações que controlam recursos críticos da máquina. Essa separação estabelece dois níveis principais de execução: <strong>modo usuário</strong> e <strong>modo núcleo</strong>.</p>
     </div>
+
+    <p>Aplicações comuns executam em <strong>modo usuário</strong>, com acesso controlado aos recursos do sistema. O núcleo do sistema operacional executa em <strong>modo núcleo</strong>, no qual pode realizar operações privilegiadas necessárias para gerenciar memória, dispositivos, interrupções e outros recursos compartilhados.</p>
 
     <figure class="source-figure compact">
-      <img src="assets/aula-08/tanenbaum-fig-1-1.jpg" alt="Figura mostrando hardware na base, sistema operacional em modo núcleo e programas em modo usuário.">
-      <figcaption><strong>Separação de privilégios.</strong> Na figura, aplicações e interface com o usuário ficam em modo usuário, enquanto o sistema operacional ocupa a região privilegiada.</figcaption>
+      <img class="user-kernel-figure" src="assets/aula-08/tanenbaum-fig-1-1.jpg" alt="Figura mostrando aplicações e interface em modo usuário, sistema operacional em modo núcleo e hardware na base.">
+      <figcaption><strong>Separação de privilégios.</strong> Aplicações e programas de interface permanecem no modo usuário; o sistema operacional ocupa a região privilegiada que controla o acesso aos recursos do hardware.</figcaption>
     </figure>
 
-    <div class="question-set">
-      <h3>Quem deveria poder realizar diretamente cada operação?</h3>
-      <ol>
-        <li>Somar dois números.</li>
-        <li>Alterar uma variável da própria aplicação.</li>
-        <li>Reprogramar diretamente o controlador de armazenamento.</li>
-        <li>Alterar o mapeamento de memória de outro processo.</li>
-        <li>Solicitar a leitura de um arquivo.</li>
-        <li>Escrever diretamente em um dispositivo de E/S.</li>
-      </ol>
-      <p><strong>Critério:</strong> diferencie operações que podem permanecer no espaço da aplicação de operações que precisam ser mediadas pelo sistema.</p>
+    <div class="concept-grid">
+      <article class="concept-card">
+        <h3>Modo usuário</h3>
+        <div class="concept-item"><strong>Quem executa</strong><p>aplicações e outros programas que utilizam os serviços do sistema operacional.</p></div>
+        <div class="concept-item"><strong>Como acessa recursos</strong><p>por interfaces controladas, solicitando ao sistema operacional operações que exigem privilégios.</p></div>
+        <div class="concept-item"><strong>Objetivo</strong><p>manter a execução da aplicação isolada dos mecanismos que controlam diretamente a máquina.</p></div>
+      </article>
+
+      <article class="concept-card">
+        <h3>Modo núcleo</h3>
+        <div class="concept-item"><strong>Quem executa</strong><p>o núcleo do sistema operacional e rotinas que precisam atuar com privilégios elevados.</p></div>
+        <div class="concept-item"><strong>O que pode realizar</strong><p>operações de controle sobre memória, dispositivos, interrupções e outros recursos protegidos.</p></div>
+        <div class="concept-item"><strong>Objetivo</strong><p>centralizar a coordenação de operações capazes de afetar todo o sistema.</p></div>
+      </article>
     </div>
 
-    <p class="bridge-question"><strong>Nova pergunta:</strong> se a aplicação não pode executar certas operações diretamente, como ela solicita que o sistema operacional as realize?</p>
+    <div class="trace-table-wrap" style="margin-top:1.3rem">
+      <table class="twos-table">
+        <thead><tr><th>Operação</th><th>Onde ocorre</th><th>Por quê</th></tr></thead>
+        <tbody>
+          <tr><td>somar valores ou processar dados da aplicação</td><td>modo usuário</td><td>é uma operação local ao programa e não exige controle direto do hardware</td></tr>
+          <tr><td>acessar uma variável do próprio processo</td><td>modo usuário</td><td>faz parte do espaço de memória autorizado para a aplicação</td></tr>
+          <tr><td>configurar diretamente um controlador de dispositivo</td><td>modo núcleo</td><td>altera o funcionamento de um recurso físico compartilhado</td></tr>
+          <tr><td>alterar tabelas ou mapeamentos de memória do sistema</td><td>modo núcleo</td><td>afeta proteção e organização da memória</td></tr>
+          <tr><td>ler um arquivo</td><td>solicitação em modo usuário; serviço realizado pelo SO</td><td>a aplicação pede a operação e o sistema coordena armazenamento, permissões e E/S</td></tr>
+          <tr><td>enviar dados pela rede</td><td>solicitação em modo usuário; serviço realizado pelo SO</td><td>a aplicação utiliza uma interface de comunicação e o sistema coordena protocolos, buffers e dispositivo de rede</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-set">
+      <h3>Analise a separação de privilégios</h3>
+      <ol>
+        <li><strong>Compare os dois modos.</strong> Qual diferença fundamental existe entre executar uma instrução comum da aplicação e executar uma operação que altera um recurso protegido?</li>
+        <li><strong>Considere a memória.</strong> Por que o sistema operacional precisa controlar alterações que afetam o espaço de memória de outros processos?</li>
+        <li><strong>Considere os dispositivos.</strong> Que problemas surgiriam se diferentes aplicações pudessem reconfigurar diretamente o mesmo controlador de armazenamento ou de rede?</li>
+        <li><strong>Retome a comunicação em rede.</strong> Em que momento a aplicação permanece no modo usuário e em que momento o sistema operacional precisa atuar com privilégios maiores?</li>
+        <li><strong>Relacione proteção e abstração.</strong> Como a separação entre os dois modos permite oferecer interfaces simples às aplicações sem abrir mão do controle dos recursos físicos?</li>
+      </ol>
+    </div>
+
+    <p class="bridge-question"><strong>Próxima ideia:</strong> a aplicação precisa de uma forma controlada de atravessar essa fronteira e solicitar ao núcleo operações privilegiadas. Essa interface aparece nas <strong>chamadas de sistema</strong>.</p>
   </div>
 </section>
 
