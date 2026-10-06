@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
-  <meta name="description" content="Rascunho da Aula 08 de Arquitetura de Computadores e Sistemas Operacionais: introdução aos sistemas operacionais, abstrações, gerenciamento de recursos, modo usuário e modo núcleo.">
+  <meta name="description" content="Rascunho da Aula 08 de Arquitetura de Computadores e Sistemas Operacionais: introdução aos sistemas operacionais a partir de problemas, abstrações, gerenciamento de recursos, proteção e chamadas de sistema.">
   <meta name="theme-color" content="#101a24">
   <title>Rascunho · Aula 08 — Introdução aos Sistemas Operacionais</title>
   <link rel="stylesheet" href="../styles.css">
@@ -15,523 +15,529 @@
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <style>
     .draft-lesson-banner{padding:.7rem 1rem;text-align:center;font-weight:700;background:var(--accent-soft,#e8f2f5);border-bottom:1px solid var(--line,#d8e1e7)}
-    .os-stack{display:grid;gap:.55rem;max-width:720px;margin:1.5rem auto}
-    .os-stack > div{padding:1rem 1.15rem;border:1px solid var(--line,#d8e1e7);border-radius:14px;background:var(--surface,#fff);text-align:center}
+    .os-stack{display:grid;gap:.55rem;max-width:760px;margin:1.5rem auto}
+    .os-stack>div{padding:1rem 1.15rem;border:1px solid var(--line,#d8e1e7);border-radius:14px;background:var(--surface,#fff);text-align:center}
     .os-stack .os-kernel{border-width:2px}
     .resource-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
     .resource-card{padding:1.15rem;border:1px solid var(--line,#d8e1e7);border-radius:16px;background:var(--surface,#fff)}
     .resource-card h3{margin-top:0}
-    .scenario-table td:first-child,.scenario-table th:first-child{width:18%}
-    .mental-map{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.65;padding:1.25rem;border:1px solid var(--line,#d8e1e7);border-radius:16px;background:var(--surface,#fff);overflow:auto}\n    .source-figure{max-width:900px;margin:2rem auto;padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:18px;background:var(--surface,#fff)}\n    .source-figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:10px}\n    .source-figure figcaption{margin-top:.8rem;font-size:.9rem;line-height:1.5;opacity:.82}\n    .source-figure.compact{max-width:700px}\n    .source-figure.hero-image{max-width:520px}
-    @media(max-width:760px){.resource-grid{grid-template-columns:1fr}}
+    .mental-map{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;line-height:1.65;padding:1.25rem;border:1px solid var(--line,#d8e1e7);border-radius:16px;background:var(--surface,#fff);overflow:auto}
+    .source-figure{max-width:900px;margin:2rem auto;padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:18px;background:var(--surface,#fff)}
+    .source-figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:10px}
+    .source-figure figcaption{margin-top:.8rem;font-size:.9rem;line-height:1.5;opacity:.82}
+    .source-figure.compact{max-width:740px}
+    .question-set{display:grid;gap:.75rem;margin:1.25rem 0;padding:1.1rem 1.2rem;border-left:4px solid var(--accent,#1f7891);background:var(--surface,#fff);border-radius:0 14px 14px 0}
+    .question-set h3{margin:.1rem 0 .35rem}
+    .question-set ol{margin:.2rem 0 0;padding-left:1.35rem}
+    .question-set li+li{margin-top:.45rem}
+    .goal-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}
+    .goal-card{padding:1.15rem;border:1px solid var(--line,#d8e1e7);border-radius:16px;background:var(--surface,#fff)}
+    .timeline-simple{display:grid;grid-template-columns:repeat(6,minmax(110px,1fr));gap:.6rem;overflow:auto;padding-bottom:.4rem}
+    .timeline-simple div{padding:.9rem;border:1px solid var(--line,#d8e1e7);border-radius:12px;background:var(--surface,#fff);min-height:105px}
+    .timeline-simple strong{display:block;margin-bottom:.35rem}
+    .map-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:1rem}
+    .map-list article{padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:14px;background:var(--surface,#fff)}
+    .map-list h3{margin-top:0}
+    @media(max-width:760px){.resource-grid,.goal-grid,.map-list{grid-template-columns:1fr}}
     @media print{.draft-lesson-banner,.theme-toggle,.nav-toggle,.aula03-mobile-toc,.aula03-toc{display:none!important}}
   </style>
 </head>
 <body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean">
-  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
-  <div class="progress" id="progress" aria-hidden="true"></div>
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="../index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
-        <span class="brand-mark" aria-hidden="true">SO</span>
-        <span><strong>Arquitetura &amp; SO</strong><small>Aula 08 · rascunho</small></span>
-      </a>
-      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
-      <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
-        <a href="index.html">Rascunhos</a>
-        <a href="../curso.html">Visão geral</a>
-        <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
-      </nav>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="../index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
+      <span class="brand-mark" aria-hidden="true">SO</span>
+      <span><strong>Arquitetura &amp; SO</strong><small>Aula 08 · rascunho</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+    <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
+      <a href="index.html">Rascunhos</a>
+      <a href="../curso.html">Visão geral</a>
+      <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+    </nav>
+  </div>
+</header>
+
+<div class="draft-lesson-banner">Rascunho para validação · este material ainda não faz parte da navegação oficial</div>
+
+<div class="aula03-shell aula03-page-grid">
+<main id="conteudo">
+
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
+    <div>
+      <p class="eyebrow">Aula 08 · Sistemas Operacionais</p>
+      <h1>Por que precisamos de um sistema operacional?</h1>
+      <p class="hero-lead">Até aqui estudamos a máquina: processador, memória, armazenamento, entrada e saída e representação de dados. Agora a pergunta muda. <strong>Como aplicações conseguem usar essa máquina sem controlar diretamente todos os seus detalhes?</strong></p>
+      <div class="hero-actions"><a class="button button-primary" href="#arquitetura">Começar a aula</a><a class="button button-secondary" href="#integracao">Ir à atividade final</a></div>
     </div>
-  </header>
+    <aside class="guiding-card">
+      <span>Pergunta orientadora</span>
+      <blockquote>O que o sistema operacional precisa fazer para tornar o hardware utilizável, compartilhável e protegido?</blockquote>
+    </aside>
+  </div>
+</section>
 
-  <div class="draft-lesson-banner">Rascunho para validação · este material ainda não faz parte da navegação oficial</div>
+<details class="aula03-mobile-toc">
+  <summary>Nesta aula</summary>
+  <nav>
+    <a href="#visao">Visão da aula</a>
+    <a href="#arquitetura">Da arquitetura ao SO</a>
+    <a href="#sem-so">Se não houvesse SO</a>
+    <a href="#abstracao">SO como abstração</a>
+    <a href="#recursos">SO como gerenciador</a>
+    <a href="#objetivos">Conveniência e eficiência</a>
+    <a href="#privilegios">Modo usuário e núcleo</a>
+    <a href="#syscalls">Chamadas de sistema</a>
+    <a href="#historia">Uma história de problemas</a>
+    <a href="#mapa">Mapa da disciplina</a>
+    <a href="#tipos">Tipos de SO</a>
+    <a href="#observacao">Observação no Linux</a>
+    <a href="#integracao">Atividade de integração</a>
+    <a href="#fechamento">Síntese</a>
+  </nav>
+</details>
 
-  <div class="aula03-shell aula03-page-grid">
-    <main id="conteudo">
-      <section class="hero" id="inicio">
-        <div class="container hero-grid">
-          <div>
-            <p class="eyebrow">Aula 08 · Sistemas Operacionais</p>
-            <h1>Introdução aos Sistemas Operacionais</h1>
-            <p class="hero-lead">Nas aulas anteriores estudamos <strong>como o computador representa, processa, armazena e movimenta dados</strong>. A partir desta aula, o foco passa a ser o software responsável por organizar o uso desses recursos: o <strong>sistema operacional</strong>.</p>
-            <div class="hero-actions">
-              <a class="button button-primary" href="#retomada">Começar a aula</a>
-              <a class="button button-secondary" href="#pratica">Ir à prática</a>
-            </div>
-          </div>
-          <aside class="guiding-card">
-            <span>Pergunta orientadora</span>
-            <blockquote>Por que precisamos de um sistema operacional entre as aplicações e o hardware?</blockquote>
-          </aside>
+<section class="section" id="visao">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Visão da aula</p>
+      <h2>A aula será organizada por problemas, não por definições isoladas</h2>
+      <p>Cada conceito será introduzido a partir de uma necessidade concreta: simplificar o hardware, compartilhar recursos, proteger o sistema e permitir que aplicações solicitem serviços de maneira controlada.</p>
+    </div>
+    <div class="overview-grid">
+      <article class="card topics-card">
+        <h3>Conteúdo programático</h3>
+        <div class="topic-list">
+          <div>Papel do sistema operacional</div>
+          <div>Abstrações</div>
+          <div>Gerenciamento de recursos</div>
+          <div>Conveniência e eficiência</div>
+          <div>Modo usuário e modo núcleo</div>
+          <div>Chamadas de sistema</div>
+          <div>Evolução conceitual dos sistemas operacionais</div>
         </div>
-      </section>
+      </article>
+      <article class="card competency c6">
+        <h3>C6 — Integrar sistemas de software</h3>
+        <div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: compreender como o SO conecta aplicações aos recursos físicos do computador.</small></span></div>
+      </article>
+      <article class="card competency">
+        <h3>Objetivo da aula</h3>
+        <p>Ao final, o estudante deve conseguir explicar por que o SO existe, quais problemas ele resolve e como suas principais áreas se relacionam com CPU, memória, armazenamento e E/S.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
-      <details class="aula03-mobile-toc">
-        <summary>Nesta aula</summary>
-        <nav>
-          <a href="#visao">Visão da aula</a>
-          <a href="#retomada">Retomada</a>
-          <a href="#problema">O problema</a>
-          <a href="#duas-visoes">Duas funções do SO</a>
-          <a href="#abstracoes">Abstrações</a>
-          <a href="#recursos">Gerenciamento de recursos</a>
-          <a href="#privilegios">Modo usuário e núcleo</a>
-          <a href="#servicos">Serviços do SO</a>
-          <a href="#tipos">Tipos de SO</a>
-          <a href="#observacao">Observação prática</a>
-          <a href="#pratica">Autópsia de cenários</a>
-          <a href="#fechamento">Síntese</a>
-          <a href="#referencias">Referências</a>
-        </nav>
-      </details>
+<section class="section" id="arquitetura">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">1 · Da Arquitetura ao Sistema Operacional</p>
+      <h2>Onde o sistema operacional aparece na máquina que já estudamos?</h2>
+      <p>Stallings apresenta o computador e o software como uma estrutura em camadas. Essa visão é particularmente útil para esta disciplina porque conecta diretamente a primeira parte do semestre, dedicada à arquitetura, com a segunda, dedicada ao sistema operacional.</p>
+    </div>
 
-      <section class="section" id="visao">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Visão da aula</p>
-            <h2>Da máquina física ao ambiente de execução</h2>
-            <p>O objetivo desta aula é construir um primeiro modelo mental de sistema operacional. Não estudaremos ainda algoritmos de escalonamento, paginação ou sistemas de arquivos em profundidade. Primeiro precisamos compreender <strong>qual problema o sistema operacional resolve</strong>.</p>
-          </div>
-          <div class="overview-grid">
-            <article class="card topics-card">
-              <h3>Conteúdo programático</h3>
-              <div class="topic-list">
-                <div>Funções de um sistema operacional</div>
-                <div>Abstrações de hardware</div>
-                <div>Gerenciamento de recursos</div>
-                <div>Modo usuário e modo núcleo</div>
-                <div>Processos, memória, arquivos e dispositivos</div>
-                <div>Introdução às chamadas de sistema</div>
-                <div>Tipos de sistemas operacionais</div>
-              </div>
-            </article>
-            <article class="card competency">
-              <h3>C3 — Analisar e selecionar tecnologias</h3>
-              <div class="skill"><strong>H9</strong><span>Identificar as necessidades de tecnologia específicas para atender aos requisitos do projeto.<br><small>Nesta aula: reconhecer que diferentes contextos de uso levam a diferentes requisitos para o sistema operacional.</small></span></div>
-            </article>
-            <article class="card competency c6">
-              <h3>C6 — Integrar sistemas de software</h3>
-              <div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar aplicações, sistema operacional e os recursos físicos estudados na primeira parte da disciplina.</small></span></div>
-            </article>
-          </div>
-        </div>
-      </section>
+    <figure class="source-figure">
+      <img src="assets/aula-08/stallings-fig-1-1.jpg" alt="Estrutura em camadas com programas aplicativos, bibliotecas e utilitários, sistema operacional, arquitetura do conjunto de instruções e hardware.">
+      <figcaption><strong>Software sobre hardware.</strong> O sistema operacional aparece entre programas e os mecanismos fornecidos pela arquitetura e pelo hardware. Fonte: Stallings, capítulo 8, figura de hardware e estrutura de software.</figcaption>
+    </figure>
 
-      <section class="section" id="retomada">
-        <div class="container">
-          <div class="warmup">
-            <div>
-              <p class="eyebrow">Transição da Arquitetura para Sistemas Operacionais</p>
-              <h2>Já estudamos os recursos. Agora precisamos coordená-los.</h2>
-              <p>CPU, memória, armazenamento e dispositivos de entrada e saída não funcionam de maneira isolada. Durante a execução de software, vários programas podem precisar desses recursos ao mesmo tempo.</p>
-            </div>
-            <div class="question-cloud">
-              <div><strong>1 · CPU</strong><span>Se vários programas querem executar, quem decide qual deles usa o processador?</span></div>
-              <div><strong>2 · Memória</strong><span>Quem define quais regiões de memória cada programa pode utilizar?</span></div>
-              <div><strong>3 · Armazenamento</strong><span>Como diferentes programas conseguem acessar arquivos sem controlar diretamente o dispositivo?</span></div>
-              <div><strong>4 · Dispositivos</strong><span>Quem coordena teclado, tela, rede, USB e outros periféricos?</span></div>
-            </div>
-          </div>
-          <p class="bridge-question"><strong>Ponte para esta aula:</strong> a primeira metade da disciplina observou a máquina e seus recursos. A partir daqui, estudaremos <strong>como esses recursos são apresentados, compartilhados e protegidos para que os programas possam utilizá-los</strong>.</p>
-          <figure class="source-figure">
-            <img src="assets/aula-08/stallings-fig-1-1.jpg" alt="Figura de Stallings mostrando a estrutura de alto nível de um computador com CPU, memória principal, entrada e saída e barramento do sistema.">
-            <figcaption><strong>Retomada da arquitetura.</strong> A figura de Stallings organiza o computador em CPU, memória principal, E/S e interconexão. A partir desta estrutura física, a pergunta da aula passa a ser: como o sistema operacional coordena esses recursos? Fonte: Stallings, <em>Arquitetura e Organização de Computadores</em>, Figura 1.1.</figcaption>
-          </figure>
-        </div>
-      </section>
+    <div class="question-set">
+      <h3>Leia a figura antes de continuar</h3>
+      <ol>
+        <li>Em qual camada está o programa que um desenvolvedor normalmente escreve?</li>
+        <li>Quais elementos ficam abaixo do sistema operacional?</li>
+        <li>Por que uma aplicação não deveria precisar conhecer diretamente o barramento, a tradução de memória ou cada dispositivo de E/S?</li>
+        <li>Se retirássemos o sistema operacional da figura, que responsabilidades passariam para as aplicações?</li>
+      </ol>
+    </div>
 
-      <section class="section" id="problema">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">1 · O problema</p>
-            <h2>Um computador moderno executa muitos programas sobre poucos recursos físicos</h2>
-            <p>Imagine um computador executando navegador, editor de código, aplicativo de videoconferência, sincronização de arquivos e atualização do sistema. Todos dependem dos mesmos processadores, da mesma memória e dos mesmos dispositivos.</p>
-          </div>
+    <p class="bridge-question"><strong>Primeira ideia:</strong> a existência do SO permite que o desenvolvimento de aplicações aconteça em um nível de abstração diferente daquele em que o hardware efetivamente opera.</p>
+  </div>
+</section>
 
-          <div class="os-stack" role="img" aria-label="Aplicações acima do sistema operacional, que por sua vez opera sobre o hardware">
-            <div><strong>Aplicações</strong><br><small>Navegador · IDE · player · banco de dados · utilitários</small></div>
-            <div class="os-kernel"><strong>Sistema Operacional</strong><br><small>coordenação · abstração · proteção</small></div>
-            <div><strong>Hardware</strong><br><small>CPU · RAM · armazenamento · rede · dispositivos</small></div>
-          </div>
+<section class="section" id="sem-so">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">2 · O problema antes da definição</p>
+      <h2>O que uma aplicação teria de fazer se não houvesse sistema operacional?</h2>
+      <p>Considere uma tarefa aparentemente simples: abrir um arquivo, ler seus dados e mostrar o conteúdo na tela.</p>
+    </div>
 
-          <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Imagine sem o SO</span><span class="inquiry-tag">problema conceitual</span></div>
-            <div class="inquiry-body">
-              <div>
-                <h3>Cada aplicação teria de conhecer o hardware</h3>
-                <p>Um programa que precisasse gravar dados teria de conhecer controladores, endereços, protocolos do dispositivo, interrupções e detalhes de transferência.</p>
-              </div>
-              <div>
-                <h3>Cada aplicação teria de disputar recursos diretamente</h3>
-                <p>Também seria necessário decidir quem usa CPU, memória, disco e dispositivos quando vários programas solicitassem os mesmos recursos.</p>
-              </div>
-            </div>
-          </div>
+    <div class="concept-grid">
+      <article class="concept-card">
+        <h3>O que a aplicação quer fazer</h3>
+        <div class="concept-item"><strong>Intenção</strong><p>Abrir <code>relatorio.pdf</code>, ler bytes e apresentar informações ao usuário.</p></div>
+      </article>
+      <article class="concept-card">
+        <h3>O que existe no hardware</h3>
+        <div class="concept-item"><strong>Mecanismos</strong><p>CPU, memória, controladores, barramentos, armazenamento, tela, interrupções e protocolos específicos de cada dispositivo.</p></div>
+      </article>
+    </div>
 
-          <p class="bridge-question"><strong>Primeira definição operacional:</strong> o sistema operacional é o software de base que cria uma interface utilizável sobre o hardware e coordena o uso dos recursos físicos pelos programas.</p>
-        </div>
-      </section>
+    <div class="mental-map">Aplicação deseja:
+    abrir("relatorio.pdf")
 
-      <section class="section" id="duas-visoes">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">2 · Duas perspectivas complementares</p>
-            <h2>O sistema operacional como máquina estendida e como gerenciador de recursos</h2>
-            <p>Uma introdução clássica aos sistemas operacionais pode ser organizada a partir de duas funções. Elas não competem entre si: descrevem o mesmo sistema a partir de pontos de vista diferentes.</p>
-          </div>
+Sem uma camada intermediária, ela precisaria lidar com:
+    localização física dos dados
+    controlador de armazenamento
+    transferência para a memória
+    estado do dispositivo
+    erros de E/S
+    acesso à tela
+    concorrência com outros programas</div>
 
-          <div class="concept-grid">
-            <article class="concept-card">
-              <h3>Fornecer abstrações</h3>
-              <div class="concept-item">
-                <strong>Visão de cima para baixo</strong>
-                <p>O SO esconde muitos detalhes do hardware e oferece objetos e operações mais simples aos programas.</p>
-              </div>
-              <div class="concept-item">
-                <strong>Exemplo</strong>
-                <p>A aplicação trabalha com um <em>arquivo</em>, em vez de controlar diretamente setores, controladores e protocolos de armazenamento.</p>
-              </div>
-            </article>
+    <div class="question-set">
+      <h3>Questão de reflexão</h3>
+      <ol>
+        <li>Qual parte desse trabalho pertence ao problema da aplicação?</li>
+        <li>Qual parte é infraestrutura comum a muitas aplicações?</li>
+        <li>Faz sentido cada aplicação implementar sua própria forma de acessar o mesmo dispositivo?</li>
+      </ol>
+    </div>
+  </div>
+</section>
 
-            <article class="concept-card">
-              <h3>Gerenciar recursos</h3>
-              <div class="concept-item">
-                <strong>Visão de baixo para cima</strong>
-                <p>O SO controla e arbitra o uso de processador, memória, armazenamento e dispositivos entre programas concorrentes.</p>
-              </div>
-              <div class="concept-item">
-                <strong>Exemplo</strong>
-                <p>Se dez processos estão prontos para executar, algum mecanismo precisa decidir como o tempo de CPU será distribuído.</p>
-              </div>
-            </article>
-          </div>
+<section class="section" id="abstracao">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">3 · Primeira perspectiva</p>
+      <h2>O sistema operacional fornece abstrações</h2>
+      <p>Tanenbaum apresenta uma das funções centrais do SO como fornecer aos programas recursos abstratos mais simples que os mecanismos físicos da máquina. O ponto não é esconder que o hardware existe, mas oferecer interfaces que possam ser usadas sem repetir toda a complexidade do dispositivo.</p>
+    </div>
 
-          <div class="mental-map">Aplicações
+    <figure class="source-figure compact">
+      <img src="assets/aula-08/tanenbaum-fig-1-2.jpg" alt="Representação do sistema operacional entre programas aplicativos e hardware, transformando uma interface complexa em uma interface mais simples.">
+      <figcaption><strong>Abstração.</strong> A figura do Tanenbaum resume a ideia de que o SO oferece aos programas uma interface mais adequada que a interface física do hardware.</figcaption>
+    </figure>
+
+    <div class="trace-table-wrap">
+      <table class="twos-table">
+        <thead><tr><th>Hardware ou mecanismo</th><th>Abstração útil ao software</th></tr></thead>
+        <tbody>
+          <tr><td>CPU</td><td>processo e thread</td></tr>
+          <tr><td>memória física</td><td>espaço de endereçamento</td></tr>
+          <tr><td>dispositivo de armazenamento</td><td>arquivo e diretório</td></tr>
+          <tr><td>placa/controlador de rede</td><td>interfaces de comunicação</td></tr>
+          <tr><td>dispositivos de E/S</td><td>operações padronizadas mediadas pelo SO</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-set">
+      <h3>Cheque a ideia</h3>
+      <ol>
+        <li>Um arquivo existe fisicamente no SSD exatamente como a aplicação o enxerga?</li>
+        <li>Por que <code>abrir um arquivo</code> é uma abstração mais útil para uma aplicação do que manipular diretamente blocos físicos?</li>
+        <li>Qual vantagem existe em duas aplicações diferentes utilizarem a mesma abstração de arquivo?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="recursos">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">4 · Segunda perspectiva</p>
+      <h2>O sistema operacional também gerencia recursos</h2>
+      <p>A outra perspectiva apresentada por Tanenbaum observa o sistema de baixo para cima. CPU, memória, armazenamento e dispositivos são recursos limitados que podem ser solicitados por vários programas ao mesmo tempo.</p>
+    </div>
+
+    <div class="resource-grid">
+      <article class="resource-card"><h3>CPU</h3><p>Se existem mais processos prontos que núcleos disponíveis, alguém precisa decidir quais executam e quando.</p></article>
+      <article class="resource-card"><h3>Memória</h3><p>Diferentes processos precisam ocupar memória simultaneamente sem sobrescrever livremente os dados uns dos outros.</p></article>
+      <article class="resource-card"><h3>Armazenamento</h3><p>Vários programas podem ler e gravar dados ao mesmo tempo, exigindo organização e controle.</p></article>
+      <article class="resource-card"><h3>Entrada e saída</h3><p>Rede, teclado, áudio, USB e outros dispositivos recebem solicitações concorrentes.</p></article>
+    </div>
+
+    <div class="question-set">
+      <h3>Problema para pensar</h3>
+      <p>Um computador possui <strong>8 núcleos</strong> e o monitor de processos mostra <strong>180 processos</strong>.</p>
+      <ol>
+        <li>Isso significa que 180 processos estão executando instruções literalmente ao mesmo tempo?</li>
+        <li>O que precisa acontecer com os processos que não estão executando naquele instante?</li>
+        <li>Que parte do sistema deverá manter informações sobre esses processos e decidir quando cada um pode usar a CPU?</li>
+      </ol>
+    </div>
+
+    <p class="bridge-question"><strong>Observe:</strong> ainda não estamos estudando algoritmos de escalonamento. Primeiro estamos identificando o problema que torna o escalonamento necessário.</p>
+  </div>
+</section>
+
+<section class="section" id="objetivos">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">5 · Uma síntese do Stallings</p>
+      <h2>Conveniência e eficiência</h2>
+      <p>Stallings resume os objetivos do sistema operacional em duas ideias complementares: tornar o computador mais conveniente para uso e permitir que seus recursos sejam utilizados de forma eficiente.</p>
+    </div>
+
+    <div class="goal-grid">
+      <article class="goal-card"><h3>Conveniência</h3><p>O usuário e a aplicação trabalham com mecanismos mais adequados ao problema: arquivos, processos, diretórios, interfaces de E/S e outros serviços.</p></article>
+      <article class="goal-card"><h3>Eficiência</h3><p>O SO organiza o uso dos recursos físicos para reduzir desperdício e mediar solicitações concorrentes.</p></article>
+    </div>
+
+    <div class="trace-table-wrap" style="margin-top:1.3rem">
+      <table class="twos-table">
+        <thead><tr><th>Situação</th><th>Conveniência</th><th>Eficiência</th></tr></thead>
+        <tbody>
+          <tr><td>Abrir um arquivo pelo nome</td><td>principal</td><td>também pode contribuir</td></tr>
+          <tr><td>Distribuir tempo de CPU entre processos</td><td>indireta</td><td>principal</td></tr>
+          <tr><td>Fornecer drivers e uma interface uniforme de E/S</td><td>principal</td><td>também pode contribuir</td></tr>
+          <tr><td>Manter vários programas em memória</td><td>indireta</td><td>principal</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-set">
+      <h3>Para discutir</h3>
+      <ol>
+        <li>Conveniência e eficiência sempre apontam para a mesma decisão de projeto?</li>
+        <li>É possível um mecanismo do SO contribuir para os dois objetivos ao mesmo tempo?</li>
+        <li>Um sistema voltado a desktop e um sistema voltado a servidor podem priorizar esses objetivos de maneira diferente?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="privilegios">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">6 · Compartilhar não basta: é preciso proteger</p>
+      <h2>Modo usuário e modo núcleo</h2>
+      <p>Se qualquer aplicação pudesse executar qualquer instrução e controlar diretamente todos os dispositivos, um erro em um único programa poderia comprometer todo o computador. A arquitetura fornece mecanismos de privilégio que o sistema operacional utiliza para impor limites.</p>
+    </div>
+
+    <figure class="source-figure compact">
+      <img src="assets/aula-08/tanenbaum-fig-1-1.jpg" alt="Figura mostrando hardware na base, sistema operacional em modo núcleo e programas em modo usuário.">
+      <figcaption><strong>Separação de privilégios.</strong> Na figura de Tanenbaum, aplicações e interface com o usuário ficam em modo usuário, enquanto o sistema operacional ocupa a região privilegiada.</figcaption>
+    </figure>
+
+    <div class="question-set">
+      <h3>Quem deveria poder realizar diretamente cada operação?</h3>
+      <ol>
+        <li>Somar dois números.</li>
+        <li>Alterar uma variável da própria aplicação.</li>
+        <li>Reprogramar diretamente o controlador de armazenamento.</li>
+        <li>Alterar o mapeamento de memória de outro processo.</li>
+        <li>Solicitar a leitura de um arquivo.</li>
+        <li>Escrever diretamente em um dispositivo de E/S.</li>
+      </ol>
+      <p><strong>Critério:</strong> diferencie operações que podem permanecer no espaço da aplicação de operações que precisam ser mediadas pelo sistema.</p>
+    </div>
+
+    <p class="bridge-question"><strong>Nova pergunta:</strong> se a aplicação não pode executar certas operações diretamente, como ela solicita que o sistema operacional as realize?</p>
+  </div>
+</section>
+
+<section class="section" id="syscalls">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">7 · A fronteira entre aplicação e kernel</p>
+      <h2>Chamadas de sistema</h2>
+      <p>Aplicações precisam de uma interface controlada para solicitar serviços ao sistema operacional. As chamadas de sistema formam parte dessa interface entre o programa em modo usuário e o kernel.</p>
+    </div>
+
+    <div class="mental-map">Aplicação
+    ↓
+função de biblioteca / API
+    ↓
+chamada de sistema
+    ↓
+kernel
+    ↓
+estrutura do SO ou recurso físico</div>
+
+    <div class="trace-table-wrap">
+      <table class="twos-table">
+        <thead><tr><th>Necessidade</th><th>Serviço solicitado</th></tr></thead>
+        <tbody>
+          <tr><td>ler dados persistentes</td><td>abrir e ler arquivo</td></tr>
+          <tr><td>iniciar outro programa</td><td>criação/execução de processo</td></tr>
+          <tr><td>obter memória</td><td>serviços de gerenciamento de memória</td></tr>
+          <tr><td>enviar dados</td><td>operações de comunicação/E/S</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="question-set">
+      <h3>Questão de raciocínio</h3>
+      <p>Quando um programa em Python executa uma operação de abertura de arquivo, por que não devemos interpretar isso como “Python controla diretamente o SSD”?</p>
+    </div>
+
+    <p class="bridge-question"><strong>Limite desta aula:</strong> não estudaremos ainda a implementação da transição entre modos, traps ou registradores envolvidos. Nesta primeira aula basta compreender a função da fronteira.</p>
+  </div>
+</section>
+
+<section class="section" id="historia">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">8 · História sem transformar a aula em cronologia</p>
+      <h2>Os sistemas operacionais evoluíram porque novos problemas apareceram</h2>
+      <p>O capítulo introdutório de Tanenbaum apresenta uma história extensa dos sistemas operacionais. Para esta aula vamos utilizar apenas o fio conceitual: à medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
+    </div>
+
+    <div class="timeline-simple">
+      <div><strong>Uma tarefa</strong><span>Máquina dedicada a um trabalho por vez.</span></div>
+      <div><strong>Lotes</strong><span>Organizar várias tarefas para reduzir intervenção manual.</span></div>
+      <div><strong>Multiprogramação</strong><span>Outra tarefa pode usar a CPU enquanto uma espera por E/S.</span></div>
+      <div><strong>Tempo compartilhado</strong><span>Vários usuários e tarefas precisam de resposta interativa.</span></div>
+      <div><strong>PCs e móveis</strong><span>Muitas aplicações e dispositivos em uma única máquina.</span></div>
+      <div><strong>Sistemas atuais</strong><span>Concorrência, proteção, virtualização, redes e múltiplos núcleos.</span></div>
+    </div>
+
+    <div class="question-set">
+      <h3>Em vez de decorar datas, identifique o padrão</h3>
+      <ol>
+        <li>Por que esperar uma operação de E/S pode desperdiçar tempo de CPU?</li>
+        <li>O que muda quando colocamos mais de uma tarefa na memória?</li>
+        <li>Que novos problemas aparecem quando vários usuários compartilham a máquina?</li>
+        <li>Quais funções de um SO moderno podem ser vistas como respostas a esses problemas históricos?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="mapa">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">9 · O mapa da disciplina</p>
+      <h2>Agora podemos entender por que cada tema existe</h2>
+      <p>Os próximos assuntos não são uma lista arbitrária. Cada um responde a um problema que apareceu nesta aula.</p>
+    </div>
+
+    <div class="map-list">
+      <article><h3>Processos</h3><p>Como o SO representa e acompanha programas em execução?</p></article>
+      <article><h3>Escalonamento</h3><p>Quem usa a CPU agora e por quanto tempo?</p></article>
+      <article><h3>Memória</h3><p>Como vários processos ocupam e protegem seus espaços de memória?</p></article>
+      <article><h3>Sistemas de arquivos</h3><p>Como dados persistentes são organizados e acessados?</p></article>
+      <article><h3>E/S e drivers</h3><p>Como o SO controla dispositivos diferentes por interfaces utilizáveis?</p></article>
+      <article><h3>Proteção e usuários</h3><p>Quem pode acessar qual recurso e realizar qual operação?</p></article>
+      <article><h3>Inicialização</h3><p>Como o software de sistema chega ao estado em que pode oferecer todos esses serviços?</p></article>
+      <article><h3>Concorrência</h3><p>O que acontece quando atividades diferentes avançam e compartilham dados ou recursos?</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tipos">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">10 · Diferentes sistemas, diferentes prioridades</p>
+      <h2>Um sistema operacional não é definido por uma única forma de uso</h2>
+      <p>Os princípios gerais permanecem, mas as prioridades mudam conforme o contexto.</p>
+    </div>
+    <div class="trace-table-wrap">
+      <table class="twos-table">
+        <thead><tr><th>Contexto</th><th>Preocupações típicas</th></tr></thead>
+        <tbody>
+          <tr><td>computador pessoal</td><td>responsividade, compatibilidade, interação e variedade de aplicações</td></tr>
+          <tr><td>servidor</td><td>concorrência, disponibilidade, eficiência no uso de CPU, memória, armazenamento e rede</td></tr>
+          <tr><td>móvel</td><td>energia, sensores, conectividade e isolamento de aplicações</td></tr>
+          <tr><td>embarcado</td><td>restrições específicas de hardware e função dedicada</td></tr>
+          <tr><td>tempo real</td><td>restrições temporais e previsibilidade</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="precision-note"><strong>RTOS neste semestre:</strong> tempo real permanece importante, mas aparece como um caso particular dentro do estudo geral de sistemas operacionais. Voltaremos a deadlines e previsibilidade quando escalonamento já estiver conceitualmente estabelecido.</div>
+  </div>
+</section>
+
+<section class="section" id="observacao">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">11 · Observação prática</p>
+      <h2>Procure evidências do que acabamos de estudar</h2>
+      <p>Em Linux ou WSL, use alguns comandos apenas como instrumentos de observação.</p>
+    </div>
+
+    <div class="code-frame"><div class="code-caption">Processos</div><pre><code>ps
+top</code></pre></div>
+    <div class="code-frame"><div class="code-caption">Memória</div><pre><code>free -h</code></pre></div>
+    <div class="code-frame"><div class="code-caption">Sistemas de arquivos</div><pre><code>df -h</code></pre></div>
+    <div class="code-frame"><div class="code-caption">Informações expostas pelo kernel</div><pre><code>ls /proc</code></pre></div>
+
+    <div class="question-set">
+      <h3>Não responda apenas “o que o comando mostra”</h3>
+      <ol>
+        <li>Qual problema de gerenciamento do SO está relacionado a cada comando?</li>
+        <li>Por que aparecem processos que você não abriu manualmente?</li>
+        <li>Por que memória “em uso” não pertence a uma única aplicação?</li>
+        <li>O que a existência de vários sistemas de arquivos indica sobre abstração?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="integracao">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">12 · Atividade de integração</p>
+      <h2>Analise uma situação cotidiana usando o modelo da aula</h2>
+      <p>Considere um notebook em que o estudante mantém o navegador aberto com várias abas, reproduz música, conecta um pendrive e executa uma suíte de testes Python que utiliza intensamente a CPU.</p>
+    </div>
+
+    <div class="question-set">
+      <h3>Análise do cenário</h3>
+      <ol>
+        <li>Quais recursos físicos estudados em Arquitetura aparecem nesse cenário?</li>
+        <li>Quais programas podem disputar tempo de CPU?</li>
+        <li>Que abstrações do SO estão sendo utilizadas?</li>
+        <li>Quais operações provavelmente precisam atravessar a fronteira entre modo usuário e modo núcleo?</li>
+        <li>Por que o navegador não deveria conseguir acessar livremente a memória do reprodutor de música?</li>
+        <li>Identifique uma situação relacionada à <strong>conveniência</strong> e outra relacionada à <strong>eficiência</strong>.</li>
+        <li>Se a máquina começar a ficar lenta, quais recursos você investigaria primeiro? Justifique.</li>
+        <li>Associe cada problema identificado a um dos temas futuros: processos, escalonamento, memória, arquivos, E/S ou proteção.</li>
+      </ol>
+    </div>
+
+    <p class="bridge-question"><strong>Objetivo da atividade:</strong> não encontrar um único “culpado”, mas perceber que o sistema operacional coordena vários recursos simultaneamente e oferece às aplicações uma visão organizada dessa máquina.</p>
+  </div>
+</section>
+
+<section class="section" id="fechamento">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Síntese</p>
+      <h2>Quatro ideias para levar desta primeira aula</h2>
+    </div>
+
+    <div class="concept-grid">
+      <article class="concept-card"><h3>Abstração</h3><div class="concept-item"><p>O SO oferece interfaces mais adequadas que os detalhes físicos do hardware.</p></div></article>
+      <article class="concept-card"><h3>Gerenciamento</h3><div class="concept-item"><p>O SO organiza recursos limitados entre múltiplos programas e usuários.</p></div></article>
+      <article class="concept-card"><h3>Proteção</h3><div class="concept-item"><p>O SO usa mecanismos de privilégio para impedir que qualquer aplicação controle livremente toda a máquina.</p></div></article>
+      <article class="concept-card"><h3>Interface</h3><div class="concept-item"><p>Aplicações solicitam serviços ao kernel por interfaces controladas, incluindo chamadas de sistema.</p></div></article>
+    </div>
+
+    <div class="mental-map" style="margin-top:1.4rem">Aplicações
     ↓ usam abstrações e solicitam serviços
 Sistema Operacional
-    ↓ controla e organiza
-CPU · memória · armazenamento · E/S</div>
-        </div>
-      </section>
-
-      <section class="section" id="abstracoes">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">3 · Abstrações</p>
-            <h2>O programa trabalha com conceitos mais simples que o hardware real</h2>
-            <p>Abstrair não significa eliminar o hardware. Significa criar uma interface estável que permite ao programa utilizar o recurso sem conhecer todos os detalhes da implementação física.</p>
-          </div>
-
-          <figure class="source-figure compact">
-            <img src="assets/aula-08/tanenbaum-fig-1-2.jpg" alt="Figura de Tanenbaum e Bos representando o sistema operacional como uma camada que transforma a interface complexa do hardware em abstrações mais simples para os programas.">
-            <figcaption><strong>Abstração como função do sistema operacional.</strong> A figura sintetiza a ideia de que o hardware apresenta interfaces complexas, enquanto o SO oferece abstrações mais regulares aos programas. Fonte: Tanenbaum e Bos, <em>Sistemas Operacionais Modernos</em>, Figura 1.2.</figcaption>
-          </figure>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Recurso físico</th><th>Abstração ou serviço observado pelo software</th><th>O que é simplificado</th></tr></thead>
-              <tbody>
-                <tr><td>CPU</td><td><strong>Processo / thread</strong></td><td>Execução concorrente e compartilhamento do processador</td></tr>
-                <tr><td>Memória RAM</td><td><strong>Espaço de endereçamento</strong></td><td>Organização e isolamento da memória utilizada pelo programa</td></tr>
-                <tr><td>SSD / HDD</td><td><strong>Arquivo e diretório</strong></td><td>Organização persistente dos dados sem acesso direto ao dispositivo</td></tr>
-                <tr><td>Rede</td><td><strong>Interfaces de comunicação</strong></td><td>Envio e recebimento sem que a aplicação controle diretamente o hardware de rede</td></tr>
-                <tr><td>Periféricos</td><td><strong>Dispositivos acessados por interfaces do SO</strong></td><td>Diferenças de controladores e protocolos específicos</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3 style="margin-top:2rem">Exemplo: salvar um arquivo</h3>
-          <div class="mental-map">Aplicação
-    ↓ "grave estes dados neste arquivo"
-Sistema Operacional
-    ↓ sistema de arquivos
-Driver / controlador
-    ↓
-Dispositivo de armazenamento</div>
-
-          <p>A aplicação expressa a operação em um nível de abstração útil ao software. O sistema operacional transforma essa solicitação em operações compatíveis com o sistema de arquivos e com o dispositivo.</p>
-        </div>
-      </section>
-
-      <section class="section" id="recursos">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">4 · Gerenciamento de recursos</p>
-            <h2>Compartilhar recursos exige decisões</h2>
-            <p>Quando existem mais solicitações que recursos imediatamente disponíveis, o sistema operacional precisa controlar o compartilhamento.</p>
-          </div>
-
-          <div class="resource-grid">
-            <article class="resource-card"><h3>CPU</h3><p>Vários processos podem estar prontos ao mesmo tempo. O SO mantém informações sobre eles e decide qual poderá executar.</p></article>
-            <article class="resource-card"><h3>Memória</h3><p>O SO controla quais regiões pertencem a cada processo, evita acessos indevidos e administra a memória disponível.</p></article>
-            <article class="resource-card"><h3>Arquivos e armazenamento</h3><p>O SO organiza nomes, diretórios, permissões, leitura e escrita de dados persistentes.</p></article>
-            <article class="resource-card"><h3>Dispositivos de E/S</h3><p>O SO coordena operações com teclado, tela, USB, rede e outros dispositivos, normalmente por meio de drivers.</p></article>
-          </div>
-
-          <div class="inquiry" style="margin-top:1.5rem">
-            <div class="inquiry-head"><span class="inquiry-kicker">Compartilhamento no tempo e no espaço</span><span class="inquiry-tag">ideia inicial</span></div>
-            <div class="inquiry-body">
-              <div><h3>No tempo</h3><p>Um recurso é utilizado por diferentes programas em momentos diferentes. A CPU é o exemplo mais importante: os processos se alternam no uso dos núcleos disponíveis.</p></div>
-              <div><h3>No espaço</h3><p>Um recurso pode ser dividido. A memória principal, por exemplo, pode manter regiões utilizadas por diferentes processos ao mesmo tempo.</p></div>
-            </div>
-          </div>
-
-          <p class="bridge-question"><strong>Importante:</strong> ainda não estamos estudando <em>como</em> o escalonador ou o gerenciador de memória implementam essas decisões. Nesta aula interessa compreender <strong>por que essas decisões existem</strong>.</p>
-        </div>
-      </section>
-
-      <section class="section" id="privilegios">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">5 · Proteção</p>
-            <h2>Uma aplicação não deve poder controlar livremente toda a máquina</h2>
-            <p>Se qualquer programa pudesse alterar qualquer endereço de memória, configurar dispositivos ou interromper outros programas, não haveria isolamento confiável entre aplicações.</p>
-          </div>
-
-          <div class="os-stack">
-            <div><strong>Modo usuário</strong><br><small>Aplicações executam com privilégios limitados</small></div>
-            <div class="os-kernel"><strong>Modo núcleo</strong><br><small>O kernel pode executar operações privilegiadas e controlar recursos</small></div>
-            <div><strong>Hardware</strong><br><small>O processador fornece mecanismos que sustentam essa separação</small></div>
-          </div>
-
-          <div class="concept-grid">
-            <article class="concept-card"><h3>Modo usuário</h3><div class="concept-item"><strong>Objetivo</strong><p>Limitar o que um programa comum pode fazer diretamente. Isso reduz a possibilidade de uma aplicação comprometer todo o sistema.</p></div></article>
-            <article class="concept-card"><h3>Modo núcleo</h3><div class="concept-item"><strong>Objetivo</strong><p>Permitir ao kernel executar operações necessárias para controlar memória, processadores, interrupções e dispositivos.</p></div></article>
-          </div>
-
-          <p class="bridge-question"><strong>Questão que fica para a próxima etapa:</strong> se a aplicação está em modo usuário, como ela pede ao kernel para abrir um arquivo, criar um processo ou acessar um dispositivo?</p>
-        </div>
-      </section>
-
-      <section class="section" id="servicos">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">6 · Interface com o sistema operacional</p>
-            <h2>Aplicações solicitam serviços ao kernel</h2>
-            <p>Um programa precisa de uma forma controlada de atravessar a fronteira entre execução em modo usuário e serviços fornecidos pelo sistema operacional.</p>
-          </div>
-
-          <div class="mental-map">Aplicação
-    ↓ solicita uma operação
-Interface do sistema
-    ↓
-Kernel
-    ↓ realiza a operação de forma controlada
-Recurso físico ou estrutura do SO</div>
-
-          <p>Chamaremos essas operações de <strong>chamadas de sistema</strong>. Elas formam uma interface fundamental entre programas e kernel. Nesta aula basta reconhecer o papel dessa interface; o mecanismo será estudado em uma aula própria.</p>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Necessidade da aplicação</th><th>Serviço esperado do SO</th></tr></thead>
-              <tbody>
-                <tr><td>Abrir e ler dados persistentes</td><td>Operações sobre arquivos</td></tr>
-                <tr><td>Iniciar outro programa</td><td>Criação e gerenciamento de processos</td></tr>
-                <tr><td>Solicitar mais memória</td><td>Gerenciamento do espaço de memória do processo</td></tr>
-                <tr><td>Enviar dados pela rede</td><td>Operações de comunicação e E/S</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <p class="bridge-question"><strong>Referência para o percurso da disciplina:</strong> o MIT 6.S081 organiza o estudo prático justamente a partir de uma introdução ao SO e, em seguida, avança para organização do sistema e chamadas de sistema, tabelas de páginas, traps, interrupções, escalonamento e sistemas de arquivos. Aqui usaremos essa abordagem como referência de engenharia, adaptada ao escopo do nosso componente.</p>
-        </div>
-      </section>
-
-      <section class="section" id="tipos">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">7 · Diferentes contextos</p>
-            <h2>Nem todo sistema operacional é projetado para o mesmo objetivo</h2>
-            <p>Os princípios fundamentais permanecem, mas os requisitos mudam conforme o ambiente em que o sistema será utilizado.</p>
-          </div>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table">
-              <thead><tr><th>Contexto</th><th>Exemplos de preocupação</th></tr></thead>
-              <tbody>
-                <tr><td><strong>Computadores pessoais</strong></td><td>Responsividade, compatibilidade, interface com usuário e execução de muitos aplicativos</td></tr>
-                <tr><td><strong>Servidores</strong></td><td>Concorrência, disponibilidade, uso eficiente de CPU, memória, armazenamento e rede</td></tr>
-                <tr><td><strong>Sistemas móveis</strong></td><td>Energia, sensores, conectividade, isolamento de aplicações e recursos limitados</td></tr>
-                <tr><td><strong>Sistemas embarcados</strong></td><td>Recursos específicos, restrições de hardware, consumo e função dedicada</td></tr>
-                <tr><td><strong>Sistemas de tempo real</strong></td><td>Respostas dentro de restrições temporais e comportamento previsível</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="precision-note"><strong>RTOS neste semestre:</strong> sistemas operacionais de tempo real continuam sendo relevantes, mas serão tratados como uma categoria específica dentro do estudo de sistemas operacionais. A discussão sobre deadlines, latência e previsibilidade será retomada quando estudarmos processos e escalonamento.</div>
-        </div>
-      </section>
-
-      <section class="section" id="observacao">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">8 · Observação prática</p>
-            <h2>Os conceitos aparecem em um sistema real</h2>
-            <p>Use um terminal Linux ou WSL. O objetivo não é memorizar comandos, mas identificar evidências dos recursos que o sistema operacional administra.</p>
-          </div>
-
-          <div class="code-frame">
-            <div class="code-caption">Processos em execução</div>
-            <pre><code>ps
-top</code></pre>
-          </div>
-
-          <div class="code-frame">
-            <div class="code-caption">Uso de memória</div>
-            <pre><code>free -h</code></pre>
-          </div>
-
-          <div class="code-frame">
-            <div class="code-caption">Sistemas de arquivos montados e espaço utilizado</div>
-            <pre><code>df -h</code></pre>
-          </div>
-
-          <div class="code-frame">
-            <div class="code-caption">Informações expostas pelo kernel no Linux</div>
-            <pre><code>ls /proc</code></pre>
-          </div>
-
-          <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Observe e registre</span><span class="inquiry-tag">5 minutos</span></div>
-            <div class="inquiry-body">
-              <div>
-                <h3>Processos</h3>
-                <ol class="prompt-list">
-                  <li>Quantos processos aparecem?</li>
-                  <li>Quais usam mais CPU naquele instante?</li>
-                  <li>O sistema possui apenas os programas que você abriu manualmente?</li>
-                </ol>
-              </div>
-              <div>
-                <h3>Memória e armazenamento</h3>
-                <ol class="prompt-list">
-                  <li>Quanta memória está em uso?</li>
-                  <li>Quais sistemas de arquivos aparecem?</li>
-                  <li>Que relação esses resultados têm com os recursos estudados anteriormente?</li>
-                </ol>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="pratica">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Prática guiada · Autópsia de cenários</p>
-            <h2>Identifique onde o sistema operacional precisa atuar</h2>
-            <p>Esta atividade reaproveita a estrutura do material anterior, agora sem utilizar RTOS como eixo da primeira aula. Para cada cenário, analise os recursos envolvidos e a coordenação realizada pelo sistema operacional.</p>
-          </div>
-
-          <div class="trace-table-wrap">
-            <table class="twos-table scenario-table">
-              <thead><tr><th>Etapa</th><th>Pergunta</th></tr></thead>
-              <tbody>
-                <tr><td><strong>1 · Recursos</strong></td><td>Quais recursos estão envolvidos: CPU, memória, armazenamento, rede ou dispositivos?</td></tr>
-                <tr><td><strong>2 · Coordenação</strong></td><td>O que o sistema operacional precisa gerenciar: execução, memória, arquivos, comunicação ou dispositivos?</td></tr>
-                <tr><td><strong>3 · Disputa</strong></td><td>Existe mais de uma tarefa competindo pelo mesmo recurso?</td></tr>
-                <tr><td><strong>4 · Sintoma</strong></td><td>Qual comportamento o usuário consegue observar: lentidão, fila, travamento, alto uso de CPU, uso intenso de disco ou outro efeito?</td></tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="inquiry">
-            <div class="inquiry-head"><span class="inquiry-kicker">Exemplo</span><span class="inquiry-tag">arquivo grande</span></div>
-            <div class="inquiry-body">
-              <div>
-                <h3>Abrindo um PDF de 200 MB</h3>
-                <p><strong>Recursos:</strong> armazenamento, memória e CPU.</p>
-                <p><strong>Coordenação:</strong> iniciar a aplicação, localizar e ler o arquivo, manter dados em memória e permitir a execução do leitor.</p>
-              </div>
-              <div>
-                <h3>Sintoma possível</h3>
-                <p>A abertura pode demorar enquanto leitura, alocação de memória e processamento acontecem. O fato de a aplicação parecer realizar uma única ação não significa que apenas um recurso esteja envolvido.</p>
-              </div>
-            </div>
-          </div>
-
-          <h3 style="margin-top:2rem">Cenário A · Copiar muitas fotos</h3>
-          <p>Você copia 2.000 fotos de um celular para o notebook. A transferência demora, mas o computador continua utilizável.</p>
-          <ol class="prompt-list">
-            <li>Qual recurso parece dominar o tempo da operação?</li>
-            <li>Por que a CPU pode permanecer relativamente disponível?</li>
-            <li>Quais dispositivos e estruturas de arquivos o SO precisa coordenar?</li>
-            <li>Por que a interface continua responsiva mesmo com a cópia em andamento?</li>
-          </ol>
-
-          <h3 style="margin-top:2rem">Cenário B · Vídeo durante atualização</h3>
-          <p>Um vídeo está sendo reproduzido enquanto o sistema realiza uma atualização ou uma varredura de segurança. O vídeo começa a apresentar travamentos.</p>
-          <ol class="prompt-list">
-            <li>Quais processos estão concorrendo?</li>
-            <li>Quais recursos podem estar sendo disputados?</li>
-            <li>Que papel o escalonamento da CPU pode ter nesse comportamento?</li>
-            <li>Como operações de armazenamento podem contribuir para a lentidão?</li>
-          </ol>
-
-          <h3 style="margin-top:2rem">Cenário C · Testes, IDE e navegador</h3>
-          <p>Uma suíte de testes é executada repetidamente com IDE e navegador abertos. O código não muda, mas o tempo total varia entre as execuções.</p>
-          <ol class="prompt-list">
-            <li>Por que o tempo pode variar mesmo com o mesmo código?</li>
-            <li>Quais recursos estão sendo compartilhados?</li>
-            <li>Como falta de memória disponível pode afetar o resultado?</li>
-            <li>Por que medir o desempenho de um programa exige observar o estado do sistema?</li>
-          </ol>
-        </div>
-      </section>
-
-      <section class="section" id="fechamento">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Síntese</p>
-            <h2>O modelo que deve permanecer desta aula</h2>
-          </div>
-
-          <div class="mental-map">Aplicações
-        ↓
-abstrações e serviços
-        ↓
-SISTEMA OPERACIONAL
-        ↓
-gerenciamento · compartilhamento · proteção
-        ↓
+    ↓ gerencia · compartilha · protege
 CPU · memória · armazenamento · rede · dispositivos</div>
 
-          <div class="concept-grid" style="margin-top:1.5rem">
-            <article class="concept-card"><h3>Abstração</h3><div class="concept-item"><p>O SO fornece aos programas interfaces mais simples que os mecanismos físicos do hardware.</p></div></article>
-            <article class="concept-card"><h3>Gerenciamento</h3><div class="concept-item"><p>O SO organiza o uso dos recursos quando vários programas precisam deles.</p></div></article>
-            <article class="concept-card"><h3>Proteção</h3><div class="concept-item"><p>O SO participa do isolamento entre aplicações e controla operações que exigem privilégios.</p></div></article>
-            <article class="concept-card"><h3>Interface</h3><div class="concept-item"><p>Aplicações solicitam serviços ao sistema operacional por interfaces controladas, incluindo chamadas de sistema.</p></div></article>
-          </div>
-
-          <p class="bridge-question"><strong>Próxima etapa:</strong> estudar o que é um processo e como o sistema operacional representa, cria, executa e interrompe programas em execução.</p>
-        </div>
-      </section>
-
-      <section class="section" id="referencias">
-        <div class="container">
-          <div class="section-heading">
-            <p class="eyebrow">Referências</p>
-            <h2>Materiais utilizados na construção do rascunho</h2>
-          </div>
-          <div class="reference-list">
-            <p><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas Operacionais Modernos</em>. Capítulo 1: Introdução. Utilizado principalmente para as duas perspectivas do sistema operacional, modo usuário/modo núcleo e conceitos introdutórios.</p>
-            <p><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. Utilizado para estabelecer a transição entre os recursos físicos estudados anteriormente e o papel do sistema operacional.</p>
-            <p><strong>MIT 6.S081 — Operating System Engineering.</strong> Referência para a sequência de engenharia de sistemas operacionais: introdução, organização do SO, chamadas de sistema, memória virtual, interrupções, escalonamento e sistemas de arquivos.</p>
-            <p><strong>UniSENAI PR.</strong> Ementário do componente Arquitetura de Computadores e Sistemas Operacionais. O rascunho prioriza os itens previstos para sistemas operacionais: funções do SO, processos, escalonamento, memória, arquivos, usuários e segurança, drivers e inicialização.</p>
-            <p><strong>Material anterior da disciplina.</strong> A estrutura da atividade “Autópsia de Cenários” foi preservada e reposicionada como prática introdutória de identificação de recursos e responsabilidades do SO. O conteúdo específico de RTOS foi retirado desta primeira aula e reservado para o estudo posterior de escalonamento e previsibilidade.</p>
-          </div>
-        </div>
-      </section>
-
-      <div class="container lesson-part-navigation">
-        <a class="button" href="index.html">← Voltar aos rascunhos</a>
-      </div>
-    </main>
+    <p class="bridge-question"><strong>Próxima pergunta:</strong> se vários programas podem estar ativos ao mesmo tempo, como o sistema operacional representa cada programa em execução? Esse será o ponto de partida para estudar <strong>processos</strong>.</p>
   </div>
+</section>
 
-  <footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p></div></footer>
-  <script defer src="../script.js"></script>
+<section class="section" id="referencias">
+  <div class="container">
+    <div class="section-heading"><p class="eyebrow">Referências</p><h2>Base conceitual utilizada</h2></div>
+    <div class="reference-list">
+      <p><strong>TANENBAUM, Andrew S.; BOS, Herbert.</strong> <em>Sistemas Operacionais Modernos</em>. Capítulo 1. Base para a apresentação do SO como fornecedor de abstrações e gerenciador de recursos, para modo usuário/modo núcleo e para a evolução histórica.</p>
+      <p><strong>STALLINGS, William.</strong> <em>Arquitetura e Organização de Computadores</em>. Capítulo 8. Base para a relação entre hardware e software e para os objetivos de conveniência e eficiência.</p>
+      <p><strong>MIT 6.S081 — Operating System Engineering.</strong> Referência complementar para a sequência prática posterior: organização do SO, chamadas de sistema, memória virtual, interrupções, escalonamento e sistemas de arquivos.</p>
+    </div>
+  </div>
+</section>
+
+<div class="container lesson-part-navigation"><a class="button" href="index.html">← Voltar aos rascunhos</a></div>
+</main>
+</div>
+
+<footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software</p></div></footer>
+<script defer src="../script.js"></script>
 </body>
 </html>
