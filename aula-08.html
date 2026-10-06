@@ -71,7 +71,7 @@
       <p class="eyebrow">Aula 08 · Sistemas Operacionais</p>
       <h1>Por que precisamos de um sistema operacional?</h1>
       <p class="hero-lead">Até aqui estudamos a máquina: processador, memória, armazenamento, entrada e saída e representação de dados. Agora a pergunta muda. <strong>Como aplicações conseguem usar essa máquina sem controlar diretamente todos os seus detalhes?</strong></p>
-      <div class="hero-actions"><a class="button button-primary" href="#arquitetura">Começar a aula</a><a class="button button-secondary" href="#integracao">Ir à atividade final</a></div>
+      <div class="hero-actions"><a class="button button-primary" href="#historia">Começar a aula</a><a class="button button-secondary" href="#integracao">Ir à atividade final</a></div>
     </div>
     <aside class="guiding-card">
       <span>Pergunta orientadora</span>
@@ -84,15 +84,15 @@
   <summary>Nesta aula</summary>
   <nav>
     <a href="#visao">Visão da aula</a>
+    <a href="#historia">Evolução dos sistemas operacionais</a>
+    <a href="#tipos">Diferentes sistemas, diferentes prioridades</a>
     <a href="#arquitetura">Da arquitetura de computadores ao sistema operacional</a>
-    <a href="#sem-so">Se não houvesse SO</a>
-    <a href="#abstracao">SO como abstração</a>
+    <a href="#sem-so">Da intenção da aplicação ao trabalho do sistema</a>
+    <a href="#abstracao">Abstrações do SO</a>
     <a href="#recursos">SO como gerenciador</a>
     <a href="#objetivos">Conveniência e eficiência</a>
     <a href="#privilegios">Modo usuário e núcleo</a>
     <a href="#syscalls">Chamadas de sistema</a>
-    <a href="#historia">Uma história de problemas</a>
-    <a href="#tipos">Tipos de SO</a>
     <a href="#integracao">Atividade de integração</a>
     <a href="#fechamento">Síntese</a>
   </nav>
@@ -130,10 +130,62 @@
   </div>
 </section>
 
+<section class="section" id="historia">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">1 · Evolução dos sistemas operacionais</p>
+      <h2>Os sistemas operacionais evoluíram porque novos problemas apareceram</h2>
+      <p>A evolução dos sistemas operacionais pode ser acompanhada pelo surgimento de novos problemas de compartilhamento e controle. À medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
+    </div>
+
+    <div class="timeline-simple">
+      <div><strong>Uma tarefa</strong><span>Máquina dedicada a um trabalho por vez.</span></div>
+      <div><strong>Lotes</strong><span>Organizar várias tarefas para reduzir intervenção manual.</span></div>
+      <div><strong>Multiprogramação</strong><span>Outra tarefa pode usar a CPU enquanto uma espera por E/S.</span></div>
+      <div><strong>Tempo compartilhado</strong><span>Vários usuários e tarefas precisam de resposta interativa.</span></div>
+      <div><strong>PCs e móveis</strong><span>Muitas aplicações e dispositivos em uma única máquina.</span></div>
+      <div><strong>Sistemas atuais</strong><span>Concorrência, proteção, virtualização, redes e múltiplos núcleos.</span></div>
+    </div>
+
+    <div class="question-set">
+      <h3>Identifique o padrão de evolução</h3>
+      <ol>
+        <li>Por que esperar uma operação de E/S pode desperdiçar tempo de CPU?</li>
+        <li>O que muda quando colocamos mais de uma tarefa na memória?</li>
+        <li>Que novos problemas aparecem quando vários usuários compartilham a máquina?</li>
+        <li>Quais funções de um SO moderno podem ser vistas como respostas a esses problemas históricos?</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="tipos">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">2 · Diferentes sistemas, diferentes prioridades</p>
+      <h2>Um sistema operacional não é definido por uma única forma de uso</h2>
+      <p>Os princípios gerais permanecem, mas as prioridades mudam conforme o contexto.</p>
+    </div>
+    <div class="trace-table-wrap">
+      <table class="twos-table">
+        <thead><tr><th>Contexto</th><th>Preocupações típicas</th></tr></thead>
+        <tbody>
+          <tr><td>computador pessoal</td><td>responsividade, compatibilidade, interação e variedade de aplicações</td></tr>
+          <tr><td>servidor</td><td>concorrência, disponibilidade, eficiência no uso de CPU, memória, armazenamento e rede</td></tr>
+          <tr><td>móvel</td><td>energia, sensores, conectividade e isolamento de aplicações</td></tr>
+          <tr><td>embarcado</td><td>restrições específicas de hardware e função dedicada</td></tr>
+          <tr><td>tempo real</td><td>restrições temporais e previsibilidade</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="precision-note"><strong>RTOS neste semestre:</strong> tempo real permanece importante, mas aparece como um caso particular dentro do estudo geral de sistemas operacionais. Voltaremos a deadlines e previsibilidade quando escalonamento já estiver conceitualmente estabelecido.</div>
+  </div>
+</section>
+
 <section class="section" id="arquitetura">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">1 · Da arquitetura de computadores ao sistema operacional</p>
+      <p class="eyebrow">3 · Da arquitetura de computadores ao sistema operacional</p>
       <h2>Onde o sistema operacional aparece na máquina que já estudamos?</h2>
       <p>O computador e o software podem ser compreendidos como uma estrutura em camadas. Essa visão conecta diretamente a primeira parte do semestre, dedicada à arquitetura, com a segunda, dedicada ao sistema operacional.</p>
     </div>
@@ -177,7 +229,7 @@ Hardware</div>
 <section class="section" id="sem-so">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">2 · O que acontece quando uma aplicação solicita um serviço</p>
+      <p class="eyebrow">4 · O que acontece quando uma aplicação solicita um serviço</p>
       <h2>Da intenção da aplicação à comunicação em rede</h2>
       <p>Considere uma aplicação que precisa enviar dados para um servidor pela rede. Para o programa, a intenção pode ser simples: estabelecer uma comunicação, enviar uma mensagem e receber uma resposta. Para que isso aconteça, diferentes mecanismos de software e hardware precisam atuar de forma coordenada.</p>
     </div>
@@ -238,7 +290,7 @@ Hardware</div>
 <section class="section" id="abstracao">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">3 · Abstrações fornecidas pelo sistema operacional</p>
+      <p class="eyebrow">5 · Abstrações fornecidas pelo sistema operacional</p>
       <h2>Do recurso físico ao serviço utilizado pela aplicação</h2>
       <p>Uma das funções centrais do sistema operacional é transformar mecanismos físicos da máquina em serviços que possam ser utilizados pelas aplicações. A aplicação trabalha com conceitos adequados ao seu problema; o sistema operacional coordena os detalhes necessários para que esses conceitos sejam realizados sobre o hardware.</p>
     </div>
@@ -299,7 +351,7 @@ Hardware</div>
 <section class="section" id="recursos">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">4 · Segunda perspectiva</p>
+      <p class="eyebrow">6 · Segunda perspectiva</p>
       <h2>O sistema operacional também gerencia recursos</h2>
       <p>Uma segunda perspectiva observa o sistema de baixo para cima. CPU, memória, armazenamento e dispositivos são recursos limitados que podem ser solicitados por vários programas ao mesmo tempo.</p>
     </div>
@@ -328,7 +380,7 @@ Hardware</div>
 <section class="section" id="objetivos">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">5 · Terceira perspectiva</p>
+      <p class="eyebrow">7 · Terceira perspectiva</p>
       <h2>Conveniência e eficiência</h2>
       <p>Depois de observar o sistema operacional como fornecedor de abstrações e como gerenciador de recursos, podemos reunir essas funções em dois objetivos mais amplos: tornar o uso do computador mais conveniente e promover o uso eficiente de seus recursos.</p>
     </div>
@@ -364,7 +416,7 @@ Hardware</div>
 <section class="section" id="privilegios">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">6 · Proteção e privilégio</p>
+      <p class="eyebrow">8 · Proteção e privilégio</p>
       <h2>Modo usuário e modo núcleo</h2>
       <p>O sistema operacional utiliza mecanismos de privilégio fornecidos pela arquitetura para separar a execução das aplicações das operações que controlam recursos críticos da máquina. Essa separação estabelece dois níveis principais de execução: <strong>modo usuário</strong> e <strong>modo núcleo</strong>.</p>
     </div>
@@ -424,7 +476,7 @@ Hardware</div>
 <section class="section" id="syscalls">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">7 · A fronteira entre aplicação e kernel</p>
+      <p class="eyebrow">9 · A fronteira entre aplicação e kernel</p>
       <h2>Chamadas de sistema</h2>
       <p>Na seção anterior vimos que aplicações executam em modo usuário e não podem realizar diretamente todas as operações da máquina. Ainda assim, elas precisam abrir arquivos, criar processos, reservar memória, acessar dispositivos e enviar dados pela rede. A <strong>chamada de sistema</strong> é o mecanismo que permite solicitar esses serviços ao núcleo de forma controlada.</p>
     </div>
@@ -486,58 +538,6 @@ Aplicação continua a execução</div>
 
     <p class="bridge-question"><strong>Ideia central:</strong> chamadas de sistema conectam os dois lados que acabamos de estudar: a intenção da aplicação e os mecanismos privilegiados do sistema operacional.</p>
 
-  </div>
-</section>
-
-<section class="section" id="historia">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">8 · Evolução dos sistemas operacionais</p>
-      <h2>Os sistemas operacionais evoluíram porque novos problemas apareceram</h2>
-      <p>A evolução dos sistemas operacionais pode ser acompanhada pelo surgimento de novos problemas de compartilhamento e controle. À medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
-    </div>
-
-    <div class="timeline-simple">
-      <div><strong>Uma tarefa</strong><span>Máquina dedicada a um trabalho por vez.</span></div>
-      <div><strong>Lotes</strong><span>Organizar várias tarefas para reduzir intervenção manual.</span></div>
-      <div><strong>Multiprogramação</strong><span>Outra tarefa pode usar a CPU enquanto uma espera por E/S.</span></div>
-      <div><strong>Tempo compartilhado</strong><span>Vários usuários e tarefas precisam de resposta interativa.</span></div>
-      <div><strong>PCs e móveis</strong><span>Muitas aplicações e dispositivos em uma única máquina.</span></div>
-      <div><strong>Sistemas atuais</strong><span>Concorrência, proteção, virtualização, redes e múltiplos núcleos.</span></div>
-    </div>
-
-    <div class="question-set">
-      <h3>Identifique o padrão de evolução</h3>
-      <ol>
-        <li>Por que esperar uma operação de E/S pode desperdiçar tempo de CPU?</li>
-        <li>O que muda quando colocamos mais de uma tarefa na memória?</li>
-        <li>Que novos problemas aparecem quando vários usuários compartilham a máquina?</li>
-        <li>Quais funções de um SO moderno podem ser vistas como respostas a esses problemas históricos?</li>
-      </ol>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="tipos">
-  <div class="container">
-    <div class="section-heading">
-      <p class="eyebrow">9 · Diferentes sistemas, diferentes prioridades</p>
-      <h2>Um sistema operacional não é definido por uma única forma de uso</h2>
-      <p>Os princípios gerais permanecem, mas as prioridades mudam conforme o contexto.</p>
-    </div>
-    <div class="trace-table-wrap">
-      <table class="twos-table">
-        <thead><tr><th>Contexto</th><th>Preocupações típicas</th></tr></thead>
-        <tbody>
-          <tr><td>computador pessoal</td><td>responsividade, compatibilidade, interação e variedade de aplicações</td></tr>
-          <tr><td>servidor</td><td>concorrência, disponibilidade, eficiência no uso de CPU, memória, armazenamento e rede</td></tr>
-          <tr><td>móvel</td><td>energia, sensores, conectividade e isolamento de aplicações</td></tr>
-          <tr><td>embarcado</td><td>restrições específicas de hardware e função dedicada</td></tr>
-          <tr><td>tempo real</td><td>restrições temporais e previsibilidade</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="precision-note"><strong>RTOS neste semestre:</strong> tempo real permanece importante, mas aparece como um caso particular dentro do estudo geral de sistemas operacionais. Voltaremos a deadlines e previsibilidade quando escalonamento já estiver conceitualmente estabelecido.</div>
   </div>
 </section>
 
