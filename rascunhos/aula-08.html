@@ -438,37 +438,67 @@ Hardware</div>
     <div class="section-heading">
       <p class="eyebrow">7 · A fronteira entre aplicação e kernel</p>
       <h2>Chamadas de sistema</h2>
-      <p>Aplicações precisam de uma interface controlada para solicitar serviços ao sistema operacional. As chamadas de sistema formam parte dessa interface entre o programa em modo usuário e o kernel.</p>
+      <p>Na seção anterior vimos que aplicações executam em modo usuário e não podem realizar diretamente todas as operações da máquina. Ainda assim, elas precisam abrir arquivos, criar processos, reservar memória, acessar dispositivos e enviar dados pela rede. A <strong>chamada de sistema</strong> é o mecanismo que permite solicitar esses serviços ao núcleo de forma controlada.</p>
     </div>
 
-    <div class="mental-map">Aplicação
-    ↓
-função de biblioteca / API
-    ↓
-chamada de sistema
-    ↓
-kernel
-    ↓
-estrutura do SO ou recurso físico</div>
+    <div class="concept-grid">
+      <article class="concept-card">
+        <h3>A aplicação expressa uma necessidade</h3>
+        <div class="concept-item"><strong>Exemplo</strong><p>“Preciso ler dados de um arquivo”, “preciso enviar dados pela rede” ou “preciso criar outro processo”.</p></div>
+      </article>
+      <article class="concept-card">
+        <h3>O núcleo executa a operação privilegiada</h3>
+        <div class="concept-item"><strong>Mediação</strong><p>O sistema operacional verifica a solicitação, acessa os mecanismos protegidos necessários e devolve um resultado para a aplicação.</p></div>
+      </article>
+    </div>
+
+    <div class="mental-map" style="margin-top:1.3rem">Aplicação em modo usuário
+    ↓ expressa uma necessidade
+API / função de biblioteca
+    ↓ solicita um serviço
+Chamada de sistema
+    ↓ atravessa a fronteira de privilégio
+Kernel
+    ↓ executa a operação protegida
+Hardware ou estrutura interna do SO
+    ↑
+resultado / erro
+    ↑
+Aplicação continua a execução</div>
+
+    <p>Essa passagem não significa que a aplicação passa a controlar livremente a máquina. O controle é transferido ao sistema operacional por um mecanismo previsto pela arquitetura. O núcleo executa a parte privilegiada da operação e, ao terminar, devolve o controle ao programa em modo usuário. fileciteturn35file1L2076-L2095</p>
 
     <div class="trace-table-wrap">
       <table class="twos-table">
-        <thead><tr><th>Necessidade</th><th>Serviço solicitado</th></tr></thead>
+        <thead><tr><th>Necessidade da aplicação</th><th>Serviço solicitado ao SO</th><th>Recurso envolvido</th></tr></thead>
         <tbody>
-          <tr><td>ler dados persistentes</td><td>abrir e ler arquivo</td></tr>
-          <tr><td>iniciar outro programa</td><td>criação/execução de processo</td></tr>
-          <tr><td>obter memória</td><td>serviços de gerenciamento de memória</td></tr>
-          <tr><td>enviar dados</td><td>operações de comunicação/E/S</td></tr>
+          <tr><td>ler dados persistentes</td><td>abrir e ler arquivo</td><td>sistema de arquivos, memória e armazenamento</td></tr>
+          <tr><td>iniciar outra execução</td><td>criar ou executar processo</td><td>CPU, memória e estruturas de processos</td></tr>
+          <tr><td>obter mais memória</td><td>solicitar gerenciamento de memória</td><td>memória virtual e memória física</td></tr>
+          <tr><td>enviar dados pela rede</td><td>solicitar operação de comunicação</td><td>buffers, protocolos, driver e dispositivo de rede</td></tr>
+          <tr><td>acessar um dispositivo</td><td>solicitar operação de E/S</td><td>driver, controlador e hardware</td></tr>
         </tbody>
       </table>
     </div>
 
     <div class="question-set">
-      <h3>Questão de raciocínio</h3>
-      <p>Quando um programa em Python executa uma operação de abertura de arquivo, por que não devemos interpretar isso como “Python controla diretamente o SSD”?</p>
+      <h3>Acompanhe uma solicitação</h3>
+      <ol>
+        <li><strong>Comece pela aplicação.</strong> Considere um programa que deseja enviar uma mensagem pela rede. O que ele precisa expressar em alto nível?</li>
+        <li><strong>Localize a fronteira.</strong> Em que ponto a solicitação deixa o espaço da aplicação e passa a ser tratada pelo sistema operacional?</li>
+        <li><strong>Considere os privilégios.</strong> Quais partes da operação exigem acesso a recursos que a aplicação não controla diretamente?</li>
+        <li><strong>Acompanhe o retorno.</strong> O que o sistema operacional precisa devolver para que a aplicação saiba se a operação foi concluída ou se ocorreu um erro?</li>
+        <li><strong>Relacione com abstração.</strong> Por que uma função como <code>enviar(dados)</code> é mais adequada para a aplicação do que manipular diretamente registradores e controladores da placa de rede?</li>
+      </ol>
     </div>
 
-    <p class="bridge-question"><strong>Limite desta aula:</strong> a implementação da transição entre modos, traps e registradores envolvidos será estudada posteriormente. Nesta aula, o foco está em compreender a função dessa fronteira.</p>
+    <div class="precision-note">
+      <strong>API não é sinônimo de chamada de sistema.</strong> Uma aplicação frequentemente utiliza uma função de biblioteca ou uma API. Essa função pode executar parte do trabalho em modo usuário e, quando precisa de um serviço privilegiado, recorrer a uma chamada de sistema. A chamada de sistema é a passagem controlada para o núcleo.
+    </div>
+
+    <p class="bridge-question"><strong>Ideia central:</strong> chamadas de sistema conectam os dois lados que acabamos de estudar: a intenção da aplicação e os mecanismos privilegiados do sistema operacional.</p>
+
+    <p class="bridge-question"><strong>Aprofundamento posterior:</strong> a transição efetiva entre os modos envolve mecanismos da arquitetura, como uma instrução de trap e a transferência controlada para o núcleo. Nesta aula, o foco permanece na função dessa fronteira. fileciteturn35file1L2076-L2095</p>
   </div>
 </section>
 
