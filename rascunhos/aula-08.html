@@ -85,7 +85,7 @@
   <summary>Nesta aula</summary>
   <nav>
     <a href="#visao">Visão da aula</a>
-    <a href="#arquitetura">Da arquitetura ao SO</a>
+    <a href="#arquitetura">Da arquitetura de computadores ao sistema operacional</a>
     <a href="#sem-so">Se não houvesse SO</a>
     <a href="#abstracao">SO como abstração</a>
     <a href="#recursos">SO como gerenciador</a>
@@ -136,14 +136,14 @@
 <section class="section" id="arquitetura">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">1 · Da Arquitetura ao Sistema Operacional</p>
+      <p class="eyebrow">1 · Da arquitetura de computadores ao sistema operacional</p>
       <h2>Onde o sistema operacional aparece na máquina que já estudamos?</h2>
-      <p>Stallings apresenta o computador e o software como uma estrutura em camadas. Essa visão é particularmente útil para esta disciplina porque conecta diretamente a primeira parte do semestre, dedicada à arquitetura, com a segunda, dedicada ao sistema operacional.</p>
+      <p>O computador e o software podem ser compreendidos como uma estrutura em camadas. Essa visão conecta diretamente a primeira parte do semestre, dedicada à arquitetura, com a segunda, dedicada ao sistema operacional.</p>
     </div>
 
     <figure class="source-figure">
       <img src="assets/aula-08/stallings-fig-8-1-clean.svg" alt="Estrutura em camadas com programas aplicativos, bibliotecas e utilitários, sistema operacional, arquitetura do conjunto de instruções e hardware.">
-      <figcaption><strong>Software sobre hardware.</strong> O sistema operacional aparece entre programas e os mecanismos fornecidos pela arquitetura e pelo hardware. Fonte: Stallings, capítulo 8, Figura 8.1 — Hardware de computador e estrutura de software.</figcaption>
+      <figcaption><strong>Software sobre hardware.</strong> O sistema operacional aparece entre programas e os mecanismos fornecidos pela arquitetura e pelo hardware. Figura 8.1 — Hardware de computador e estrutura de software. Referência completa ao final da aula.</figcaption>
     </figure>
 
     <div class="question-set">
@@ -207,12 +207,12 @@ O sistema operacional assume responsabilidades como:
     <div class="section-heading">
       <p class="eyebrow">3 · Primeira perspectiva</p>
       <h2>O sistema operacional fornece abstrações</h2>
-      <p>Tanenbaum apresenta uma das funções centrais do SO como fornecer aos programas recursos abstratos mais simples que os mecanismos físicos da máquina. O ponto não é esconder que o hardware existe, mas oferecer interfaces que possam ser usadas sem repetir toda a complexidade do dispositivo.</p>
+      <p>Uma das funções centrais do sistema operacional é fornecer aos programas recursos abstratos mais simples que os mecanismos físicos da máquina. O hardware permanece presente, mas o software passa a utilizar interfaces que evitam repetir toda a complexidade de cada dispositivo.</p>
     </div>
 
     <figure class="source-figure compact">
       <img src="assets/aula-08/tanenbaum-fig-1-2.jpg" alt="Representação do sistema operacional entre programas aplicativos e hardware, transformando uma interface complexa em uma interface mais simples.">
-      <figcaption><strong>Abstração.</strong> A figura do Tanenbaum resume a ideia de que o SO oferece aos programas uma interface mais adequada que a interface física do hardware.</figcaption>
+      <figcaption><strong>Abstração.</strong> A figura resume a ideia de que o SO oferece aos programas uma interface mais adequada que a interface física do hardware.</figcaption>
     </figure>
 
     <div class="trace-table-wrap">
@@ -244,7 +244,7 @@ O sistema operacional assume responsabilidades como:
     <div class="section-heading">
       <p class="eyebrow">4 · Segunda perspectiva</p>
       <h2>O sistema operacional também gerencia recursos</h2>
-      <p>A outra perspectiva apresentada por Tanenbaum observa o sistema de baixo para cima. CPU, memória, armazenamento e dispositivos são recursos limitados que podem ser solicitados por vários programas ao mesmo tempo.</p>
+      <p>Uma segunda perspectiva observa o sistema de baixo para cima. CPU, memória, armazenamento e dispositivos são recursos limitados que podem ser solicitados por vários programas ao mesmo tempo.</p>
     </div>
 
     <div class="resource-grid">
@@ -271,9 +271,9 @@ O sistema operacional assume responsabilidades como:
 <section class="section" id="objetivos">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">5 · Uma síntese do Stallings</p>
+      <p class="eyebrow">5 · Objetivos do sistema operacional</p>
       <h2>Conveniência e eficiência</h2>
-      <p>Stallings resume os objetivos do sistema operacional em duas ideias complementares: tornar o computador mais conveniente para uso e permitir que seus recursos sejam utilizados de forma eficiente.</p>
+      <p>Os objetivos do sistema operacional podem ser organizados em duas ideias complementares: tornar o computador mais conveniente para uso e permitir que seus recursos sejam utilizados de forma eficiente.</p>
     </div>
 
     <div class="goal-grid">
@@ -314,7 +314,7 @@ O sistema operacional assume responsabilidades como:
 
     <figure class="source-figure compact">
       <img src="assets/aula-08/tanenbaum-fig-1-1.jpg" alt="Figura mostrando hardware na base, sistema operacional em modo núcleo e programas em modo usuário.">
-      <figcaption><strong>Separação de privilégios.</strong> Na figura de Tanenbaum, aplicações e interface com o usuário ficam em modo usuário, enquanto o sistema operacional ocupa a região privilegiada.</figcaption>
+      <figcaption><strong>Separação de privilégios.</strong> Na figura, aplicações e interface com o usuário ficam em modo usuário, enquanto o sistema operacional ocupa a região privilegiada.</figcaption>
     </figure>
 
     <div class="question-set">
@@ -378,7 +378,7 @@ estrutura do SO ou recurso físico</div>
     <div class="section-heading">
       <p class="eyebrow">8 · Evolução dos sistemas operacionais</p>
       <h2>Os sistemas operacionais evoluíram porque novos problemas apareceram</h2>
-      <p>O capítulo introdutório de Tanenbaum apresenta uma história extensa dos sistemas operacionais. Para esta aula vamos utilizar apenas o fio conceitual: à medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
+      <p>A evolução dos sistemas operacionais pode ser acompanhada pelo surgimento de novos problemas de compartilhamento e controle. À medida que mais trabalho passou a compartilhar a mesma máquina, novas responsabilidades precisaram ser automatizadas.</p>
     </div>
 
     <div class="timeline-simple">
