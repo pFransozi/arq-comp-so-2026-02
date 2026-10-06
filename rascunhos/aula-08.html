@@ -205,12 +205,16 @@ Hardware</div>
     <div class="question-set">
       <h3>Analise a figura antes de continuar</h3>
       <ol>
-        <li><strong>Identifique a intenção da aplicação.</strong> Que tipo de solicitação está sendo feita e em que nível ela é expressa?</li>
-        <li><strong>Observe o papel do sistema operacional.</strong> Quais partes do sistema aparecem como responsáveis por coordenar a operação solicitada?</li>
-        <li><strong>Relacione a solicitação aos recursos físicos.</strong> Que componentes de hardware podem participar da operação entre o pedido da aplicação e a resposta devolvida ao programa?</li>
-        <li><strong>Interprete a mediação realizada pelo sistema operacional.</strong> Por que a aplicação utiliza os serviços do SO para chegar ao SSD, à memória e aos controladores?</li>
-        <li><strong>Considere o resultado da operação.</strong> O que retorna para a aplicação e por que esse retorno já aparece em um formato útil ao programa?</li>
-        <li><strong>Projete a ausência do sistema operacional.</strong> Que responsabilidades relativas à memória, aos dispositivos, ao armazenamento e à coordenação da operação precisariam ser assumidas pela própria aplicação?</li>
+        <li><strong>Reconstrua a solicitação feita pela aplicação.</strong> A aplicação executa <code>abrir("relatorio.pdf")</code>. Explique o que essa instrução representa do ponto de vista do programa e por que ela não corresponde, por si só, a uma operação física direta sobre o SSD.</li>
+        <li><strong>Identifique as etapas intermediárias.</strong> Entre a solicitação da aplicação e o acesso ao dispositivo de armazenamento, quais partes do sistema operacional aparecem na figura? Descreva o papel que cada uma pode exercer durante essa operação.</li>
+        <li><strong>Relacione software e hardware.</strong> Considere sistema de arquivos, gerenciamento de memória, controle de E/S e drivers. A quais recursos físicos cada um deles pode estar relacionado durante a leitura de um arquivo?</li>
+        <li><strong>Explique a mediação realizada pelo sistema operacional.</strong> Por que a aplicação solicita um serviço ao sistema operacional em vez de controlar diretamente SSD, memória, barramento e controladores? Considere abstração, compatibilidade, compartilhamento e proteção.</li>
+        <li><strong>Acompanhe os dados durante a operação.</strong> Depois que os dados são localizados no armazenamento, que caminho conceitual eles precisam percorrer até se tornarem utilizáveis pela aplicação? Em que momento a memória principal passa a participar desse processo?</li>
+        <li><strong>Interprete a resposta devolvida à aplicação.</strong> A aplicação não recebe informações sobre setores físicos, comandos do controlador ou detalhes do barramento. O que ela recebe em seu lugar? O que isso revela sobre o nível de abstração fornecido pelo sistema operacional?</li>
+        <li><strong>Analise o compartilhamento de recursos.</strong> Imagine que, enquanto esse arquivo é lido, outros programas também estejam utilizando CPU, memória e armazenamento. Que novas responsabilidades passam a existir para o sistema operacional?</li>
+        <li><strong>Considere a ausência dessa camada de software.</strong> Se cada aplicação tivesse de controlar diretamente os recursos físicos, que tipos de conhecimento e de responsabilidade precisariam fazer parte de cada programa?</li>
+        <li><strong>Relacione a figura à ideia de camadas.</strong> Quais detalhes ficam restritos às camadas inferiores e quais informações chegam às camadas superiores? Como essa separação contribui para o desenvolvimento de software?</li>
+        <li><strong>Generalize o exemplo.</strong> A mesma estrutura poderia ser aplicada a outras operações, como reproduzir áudio, enviar dados pela rede ou imprimir um documento? Indique quais partes do percurso permaneceriam semelhantes e quais mudariam.</li>
       </ol>
     </div>
 
