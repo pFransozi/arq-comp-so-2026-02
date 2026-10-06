@@ -180,42 +180,40 @@ Hardware</div>
 <section class="section" id="sem-so">
   <div class="container">
     <div class="section-heading">
-      <p class="eyebrow">2 · O problema antes da definição</p>
-      <h2>Que responsabilidades o sistema operacional assume para as aplicações?</h2>
-      <p>Considere uma tarefa aparentemente simples: abrir um arquivo, ler seus dados e mostrar o conteúdo na tela.</p>
+      <p class="eyebrow">2 · O que acontece quando uma aplicação solicita um serviço</p>
+      <h2>Da intenção da aplicação ao trabalho do sistema</h2>
+      <p>Uma aplicação trabalha com operações que fazem sentido para o seu problema: abrir um arquivo, reproduzir áudio, enviar dados pela rede ou mostrar uma imagem na tela. Para realizar essas operações, diversos mecanismos do computador precisam ser coordenados. O sistema operacional ocupa essa posição intermediária, transformando solicitações de alto nível em operações sobre os recursos da máquina.</p>
     </div>
+
+    <figure class="source-figure">
+      <img src="assets/aula-08/service-request-flow.svg" alt="Diagrama mostrando uma aplicação solicitando a abertura de um arquivo, o sistema operacional coordenando sistema de arquivos, gerenciamento de memória, controle de entrada e saída e drivers, e o hardware com CPU, RAM, SSD e barramento.">
+      <figcaption><strong>Da intenção da aplicação ao trabalho do sistema.</strong> A aplicação expressa uma solicitação em alto nível; o sistema operacional a transforma em operações sobre os recursos físicos do computador.</figcaption>
+    </figure>
 
     <div class="concept-grid">
       <article class="concept-card">
-        <h3>O que a aplicação quer fazer</h3>
-        <div class="concept-item"><strong>Intenção</strong><p>Abrir <code>relatorio.pdf</code>, ler bytes e apresentar informações ao usuário.</p></div>
+        <h3>O que a aplicação expressa</h3>
+        <div class="concept-item"><strong>Intenção</strong><p>A aplicação formula uma operação em alto nível, como abrir um arquivo, ler dados ou mostrar informações ao usuário.</p></div>
       </article>
       <article class="concept-card">
-        <h3>O que existe no hardware</h3>
-        <div class="concept-item"><strong>Mecanismos</strong><p>CPU, memória, controladores, barramentos, armazenamento, tela, interrupções e protocolos específicos de cada dispositivo.</p></div>
+        <h3>O que o sistema operacional coordena</h3>
+        <div class="concept-item"><strong>Execução da solicitação</strong><p>O sistema operacional articula mecanismos como sistema de arquivos, memória, controle de entrada e saída e drivers para realizar a operação sobre o hardware.</p></div>
       </article>
     </div>
 
-    <div class="mental-map">Aplicação deseja:
-    abrir("relatorio.pdf")
-
-O sistema operacional assume responsabilidades como:
-    localização física dos dados
-    controlador de armazenamento
-    transferência para a memória
-    estado do dispositivo
-    erros de E/S
-    acesso à tela
-    concorrência com outros programas</div>
-
     <div class="question-set">
-      <h3>Questão de reflexão</h3>
+      <h3>Analise a figura antes de continuar</h3>
       <ol>
-        <li>Qual parte desse trabalho pertence ao problema da aplicação?</li>
-        <li>Qual parte é infraestrutura comum a muitas aplicações?</li>
-        <li>Faz sentido cada aplicação implementar sua própria forma de acessar o mesmo dispositivo?</li>
+        <li><strong>Identifique a intenção da aplicação.</strong> Que tipo de solicitação está sendo feita e em que nível ela é expressa?</li>
+        <li><strong>Observe o papel do sistema operacional.</strong> Quais partes do sistema aparecem como responsáveis por coordenar a operação solicitada?</li>
+        <li><strong>Relacione a solicitação aos recursos físicos.</strong> Que componentes de hardware podem participar da operação entre o pedido da aplicação e a resposta devolvida ao programa?</li>
+        <li><strong>Interprete a mediação realizada pelo sistema operacional.</strong> Por que a aplicação utiliza os serviços do SO para chegar ao SSD, à memória e aos controladores?</li>
+        <li><strong>Considere o resultado da operação.</strong> O que retorna para a aplicação e por que esse retorno já aparece em um formato útil ao programa?</li>
+        <li><strong>Projete a ausência do sistema operacional.</strong> Que responsabilidades relativas à memória, aos dispositivos, ao armazenamento e à coordenação da operação precisariam ser assumidas pela própria aplicação?</li>
       </ol>
     </div>
+
+    <p class="bridge-question"><strong>Ideia central:</strong> a aplicação expressa uma intenção em alto nível, enquanto o sistema operacional transforma essa intenção em operações organizadas sobre os recursos físicos do computador.</p>
   </div>
 </section>
 
