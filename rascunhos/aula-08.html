@@ -186,11 +186,6 @@ Hardware</div>
       <p>Considere uma aplicação que precisa enviar dados para um servidor pela rede. Para o programa, a intenção pode ser simples: estabelecer uma comunicação, enviar uma mensagem e receber uma resposta. Para que isso aconteça, diferentes mecanismos de software e hardware precisam atuar de forma coordenada.</p>
     </div>
 
-    <figure class="source-figure compact">
-      <img src="assets/aula-08/application-intent-network.svg" alt="Diagrama simples mostrando uma aplicação cliente enviando dados para um servidor e recebendo uma resposta.">
-      <figcaption><strong>Intenção da aplicação.</strong> Para o programa, o objetivo é comunicar-se com outro sistema: enviar dados e receber uma resposta. Os mecanismos necessários para realizar essa intenção serão revelados na próxima figura.</figcaption>
-    </figure>
-
     <p class="bridge-question"><strong>Observe a diferença de perspectiva:</strong> a aplicação descreve <em>o que deseja realizar</em>. O sistema operacional organiza <em>como essa intenção será concretizada</em> pelos recursos da máquina.</p>
 
     <figure class="source-figure">
@@ -211,6 +206,12 @@ Hardware</div>
 
     <div class="question-set">
       <h3>Analise a figura antes de continuar</h3>
+
+      <figure class="source-figure compact">
+        <img src="assets/aula-08/application-intent-network.svg" alt="Diagrama simples mostrando uma aplicação cliente enviando dados para um servidor e recebendo uma resposta.">
+        <figcaption><strong>Intenção da aplicação.</strong> Para o programa, o objetivo é comunicar-se com outro sistema: enviar dados e receber uma resposta.</figcaption>
+      </figure>
+
       <ol>
         <li><strong>Reconstrua a intenção da aplicação.</strong> O programa deseja enviar dados para um servidor. O que essa intenção representa do ponto de vista da aplicação e quais detalhes da comunicação ainda não aparecem nesse nível?</li>
         <li><strong>Identifique as etapas intermediárias.</strong> Entre a solicitação da aplicação e a transmissão pela placa de rede, quais componentes do sistema operacional aparecem na figura? Explique a função que cada um pode exercer.</li>
