@@ -21,345 +21,58 @@
       --tl-soft:var(--accent-soft,#e8f2f5);
       --tl-line:var(--line,#d8e1e7);
       --tl-surface:var(--surface,#fff);
-      --tl-text:var(--text,#17212b);
     }
-
     html,body{height:100%}
     body{overflow:hidden}
-
-    .draft-lesson-banner{
-      padding:.5rem 1rem;
-      text-align:center;
-      font-size:.85rem;
-      font-weight:700;
-      background:var(--tl-soft);
-      border-bottom:1px solid var(--tl-line)
-    }
-
-    .timeline-stage{
-      min-height:calc(100vh - 132px);
-      display:grid;
-      place-items:center;
-      padding:1.25rem
-    }
-
-    .timeline-shell{
-      width:min(1120px,96vw);
-      height:min(720px,calc(100vh - 165px));
-      min-height:560px;
-      display:grid;
-      grid-template-rows:auto auto 1fr auto;
-      border:1px solid var(--tl-line);
-      border-radius:26px;
-      background:var(--tl-surface);
-      box-shadow:0 24px 70px rgba(12,28,39,.10);
-      overflow:hidden
-    }
-
-    .timeline-topbar{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:1rem;
-      align-items:center;
-      padding:1rem 1.35rem .85rem;
-      border-bottom:1px solid var(--tl-line)
-    }
-
-    .timeline-kicker{
-      font-size:.78rem;
-      font-weight:850;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      color:var(--tl-accent)
-    }
-
-    .timeline-title{
-      margin:0;
-      font-size:1rem;
-      text-align:center;
-      font-weight:750
-    }
-
-    .timeline-counter{
-      min-width:54px;
-      text-align:right;
-      font-variant-numeric:tabular-nums;
-      font-weight:800;
-      color:var(--tl-accent)
-    }
-
-    .timeline-progress{
-      position:relative;
-      height:5px;
-      background:color-mix(in srgb,var(--tl-line) 78%,transparent);
-      overflow:hidden
-    }
-
-    .timeline-progress-bar{
-      width:9.09%;
-      height:100%;
-      background:var(--tl-accent);
-      transition:width .3s ease
-    }
-
-    .timeline-card-wrap{
-      position:relative;
-      overflow:hidden
-    }
-
-    .timeline-card{
-      position:absolute;
-      inset:0;
-      display:grid;
-      grid-template-columns:minmax(0,1.15fr) minmax(340px,.85fr);
-      gap:1.6rem;
-      align-items:stretch;
-      padding:2rem 2.2rem;
-      opacity:0;
-      transform:translateX(45px);
-      pointer-events:none;
-      transition:opacity .25s ease,transform .32s ease
-    }
-
-    .timeline-card.is-active{
-      opacity:1;
-      transform:translateX(0);
-      pointer-events:auto
-    }
-
-    .timeline-card.is-before{
-      transform:translateX(-45px)
-    }
-
-    .timeline-main{
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      min-width:0
-    }
-
-    .timeline-phase{
-      display:inline-flex;
-      width:max-content;
-      max-width:100%;
-      align-items:center;
-      gap:.55rem;
-      margin-bottom:1rem;
-      padding:.38rem .68rem;
-      border-radius:999px;
-      background:var(--tl-soft);
-      color:var(--tl-accent);
-      font-size:.78rem;
-      font-weight:850;
-      letter-spacing:.04em;
-      text-transform:uppercase
-    }
-
-    .timeline-card h1{
-      margin:0 0 .75rem;
-      font-size:clamp(2rem,4vw,3.4rem);
-      line-height:1.02;
-      letter-spacing:-.035em
-    }
-
-    .timeline-question{
-      max-width:760px;
-      margin:0 0 1.5rem;
-      font-size:clamp(1.15rem,1.7vw,1.45rem);
-      line-height:1.4;
-      font-weight:650
-    }
-
-    .legacy-line{
-      margin-top:auto;
-      padding-top:1.2rem;
-      border-top:1px solid var(--tl-line)
-    }
-
-    .legacy-line span{
-      display:block;
-      margin-bottom:.35rem;
-      font-size:.76rem;
-      font-weight:850;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      color:var(--tl-accent)
-    }
-
-    .legacy-line p{
-      margin:0;
-      font-size:1.02rem;
-      line-height:1.45
-    }
-
-    .timeline-side{
-      display:grid;
-      grid-template-rows:1fr 1fr auto;
-      gap:.8rem
-    }
-
-    .info-block{
-      padding:1.05rem 1.1rem;
-      border:1px solid var(--tl-line);
-      border-radius:18px;
-      background:color-mix(in srgb,var(--tl-surface) 88%,var(--tl-soft) 12%);
-      overflow:auto
-    }
-
-    .info-block.problem{
-      border-left:4px solid var(--tl-accent)
-    }
-
-    .info-block.answer{
-      background:var(--tl-soft)
-    }
-
-    .info-block span{
-      display:block;
-      margin-bottom:.45rem;
-      font-size:.74rem;
-      font-weight:850;
-      letter-spacing:.07em;
-      text-transform:uppercase;
-      color:var(--tl-accent)
-    }
-
-    .info-block p{
-      margin:0;
-      font-size:1rem;
-      line-height:1.48
-    }
-
-    .timeline-details{
-      border-top:1px solid var(--tl-line);
-      padding-top:.75rem
-    }
-
-    .timeline-details summary{
-      cursor:pointer;
-      font-weight:750;
-      color:var(--tl-accent)
-    }
-
-    .timeline-details-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:.65rem;
-      margin-top:.65rem
-    }
-
-    .timeline-details-grid div{
-      padding:.75rem .8rem;
-      border-radius:12px;
-      background:color-mix(in srgb,var(--tl-soft) 72%,transparent);
-      font-size:.88rem;
-      line-height:1.4
-    }
-
-    .timeline-details-grid strong{
-      display:block;
-      margin-bottom:.25rem
-    }
-
-    .timeline-nav{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:1rem;
-      align-items:center;
-      padding:.9rem 1.2rem 1rem;
-      border-top:1px solid var(--tl-line)
-    }
-
-    .nav-arrow{
-      width:48px;
-      height:48px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--tl-line);
-      border-radius:999px;
-      background:var(--tl-surface);
-      color:inherit;
-      font-size:1.35rem;
-      cursor:pointer
-    }
-
-    .nav-arrow:hover,
-    .nav-arrow:focus-visible{
-      border-color:var(--tl-accent);
-      outline:none
-    }
-
-    .timeline-dots{
-      display:flex;
-      justify-content:center;
-      gap:.45rem;
-      flex-wrap:wrap
-    }
-
-    .timeline-dot{
-      width:10px;
-      height:10px;
-      padding:0;
-      border:0;
-      border-radius:50%;
-      background:var(--tl-line);
-      cursor:pointer;
-      transition:transform .15s ease,background .15s ease
-    }
-
-    .timeline-dot.is-active{
-      background:var(--tl-accent);
-      transform:scale(1.35)
-    }
-
-    .timeline-hint{
-      position:fixed;
-      left:50%;
-      bottom:.35rem;
-      transform:translateX(-50%);
-      font-size:.78rem;
-      opacity:.58;
-      white-space:nowrap
-    }
-
-    @media(max-width:820px){
+    .draft-lesson-banner{padding:.5rem 1rem;text-align:center;font-size:.85rem;font-weight:700;background:var(--tl-soft);border-bottom:1px solid var(--tl-line)}
+    .timeline-stage{min-height:calc(100vh - 132px);display:grid;place-items:center;padding:1.1rem}
+    .timeline-shell{width:min(1180px,97vw);height:min(735px,calc(100vh - 158px));min-height:570px;display:grid;grid-template-rows:auto 5px 1fr auto;border:1px solid var(--tl-line);border-radius:26px;background:var(--tl-surface);box-shadow:0 24px 70px rgba(12,28,39,.10);overflow:hidden}
+    .timeline-topbar{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:.9rem 1.3rem .8rem;border-bottom:1px solid var(--tl-line)}
+    .timeline-kicker{font-size:.76rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase;color:var(--tl-accent)}
+    .timeline-title{margin:0;font-size:1rem;text-align:center;font-weight:750}
+    .timeline-counter{min-width:60px;text-align:right;font-variant-numeric:tabular-nums;font-weight:800;color:var(--tl-accent)}
+    .timeline-progress{height:5px;background:color-mix(in srgb,var(--tl-line) 78%,transparent);overflow:hidden}
+    .timeline-progress-bar{width:9.09%;height:100%;background:var(--tl-accent);transition:width .3s ease}
+    .timeline-card-wrap{position:relative;overflow:hidden}
+    .timeline-card{position:absolute;inset:0;display:grid;grid-template-columns:minmax(0,.92fr) minmax(0,1.08fr);gap:1.3rem;padding:1.45rem 1.6rem;opacity:0;transform:translateX(42px);pointer-events:none;transition:opacity .22s ease,transform .3s ease}
+    .timeline-card.is-active{opacity:1;transform:translateX(0);pointer-events:auto}
+    .timeline-card.is-before{transform:translateX(-42px)}
+    .timeline-main{display:flex;flex-direction:column;min-width:0}
+    .timeline-phase{display:inline-flex;width:max-content;max-width:100%;align-items:center;margin-bottom:.75rem;padding:.32rem .62rem;border-radius:999px;background:var(--tl-soft);color:var(--tl-accent);font-size:.74rem;font-weight:850;letter-spacing:.04em;text-transform:uppercase}
+    .timeline-card h1{margin:0 0 .55rem;font-size:clamp(1.85rem,3.6vw,3rem);line-height:1.02;letter-spacing:-.03em}
+    .timeline-question{margin:0 0 1rem;font-size:clamp(1.05rem,1.55vw,1.3rem);line-height:1.38;font-weight:650}
+    .problem-box{margin-top:auto;padding:1rem 1.05rem;border-left:4px solid var(--tl-accent);border-radius:0 16px 16px 0;background:var(--tl-soft)}
+    .problem-box span{display:block;margin-bottom:.35rem;font-size:.73rem;font-weight:850;letter-spacing:.07em;text-transform:uppercase;color:var(--tl-accent)}
+    .problem-box p{margin:0;line-height:1.45;font-size:.98rem}
+    .timeline-side{display:grid;grid-template-rows:auto auto auto auto;gap:.62rem;align-content:center}
+    .info-block{padding:.78rem .9rem;border:1px solid var(--tl-line);border-radius:14px;background:var(--tl-surface)}
+    .info-block.emphasis{background:color-mix(in srgb,var(--tl-surface) 84%,var(--tl-soft) 16%)}
+    .info-block span{display:block;margin-bottom:.3rem;font-size:.7rem;font-weight:850;letter-spacing:.06em;text-transform:uppercase;color:var(--tl-accent)}
+    .info-block p{margin:0;font-size:.9rem;line-height:1.4}
+    .timeline-nav{display:grid;grid-template-columns:auto 1fr auto;gap:1rem;align-items:center;padding:.8rem 1.1rem .9rem;border-top:1px solid var(--tl-line)}
+    .nav-arrow{width:46px;height:46px;display:grid;place-items:center;border:1px solid var(--tl-line);border-radius:999px;background:var(--tl-surface);color:inherit;font-size:1.25rem;cursor:pointer}
+    .nav-arrow:hover,.nav-arrow:focus-visible{border-color:var(--tl-accent);outline:none}
+    .timeline-dots{display:flex;justify-content:center;gap:.42rem;flex-wrap:wrap}
+    .timeline-dot{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--tl-line);cursor:pointer}
+    .timeline-dot.is-active{background:var(--tl-accent);transform:scale(1.35)}
+    .timeline-hint{position:fixed;left:50%;bottom:.25rem;transform:translateX(-50%);font-size:.76rem;opacity:.58;white-space:nowrap}
+    @media(max-width:860px){
       body{overflow:auto}
-      .timeline-stage{min-height:auto;padding:.8rem}
-      .timeline-shell{
-        height:auto;
-        min-height:calc(100vh - 130px)
-      }
-      .timeline-card-wrap{min-height:760px}
-      .timeline-card{
-        grid-template-columns:1fr;
-        gap:1rem;
-        padding:1.25rem;
-        overflow-y:auto
-      }
-      .timeline-side{
-        grid-template-rows:auto auto auto
-      }
-      .timeline-details-grid{
-        grid-template-columns:1fr
-      }
-      .timeline-topbar{
-        grid-template-columns:1fr auto
-      }
-      .timeline-title{
-        display:none
-      }
-      .timeline-hint{
-        display:none
-      }
+      .timeline-stage{min-height:auto;padding:.75rem}
+      .timeline-shell{height:auto;min-height:calc(100vh - 130px)}
+      .timeline-card-wrap{min-height:900px}
+      .timeline-card{grid-template-columns:1fr;gap:.85rem;padding:1.05rem;overflow-y:auto}
+      .timeline-side{align-content:start}
+      .timeline-topbar{grid-template-columns:1fr auto}
+      .timeline-title{display:none}
+      .timeline-hint{display:none}
     }
-
-    @media(max-height:720px) and (min-width:821px){
+    @media(max-height:720px) and (min-width:861px){
       .timeline-shell{min-height:510px}
-      .timeline-card{padding:1.25rem 1.6rem}
-      .timeline-card h1{font-size:2.35rem}
-      .timeline-question{font-size:1.05rem;margin-bottom:1rem}
-      .info-block p{font-size:.9rem}
-      .legacy-line p{font-size:.92rem}
+      .timeline-card{padding:1rem 1.3rem;gap:1rem}
+      .timeline-card h1{font-size:2.2rem}
+      .timeline-question{font-size:1rem;margin-bottom:.7rem}
+      .problem-box p,.info-block p{font-size:.82rem}
     }
   </style>
 </head>
@@ -382,186 +95,195 @@
 <div class="draft-lesson-banner">Rascunho para validação · ainda não vinculado à Aula 08 oficial</div>
 
 <main class="timeline-stage" id="conteudo">
-  <section class="timeline-shell" aria-label="Linha do tempo da evolução dos sistemas operacionais">
+<section class="timeline-shell" aria-label="Linha do tempo da evolução dos sistemas operacionais">
+  <div class="timeline-topbar">
+    <span class="timeline-kicker" id="phase-label">Evolução dos modelos de execução</span>
+    <p class="timeline-title">Evolução dos Sistemas Operacionais</p>
+    <span class="timeline-counter" id="counter">01 / 11</span>
+  </div>
+  <div class="timeline-progress"><div class="timeline-progress-bar" id="progress-bar"></div></div>
 
-    <div class="timeline-topbar">
-      <span class="timeline-kicker" id="phase-label">Compartilhar melhor a máquina</span>
-      <p class="timeline-title">Evolução dos Sistemas Operacionais</p>
-      <span class="timeline-counter" id="counter">01 / 11</span>
-    </div>
+  <div class="timeline-card-wrap" id="card-wrap">
 
-    <div class="timeline-progress" aria-hidden="true"><div class="timeline-progress-bar" id="progress-bar"></div></div>
+    <article class="timeline-card is-active" data-index="0" data-phase="Evolução dos modelos de execução">
+      <div class="timeline-main">
+        <span class="timeline-phase">Primeiros sistemas</span>
+        <h1>Sistemas em lote (Batch)</h1>
+        <p class="timeline-question">Como reduzir o tempo perdido entre um trabalho e outro?</p>
+        <div class="problem-box"><span>Problema central</span><p>Reduzir o tempo perdido entre trabalhos e diminuir a dependência da preparação manual pelo operador.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A turma identificou o alto custo das máquinas, o desperdício entre a preparação manual de trabalhos e a ideia de agrupar jobs para executá-los em sequência.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Evitar generalizar que um erro em um job sempre interrompia todo o lote. O ponto central é a pouca interação durante a execução e o elevado tempo até o resultado.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Monitor residente, controle de jobs, turnaround e, como evolução dos sistemas em lote, mecanismos de spooling.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>Batch automatizou a sequência de trabalhos, mas a CPU ainda podia ficar ociosa durante E/S. Esse problema prepara a multiprogramação.</p></div>
+      </div>
+    </article>
 
-    <div class="timeline-card-wrap" id="card-wrap">
+    <article class="timeline-card" data-index="1" data-phase="Evolução dos modelos de execução">
+      <div class="timeline-main">
+        <span class="timeline-phase">Melhor aproveitamento da CPU</span>
+        <h1>Multiprogramação</h1>
+        <p class="timeline-question">Por que deixar a CPU esperando por uma operação de E/S?</p>
+        <div class="problem-box"><span>Problema central</span><p>Evitar a ociosidade da CPU enquanto um programa aguarda operações de entrada e saída.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A resposta destacou a CPU ociosa durante E/S e a ideia de manter vários programas disponíveis para que o processador continue trabalhando.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Em vez de “alternância inteligente”, é mais preciso dizer que, quando um processo bloqueia, o sistema pode selecionar outro processo pronto. Multiprogramação não implica execução simultânea.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Proteção de memória, interrupções, filas de processos prontos e bloqueados e políticas de escalonamento.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>A multiprogramação melhora a utilização da máquina. O passo seguinte é tornar esse compartilhamento rápido o suficiente para permitir interação.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card is-active" data-index="0" data-phase="Compartilhar melhor a máquina">
-        <div class="timeline-main">
-          <span class="timeline-phase">Primeiros sistemas</span>
-          <h1>Sistemas em lote</h1>
-          <p class="timeline-question">Como reduzir o tempo perdido entre um trabalho e outro?</p>
-          <div class="legacy-line"><span>Legado</span><p>Automação da execução · controle de jobs · organização do processamento.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Grande dependência do operador e tempo desperdiçado na preparação e troca de trabalhos.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Organizar jobs em lotes e executá-los em sequência, automatizando parte do fluxo.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Batch não era interativo. O foco estava na automação do processamento.</div><div><strong>Completar</strong>Monitor residente, turnaround elevado e, posteriormente, spooling.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="2" data-phase="Evolução dos modelos de execução">
+      <div class="timeline-main">
+        <span class="timeline-phase">Interação multiusuário</span>
+        <h1>Tempo compartilhado</h1>
+        <p class="timeline-question">Como vários usuários podem interagir com a mesma máquina?</p>
+        <div class="problem-box"><span>Problema central</span><p>Permitir interação rápida de vários usuários, e não apenas manter a CPU ocupada.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>Não foi identificada uma entrega específica para este tema. Este card completa o percurso histórico necessário.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Tempo compartilhado pode ser entendido como uma evolução da multiprogramação orientada à interação e à percepção de resposta rápida.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Preempção, fatias de tempo, terminais interativos, tempo de resposta, autenticação, proteção e contabilização de recursos.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>A interação multiusuário consolida funções que permanecem nos sistemas atuais: escalonamento, proteção, isolamento e sessões.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="1" data-phase="Compartilhar melhor a máquina">
-        <div class="timeline-main">
-          <span class="timeline-phase">Melhor aproveitamento da CPU</span>
-          <h1>Multiprogramação</h1>
-          <p class="timeline-question">Por que deixar a CPU esperando por uma operação de E/S?</p>
-          <div class="legacy-line"><span>Legado</span><p>Escalonamento · proteção de memória · concorrência · interrupções.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>A CPU podia ficar ociosa enquanto o programa em execução aguardava entrada ou saída.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Manter vários programas disponíveis para que outro use a CPU quando o atual estiver bloqueado.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Em um processador, multiprogramação não implica paralelismo real.</div><div><strong>Completar</strong>Vários programas em memória exigem proteção e escalonamento.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="3" data-phase="Contextos e prioridades de uso">
+      <div class="timeline-main">
+        <span class="timeline-phase">Computação pessoal</span>
+        <h1>Computadores pessoais</h1>
+        <p class="timeline-question">Como tornar o computador diretamente utilizável por uma pessoa?</p>
+        <div class="problem-box"><span>Problema central</span><p>Tornar o computador acessível ao usuário final, mantendo aplicações, dispositivos e dados integrados.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A pesquisa apresentou bem a mudança de prioridade: interfaces acessíveis, arquivos, dispositivos, várias aplicações, conectividade, compatibilidade e segurança.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Essas funções não surgiram todas com os PCs; muitas já existiam. O que mudou foi sua prioridade, escala e forma de apresentação.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Evolução da linha de comando para GUI, Plug and Play, suporte a redes e periféricos, contas de usuário e atualizações.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>Conveniência e experiência do usuário ganham grande peso, sem eliminar abstração, gerenciamento e proteção.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="2" data-phase="Compartilhar melhor a máquina">
-        <div class="timeline-main">
-          <span class="timeline-phase">Interação com vários usuários</span>
-          <h1>Tempo compartilhado</h1>
-          <p class="timeline-question">Como vários usuários podem interagir com a mesma máquina?</p>
-          <div class="legacy-line"><span>Legado</span><p>Preempção · fatias de tempo · responsividade · isolamento entre usuários.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Utilizar bem a CPU não bastava: usuários passaram a exigir interação e resposta rápida.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Dividir o tempo da CPU em intervalos curtos entre processos e usuários.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>O objetivo inclui responsividade, além de utilização eficiente.</div><div><strong>Completar</strong>Tempo de resposta, proteção e compartilhamento controlado.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="4" data-phase="Contextos e prioridades de uso">
+      <div class="timeline-main">
+        <span class="timeline-phase">Serviços e usuários em rede</span>
+        <h1>Rede e servidores</h1>
+        <p class="timeline-question">Como atender muitos clientes e serviços continuamente?</p>
+        <div class="problem-box"><span>Problema central</span><p>Atender múltiplos usuários e serviços concorrentes, mantendo disponibilidade e controle de recursos.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A turma identificou disputa por CPU, memória e rede, além de concorrência, disponibilidade, armazenamento, segurança e isolamento.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>“Rede estável” não é característica do SO. É mais preciso falar em pilha de rede, conexões, concorrência, disponibilidade e proteção.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Serviços de longa duração, autenticação, permissões, logs, monitoramento, recuperação de falhas e limites de recursos.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>O foco passa da interação local para atendimento contínuo de requisições, concorrência em escala e disponibilidade.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="3" data-phase="Diferentes contextos de uso">
-        <div class="timeline-main">
-          <span class="timeline-phase">Computação pessoal</span>
-          <h1>Computadores pessoais</h1>
-          <p class="timeline-question">Como tornar o computador utilizável diretamente por uma pessoa?</p>
-          <div class="legacy-line"><span>Legado</span><p>GUI · multitarefa · periféricos · experiência do usuário.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>O computador passou a ser utilizado diretamente pelo usuário final em tarefas variadas.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Priorizar interação, aplicações, arquivos, periféricos, compatibilidade e facilidade de uso.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Muitas funções já existiam, mas ganharam novas prioridades.</div><div><strong>Completar</strong>Conectividade, segurança e diversidade de hardware.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="5" data-phase="Contextos e prioridades de uso">
+      <div class="timeline-main">
+        <span class="timeline-phase">Mobilidade</span>
+        <h1>Sistemas móveis</h1>
+        <p class="timeline-question">Como equilibrar energia, sensores, conectividade e aplicações?</p>
+        <div class="problem-box"><span>Problema central</span><p>Operar sob energia limitada, mobilidade, sensores, conectividade variável e muitas aplicações instaladas.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A pesquisa trouxe energia, troca de redes, sensores, permissões, sandbox, execução em segundo plano e proteção de dados.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Evitar a regra simplista de que apps “são pausados”. Sistemas móveis adotam políticas específicas de ciclo de vida e background.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Gerenciamento térmico, custo energético dos rádios, políticas de background, sandbox por aplicação e mudanças de conectividade.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>As funções gerais do SO permanecem, mas energia, sensores, privacidade e ciclo de vida tornam-se prioridades.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="4" data-phase="Diferentes contextos de uso">
-        <div class="timeline-main">
-          <span class="timeline-phase">Serviços e usuários em rede</span>
-          <h1>Servidores</h1>
-          <p class="timeline-question">Como atender muitos serviços e usuários continuamente?</p>
-          <div class="legacy-line"><span>Legado</span><p>Serviços persistentes · disponibilidade · autenticação · logs · recuperação.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Uma máquina precisa atender solicitações concorrentes e permanecer disponível por longos períodos.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Fortalecer concorrência, rede, segurança, armazenamento e gerenciamento eficiente de recursos.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Servidor envolve continuidade, isolamento e atendimento simultâneo.</div><div><strong>Completar</strong>Escalabilidade, permissões e recuperação de falhas.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="6" data-phase="Contextos e prioridades de uso">
+      <div class="timeline-main">
+        <span class="timeline-phase">Especialização</span>
+        <h1>Sistemas embarcados</h1>
+        <p class="timeline-question">Como executar uma função específica em hardware restrito?</p>
+        <div class="problem-box"><span>Problema central</span><p>Executar funções específicas com forte relação com o hardware e recursos limitados.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A turma reconheceu a função específica, a relação estreita com o hardware e um conjunto mais restrito de funcionalidades.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>A questão sobre influência das restrições ficou sem resposta. Interface simples ou botões não definem um sistema embarcado.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Footprint, processamento, energia, armazenamento, confiabilidade, inicialização, interfaces específicas e possibilidade de operar sem SO completo.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>Mostra que um SO deve ser adequado ao contexto: nem todo sistema precisa oferecer os serviços de um desktop ou servidor.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="5" data-phase="Diferentes contextos de uso">
-        <div class="timeline-main">
-          <span class="timeline-phase">Restrições e especialização</span>
-          <h1>Sistemas embarcados</h1>
-          <p class="timeline-question">Como operar com poucos recursos e uma função específica?</p>
-          <div class="legacy-line"><span>Legado</span><p>Baixo footprint · eficiência energética · integração estreita com hardware.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Dispositivos dedicados operam sob restrições de memória, processamento, energia e hardware específico.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Usar sistemas fortemente ajustados à função e aos limites do dispositivo.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>O objetivo não é apenas “ser menor”, mas ser adequado ao dispositivo.</div><div><strong>Completar</strong>Confiabilidade, previsibilidade e conjunto controlado de funções.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="7" data-phase="Contextos e prioridades de uso">
+      <div class="timeline-main">
+        <span class="timeline-phase">Tempo como requisito</span>
+        <h1>Sistemas de tempo real</h1>
+        <p class="timeline-question">E se um resultado correto chegar tarde demais?</p>
+        <div class="problem-box"><span>Problema central</span><p>Cumprir requisitos temporais: a correção depende também do momento em que o resultado é produzido.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>Duas equipes destacaram corretamente deadlines e relacionaram o tema a controle, veículos, equipamentos médicos e aplicações críticas.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>RTOS não simplesmente “garante” prazos e não significa necessariamente “mais rápido”; o objetivo é previsibilidade sob hipóteses de projeto.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Hard e soft real-time, latência, jitter, prioridades, preempção e previsibilidade temporal.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>Enquanto sistemas gerais valorizam desempenho médio e responsividade, RTOS coloca previsibilidade entre os requisitos centrais.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="6" data-phase="Diferentes contextos de uso">
-        <div class="timeline-main">
-          <span class="timeline-phase">Tempo como requisito</span>
-          <h1>Tempo real</h1>
-          <p class="timeline-question">E se chegar atrasado significar falhar?</p>
-          <div class="legacy-line"><span>Legado</span><p>Deadlines · prioridades · jitter · hard e soft real-time.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Em certos domínios, um resultado correto também precisa chegar dentro de um prazo.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Priorizar previsibilidade temporal, latência controlada e políticas adequadas de escalonamento.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>RTOS não significa apenas “mais rápido”, mas previsível.</div><div><strong>Completar</strong>Preempção, latência e análise temporal.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="8" data-phase="Abstração, isolamento e infraestrutura">
+      <div class="timeline-main">
+        <span class="timeline-phase">Máquinas lógicas</span>
+        <h1>Virtualização</h1>
+        <p class="timeline-question">Como compartilhar o mesmo hardware entre ambientes isolados?</p>
+        <div class="problem-box"><span>Problema central</span><p>Compartilhar hardware físico entre vários ambientes isolados e consolidar infraestrutura.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A pesquisa explicou bem hardware compartilhado, VMs, isolamento, recursos virtuais e ganhos de consolidação e flexibilidade.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>A camada diretamente sobre o hardware descreve hipervisores tipo 1; também existem hipervisores tipo 2 sobre um SO hospedeiro.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Diferença entre host e guest, SO convidado em cada VM e custo adicional de recursos e virtualização.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>A abstração passa a criar a visão de uma máquina inteira para outro sistema operacional.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="7" data-phase="Diferentes contextos de uso">
-        <div class="timeline-main">
-          <span class="timeline-phase">Mobilidade e sensores</span>
-          <h1>Sistemas móveis</h1>
-          <p class="timeline-question">Como equilibrar aplicações, sensores, conectividade e bateria?</p>
-          <div class="legacy-line"><span>Legado</span><p>Sandbox · permissões · energia · gerenciamento térmico · ciclo de vida.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Mobilidade combina energia limitada, sensores, rádios sem fio e muitas aplicações instaladas.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Controlar ciclo de vida, permissões, memória, execução em segundo plano e acesso a sensores.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Políticas de background variam; não se resumem a “pausar apps”.</div><div><strong>Completar</strong>Rádio e controle térmico também influenciam decisões de execução.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="9" data-phase="Abstração, isolamento e infraestrutura">
+      <div class="timeline-main">
+        <span class="timeline-phase">Isolamento de processos</span>
+        <h1>Conteinerização</h1>
+        <p class="timeline-question">Como reproduzir e isolar ambientes com menor custo?</p>
+        <div class="problem-box"><span>Problema central</span><p>Reproduzir ambientes de aplicação e isolá-los sem o custo de uma máquina virtual completa.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A resposta foi tecnicamente forte: ambientes reproduzíveis, diferença para VMs, namespaces, cgroups, camadas de arquivos e rede.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>Contêiner não leva kernel próprio; compartilha o kernel do host. OverlayFS e veth são comuns, mas não definem universalmente contêineres.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Imagem imutável, registries, camada gravável, diferença de overhead para VMs e separação entre mecanismo e orquestração.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>A ênfase muda de máquinas virtuais completas para isolamento de processos e recursos compartilhando o kernel.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="8" data-phase="Abstrair e distribuir infraestrutura">
-        <div class="timeline-main">
-          <span class="timeline-phase">Isolamento de ambientes</span>
-          <h1>Virtualização</h1>
-          <p class="timeline-question">Como transformar uma máquina física em várias máquinas lógicas?</p>
-          <div class="legacy-line"><span>Legado</span><p>VMs · isolamento · consolidação · hipervisores.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Era necessário consolidar infraestrutura e manter ambientes isolados sobre o mesmo hardware.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Virtualizar CPU, memória, armazenamento e dispositivos para criar máquinas virtuais independentes.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Há hipervisores que operam diretamente no hardware e outros sobre um SO hospedeiro.</div><div><strong>Completar</strong>Cada VM normalmente executa seu próprio sistema operacional convidado.</div></div></details>
-        </div>
-      </article>
+    <article class="timeline-card" data-index="10" data-phase="Abstração, isolamento e infraestrutura">
+      <div class="timeline-main">
+        <span class="timeline-phase">Infraestrutura distribuída</span>
+        <h1>Computação em nuvem</h1>
+        <p class="timeline-question">Como disponibilizar recursos sob demanda em escala?</p>
+        <div class="problem-box"><span>Problema central</span><p>Disponibilizar recursos computacionais sob demanda para cargas variáveis e distribuídas.</p></div>
+      </div>
+      <div class="timeline-side">
+        <div class="info-block emphasis"><span>Síntese da turma</span><p>A pesquisa relacionou nuvem a recursos sob demanda, elasticidade, disponibilidade, automação, virtualização, contêineres, rede e armazenamento.</p></div>
+        <div class="info-block"><span>Ajuste conceitual</span><p>O SO é parte da infraestrutura, mas multi-tenancy e elasticidade dependem de uma combinação de tecnologias e serviços de plataforma.</p></div>
+        <div class="info-block"><span>Para completar</span><p>Diferenciar elasticidade de escalabilidade, destacar redundância, tolerância a falhas e administração de conjuntos distribuídos.</p></div>
+        <div class="info-block"><span>Conexão evolutiva</span><p>Abstração e gerenciamento de recursos deixam de ocorrer apenas dentro de uma máquina e passam à escala da infraestrutura.</p></div>
+      </div>
+    </article>
 
-      <article class="timeline-card" data-index="9" data-phase="Abstrair e distribuir infraestrutura">
-        <div class="timeline-main">
-          <span class="timeline-phase">Portabilidade e leveza</span>
-          <h1>Conteinerização</h1>
-          <p class="timeline-question">Como isolar aplicações sem duplicar um sistema operacional inteiro?</p>
-          <div class="legacy-line"><span>Legado</span><p>Namespaces · cgroups · imagens · implantação reproduzível.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Ambientes de aplicação precisavam ser reproduzíveis, portáveis e mais leves que VMs completas.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Isolar processos e recursos no mesmo kernel, empacotando aplicação e dependências.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Contêiner não carrega kernel próprio; compartilha o kernel hospedeiro.</div><div><strong>Completar</strong>Imagens, camada gravável e comparação de isolamento com VMs.</div></div></details>
-        </div>
-      </article>
+  </div>
 
-      <article class="timeline-card" data-index="10" data-phase="Abstrair e distribuir infraestrutura">
-        <div class="timeline-main">
-          <span class="timeline-phase">Infraestrutura sob demanda</span>
-          <h1>Computação em nuvem</h1>
-          <p class="timeline-question">Como disponibilizar recursos computacionais conforme a demanda?</p>
-          <div class="legacy-line"><span>Legado</span><p>Elasticidade · automação · redundância · tolerância a falhas · orquestração.</p></div>
-        </div>
-        <div class="timeline-side">
-          <div class="info-block problem"><span>Problema</span><p>Infraestrutura fixa é rígida diante de cargas que crescem, diminuem ou mudam rapidamente.</p></div>
-          <div class="info-block answer"><span>Resposta do sistema</span><p>Combinar SO, virtualização, contêineres, redes e automação para oferecer recursos sob demanda.</p></div>
-          <details class="timeline-details"><summary>Ajustes e complementos</summary><div class="timeline-details-grid"><div><strong>Ajuste</strong>Nuvem não é um tipo de SO; é um modelo de infraestrutura e serviço.</div><div><strong>Completar</strong>Escala, distribuição e recuperação exigem coordenação além de uma única máquina.</div></div></details>
-        </div>
-      </article>
-
-    </div>
-
-    <div class="timeline-nav">
-      <button class="nav-arrow" type="button" id="prev" aria-label="Card anterior">←</button>
-      <div class="timeline-dots" id="dots" aria-label="Navegação pela linha do tempo"></div>
-      <button class="nav-arrow" type="button" id="next" aria-label="Próximo card">→</button>
-    </div>
-  </section>
+  <div class="timeline-nav">
+    <button class="nav-arrow" type="button" id="prev" aria-label="Card anterior">←</button>
+    <div class="timeline-dots" id="dots" aria-label="Navegação pela linha do tempo"></div>
+    <button class="nav-arrow" type="button" id="next" aria-label="Próximo card">→</button>
+  </div>
+</section>
 </main>
 
 <div class="timeline-hint">← → para navegar · também funciona com swipe</div>
 
 <script>
-document.addEventListener('DOMContentLoaded', function(){
+document.addEventListener('DOMContentLoaded',function(){
   const cards=[...document.querySelectorAll('.timeline-card')];
   const prev=document.getElementById('prev');
   const next=document.getElementById('next');
@@ -570,8 +292,7 @@ document.addEventListener('DOMContentLoaded', function(){
   const phase=document.getElementById('phase-label');
   const progress=document.getElementById('progress-bar');
   const wrap=document.getElementById('card-wrap');
-  let current=0;
-  let startX=null;
+  let current=0,startX=null;
 
   cards.forEach((card,i)=>{
     const dot=document.createElement('button');
@@ -587,10 +308,6 @@ document.addEventListener('DOMContentLoaded', function(){
     cards.forEach((card,i)=>{
       card.classList.toggle('is-active',i===current);
       card.classList.toggle('is-before',i<current);
-      if(i!==current){
-        const details=card.querySelector('details');
-        if(details) details.open=false;
-      }
     });
     [...dots.children].forEach((dot,i)=>dot.classList.toggle('is-active',i===current));
     counter.textContent=String(current+1).padStart(2,'0')+' / '+String(cards.length).padStart(2,'0');
@@ -600,20 +317,17 @@ document.addEventListener('DOMContentLoaded', function(){
 
   prev.addEventListener('click',()=>show(current-1));
   next.addEventListener('click',()=>show(current+1));
-
   document.addEventListener('keydown',e=>{
     if(e.key==='ArrowRight'){e.preventDefault();show(current+1)}
     if(e.key==='ArrowLeft'){e.preventDefault();show(current-1)}
   });
-
   wrap.addEventListener('touchstart',e=>{startX=e.changedTouches[0].clientX},{passive:true});
   wrap.addEventListener('touchend',e=>{
     if(startX===null)return;
     const dx=e.changedTouches[0].clientX-startX;
-    if(Math.abs(dx)>55) show(current+(dx<0?1:-1));
+    if(Math.abs(dx)>55)show(current+(dx<0?1:-1));
     startX=null;
   },{passive:true});
-
   show(0);
 });
 </script>
