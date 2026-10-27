@@ -1,0 +1,74 @@
+/* Aula 09: componentes editoriais da Aula 08 e extensões para a simulação.
+   Tipografia, cores, navegação, cartões e tabelas vêm do tema compartilhado. */
+
+/* Mesmas regras de figuras, perguntas e síntese usadas na Aula 08. */
+.aula09-page .source-figure{max-width:900px;margin:2rem auto;padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:18px;background:var(--surface,#fff)}
+.aula09-page .source-figure img{display:block;max-width:100%;height:auto;margin:0 auto;border-radius:10px}
+.aula09-page .source-figure figcaption{margin-top:.8rem;font-size:.9rem;line-height:1.5;opacity:.82}
+.aula09-page .source-figure svg{display:block;max-width:100%;width:100%;height:auto}
+.aula09-page .question-set{display:grid;gap:.75rem;margin:1.25rem 0;padding:1.1rem 1.2rem;border-left:4px solid var(--accent,#1f7891);background:var(--surface,#fff);border-radius:0 14px 14px 0}
+.aula09-page .question-set h3{margin:.1rem 0 .35rem}
+.aula09-page .question-set ol{margin:.2rem 0 0;padding-left:1.35rem}
+.aula09-page .question-set li+li{margin-top:.45rem}
+.aula09-page .map-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.8rem;margin-top:1rem}
+.aula09-page .map-list article{padding:1rem;border:1px solid var(--line,#d8e1e7);border-radius:14px;background:var(--surface,#fff)}
+.aula09-page .map-list h3{margin-top:0}
+
+/* Complementos de estrutura, sem redefinir o sistema visual da aula. */
+.aula09-page .bridge-question p:last-child,.aula09-page .concept-card p:last-child,.aula09-page .map-list p:last-child{margin-bottom:0}
+.aula09-page .detail-body{padding:1rem 1.15rem}
+.aula09-page .detail-body>:first-child{margin-top:0}
+.aula09-page .detail-body>:last-child{margin-bottom:0}
+.aula09-page details:not(.aula03-mobile-toc){margin:1.25rem 0}
+.aula09-page pre{padding:1.1rem 1.25rem;font-size:.92rem;line-height:1.6}
+.aula09-page .meta{color:var(--ensino-muted);font-size:.9rem}
+.aula09-page .lab-step{margin-top:2rem}
+.aula09-page .lab-step h3{margin-top:0}
+.aula09-page .lab-step .download-code{margin-bottom:1rem}
+.aula09-page .ref-list li+li{margin-top:1rem}
+.aula09-page .answer-space,.aula09-page .print-only{display:none}
+.aula09-page .lesson-part-navigation{margin:2rem 0 3rem}
+
+/* Imagens do material original: a legenda acompanha o tema da página. */
+.aula09-page .image-expand{display:block;width:100%;padding:0;border:0;background:transparent;cursor:zoom-in}
+.aula09-page .zoom-hint{color:var(--ensino-accent)}
+.aula09-page #image-dialog{width:max-content;max-width:96vw;max-height:94vh;padding:1rem;border:1px solid var(--ensino-line);border-radius:var(--ensino-radius);background:var(--ensino-bg);color:var(--ensino-text)}
+.aula09-page #image-dialog::backdrop{background:rgba(8,12,16,.88)}
+.aula09-page #image-dialog img{display:block;max-width:90vw;max-height:78vh;width:auto;height:auto;object-fit:contain;background:#fff;border-radius:var(--ensino-radius-sm)}
+.aula09-page #image-dialog form{display:flex;justify-content:flex-end;margin:0 0 1rem}
+.aula09-page #image-dialog p{max-width:90vw;font-size:.9rem;line-height:1.5;color:var(--ensino-muted);margin:1rem 0 0}
+
+/* A simulação reutiliza as superfícies e os controles do portal. */
+.aula09-page .sim{margin:1.5rem 0;padding:var(--ensino-card-space);border:1px solid var(--ensino-line);border-radius:var(--ensino-radius);background:var(--ensino-bg)}
+.aula09-page .sim-actors{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--ensino-component-gap)}
+.aula09-page .sim-actor{padding:1rem;border:1px solid var(--ensino-line);border-radius:var(--ensino-radius-sm);background:var(--ensino-bg)}
+.aula09-page .sim-actor strong{display:block}
+.aula09-page .state{display:inline-block;margin-top:.65rem;padding:.25rem .6rem;border:1px solid var(--ensino-line);border-radius:4px;background:var(--ensino-surface);color:var(--ensino-text);font-size:.9rem}
+.aula09-page .state.running{border-color:var(--ensino-accent);background:var(--ensino-accent-soft);color:var(--ensino-text)}
+.aula09-page .cpu{margin:1.25rem 0;padding:.8rem 1rem;border-left:3px solid var(--ensino-accent);background:var(--ensino-accent-soft)}
+.aula09-page .event-text{min-height:150px}
+.aula09-page .event-text h3{margin:.6rem 0}
+.aula09-page .step-number{color:var(--ensino-muted);font-size:.9rem}
+.aula09-page .sim-controls{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:1.25rem}
+.aula09-page button:disabled{opacity:.45;cursor:default}
+
+@media(max-width:760px){
+  .aula09-page .map-list,.aula09-page .sim-actors{grid-template-columns:1fr}
+  .aula09-page .source-figure{padding:.75rem}
+  .aula09-page .event-text{min-height:180px}
+  .aula09-page .zoom-hint{display:block;margin-top:.3rem}
+}
+@media print{
+  @page{size:A4;margin:16mm}
+  body.aula09-page{--ensino-bg:#fff;--ensino-surface:#fff;--ensino-text:#000;--ensino-muted:#444;--ensino-line:#ccc;--ensino-accent:#333;--ensino-accent-soft:#f4f4f4;color:#000;background:#fff;font-size:10.5pt}
+  .aula09-page .site-header,.aula09-page .aula03-toc,.aula09-page .aula03-mobile-toc,.aula09-page .hero-actions,.aula09-page .sim-controls,.aula09-page .download-code,.aula09-page .zoom-hint,.aula09-page .lesson-part-navigation,.aula09-page #image-dialog{display:none!important}
+  .aula09-page .aula03-shell{width:100%!important;max-width:none!important}
+  .aula09-page .section{padding:20px 0!important}
+  .aula09-page .source-figure,.aula09-page .bridge-question,.aula09-page .question-set,.aula09-page tr{break-inside:avoid}
+  .aula09-page .source-figure img{max-height:135mm;width:auto;max-width:100%;margin:auto}
+  .aula09-page .sim-live{display:none}
+  .aula09-page .print-only,.aula09-page .answer-space{display:block}
+  .aula09-page .answer-space{height:55px;border-bottom:1px dotted var(--ensino-line)}
+  .aula09-page .trace-table-wrap{overflow:visible}
+  .aula09-page pre{white-space:pre-wrap;font-size:8pt}
+}
