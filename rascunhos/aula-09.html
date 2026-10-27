@@ -259,7 +259,7 @@
 <button class="image-expand" type="button" data-image="img-multithread" aria-haspopup="dialog" aria-label="Ampliar: Processo com múltiplas threads durante uma espera de rede"><img id="img-multithread" src="assets/aula-09/processo-multithread.png" width="1883" height="509" alt="Um único processo contém threads de comunicação, interface gráfica e acesso a recursos locais. Enquanto a thread de comunicação aguarda o servidor, as demais podem continuar executando. O bloqueio de uma atividade não implica, necessariamente, interromper toda a aplicação." loading="lazy"></button>
 <figcaption><strong>O mesmo caso, agora com múltiplas threads.</strong> A comunicação pode esperar enquanto os demais fluxos progridem. <span class="zoom-hint">Clique na imagem para ampliar.</span></figcaption></figure>
 <p>No exemplo, a thread de comunicação aguarda a resposta do servidor, enquanto as demais podem continuar. Para isso, elas precisam poder ser escalonadas separadamente e não depender de um resultado ou recurso que ainda esteja indisponível.</p>
-<div class="question-set"><h3>Compare os dois desenhos</h3><ol><li>O desenho apresenta três processos ou três threads de um processo?</li><li>Qual thread está esperando um evento? Quais ainda podem receber CPU?</li><li>Se a interface precisar do resultado da rede para concluir uma ação, o uso de várias threads elimina essa dependência?</li></ol></div>
+
 
 <h3>O que as threads compartilham?</h3>
 <p>Threads de um mesmo processo compartilham seu espaço de endereçamento e recursos, como código, dados e referências a arquivos abertos. Ao mesmo tempo, cada thread possui seu próprio contexto de execução: contador de programa, valores dos registradores e pilha para organizar chamadas e parte das variáveis locais.</p>
