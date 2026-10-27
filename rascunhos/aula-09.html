@@ -272,7 +272,14 @@
 <h3>Estados de uma thread</h3>
 <p>Assim como vimos para processos, uma thread pode estar <strong>pronta, executando, bloqueada ou finalizada</strong>. No exemplo, consideramos threads que o kernel pode escalonar separadamente: enquanto uma aguarda a rede, outra pode receber CPU.</p>
 <p>O término de uma thread não encerra necessariamente o processo; outras threads podem continuar. Para threads reconhecidas pelo kernel, o SO mantém informações em estruturas próprias, frequentemente chamadas de <strong>TCB</strong>.</p>
-<details><summary>Aprofundamento: threads no usuário e no kernel</summary><div class="detail-body"><p>Nem todo fluxo criado por uma biblioteca corresponde a uma thread que o SO vê separadamente. No modelo <strong>N:1</strong>, várias threads de usuário são mapeadas para uma única thread de kernel. No modelo <strong>1:1</strong>, cada thread de usuário corresponde a uma thread reconhecida pelo kernel.</p><p>No primeiro modelo, uma chamada bloqueante da única thread de kernel pode impedir o progresso das demais threads de usuário. No segundo, o kernel pode executar outra thread pronta do mesmo processo. Esses modelos ajudam a explicar por que o efeito de um bloqueio depende da implementação.</p></div></details>
+<h3>Threads de usuário e threads reconhecidas pelo kernel</h3>
+<p>Uma biblioteca ou sistema de execução pode gerenciar threads no <strong>espaço do usuário</strong>. O kernel, por sua vez, escalona as threads que ele reconhece. Os modelos abaixo mostram como esses dois níveis podem se relacionar.</p>
+<div class="trace-table-wrap"><table class="twos-table"><thead><tr><th>Modelo</th><th>Como as threads se relacionam</th><th>O que pode acontecer em uma espera bloqueante?</th></tr></thead><tbody>
+<tr><td><strong>N:1</strong></td><td>Várias threads de usuário são executadas sobre uma única thread reconhecida pelo kernel. A biblioteca gerencia a alternância entre elas.</td><td>Se a chamada bloquear essa única thread de kernel, as demais threads de usuário desse processo também deixam de avançar enquanto ela estiver bloqueada.</td></tr>
+<tr><td><strong>1:1</strong></td><td>Cada thread de usuário corresponde a uma thread reconhecida pelo kernel, que pode escaloná-la separadamente.</td><td>Se uma thread bloquear, o kernel pode escolher outra thread pronta do mesmo processo para executar.</td></tr>
+</tbody></table></div>
+<p>Uma thread reconhecida pelo kernel pode executar código da aplicação em <strong>modo usuário</strong> e entrar no núcleo ao solicitar um serviço.</p>
+<p>No exemplo da rede, o modelo 1:1 permite ao kernel escolher outra thread pronta enquanto a de comunicação espera. A interface ainda pode precisar aguardar se depender da resposta ou de um recurso que esteja indisponível.</p>
 
 <h3>Concorrência e paralelismo</h3>
 <p><strong>Concorrência</strong> significa que diferentes atividades progridem durante um mesmo intervalo, possivelmente por alternância. <strong>Paralelismo</strong> envolve execução simultânea em recursos de processamento distintos.</p>
