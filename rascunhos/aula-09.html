@@ -173,17 +173,15 @@
 <h3>3.2 · O que compõe esse ambiente?</h3>
 <p>Um processo envolve mais que o código. No exemplo de tratamento de imagens, precisamos das instruções, da imagem carregada, das chamadas em andamento e das referências aos arquivos utilizados.</p>
 <div class="trace-table-wrap"><table class="twos-table"><thead><tr><th>Componente</th><th>Papel na execução</th><th>No exemplo</th></tr></thead><tbody>
-<tr><td><strong>Código</strong></td><td>Instruções executáveis do programa e de bibliotecas utilizadas.</td><td>Rotinas que leem a imagem e aplicam o filtro.</td></tr>
-<tr><td><strong>Dados e heap</strong></td><td>Variáveis e objetos; o heap comporta alocações dinâmicas.</td><td>Pixels carregados, parâmetros e resultado parcial.</td></tr>
+<tr><td><strong>Código</strong></td><td>Instruções executáveis do programa e das bibliotecas utilizadas. Em formatos comuns de executáveis, ficam na seção <code>.text</code>.</td><td>Rotinas que leem a imagem e aplicam o filtro.</td></tr>
+<tr><td><strong>Dados estáticos</strong></td><td>Variáveis globais e estáticas. A seção <code>.data</code> costuma reunir dados inicializados; <code>.bss</code>, dados que começam zerados.</td><td>Parâmetros globais do filtro e contadores estáticos.</td></tr>
+<tr><td><strong>Heap</strong></td><td>Região utilizada para alocações dinâmicas durante a execução.</td><td>Memória alocada para os pixels carregados e para a imagem resultante.</td></tr>
 <tr><td><strong>Pilha de execução</strong></td><td>Organiza chamadas de função, retornos e parte dos dados locais.</td><td>Informações necessárias para voltar da função que aplica o filtro.</td></tr>
-<tr><td><strong>Espaço de endereçamento virtual</strong></td><td>Conjunto de endereços que o processo pode utilizar, com mapeamentos e permissões administrados pelo SO.</td><td>Endereços usados para acessar código, imagem e pilha.</td></tr>
+<tr><td><strong>Espaço de endereçamento virtual</strong></td><td>Endereços que o processo pode utilizar. A <strong>MMU</strong> (unidade de gerenciamento de memória do processador) os traduz para endereços físicos e verifica permissões, conforme as estruturas configuradas pelo SO.</td><td>Endereços usados para acessar código, imagem e pilha. Não é necessário que todo o espaço virtual esteja na RAM ao mesmo tempo.</td></tr>
 <tr><td><strong>Recursos do SO</strong></td><td>Referências a arquivos abertos, conexões e outros objetos.</td><td>Arquivo de entrada e arquivo em que o resultado será salvo.</td></tr>
 <tr><td><strong>Contexto de execução</strong></td><td>Estado necessário para continuar um fluxo: contador de programa, registradores e ponteiro da pilha.</td><td>Ponto em que o processamento parou e valores necessários para retomá-lo.</td></tr>
 </tbody></table></div>
 <p>Enquanto o fluxo executa, seu contexto está nos registradores da CPU. Ao alternar para outro fluxo, o sistema preserva o estado necessário em memória. <strong>O processo não possui registradores físicos exclusivos</strong>; o hardware é compartilhado ao longo do tempo.</p>
-<details><summary>Relacionando os termos do PDF: .text, .data, .bss e MMU</summary><div class="detail-body">
-<p>Em formatos comuns de executáveis, <code>.text</code> reúne código; <code>.data</code>, dados inicializados; e <code>.bss</code>, dados estáticos que começam zerados. Heap e pilhas atendem a necessidades da execução. Esses nomes são comuns, mas não representam uma divisão universal de toda implementação.</p>
-<p>A <strong>MMU</strong> é a unidade de gerenciamento de memória do processador. Em sistemas com memória virtual, ela traduz endereços e verifica permissões usando estruturas configuradas pelo SO. Não é necessário que todo o espaço virtual do processo esteja na RAM ao mesmo tempo.</p></div></details>
 
 <h3>3.3 · Identidade, recursos e isolamento</h3>
 <p>O <strong>PID</strong> é o identificador numérico do processo. Ele permite distinguir execuções ativas no contexto em que são identificadas e pode ser reutilizado após o encerramento. O SO também mantém informações como proprietário, relações de criação e recursos utilizados.</p>
