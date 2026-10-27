@@ -287,3 +287,39 @@
     }
   }
 })();
+
+
+// Aula 09: interações ativadas apenas na página de processos e threads.
+(()=>{
+if(!document.body.classList.contains("aula09-page")) return;
+
+const steps = [
+{a:'Pronto',b:'Pronto',cpu:'Kernel: seleção da próxima execução',title:'Duas execuções prontas',text:'A e B já foram admitidos. Ambos podem executar, mas só um pode ocupar a CPU lógica considerada por vez.'},
+{a:'Executando',b:'Pronto',cpu:'Processo A',title:'A recebe a CPU',text:'O kernel selecionou A e preparou seu contexto. B continua apto a executar, aguardando sua vez.'},
+{a:'Bloqueado',b:'Pronto',cpu:'Kernel: tratamento do pedido de A',title:'A precisa esperar pela leitura',text:'A solicita dados que ainda não estão disponíveis. O kernel bloqueia A. A CPU pode ser destinada a outra execução pronta.'},
+{a:'Bloqueado',b:'Executando',cpu:'Processo B',title:'B executa enquanto A espera',text:'B usa a CPU. A continua existindo e mantendo seus recursos, mas seu fluxo de instruções não pode avançar até a chegada dos dados.'},
+{a:'Pronto',b:'Executando',cpu:'Kernel: tratamento da interrupção de E/S',title:'Os dados de A ficam disponíveis',text:'Uma interrupção informa a conclusão da E/S. A volta à fila de prontos. B permanece a execução corrente; seu código de aplicação está brevemente interrompido pelo kernel.'},
+{a:'Pronto',b:'Executando',cpu:'Processo B',title:'O kernel retorna a B',text:'Neste exemplo, B continua. A interrupção foi tratada sem substituir a execução corrente: entrar no kernel não exige troca para outro processo.'},
+{a:'Pronto',b:'Pronto',cpu:'Kernel: preempção e seleção',title:'B perde a CPU por preempção',text:'Após um evento do temporizador, o kernel retira B da CPU. B continua apto e volta à fila de prontos. Não está bloqueado por E/S.'},
+{a:'Executando',b:'Pronto',cpu:'Processo A',title:'A retoma seu trabalho',text:'O kernel seleciona A e restaura seu contexto. Agora A pode continuar usando os dados recebidos. A liberação da E/S ocorreu antes da seleção.'},
+{a:'Finalizado',b:'Pronto',cpu:'Kernel: encerramento de A',title:'A conclui sua execução',text:'A termina. O kernel administra os recursos e o estado de saída. B ainda está pronto e pode ser escolhido.'},
+{a:'Finalizado',b:'Executando',cpu:'Processo B',title:'B volta a executar',text:'O contexto de B é restaurado. Ele continua do ponto em que foi interrompido. A sequência mostrou bloqueio, retomada, preempção e término.'}
+];
+let current=0;
+const stateClass={'Pronto':'ready','Executando':'running','Bloqueado':'blocked','Finalizado':''};
+function renderStep(){const s=steps[current]; for(const who of ['a','b']){const el=document.getElementById('state-'+who);el.textContent=s[who];el.className='state '+stateClass[s[who]];}document.getElementById('cpu-value').textContent=s.cpu;document.getElementById('step-number').textContent=`Etapa ${current+1} de ${steps.length}`;document.getElementById('event-title').textContent=s.title;document.getElementById('event-description').textContent=s.text;document.getElementById('previous').disabled=current===0;document.getElementById('next').disabled=current===steps.length-1;}
+document.getElementById('previous').addEventListener('click',()=>{if(current>0){current--;renderStep();}});
+document.getElementById('next').addEventListener('click',()=>{if(current<steps.length-1){current++;renderStep();}});
+document.getElementById('reset').addEventListener('click',()=>{current=0;renderStep();});
+document.getElementById('print').addEventListener('click',()=>window.print());
+let printDetails=[];
+window.addEventListener('beforeprint',()=>{printDetails=Array.from(document.querySelectorAll('details')).filter(x=>!x.open&&!x.classList.contains('teacher')&&!x.classList.contains('aula03-mobile-toc'));printDetails.forEach(x=>x.open=true);});
+window.addEventListener('afterprint',()=>{printDetails.forEach(x=>x.open=false);});
+
+const imageDialog=document.getElementById('image-dialog');
+let imageTrigger=null;
+imageDialog.addEventListener('close',()=>imageTrigger?.focus({preventScroll:true}));
+document.querySelectorAll('[data-image]').forEach(button=>button.addEventListener('click',()=>{imageTrigger=button;const img=document.getElementById(button.dataset.image);document.getElementById('dialog-image').src=img.src;document.getElementById('dialog-image').alt=img.alt;document.getElementById('dialog-description').textContent=img.closest('figure').querySelector('figcaption').textContent.replace('Clique na imagem para ampliar.','').trim();imageDialog.showModal();}));
+imageDialog.addEventListener('click',event=>{if(event.target===imageDialog)imageDialog.close();});
+
+})();
