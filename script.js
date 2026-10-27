@@ -311,7 +311,6 @@ function renderStep(){const s=steps[current]; for(const who of ['a','b']){const 
 document.getElementById('previous').addEventListener('click',()=>{if(current>0){current--;renderStep();}});
 document.getElementById('next').addEventListener('click',()=>{if(current<steps.length-1){current++;renderStep();}});
 document.getElementById('reset').addEventListener('click',()=>{current=0;renderStep();});
-document.getElementById('print').addEventListener('click',()=>window.print());
 let printDetails=[];
 window.addEventListener('beforeprint',()=>{printDetails=Array.from(document.querySelectorAll('details')).filter(x=>!x.open&&!x.classList.contains('teacher')&&!x.classList.contains('aula03-mobile-toc'));printDetails.forEach(x=>x.open=true);});
 window.addEventListener('afterprint',()=>{printDetails.forEach(x=>x.open=false);});

@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="rascunhos.css">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
-  <link rel="stylesheet" href="aula-09.css?v=1">
+  <link rel="stylesheet" href="aula-09.css?v=2">
 </head>
 <body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean aula09-page">
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -26,8 +26,9 @@
     </a>
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
     <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
+      <a href="../index.html">Página principal</a>
+      <a href="../curso.html">Visão geral</a>
       <a href="index.html">Rascunhos</a>
-      <a href="../aula-08.html">Aula anterior</a>
       <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
     </nav>
   </div>
@@ -35,19 +36,18 @@
 <div class="draft-banner">Rascunho para validação · Aula 09</div>
 <div class="aula03-shell aula03-page-grid">
 <main id="conteudo">
-<section class="hero lesson-hero" id="inicio">
-  <div class="container hero-grid lesson-hero-grid">
+<section class="hero" id="inicio">
+  <div class="container hero-grid">
     <div>
       <p class="eyebrow">Aula 09 · Sistemas Operacionais</p>
       <h1>Processos e threads</h1>
-      <p class="hero-lead">Como o sistema operacional representa programas em execução, alterna o uso da CPU e organiza diferentes fluxos de trabalho.</p>
-      <p class="meta">Philipe Hugo Fransozi · UniSENAI PR · 2º período · 2026/2</p>
-      <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#pratica">Ir à prática</a><button class="button button-secondary" id="print" type="button">Imprimir</button></div>
+      <p class="hero-lead">Na aula anterior estudamos como o sistema operacional oferece serviços, gerencia recursos e protege a máquina. Agora vamos acompanhar <strong>como ele representa programas em execução, alterna o uso da CPU e organiza diferentes fluxos de trabalho.</strong></p>
+      <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#pratica">Ir à prática</a></div>
     </div>
-    <aside class="guiding-card guiding-question"><span>Pergunta orientadora</span><blockquote>Se há mais tarefas do que núcleos disponíveis, como o sistema mantém várias execuções em andamento sem perder o estado de cada uma?</blockquote></aside>
+    <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Se há mais tarefas do que núcleos disponíveis, como o sistema mantém várias execuções em andamento sem perder o estado de cada uma?</blockquote></aside>
   </div>
 </section>
-<details class="aula03-mobile-toc"><summary>Nesta aula</summary><nav><a href="#objetivos">Visão da aula</a>
+<details class="aula03-mobile-toc"><summary>Nesta aula</summary><nav><a href="#visao">Visão da aula</a>
 <a href="#retomada">1.1 Estrutura do SO</a>
 <a href="#protecao">1.2 Anéis e privilégios</a>
 <a href="#controle">2.1 Chamadas de sistema</a>
@@ -60,7 +60,37 @@
 <a href="#atividades">8. Atividades</a>
 <a href="#sintese">Síntese</a>
 <a href="#referencias">Referências e leituras</a></nav></details>
-<section class="section" id="objetivos"><div class="container"><div class="section-heading"><p class="eyebrow">Objetivos</p><h2>O que você deverá conseguir explicar</h2></div><ul><li>Relacionar chamadas de sistema e interrupções ao controle da execução.</li><li>Distinguir programa, processo e thread, identificando recursos compartilhados e contextos individuais.</li><li>Interpretar estados, transições e trocas de contexto em uma sequência de eventos.</li><li>Usar observações de uma execução para justificar o modelo de processos e threads.</li></ul><details><summary>Relação com as competências da disciplina</summary><p><strong>C6 — Integrar sistemas de software:</strong> H20, distinguir o funcionamento das arquiteturas de hardware; H21, empregar linguagens e ferramentas adequadas aos contextos de integração. Aqui: relacionar CPU, kernel e unidades de execução e observar esses conceitos em uma aplicação.</p><p><strong>C3 — Analisar e selecionar tecnologias:</strong> H9, identificar necessidades tecnológicas; H10, analisar os prós e contras de opções tecnológicas. Aqui: justificar o uso de processos ou threads conforme isolamento, compartilhamento e comportamento esperado.</p></details><details class="teacher"><summary>Roteiro sugerido para o encontro</summary><p>Proposta para <strong>140 minutos de trabalho didático</strong>, ajustável ao ritmo da turma.</p><div class="trace-table-wrap"><table class="twos-table"><thead><tr><th>Bloco</th><th>Tempo</th><th>Uso em aula</th></tr></thead><tbody><tr><td>Estrutura do SO</td><td>10 min</td><td>Leitura guiada da primeira imagem e recuperação da aula 08.</td></tr><tr><td>Privilégios, chamadas e controle</td><td>25 min</td><td>Leitura das imagens de anéis e syscalls; síntese visual e transição para processos.</td></tr><tr><td>Processos e estados</td><td>25 min</td><td>Programa × processo, componentes, caso da rede e estados. A simulação pode ser retomada na prática.</td></tr><tr><td>PCB e troca de contexto</td><td>15 min</td><td>Explicar o que precisa ser preservado.</td></tr><tr><td>Threads e concorrência</td><td>25 min</td><td>Comparação visual e problema de uma interface que espera pela rede.</td></tr><tr><td>Prática de observação</td><td>20 min</td><td>Executar, registrar evidências e interpretar.</td></tr><tr><td>Fechamento</td><td>20 min</td><td>Atividades 1, 2 e 6 e síntese. Atividades 3–5 podem continuar fora da aula.</td></tr></tbody></table></div><p>Os blocos de aprofundamento são opcionais. Algoritmos de escalonamento, sincronização e paginação serão desenvolvidos nas aulas seguintes.</p></details></div></section>
+<section class="section" id="visao">
+  <div class="container">
+    <div class="section-heading">
+      <p class="eyebrow">Visão da aula</p>
+      <h2>Da organização do SO à execução de programas</h2>
+      <p>Vamos retomar o controle de acesso aos recursos e acompanhar o que acontece quando programas executam, aguardam eventos e compartilham o processador. A partir desses casos, vamos distinguir processos e threads e interpretar seus estados.</p>
+    </div>
+    <div class="overview-grid">
+      <article class="card topics-card">
+        <h3>Conteúdo programático</h3>
+        <div class="topic-list">
+          <div>Retomada: kernel, privilégios e chamadas de sistema</div>
+          <div>Programa e processo</div>
+          <div>Estados e transições</div>
+          <div>PCB e troca de contexto</div>
+          <div>Processos e threads</div>
+          <div>Concorrência e paralelismo</div>
+          <div>Observação de processos e threads em Python</div>
+        </div>
+      </article>
+      <article class="card competency c6">
+        <h3>C6 — Integrar sistemas de software</h3>
+        <div class="skill"><strong>H20</strong><span>Distinguir o funcionamento das diferentes arquiteturas de hardware e telecomunicações existentes para possibilitar o desenvolvimento de softwares compatíveis.<br><small>Nesta aula: relacionar CPU, memória e mecanismos de controle do sistema operacional à execução de processos e threads.</small></span></div>
+      </article>
+      <article class="card competency">
+        <h3>C3 — Analisar e selecionar tecnologias</h3>
+        <div class="skill"><strong>H10</strong><span>Avaliar diversas tecnologias disponíveis, sendo capaz de analisar os prós e contras de diferentes opções tecnológicas.<br><small>Nesta aula: comparar processos e threads considerando isolamento, compartilhamento de recursos e comportamento esperado da aplicação.</small></span></div>
+      </article>
+    </div>
+  </div>
+</section>
 <div class="lesson-part"><p>Parte I · Retomada e ligação com o novo conteúdo</p><h2>Como o SO controla a execução</h2></div>
 <section class="section" id="retomada"><div class="container"><div class="section-heading"><p class="eyebrow">1.1 · Ler a estrutura</p>
 <h2>Onde estão a aplicação, o kernel e o hardware?</h2></div>
@@ -231,7 +261,7 @@ print("As duas threads terminaram. O processo sera encerrado.")
 
 <div class="container lesson-part-navigation"><a class="button button-secondary" href="index.html">← Voltar aos rascunhos</a></div>
 </main>
-<aside class="aula03-toc" aria-label="Índice da aula"><div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-label="Fixar índice lateral aberto" aria-expanded="false" aria-pressed="false">◉</button></div><nav><a href="#objetivos">Visão da aula</a>
+<aside class="aula03-toc" aria-label="Índice da aula"><div class="aula03-toc-head"><span class="aula03-toc-label">Nesta aula</span><button class="aula03-toc-toggle" type="button" aria-label="Fixar índice lateral aberto" aria-expanded="false" aria-pressed="false">◉</button></div><nav><a href="#visao">Visão da aula</a>
 <a href="#retomada">1.1 Estrutura do SO</a>
 <a href="#protecao">1.2 Anéis e privilégios</a>
 <a href="#controle">2.1 Chamadas de sistema</a>
@@ -247,6 +277,6 @@ print("As duas threads terminaram. O processo sera encerrado.")
 </div>
 <dialog class="image-dialog" id="image-dialog" aria-label="Imagem ampliada"><form method="dialog"><button type="submit" autofocus>Fechar imagem</button></form><img id="dialog-image" alt=""><p id="dialog-description"></p></dialog>
 <footer class="site-footer"><div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software · 2026/2</p><p>Rascunho para validação docente · Imagens fornecidas pelo professor e referências indicadas na aula.</p></div></footer>
-<script defer src="../script.js?v=aula09-rascunho-1"></script>
+<script defer src="../script.js?v=aula09-rascunho-2"></script>
 </body>
 </html>
