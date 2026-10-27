@@ -184,10 +184,13 @@
 <p>Enquanto o fluxo executa, seu contexto está nos registradores da CPU. Ao alternar para outro fluxo, o sistema preserva o estado necessário em memória. <strong>O processo não possui registradores físicos exclusivos</strong>; o hardware é compartilhado ao longo do tempo.</p>
 
 <h3>3.3 · Identidade, recursos e isolamento</h3>
-<p>O <strong>PID</strong> é o identificador numérico do processo. Ele permite distinguir execuções ativas no contexto em que são identificadas e pode ser reutilizado após o encerramento. O SO também mantém informações como proprietário, relações de criação e recursos utilizados.</p>
-<p>Por padrão, processos possuem espaços de endereçamento separados. Assim, a variável <code>total</code> pode valer 10 em uma instância e 80 em outra. Essa separação limita acessos diretos indevidos; não significa uma RAM ou uma CPU física exclusiva para cada processo.</p>
-<p>Recursos associados a um processo <strong>não são necessariamente exclusivos</strong>. Processos podem compartilhar código somente para leitura, uma região de memória autorizada ou o acesso a um arquivo. Esse compartilhamento exige mecanismos e permissões apropriados.</p>
-<p>Também não há correspondência fixa entre janela e processo: uma aplicação pode criar vários processos ou reunir várias janelas em um só. Portanto, contar janelas não basta para contar processos.</p>
+<p>Os processos A e B do exemplo de tratamento de imagens ajudam a distinguir três aspectos:</p>
+<ol>
+<li><strong>Identidade:</strong> cada processo recebe um <strong>PID</strong>, seu identificador numérico. Uma solicitação para encerrar A usa esse número para indicar ao SO qual execução deve terminar; B pode continuar trabalhando.</li>
+<li><strong>Isolamento:</strong> cada processo possui seu próprio espaço de endereçamento. Alterar os pixels de <code>foto_01</code> na memória de A não altera <code>foto_02</code> na memória de B. O SO e o hardware aplicam essa proteção.</li>
+<li><strong>Compartilhamento com controle:</strong> A e B podem ler o mesmo arquivo de configuração. O SO autoriza esse acesso conforme as permissões do arquivo, mantendo a proteção das áreas de memória de cada processo.</li>
+</ol>
+<p>Janelas e processos podem se organizar de formas diferentes: uma aplicação pode usar vários processos ou reunir várias janelas em um só.</p>
 
 <h3>3.4 · O processo continua existindo enquanto espera</h3>
 <p>Considere agora uma aplicação com um único fluxo de execução, responsável pela interface, pela lógica e pela comunicação com um servidor. Ela faz uma <strong>chamada de rede bloqueante</strong>: o fluxo precisa esperar por uma resposta, um erro ou o fim de um tempo limite antes de continuar.</p>
