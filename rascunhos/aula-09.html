@@ -10,7 +10,6 @@
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="../aula-06.css">
   <link rel="stylesheet" href="../aula-07.css?v=10">
-  <link rel="stylesheet" href="rascunhos.css">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
   <link rel="stylesheet" href="aula-09.css?v=2">
@@ -28,20 +27,18 @@
     <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
       <a href="../index.html">Página principal</a>
       <a href="../curso.html">Visão geral</a>
-      <a href="index.html">Rascunhos</a>
       <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
     </nav>
   </div>
 </header>
-<div class="draft-banner">Rascunho para validação · Aula 09</div>
 <div class="aula03-shell aula03-page-grid">
 <main id="conteudo">
 <section class="hero" id="inicio">
   <div class="container hero-grid">
     <div>
       <p class="eyebrow">Aula 09 · Sistemas Operacionais</p>
-      <h1>Processos e threads</h1>
-      <p class="hero-lead">Na aula anterior estudamos como o sistema operacional oferece serviços, gerencia recursos e protege a máquina. Agora vamos acompanhar <strong>como ele representa programas em execução, alterna o uso da CPU e organiza diferentes fluxos de trabalho.</strong></p>
+      <h1>Como o sistema operacional controla a execução?</h1>
+      <p class="hero-lead">Na aula anterior estudamos por que precisamos de um sistema operacional e como ele gerencia e protege os recursos da máquina. Agora a pergunta é: <strong>como diferentes programas podem avançar sem perder o estado de cada execução?</strong></p>
       <div class="hero-actions"><a class="button button-primary" href="#retomada">Começar a aula</a><a class="button button-secondary" href="#pratica">Ir à prática</a></div>
     </div>
     <aside class="guiding-card"><span>Pergunta orientadora</span><blockquote>Se há mais tarefas do que núcleos disponíveis, como o sistema mantém várias execuções em andamento sem perder o estado de cada uma?</blockquote></aside>
@@ -64,8 +61,8 @@
   <div class="container">
     <div class="section-heading">
       <p class="eyebrow">Visão da aula</p>
-      <h2>Da organização do SO à execução de programas</h2>
-      <p>Vamos retomar o controle de acesso aos recursos e acompanhar o que acontece quando programas executam, aguardam eventos e compartilham o processador. A partir desses casos, vamos distinguir processos e threads e interpretar seus estados.</p>
+      <h2>A aula será organizada a partir de problemas concretos</h2>
+      <p>Cada conceito será introduzido a partir de uma situação de execução: iniciar um programa, aguardar uma leitura, alternar o uso da CPU e manter uma interface respondendo enquanto outra tarefa espera.</p>
     </div>
     <div class="overview-grid">
       <article class="card topics-card">
