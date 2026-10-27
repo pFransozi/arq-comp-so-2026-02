@@ -192,7 +192,7 @@
 </ol>
 <p>Janelas e processos podem se organizar de formas diferentes: uma aplicação pode usar vários processos ou reunir várias janelas em um só.</p>
 
-<h3>3.4 · O processo continua existindo enquanto espera</h3>
+<h3>3.4 · Quando um processo precisa esperar</h3>
 <p>Considere uma aplicação com um único fluxo de execução para a interface, a lógica e a comunicação com um servidor. Ao fazer uma <strong>chamada de rede bloqueante</strong>, esse fluxo precisa aguardar uma resposta, um erro ou o fim de um tempo limite.</p>
 <figure class="source-figure supplied-figure">
 <button class="image-expand" type="button" data-image="img-processo-rede" aria-haspopup="dialog" aria-label="Ampliar: Processo com um único fluxo de execução aguardando a rede"><img id="img-processo-rede" src="assets/aula-09/processo-uma-thread.png" width="1823" height="353" alt="Uma aplicação tem um único fluxo de execução para comunicação, interface e lógica. Ela faz uma requisição a um servidor que não responde e fica bloqueada. A interface deixa de responder e as demais atividades desse fluxo também param de avançar." loading="lazy"></button>
