@@ -58,6 +58,14 @@
   .aula09-page .event-text{min-height:180px}
   .aula09-page .zoom-hint{display:block;margin-top:.3rem}
 }
+
+/* Em telas estreitas ou com zoom, o cabeçalho acompanha a rolagem. */
+@media (max-width:1050px), (max-height:700px){
+  body.teaching-page.aula09-page .site-header{position:relative}
+  body.teaching-page.aula09-page .nav-wrap{flex-wrap:wrap;gap:.5rem 1rem;padding-block:.5rem}
+  body.teaching-page.aula09-page .main-nav{flex-wrap:wrap;gap:.5rem 1rem}
+}
+
 @media print{
   @page{size:A4;margin:16mm}
   body.aula09-page{--ensino-bg:#fff;--ensino-surface:#fff;--ensino-text:#000;--ensino-muted:#444;--ensino-line:#ccc;--ensino-accent:#333;--ensino-accent-soft:#f4f4f4;color:#000;background:#fff;font-size:10.5pt}
