@@ -1,0 +1,77 @@
+.aula10-page .draft-label {
+  display: inline-block;
+  margin-inline-start: .4rem;
+  padding: .12rem .5rem;
+  border: 1px solid var(--ensino-line);
+  border-radius: 999px;
+  color: var(--ensino-muted);
+  font-size: .78rem;
+}
+
+.aula10-page .code-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ensino-component-gap);
+}
+
+body.teaching-page.aula10-page .aula10-table table { min-width: 0; }
+.aula10-page .result-row { background: var(--ensino-accent-soft); }
+
+.aula10-page :is(.simulator, .exercise, .reading) {
+  margin: 1rem 0;
+  padding: var(--ensino-card-space);
+  border: 1px solid var(--ensino-line);
+  border-radius: var(--ensino-radius);
+  background: var(--ensino-surface);
+}
+
+.aula10-page :is(.simulator, .exercise) h3 { margin-top: 0; }
+.aula10-page .reading summary { cursor: pointer; font-weight: 600; }
+.aula10-page .reading[open] summary { margin-bottom: .65rem; }
+
+.aula10-page :is(.sim-controls, .metrics) {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem 1rem;
+}
+
+.aula10-page .sim-state {
+  margin: .75rem 0;
+  padding: .8rem 1rem;
+  border: 1px solid var(--ensino-line);
+  border-radius: var(--ensino-radius-sm);
+  background: var(--ensino-bg);
+}
+
+.aula10-page .sim-state p:last-child { margin-bottom: 0; }
+.aula10-page .metrics { margin-bottom: .45rem; }
+.aula10-page .metrics strong { color: var(--ensino-accent-strong); }
+.aula10-page .sim-controls button:disabled { opacity: .55; cursor: default; }
+.aula10-page #cenario {
+  max-width: 100%;
+  padding: .25rem .45rem;
+  border: 1px solid var(--ensino-line);
+  border-radius: var(--ensino-radius-sm);
+  background: var(--ensino-bg);
+  color: var(--ensino-text);
+}
+
+@media (max-width: 1050px), (max-height: 700px) {
+  body.teaching-page.aula10-page .site-header { position: relative; }
+  body.teaching-page.aula10-page .nav-wrap {
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+    padding-block: .5rem;
+  }
+  body.teaching-page.aula10-page .main-nav { flex-wrap: wrap; gap: .5rem 1rem; }
+}
+
+@media (max-width: 760px) {
+  .aula10-page .code-grid { grid-template-columns: minmax(0, 1fr); }
+  .aula10-page .aula10-table :is(th, td) { padding: .45rem .5rem; }
+}
+
+@media print {
+  .aula10-page .simulator { display: none; }
+}

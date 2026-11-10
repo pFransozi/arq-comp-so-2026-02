@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<meta name="description" content="Aula 10 de Arquitetura de Computadores e Sistemas Operacionais. Condições de corrida, exclusão mútua e deadlock.">
+<title>Aula 10 · Concorrência, sincronização e deadlock</title>
+  <meta name="theme-color" content="#101a24">
+  <link rel="stylesheet" href="../styles.css">
+  <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
+  <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
+  <link rel="stylesheet" href="aula-10.css">
+</head>
+<body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean aula10-page">
+<a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+<div class="progress" id="progress" aria-hidden="true"></div>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a class="brand" href="../index.html" aria-label="Arquitetura e Sistemas Operacionais — página principal">
+      <span class="brand-mark" aria-hidden="true">SO</span>
+      <span><strong>Arquitetura &amp; SO</strong><small>Aula 10</small></span>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal"><span class="sr-only">Abrir menu</span><span></span><span></span><span></span></button>
+    <nav id="menu-principal" class="main-nav" aria-label="Navegação da aula">
+      <a href="../index.html">Página principal</a>
+      <a href="../aula-09.html">Aula anterior</a>
+      <a href="index.html">Rascunhos</a>
+      <button class="theme-toggle" type="button" aria-label="Ativar modo noturno" aria-pressed="false"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-text">Modo noturno</span></button>
+    </nav>
+  </div>
+</header>
+<div class="aula03-shell aula03-page-grid">
+<main id="conteudo" tabindex="-1">
+  <section class="hero" id="inicio" aria-labelledby="titulo">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow">Aula 10 · Sistemas Operacionais <span class="draft-label">Rascunho para validação</span></p>
+        <h1 id="titulo">Concorrência, sincronização e deadlock</h1>
+        <p class="hero-lead">Na Aula 09, duas threads do mesmo processo podiam avançar compartilhando dados. Vamos acompanhar duas atualizações do mesmo contador e investigar como as travas afetam o resultado e o progresso das threads.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#corrida">Começar a aula</a>
+          <a class="button button-secondary" href="#atividade">Ir à atividade</a>
+        </div>
+      </div>
+      <aside class="guiding-card" aria-label="Pergunta orientadora">
+        <span>Pergunta orientadora</span>
+        <blockquote>Como duas threads podem atualizar os mesmos dados corretamente e continuar avançando?</blockquote>
+      </aside>
+    </div>
+  </section>
+  <details class="aula03-mobile-toc">
+    <summary>Nesta aula</summary>
+    <nav aria-label="Índice da aula">
+      <a href="#visao">Visão da aula</a>
+      <a href="#corrida">1. Condição de corrida</a>
+      <a href="#sincronizacao">2. Exclusão mútua</a>
+      <a href="#deadlock">3. Deadlock</a>
+      <a href="#atividade">Atividade de aplicação</a>
+      <a href="#sintese">Síntese</a>
+      <a href="#referencias">Referências</a>
+    </nav>
+  </details>
+
+  <section class="section" id="visao">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">Visão da aula</p>
+    <h2>Do dado compartilhado à espera por recursos</h2>
+    </div>
+    <p>Em uma única CPU lógica, o escalonador pode alternar entre threads. Em núcleos distintos, threads também podem executar em paralelo. Nos dois casos, a ordem das operações sobre um mesmo dado pode afetar o resultado.</p>
+    <div class="overview-grid">
+      <article class="card">
+        <h3>Objetivos</h3>
+        <ul>
+          <li>Reconstruir uma intercalação que perde uma atualização.</li>
+          <li>Delimitar a região crítica e explicar o efeito de uma trava.</li>
+          <li>Identificar uma espera circular e propor uma ordem de aquisição de travas.</li>
+        </ul>
+      </article>
+      <article class="card">
+        <h3>Competência C3 · H10</h3>
+        <p>Avaliar os prós e contras de diferentes opções tecnológicas. Nesta aula, comparar a proteção com uma trava, o controle de vagas com um semáforo e o efeito da ordem ao adquirir duas travas.</p>
+      </article>
+    </div>
+  </div>
+  </section>
+
+  <section class="section" id="corrida">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">1 · Condição de corrida</p>
+    <h2>Duas threads atualizam um contador</h2>
+    </div>
+    <p>Um contador começa em <code>0</code>. As threads A e B devem somar <code>1</code> cada uma. Para acompanhar a atualização, vamos separar a leitura do valor compartilhado, o cálculo e a escrita do resultado. O valor lido por cada thread fica guardado em uma variável local.</p>
+    <div class="table-wrap aula10-table" role="region" aria-label="Intercalação das atualizações" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">Passo</th><th scope="col">Thread</th><th scope="col">Ação</th><th scope="col">Contador</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">1</th><td>A</td><td>Lê <code>0</code>.</td><td><code>0</code></td></tr>
+          <tr><th scope="row">2</th><td>B</td><td>Lê <code>0</code>.</td><td><code>0</code></td></tr>
+          <tr><th scope="row">3</th><td>A</td><td>Calcula <code>0 + 1</code> e grava <code>1</code>.</td><td><code>1</code></td></tr>
+          <tr class="result-row"><th scope="row">4</th><td>B</td><td>Usa a sua leitura anterior e também grava <code>1</code>.</td><td><code>1</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>As duas threads terminam, mas o contador fica em <code>1</code>. Se B lesse o contador depois da escrita de A, o resultado seria <code>2</code>. Essa dependência da ordem de execução, que pode gerar um resultado incorreto, caracteriza uma <strong>condição de corrida</strong> (<em>race condition</em>).</p>
+    <div class="bridge-question">
+      <p><strong>Região crítica.</strong> É o trecho que acessa o estado compartilhado e precisa de coordenação. Neste exemplo, a escrita depende da leitura anterior. A região crítica abrange a atualização inteira, da leitura até a escrita.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="section" id="sincronizacao">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">2 · Sincronização e exclusão mútua</p>
+    <h2>Uma atualização de cada vez</h2>
+    </div>
+    <p>A <strong>exclusão mútua</strong> permite que apenas uma thread por vez execute a região crítica protegida pela mesma trava. Cada thread tenta adquirir a trava antes de ler o contador e a libera depois de gravar. Assim, a segunda thread lê o valor já atualizado pela primeira.</p>
+    <p>Se B tentar adquirir a trava enquanto A a detém, B pode ficar <strong>bloqueada</strong>. Quando A libera a trava, B pode voltar a disputar CPU e prosseguir quando conseguir adquiri-la. A espera tem uma saída porque A pode completar seu trabalho e liberar o recurso.</p>
+
+    <div class="simulator" id="simulador" hidden>
+      <h3>Acompanhar a intercalação</h3>
+      <div class="sim-controls">
+        <label for="cenario">Cenário</label>
+        <select id="cenario">
+          <option value="livre">Sem trava</option>
+          <option value="trava">Com trava</option>
+        </select>
+      </div>
+      <div class="sim-state" aria-live="polite" aria-atomic="true">
+        <p class="eyebrow" id="sim-passo"></p>
+        <div class="metrics">
+          <span>Contador <strong id="sim-contador"></strong></span>
+          <span>Trava <strong id="sim-trava"></strong></span>
+        </div>
+        <p id="sim-evento"></p>
+      </div>
+      <div class="sim-controls">
+        <button class="button button-secondary" type="button" id="sim-anterior">Anterior</button>
+        <button class="button button-secondary" type="button" id="sim-proximo">Próximo passo</button>
+        <button class="button button-secondary" type="button" id="sim-reiniciar">Reiniciar</button>
+      </div>
+    </div>
+
+    <h3>Demonstração em Python</h3>
+    <p>Execute os dois exemplos separadamente. No primeiro, <code>Barrier(2)</code> faz as duas threads esperarem até que ambas tenham lido o contador. Isso reproduz a sequência da tabela sem depender do momento em que o escalonador alterna as threads. No segundo, a mesma instância de <code>Lock</code> é usada pelas duas threads. O bloco <code>with</code> adquire a trava na entrada e a libera na saída.</p>
+    <div class="code-grid">
+      <div>
+        <h4>Sem trava na atualização</h4>
+        <pre tabindex="0" aria-label="Código Python sem trava"><code data-python="sem-trava">from threading import Barrier, Thread
+
+contador = 0
+leituras = Barrier(2)
+
+def incrementar():
+    global contador
+    valor_lido = contador
+    leituras.wait()  # Ambas leram antes de gravar.
+    contador = valor_lido + 1
+
+a = Thread(target=incrementar)
+b = Thread(target=incrementar)
+a.start()
+b.start()
+a.join()
+b.join()
+
+print(contador)  # 1</code></pre>
+      </div>
+      <div>
+        <h4>Com uma trava compartilhada</h4>
+        <pre tabindex="0" aria-label="Código Python com trava"><code data-python="com-trava">from threading import Lock, Thread
+
+contador = 0
+trava = Lock()
+
+def incrementar():
+    global contador
+    with trava:
+        valor_lido = contador
+        contador = valor_lido + 1
+
+a = Thread(target=incrementar)
+b = Thread(target=incrementar)
+a.start()
+b.start()
+a.join()
+b.join()
+
+print(contador)  # 2</code></pre>
+      </div>
+    </div>
+    <p>Nos dois exemplos, <code>join()</code> faz o fluxo principal aguardar o término das threads antes de exibir o contador. A coordenação das atualizações ocorre dentro de <code>incrementar()</code>.</p>
+    <details class="reading">
+      <summary>Outro mecanismo de sincronização · Semáforo</summary>
+      <p>Imagine um serviço com três vagas para processar requisições simultâneas. Um <code>Semaphore(3)</code> começa com três permissões. Cada entrada reserva uma permissão, e cada saída devolve uma. Quando uma thread tenta entrar e encontra zero permissões, ela espera. Se encontrar uma permissão, pode consumi-la e entrar.</p>
+      <p>Uma trava dá acesso exclusivo à região crítica. Um semáforo com três permissões pode manter até três requisições em atendimento. Se essas requisições atualizarem o mesmo contador, a atualização ainda exige coordenação.</p>
+    </details>
+  </div>
+  </section>
+
+  <section class="section" id="deadlock">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">3 · Deadlock</p>
+    <h2>Quando duas travas formam uma espera circular</h2>
+    </div>
+    <p>Duas operações precisam acessar os recursos X e Y antes de concluir. Cada recurso tem a sua trava. A adquire X primeiro. B adquire Y primeiro. Agora cada thread tenta adquirir a trava que está com a outra, mantendo a primeira até terminar.</p>
+    <div class="table-wrap aula10-table" role="region" aria-label="Travas mantidas e esperadas pelas threads" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">Thread</th><th scope="col">Trava que mantém</th><th scope="col">Trava que aguarda</th><th scope="col">Depende de</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">A</th><td>X</td><td>Y</td><td>B liberar Y</td></tr>
+          <tr><th scope="row">B</th><td>Y</td><td>X</td><td>A liberar X</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Há <strong>deadlock</strong>, ou impasse, porque cada uma depende de uma liberação que a outra só faria depois de prosseguir. No modelo de estados da Aula 09, ambas ficam bloqueadas. O escalonador pode continuar executando outras threads prontas, mas conceder mais tempo de CPU por si só não resolve a dependência.</p>
+
+    <h3>As quatro condições de Coffman no exemplo</h3>
+    <div class="table-wrap aula10-table" role="region" aria-label="Condições de Coffman aplicadas ao exemplo" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">Condição necessária</th><th scope="col">Como aparece no exemplo</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Exclusão mútua</th><td>Cada trava permite que apenas uma thread acesse o respectivo recurso por vez.</td></tr>
+          <tr><th scope="row">Posse e espera</th><td>Cada thread mantém uma trava enquanto aguarda a outra.</td></tr>
+          <tr><th scope="row">Não preempção do recurso</th><td>O protocolo de uso mantém cada trava com quem a adquiriu até que essa thread a libere.</td></tr>
+          <tr><th scope="row">Espera circular</th><td>A depende de B e B depende de A.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>As quatro condições são necessárias para um impasse desse tipo. Aqui, a não preempção se refere ao <strong>recurso</strong>. Uma thread pode perder a CPU e continuar mantendo a trava que adquiriu.</p>
+
+    <h3>Prevenção por ordem de aquisição</h3>
+    <p>As duas threads passam a adquirir X antes de Y. Se A adquire X primeiro, B precisa esperar por X sem adquirir Y. Com Y disponível, A adquire as duas travas, conclui sua operação e as libera. B pode então seguir a mesma ordem. A regra precisa valer para todos os trechos que adquirem essas duas travas.</p>
+    <pre tabindex="0" aria-label="Trecho Python para aquisição ordenada"><code>with trava_x:
+    with trava_y:
+        atualizar_recursos()</code></pre>
+    <p>O trecho ilustra a ordem comum. <code>trava_x</code> e <code>trava_y</code> são objetos compartilhados, e <code>atualizar_recursos()</code> representa a operação que precisa de ambos os recursos.</p>
+
+    <details class="reading">
+      <summary>Leitura complementar · Monitores e tratamento de impasses</summary>
+      <p>Um <strong>monitor</strong> reúne o estado compartilhado e as operações que o manipulam, com exclusão mútua nas operações protegidas. Condições de espera podem permitir que uma operação aguarde um evento e libere temporariamente o acesso ao monitor.</p>
+      <ul>
+        <li><strong>Prevenção.</strong> Uma regra de projeto inviabiliza uma condição necessária, como a espera circular.</li>
+        <li><strong>Evasão.</strong> Antes de conceder um recurso, verifica-se se ainda existe uma ordem em que todas as execuções podem terminar. O algoritmo do banqueiro usa as demandas máximas declaradas para fazer essa análise.</li>
+        <li><strong>Detecção e recuperação.</strong> O sistema procura impasses que já ocorreram e pode intervir, por exemplo, cancelando uma operação e liberando seus recursos. Num grafo de alocação com uma instância por tipo de recurso, um ciclo é suficiente para identificar um impasse. Com várias instâncias, a análise também considera os recursos disponíveis, as alocações e as solicitações pendentes.</li>
+      </ul>
+    </details>
+  </div>
+  </section>
+
+  <section class="section" id="atividade">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">Atividade de aplicação</p>
+    <h2>Da análise à correção</h2>
+    </div>
+    <article class="exercise">
+      <h3>1. A última vaga</h3>
+      <p>Há uma vaga disponível. Cada thread lê o número de vagas, confirma a reserva se o valor lido for positivo e grava esse valor menos um. A e B leem <code>1</code> antes que qualquer uma grave.</p>
+      <ol>
+        <li>Indique quantas reservas são confirmadas e qual valor fica gravado.</li>
+        <li>Delimite a região crítica. Explique o que pode ocorrer se a trava proteger somente a gravação.</li>
+      </ol>
+    </article>
+    <article class="exercise">
+      <h3>2. Teste com três threads</h3>
+      <p>Adapte os dois programas do contador para três threads. Ajuste a quantidade de participantes de <code>Barrier</code> na primeira versão. Em cada programa, inicie as três threads antes de chamar <code>join()</code>.</p>
+      <ol>
+        <li>Registre o valor esperado de cada versão antes de executar.</li>
+        <li>Execute e explique o resultado de cada versão com base no momento em que as threads leem o contador.</li>
+      </ol>
+    </article>
+    <article class="exercise">
+      <h3>3. Transferências em sentidos opostos</h3>
+      <p>Duas transferências usam as contas 12 e 47. Cada operação adquire primeiro a trava da conta de origem e depois a da conta de destino. Cada trava é mantida até o fim da transferência.</p>
+      <ol>
+        <li>Descreva uma sequência de eventos que deixa as duas transferências em deadlock.</li>
+        <li>Defina uma regra baseada no número das contas e indique qual trava cada transferência deve adquirir primeiro.</li>
+      </ol>
+    </article>
+  </div>
+  </section>
+
+  <section class="section" id="sintese">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">Fechamento</p>
+    <h2>Consistência dos dados e progresso das threads</h2>
+    </div>
+    <div class="table-wrap aula10-table" role="region" aria-label="Síntese das situações estudadas" tabindex="0">
+      <table>
+        <thead><tr><th scope="col">Situação</th><th scope="col">O que observar</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Condição de corrida</th><td>As threads podem terminar e produzir um resultado incorreto, dependendo da ordem dos acessos.</td></tr>
+          <tr><th scope="row">Espera pela trava</th><td>Uma thread aguarda enquanto outra pode avançar e liberar o recurso.</td></tr>
+          <tr><th scope="row">Deadlock</th><td>As threads envolvidas dependem de liberações que nenhuma delas consegue realizar enquanto espera.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="exercise">
+      <h3>Saída da aula</h3>
+      <p>Em até cinco linhas, explique como uma trava evita a perda de atualização no contador e como a ordem de aquisição de duas travas pode impedir o progresso das threads.</p>
+    </div>
+  </div>
+  </section>
+
+  <section class="section" id="referencias">
+  <div class="container">
+    <div class="section-heading">
+    <p class="eyebrow">Fontes e leituras</p>
+    <h2>Referências</h2>
+    </div>
+    <ol>
+      <li><em>Concorrência, sincronização e deadlock.</em> Material de referência da aula.</li>
+      <li>TANENBAUM, Andrew S. e BOS, Herbert. <em>Sistemas operacionais modernos.</em> 4. ed. Pearson, 2016. Capítulo 2, seção 2.3, e capítulo 6.</li>
+      <li>PYTHON SOFTWARE FOUNDATION. <a href="https://docs.python.org/pt-br/3.14/library/threading.html">Documentação do módulo <code>threading</code></a>.</li>
+    </ol>
+  </div>
+  </section>
+  <div class="container lesson-part-navigation"><a class="button button-secondary" href="index.html">← Voltar aos rascunhos</a></div>
+</main>
+<aside class="aula03-toc" aria-label="Índice lateral">
+  <div class="aula03-toc-head">
+    <span class="aula03-toc-label">Nesta aula</span>
+    <button class="aula03-toc-toggle" type="button" aria-label="Fixar índice lateral aberto" aria-expanded="false" aria-pressed="false">◉</button>
+  </div>
+  <nav aria-label="Índice da aula">
+    <a href="#visao">Visão da aula</a>
+    <a href="#corrida">1. Condição de corrida</a>
+    <a href="#sincronizacao">2. Exclusão mútua</a>
+    <a href="#deadlock">3. Deadlock</a>
+    <a href="#atividade">Atividade de aplicação</a>
+    <a href="#sintese">Síntese</a>
+    <a href="#referencias">Referências</a>
+  </nav>
+</aside>
+</div>
+<footer class="site-footer">
+  <div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software · 2026/2</p></div>
+</footer>
+<script defer src="../script.js"></script>
+<script defer src="aula-10.js"></script>
+</body>
+</html>
