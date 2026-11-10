@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="../styles.css">
   <script src="https://pfransozi.github.io/assets/js/ensino.js?v=9"></script>
   <link rel="stylesheet" href="https://pfransozi.github.io/assets/css/ensino.css?v=14">
-  <link rel="stylesheet" href="aula-10.css">
+  <link rel="stylesheet" href="aula-10.css?v=2">
 </head>
 <body class="teaching-page teaching-lesson lesson-page arch-page aula03-clean aula10-page">
 <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
@@ -92,19 +92,30 @@
     <p class="eyebrow">1 · Condição de corrida</p>
     <h2>Duas threads atualizam um contador</h2>
     </div>
-    <p>Um contador começa em <code>0</code>. As threads A e B devem somar <code>1</code> cada uma. Para acompanhar a atualização, vamos separar a leitura do valor compartilhado, o cálculo e a escrita do resultado. O valor lido por cada thread fica guardado em uma variável local.</p>
-    <div class="table-wrap aula10-table" role="region" aria-label="Intercalação das atualizações" tabindex="0">
+    <div class="exercise">
+      <h3>No quadro · Dois incrementos</h3>
+      <p>Escreva <code>0</code> no quadro. Duas pessoas representam as threads A e B. Cada uma tem uma ficha própria e deve cumprir três ações, uma por vez.</p>
+      <ol>
+        <li><strong>Ler.</strong> Copiar para a ficha o número que está no quadro.</li>
+        <li><strong>Calcular.</strong> Calcular quanto dá o número da ficha mais <code>1</code>.</li>
+        <li><strong>Gravar.</strong> Substituir o número do quadro pelo resultado.</li>
+      </ol>
+      <p>Primeiro, A e B copiam o número. Depois, A calcula e grava. Por último, B calcula e grava. <strong>Qual número fica no quadro?</strong></p>
+    </div>
+    <p>O quadro representa o <strong>contador compartilhado</strong>. A ficha representa a variável local <code>valor_lido</code> de cada thread. A ficha guarda o número copiado, mesmo quando outra thread muda o quadro.</p>
+    <div class="table-wrap aula10-table" role="region" aria-label="Ações das threads e valor do contador" tabindex="0">
       <table>
-        <thead><tr><th scope="col">Passo</th><th scope="col">Thread</th><th scope="col">Ação</th><th scope="col">Contador</th></tr></thead>
+        <thead><tr><th scope="col">Passo</th><th scope="col">Thread A</th><th scope="col">Thread B</th><th scope="col">Contador</th></tr></thead>
         <tbody>
-          <tr><th scope="row">1</th><td>A</td><td>Lê <code>0</code>.</td><td><code>0</code></td></tr>
-          <tr><th scope="row">2</th><td>B</td><td>Lê <code>0</code>.</td><td><code>0</code></td></tr>
-          <tr><th scope="row">3</th><td>A</td><td>Calcula <code>0 + 1</code> e grava <code>1</code>.</td><td><code>1</code></td></tr>
-          <tr class="result-row"><th scope="row">4</th><td>B</td><td>Usa a sua leitura anterior e também grava <code>1</code>.</td><td><code>1</code></td></tr>
+          <tr><th scope="row">1</th><td>Guarda <code>0</code> na ficha.</td><td>—</td><td><code>0</code></td></tr>
+          <tr><th scope="row">2</th><td>—</td><td>Guarda <code>0</code> na ficha.</td><td><code>0</code></td></tr>
+          <tr><th scope="row">3</th><td>Calcula <code>0 + 1</code> e grava <code>1</code>.</td><td>—</td><td><code>1</code></td></tr>
+          <tr class="result-row"><th scope="row">4</th><td>—</td><td>Usa o <code>0</code> da ficha e grava <code>1</code>.</td><td><code>1</code></td></tr>
         </tbody>
       </table>
     </div>
-    <p>As duas threads terminam, mas o contador fica em <code>1</code>. Se B lesse o contador depois da escrita de A, o resultado seria <code>2</code>. Essa dependência da ordem de execução, que pode gerar um resultado incorreto, caracteriza uma <strong>condição de corrida</strong> (<em>race condition</em>).</p>
+    <p>Dois incrementos deveriam levar o contador a <code>2</code>. Aqui, B sobrescreve a atualização de A porque calculou a partir de um valor antigo. Se A completasse as três ações antes de B ler, B leria <code>1</code> e gravaria <code>2</code>. Quando uma ordem possível das operações leva a um resultado incorreto, temos uma <strong>condição de corrida</strong> (<em>race condition</em>).</p>
+    <p>Em cada passo, só uma thread age. O escalonador pode produzir essa intercalação mesmo em uma única CPU lógica.</p>
     <div class="bridge-question">
       <p><strong>Região crítica.</strong> É o trecho que acessa o estado compartilhado e precisa de coordenação. Neste exemplo, a escrita depende da leitura anterior. A região crítica abrange a atualização inteira, da leitura até a escrita.</p>
     </div>
@@ -117,11 +128,17 @@
     <p class="eyebrow">2 · Sincronização e exclusão mútua</p>
     <h2>Uma atualização de cada vez</h2>
     </div>
-    <p>A <strong>exclusão mútua</strong> permite que apenas uma thread por vez execute a região crítica protegida pela mesma trava. Cada thread tenta adquirir a trava antes de ler o contador e a libera depois de gravar. Assim, a segunda thread lê o valor já atualizado pela primeira.</p>
-    <p>Se B tentar adquirir a trava enquanto A a detém, B pode ficar <strong>bloqueada</strong>. Quando A libera a trava, B pode voltar a disputar CPU e prosseguir quando conseguir adquiri-la. A espera tem uma saída porque A pode completar seu trabalho e liberar o recurso.</p>
+    <p>Volte ao quadro e acrescente um cartão de acesso. Cada pessoa deve pegar o cartão <strong>antes de ler</strong> e devolvê-lo <strong>depois de gravar</strong>. Assim, quem chega em segundo lê o contador já atualizado.</p>
+    <p>No programa, o cartão corresponde a uma <strong>trava compartilhada</strong> (<code>Lock</code>). A regra de acesso é a <strong>exclusão mútua</strong>. Uma thread de cada vez executa a região crítica protegida pela mesma trava.</p>
+    <p>Se B tentar adquirir a trava enquanto ela está com A, B fica <strong>bloqueada</strong> à espera da liberação. A ainda pode executar, gravar e liberar a trava. Depois, B pode ser escalonada e tentar prosseguir.</p>
+    <details class="reading">
+      <summary>Cheque a ideia · E se o cartão fosse exigido só para gravar?</summary>
+      <p>A e B ainda poderiam copiar <code>0</code> para suas fichas. Mesmo gravando uma por vez, ambas escreveriam <code>1</code>. A trava precisa cobrir a leitura e a escrita que depende dela.</p>
+    </details>
 
     <div class="simulator" id="simulador" hidden>
       <h3>Acompanhar a intercalação</h3>
+      <p>Avance até a segunda leitura no cenário sem trava. Compare o contador com o valor que cada thread guardou. Depois, troque para <strong>Com trava</strong> e observe em que momento B consegue ler.</p>
       <div class="sim-controls">
         <label for="cenario">Cenário</label>
         <select id="cenario">
@@ -131,10 +148,12 @@
       </div>
       <div class="sim-state" aria-live="polite" aria-atomic="true">
         <p class="eyebrow" id="sim-passo"></p>
-        <div class="metrics">
-          <span>Contador <strong id="sim-contador"></strong></span>
-          <span>Trava <strong id="sim-trava"></strong></span>
-        </div>
+        <dl class="metrics">
+          <div><dt>Contador compartilhado</dt><dd id="sim-contador"></dd></div>
+          <div><dt>Trava</dt><dd id="sim-trava"></dd></div>
+          <div><dt>Valor lido por A</dt><dd id="sim-leitura-a"></dd></div>
+          <div><dt>Valor lido por B</dt><dd id="sim-leitura-b"></dd></div>
+        </dl>
         <p id="sim-evento"></p>
       </div>
       <div class="sim-controls">
@@ -145,7 +164,12 @@
     </div>
 
     <h3>Demonstração em Python</h3>
-    <p>Execute os dois exemplos separadamente. No primeiro, <code>Barrier(2)</code> faz as duas threads esperarem até que ambas tenham lido o contador. Isso reproduz a sequência da tabela sem depender do momento em que o escalonador alterna as threads. No segundo, a mesma instância de <code>Lock</code> é usada pelas duas threads. O bloco <code>with</code> adquire a trava na entrada e a libera na saída.</p>
+    <p>Leia primeiro a função <code>incrementar()</code> nas duas versões. <code>valor_lido</code> faz o papel da ficha. <code>contador</code> é o valor no quadro.</p>
+    <ul>
+      <li><strong>Sem trava.</strong> <code>Barrier(2)</code> monta a situação do quadro. A primeira thread que chega a <code>leituras.wait()</code> aguarda a segunda. Quando ambas podem seguir, as duas já copiaram <code>0</code>.</li>
+      <li><strong>Com trava.</strong> As duas threads usam o mesmo <code>Lock</code>. O bloco <code>with</code> adquire a trava ao entrar e a libera ao sair, depois da gravação.</li>
+    </ul>
+    <p>Preveja o valor final em cada caso e execute os programas separadamente.</p>
     <div class="code-grid">
       <div>
         <h4>Sem trava na atualização</h4>
@@ -167,7 +191,7 @@ b.start()
 a.join()
 b.join()
 
-print(contador)  # 1</code></pre>
+print(contador)</code></pre>
       </div>
       <div>
         <h4>Com uma trava compartilhada</h4>
@@ -189,10 +213,10 @@ b.start()
 a.join()
 b.join()
 
-print(contador)  # 2</code></pre>
+print(contador)</code></pre>
       </div>
     </div>
-    <p>Nos dois exemplos, <code>join()</code> faz o fluxo principal aguardar o término das threads antes de exibir o contador. A coordenação das atualizações ocorre dentro de <code>incrementar()</code>.</p>
+    <p><code>Thread(target=incrementar)</code> prepara uma thread para executar a função. <code>start()</code> inicia cada thread. Como as duas chamadas a <code>start()</code> vêm antes de <code>join()</code>, as duas podem participar da atualização. <code>join()</code> faz o programa principal esperar o término delas antes de imprimir.</p>
     <details class="reading">
       <summary>Outro mecanismo de sincronização · Semáforo</summary>
       <p>Imagine um serviço com três vagas para processar requisições simultâneas. Um <code>Semaphore(3)</code> começa com três permissões. Cada entrada reserva uma permissão, e cada saída devolve uma. Quando uma thread tenta entrar e encontra zero permissões, ela espera. Se encontrar uma permissão, pode consumi-la e entrar.</p>
@@ -207,17 +231,49 @@ print(contador)  # 2</code></pre>
     <p class="eyebrow">3 · Deadlock</p>
     <h2>Quando duas travas formam uma espera circular</h2>
     </div>
-    <p>Duas operações precisam acessar os recursos X e Y antes de concluir. Cada recurso tem a sua trava. A adquire X primeiro. B adquire Y primeiro. Agora cada thread tenta adquirir a trava que está com a outra, mantendo a primeira até terminar.</p>
-    <div class="table-wrap aula10-table" role="region" aria-label="Travas mantidas e esperadas pelas threads" tabindex="0">
+    <p>Imagine um programa que precisa atualizar dois arquivos, X e Y. Cada arquivo tem uma trava. As threads A e B precisam obter as duas travas antes de começar a atualização, e cada uma libera as travas ao terminar.</p>
+    <div class="table-wrap aula10-table" role="region" aria-label="Sequência que produz o impasse" tabindex="0">
       <table>
-        <thead><tr><th scope="col">Thread</th><th scope="col">Trava que mantém</th><th scope="col">Trava que aguarda</th><th scope="col">Depende de</th></tr></thead>
+        <thead><tr><th scope="col">Passo</th><th scope="col">Thread A</th><th scope="col">Thread B</th></tr></thead>
         <tbody>
-          <tr><th scope="row">A</th><td>X</td><td>Y</td><td>B liberar Y</td></tr>
-          <tr><th scope="row">B</th><td>Y</td><td>X</td><td>A liberar X</td></tr>
+          <tr><th scope="row">1</th><td>Adquire X.</td><td>—</td></tr>
+          <tr><th scope="row">2</th><td>—</td><td>Adquire Y.</td></tr>
+          <tr><th scope="row">3</th><td>Pede Y e fica bloqueada, ainda com X.</td><td>Ainda pode executar.</td></tr>
+          <tr class="result-row"><th scope="row">4</th><td>Continua esperando Y.</td><td>Pede X e fica bloqueada, ainda com Y.</td></tr>
         </tbody>
       </table>
     </div>
-    <p>Há <strong>deadlock</strong>, ou impasse, porque cada uma depende de uma liberação que a outra só faria depois de prosseguir. No modelo de estados da Aula 09, ambas ficam bloqueadas. O escalonador pode continuar executando outras threads prontas, mas conceder mais tempo de CPU por si só não resolve a dependência.</p>
+    <figure class="wait-figure">
+      <svg viewBox="0 0 380 178" role="img" aria-labelledby="espera-titulo espera-descricao">
+        <title id="espera-titulo">Ciclo de espera entre as threads A e B</title>
+        <desc id="espera-descricao">A mantém X e espera B liberar Y. B mantém Y e espera A liberar X.</desc>
+        <defs>
+          <marker id="seta-espera" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 Z" fill="currentColor"/>
+          </marker>
+        </defs>
+        <rect class="wait-node" x="8" y="59" width="102" height="60" rx="8"/>
+        <rect class="wait-node" x="270" y="59" width="102" height="60" rx="8"/>
+        <path class="wait-arrow" d="M 110 75 C 149 27, 231 27, 268 75" marker-end="url(#seta-espera)"/>
+        <path class="wait-arrow" d="M 270 103 C 231 151, 149 151, 112 103" marker-end="url(#seta-espera)"/>
+        <text class="wait-node-title" x="59" y="85">Thread A</text>
+        <text x="59" y="105">Mantém X</text>
+        <text class="wait-node-title" x="321" y="85">Thread B</text>
+        <text x="321" y="105">Mantém Y</text>
+        <text x="190" y="28">A espera a liberação de Y</text>
+        <text x="190" y="160">B espera a liberação de X</text>
+      </svg>
+      <figcaption>Cada seta aponta para a thread que precisa liberar o recurso esperado.</figcaption>
+    </figure>
+    <p>No passo 3, A espera, mas B ainda pode avançar. No passo 4, B também precisa de uma trava que A mantém. O ciclo se fecha. Esse é o <strong>deadlock</strong>, ou impasse. Mais tempo de CPU, por si só, é insuficiente para liberar os recursos de que essas duas threads precisam.</p>
+
+    <h3>Prevenção por ordem de aquisição</h3>
+    <p>Agora, as duas threads pedem X antes de Y. Se A consegue X primeiro, B espera logo no seu primeiro pedido. Como Y ainda está livre, A pode adquiri-lo, atualizar os arquivos e liberar as duas travas. B pode seguir depois.</p>
+    <p>Compare com o passo 4. Na ordem comum, B espera sem manter Y. A consegue terminar e a espera tem uma saída. A mesma ordem precisa valer em todos os trechos que adquirem essas duas travas.</p>
+    <pre tabindex="0" aria-label="Trecho Python para aquisição ordenada"><code>with trava_x:
+    with trava_y:
+        atualizar_recursos()</code></pre>
+    <p>O trecho ilustra a ordem comum. <code>trava_x</code> e <code>trava_y</code> são objetos compartilhados, e <code>atualizar_recursos()</code> representa a operação que precisa de ambos os recursos.</p>
 
     <h3>As quatro condições de Coffman no exemplo</h3>
     <div class="table-wrap aula10-table" role="region" aria-label="Condições de Coffman aplicadas ao exemplo" tabindex="0">
@@ -232,13 +288,6 @@ print(contador)  # 2</code></pre>
       </table>
     </div>
     <p>As quatro condições são necessárias para um impasse desse tipo. Aqui, a não preempção se refere ao <strong>recurso</strong>. Uma thread pode perder a CPU e continuar mantendo a trava que adquiriu.</p>
-
-    <h3>Prevenção por ordem de aquisição</h3>
-    <p>As duas threads passam a adquirir X antes de Y. Se A adquire X primeiro, B precisa esperar por X sem adquirir Y. Com Y disponível, A adquire as duas travas, conclui sua operação e as libera. B pode então seguir a mesma ordem. A regra precisa valer para todos os trechos que adquirem essas duas travas.</p>
-    <pre tabindex="0" aria-label="Trecho Python para aquisição ordenada"><code>with trava_x:
-    with trava_y:
-        atualizar_recursos()</code></pre>
-    <p>O trecho ilustra a ordem comum. <code>trava_x</code> e <code>trava_y</code> são objetos compartilhados, e <code>atualizar_recursos()</code> representa a operação que precisa de ambos os recursos.</p>
 
     <details class="reading">
       <summary>Leitura complementar · Monitores e tratamento de impasses</summary>
@@ -343,6 +392,6 @@ print(contador)  # 2</code></pre>
   <div class="container"><p>Arquitetura de Computadores e Sistemas Operacionais · Engenharia de Software · 2026/2</p></div>
 </footer>
 <script defer src="../script.js"></script>
-<script defer src="aula-10.js"></script>
+<script defer src="aula-10.js?v=2"></script>
 </body>
 </html>

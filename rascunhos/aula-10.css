@@ -29,7 +29,7 @@ body.teaching-page.aula10-page .aula10-table table { min-width: 0; }
 .aula10-page .reading summary { cursor: pointer; font-weight: 600; }
 .aula10-page .reading[open] summary { margin-bottom: .65rem; }
 
-.aula10-page :is(.sim-controls, .metrics) {
+.aula10-page .sim-controls {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -45,8 +45,54 @@ body.teaching-page.aula10-page .aula10-table table { min-width: 0; }
 }
 
 .aula10-page .sim-state p:last-child { margin-bottom: 0; }
-.aula10-page .metrics { margin-bottom: .45rem; }
-.aula10-page .metrics strong { color: var(--ensino-accent-strong); }
+.aula10-page .metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .4rem;
+  margin: 0 0 .75rem;
+}
+.aula10-page .metrics div {
+  padding: .4rem .6rem;
+  border: 1px solid var(--ensino-line);
+  border-radius: var(--ensino-radius-sm);
+  overflow-wrap: anywhere;
+}
+.aula10-page .metrics dt { color: var(--ensino-muted); font-size: .88rem; }
+.aula10-page .metrics dd {
+  margin: 0;
+  color: var(--ensino-accent-strong);
+  font-weight: 600;
+}
+
+.aula10-page .wait-figure {
+  max-width: 440px;
+  margin: 1.2rem auto;
+  text-align: center;
+}
+.aula10-page .wait-figure svg {
+  display: block;
+  width: 100%;
+  color: var(--ensino-accent-strong);
+}
+.aula10-page .wait-node {
+  fill: var(--ensino-accent-soft);
+  stroke: currentColor;
+}
+.aula10-page .wait-arrow {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+}
+.aula10-page .wait-figure text {
+  fill: var(--ensino-text);
+  font-size: 16px;
+  text-anchor: middle;
+}
+.aula10-page .wait-node-title { font-weight: 600; }
+.aula10-page .wait-figure figcaption {
+  color: var(--ensino-muted);
+  font-size: .92rem;
+}
 .aula10-page .sim-controls button:disabled { opacity: .55; cursor: default; }
 .aula10-page #cenario {
   max-width: 100%;

@@ -1,19 +1,19 @@
 (() => {
   const scenarios = {
     livre: [
-      [0, "sem trava", "A e B ainda vão atualizar o contador."],
-      [0, "sem trava", "A lê 0 e guarda esse valor em sua variável local."],
-      [0, "sem trava", "A execução alterna para B. B também lê 0."],
-      [1, "sem trava", "A retoma a execução, soma 1 ao valor que leu e grava 1."],
-      [1, "sem trava", "B retoma a execução e grava 1 usando a sua leitura anterior. Uma atualização se perde."]
+      [0, "Sem trava", null, null, "A e B ainda vão atualizar o contador."],
+      [0, "Sem trava", 0, null, "A lê 0 e guarda esse valor em sua variável local."],
+      [0, "Sem trava", 0, 0, "A execução alterna para B. B também lê 0."],
+      [1, "Sem trava", 0, 0, "A retoma a execução, calcula 0 + 1 e grava 1. B ainda tem 0 como valor lido."],
+      [1, "Sem trava", 0, 0, "B calcula 0 + 1 e grava 1 por cima da atualização de A."]
     ],
     trava: [
-      [0, "livre", "A e B vão usar a mesma trava para atualizar o contador."],
-      [0, "com A", "A adquire a trava e lê 0."],
-      [0, "com A", "A execução alterna para B. B tenta adquirir a trava e fica bloqueada."],
-      [1, "livre", "A volta a executar, grava 1 e libera a trava. B pode voltar a executar quando for escalonada."],
-      [1, "com B", "B é escalonada, adquire a trava e lê 1."],
-      [2, "livre", "B soma 1 ao valor que leu, grava 2 e libera a trava."]
+      [0, "Livre", null, null, "A e B vão usar a mesma trava para atualizar o contador."],
+      [0, "Com A", 0, null, "A adquire a trava e lê 0."],
+      [0, "Com A", 0, null, "B tenta adquirir a trava e fica bloqueada antes de ler."],
+      [1, "Livre", 0, null, "A grava 1 e libera a trava. B pode prosseguir quando for escalonada e conseguir adquirir a trava."],
+      [1, "Com B", 0, 1, "B é escalonada, adquire a trava e lê o contador já atualizado."],
+      [2, "Livre", 0, 1, "B calcula 1 + 1, grava 2 e libera a trava."]
     ]
   };
   const simulator = document.getElementById("simulador");
@@ -21,6 +21,8 @@
   const stepLabel = document.getElementById("sim-passo");
   const counter = document.getElementById("sim-contador");
   const lock = document.getElementById("sim-trava");
+  const readingA = document.getElementById("sim-leitura-a");
+  const readingB = document.getElementById("sim-leitura-b");
   const eventText = document.getElementById("sim-evento");
   const previousButton = document.getElementById("sim-anterior");
   const nextButton = document.getElementById("sim-proximo");
@@ -29,10 +31,12 @@
 
   function renderStep() {
     const steps = scenarios[scenarioSelect.value];
-    const [value, owner, event] = steps[step];
+    const [value, owner, valueA, valueB, event] = steps[step];
     stepLabel.textContent = "Passo " + (step + 1) + " de " + steps.length;
     counter.textContent = value;
     lock.textContent = owner;
+    readingA.textContent = valueA ?? "Ainda não leu";
+    readingB.textContent = valueB ?? "Ainda não leu";
     eventText.textContent = event;
     previousButton.disabled = step === 0;
     nextButton.disabled = step === steps.length - 1;
